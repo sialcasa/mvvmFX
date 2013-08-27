@@ -1,10 +1,9 @@
 package de.saxsys.jfx.mvvm;
 
-import javafx.fxml.Initializable;
 
 /**
- * Abstract class for a MVVMView - you have to say which viewmodel it uses. Then you can use the embedded vm property
- * which is typed correctly.
+ * Abstract class for a MVVMView - you have to say which viewmodel it uses. Then you can use the embedded
+ * {@link MVVMViewModel} property which is typed correctly.
  * 
  * @author alexander.casall
  * 
