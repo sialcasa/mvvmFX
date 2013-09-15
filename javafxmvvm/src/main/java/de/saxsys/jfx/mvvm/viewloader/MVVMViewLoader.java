@@ -1,3 +1,18 @@
+/*
+ * Copyright 2013 Alexander Casall - Saxonia Systems AG
+ *
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
 package de.saxsys.jfx.mvvm.viewloader;
 
 import java.io.IOException;
@@ -10,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.saxsys.jfx.mvvm.base.MVVMView;
-import de.saxsys.jfx.mvvm.base.MVVMViewModel;
 
 /**
  * Loader class for loading FXML and code behind from Fs.
@@ -23,26 +37,13 @@ public class MVVMViewLoader {
 			.getLogger(MVVMViewLoader.class);
 
 	/**
-	 * Gets a {@link MVVMView} and a {@link MVVMViewModel} for a given
-	 * {@link ViewController}.
-	 * 
-	 * @param view
-	 *            to lookup
-	 * @return tuple
-	 */
-	public MVVMTuple getTuple(final MVVMViewNames view) {
-		final MVVMTuple controllerTuple = loadController(view.getResource());
-		return controllerTuple;
-	}
-
-	/**
-	 * Helper for loading a Controller from filesystem.
+	 * Load the view (Code behind + Node from FXML) by a given resource path.
 	 * 
 	 * @param resource
 	 *            to load the controller from
-	 * @return
+	 * @return tuple which is <code>null</code> if an error occures.
 	 */
-	private MVVMTuple loadController(final String resource) {
+	public MVVMViewTuple loadViewTuple(final String resource) {
 		// Load FXML file
 		final URL location = getClass().getResource(resource);
 		if (location == null) {
@@ -59,7 +60,7 @@ public class MVVMViewLoader {
 		} catch (final IOException ex) {
 			LOG.error("Error loading FXML :", ex);
 		}
-		final MVVMTuple controllerTuple = new MVVMTuple(
+		final MVVMViewTuple controllerTuple = new MVVMViewTuple(
 				(MVVMView<?>) fxmlLoader.getController(), view);
 		return controllerTuple;
 	}

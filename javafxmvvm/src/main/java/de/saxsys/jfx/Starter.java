@@ -6,35 +6,37 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import de.saxsys.jfx.exampleapplication.view.personlogin.PersonLoginView;
 import de.saxsys.jfx.exampleapplication.viewmodel.personlogin.PersonLoginViewModel;
-import de.saxsys.jfx.mvvm.viewloader.MVVMTuple;
 import de.saxsys.jfx.mvvm.viewloader.MVVMViewLoader;
 import de.saxsys.jfx.mvvm.viewloader.MVVMViewNames;
+import de.saxsys.jfx.mvvm.viewloader.MVVMViewTuple;
 
 public class Starter extends Application {
 
-    public static void main(final String[] args) {
-        launch(args);
-    }
+	public static void main(final String[] args) {
+		launch(args);
+	}
 
-    @Override
-    public void start(final Stage stage) throws Exception {
-        final MVVMTuple tuple = new MVVMViewLoader().getTuple(MVVMViewNames.PERSONLOGIN);
+	@Override
+	public void start(final Stage stage) throws Exception {
+		final MVVMViewTuple tuple = new MVVMViewLoader()
+				.loadViewTuple(MVVMViewNames.PERSONLOGIN.getResource());
 
-        // Locate code-behind with view
-        final PersonLoginView personLoginView = (PersonLoginView) tuple.getCodeBehind();
+		// Locate code-behind with view
+		final PersonLoginView personLoginView = (PersonLoginView) tuple
+				.getCodeBehind();
 
-        // Locate View for loaded FXML file
-        final Parent view = tuple.getView();
+		// Locate View for loaded FXML file
+		final Parent view = tuple.getView();
 
-        // Create ViewModel
-        final PersonLoginViewModel personLoginViewModel = new PersonLoginViewModel();
+		// Create ViewModel
+		final PersonLoginViewModel personLoginViewModel = new PersonLoginViewModel();
 
-        personLoginView.setViewModel(personLoginViewModel);
+		personLoginView.setViewModel(personLoginViewModel);
 
-        final Scene scene = new Scene(view);
+		final Scene scene = new Scene(view);
 
-        stage.setScene(scene);
-        stage.show();
-    }
+		stage.setScene(scene);
+		stage.show();
+	}
 
 }

@@ -1,3 +1,5 @@
+package de.saxsys.jfx.mvvm.viewloader;
+
 /*
  * Copyright 2013 Alexander Casall - Saxonia Systems AG
  *
@@ -13,27 +15,39 @@
  *See the License for the specific language governing permissions and
  *limitations under the License.
  */
-
-package de.saxsys.jfx.mvvm.viewloader;
+import javafx.scene.Parent;
+import de.saxsys.jfx.mvvm.base.MVVMView;
 
 /**
- * Possible ViewControllers.
+ * Tuple for carriing view / code-behind pair.
  */
-public enum MVVMViewNames {
-	PERSONWELCOME(
-			"/de/saxsys/jfx/exampleapplication/view/personwelcome/PersonWelcomeView.fxml"), PERSONLOGIN(
-			"/de/saxsys/jfx/exampleapplication/view/personlogin/PersonLoginView.fxml");
+public class MVVMViewTuple {
 
-	private String resource;
+	private final MVVMView<?> codeBehind;
+	private final Parent view;
 
-	private MVVMViewNames(final String resource) {
-		this.resource = resource;
+	/**
+	 * @param codeBehind
+	 *            to set
+	 * @param view
+	 *            to set
+	 */
+	public MVVMViewTuple(final MVVMView<?> codeBehind, final Parent view) {
+		this.codeBehind = codeBehind;
+		this.view = view;
 	}
 
 	/**
-	 * @return resource represented by a string
+	 * @return the viewmodel
 	 */
-	public String getResource() {
-		return resource;
+	public MVVMView<?> getCodeBehind() {
+		return codeBehind;
+	}
+
+	/**
+	 * @return the view
+	 */
+	public Parent getView() {
+		return view;
 	}
 }

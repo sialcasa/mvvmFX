@@ -12,58 +12,63 @@ import de.saxsys.jfx.exampleapplication.view.personwelcome.PersonWelcomeView;
 import de.saxsys.jfx.exampleapplication.viewmodel.personlogin.PersonLoginViewModel;
 import de.saxsys.jfx.exampleapplication.viewmodel.personwelcome.PersonWelcomeViewModel;
 import de.saxsys.jfx.mvvm.base.MVVMView;
-import de.saxsys.jfx.mvvm.viewloader.MVVMTuple;
 import de.saxsys.jfx.mvvm.viewloader.MVVMViewLoader;
 import de.saxsys.jfx.mvvm.viewloader.MVVMViewNames;
+import de.saxsys.jfx.mvvm.viewloader.MVVMViewTuple;
 
 /**
- * Code behind the fxml for visualization of the {@link PersonLoginView}. After the {@link PersonLoginViewModel} is
- * set, the view binds to the {@link PersonLoginViewModel}.
+ * Code behind the fxml for visualization of the {@link PersonLoginView}. After
+ * the {@link PersonLoginViewModel} is set, the view binds to the
+ * {@link PersonLoginViewModel}.
  * 
  * @author alexander.casall
  */
 public class PersonLoginView extends MVVMView<PersonLoginViewModel> {
 
-    @FXML
-    private ChoiceBox<String> personsChoiceBox;
+	@FXML
+	private ChoiceBox<String> personsChoiceBox;
 
-    @FXML
-    private VBox layoutVbox;
+	@FXML
+	private VBox layoutVbox;
 
-    private Parent personWelcome;
+	private Parent personWelcome;
 
-    @Override
-    public void initialize(final URL arg0, final ResourceBundle arg1) {
-    }
+	@Override
+	public void initialize(final URL arg0, final ResourceBundle arg1) {
+	}
 
-    @Override
-    public void beforeViewModelInitialization() {
-    }
+	@Override
+	public void beforeViewModelInitialization() {
+	}
 
-    @Override
-    public void afterViewModelInitialization() {
-        personsChoiceBox.itemsProperty().bind(viewModel.personsProperty());
-    }
+	@Override
+	public void afterViewModelInitialization() {
+		personsChoiceBox.itemsProperty().bind(viewModel.personsProperty());
+	}
 
-    @FXML
-    void loginButtonPressed(final ActionEvent event) {
-        // Remove if already exists
-        layoutVbox.getChildren().remove(personWelcome);
+	@FXML
+	void loginButtonPressed(final ActionEvent event) {
+		// Remove if already exists
+		layoutVbox.getChildren().remove(personWelcome);
 
-        final MVVMTuple tuple = new MVVMViewLoader().getTuple(MVVMViewNames.PERSONWELCOME);
+		final MVVMViewTuple tuple = new MVVMViewLoader()
+				.loadViewTuple(MVVMViewNames.PERSONWELCOME.getResource());
 
-        // Locate code-behind with view
-        final PersonWelcomeView personWelcomeView = (PersonWelcomeView) tuple.getCodeBehind();
+		// Locate code-behind with view
+		final PersonWelcomeView personWelcomeView = (PersonWelcomeView) tuple
+				.getCodeBehind();
 
-        personWelcome = tuple.getView();
+		personWelcome = tuple.getView();
 
-        // Create ViewModel
-        final int personId = personsChoiceBox.getSelectionModel().getSelectedIndex();
-        final PersonWelcomeViewModel personWelcomeViewPm = new PersonWelcomeViewModel(personId);
+		// Create ViewModel
+		final int personId = personsChoiceBox.getSelectionModel()
+				.getSelectedIndex();
+		final PersonWelcomeViewModel personWelcomeViewPm = new PersonWelcomeViewModel(
+				personId);
 
-        personWelcomeView.setViewModel(personWelcomeViewPm);
+		personWelcomeView.setViewModel(personWelcomeViewPm);
 
-        layoutVbox.getChildren().add(personWelcome);
-    }
+		layoutVbox.getChildren().add(personWelcome);
+	}
 
 }
