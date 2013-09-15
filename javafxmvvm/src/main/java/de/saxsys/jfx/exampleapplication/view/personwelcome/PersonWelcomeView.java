@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import de.saxsys.jfx.exampleapplication.viewmodel.personwelcome.PersonWelcomeViewModel;
-import de.saxsys.jfx.mvvm.MVVMView;
+import de.saxsys.jfx.mvvm.base.MVVMView;
 
 /**
  * Code behind the fxml for visualization of the PersonWelcomeViewModel. After the {@link PersonWelcomeViewModel} is

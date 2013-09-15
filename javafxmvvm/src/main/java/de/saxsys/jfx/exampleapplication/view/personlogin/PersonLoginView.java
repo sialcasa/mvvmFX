@@ -11,10 +11,10 @@ import javafx.scene.layout.VBox;
 import de.saxsys.jfx.exampleapplication.view.personwelcome.PersonWelcomeView;
 import de.saxsys.jfx.exampleapplication.viewmodel.personlogin.PersonLoginViewModel;
 import de.saxsys.jfx.exampleapplication.viewmodel.personwelcome.PersonWelcomeViewModel;
-import de.saxsys.jfx.mvvm.MVVMTuple;
-import de.saxsys.jfx.mvvm.MVVMView;
-import de.saxsys.jfx.mvvm.MVVMViewLoader;
-import de.saxsys.jfx.mvvm.MVVMViewNames;
+import de.saxsys.jfx.mvvm.base.MVVMView;
+import de.saxsys.jfx.mvvm.viewloader.MVVMTuple;
+import de.saxsys.jfx.mvvm.viewloader.MVVMViewLoader;
+import de.saxsys.jfx.mvvm.viewloader.MVVMViewNames;
 
 /**
  * Code behind the fxml for visualization of the {@link PersonLoginView}. After the {@link PersonLoginViewModel} is

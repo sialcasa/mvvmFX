@@ -6,9 +6,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import de.saxsys.jfx.exampleapplication.view.personlogin.PersonLoginView;
 import de.saxsys.jfx.exampleapplication.viewmodel.personlogin.PersonLoginViewModel;
-import de.saxsys.jfx.mvvm.MVVMTuple;
-import de.saxsys.jfx.mvvm.MVVMViewLoader;
-import de.saxsys.jfx.mvvm.MVVMViewNames;
+import de.saxsys.jfx.mvvm.viewloader.MVVMTuple;
+import de.saxsys.jfx.mvvm.viewloader.MVVMViewLoader;
+import de.saxsys.jfx.mvvm.viewloader.MVVMViewNames;
 
 public class Starter extends Application {
 

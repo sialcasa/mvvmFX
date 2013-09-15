@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import de.saxsys.jfx.exampleapplication.model.Person;
 import de.saxsys.jfx.exampleapplication.model.Repository;
-import de.saxsys.jfx.mvvm.MVVMViewModel;
+import de.saxsys.jfx.mvvm.base.MVVMViewModel;
 import de.saxsys.jfx.viewmodel.personwelcome.PersonWelcomeViewModelTest;
 
 /**

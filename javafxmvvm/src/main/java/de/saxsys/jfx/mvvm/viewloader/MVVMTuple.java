@@ -1,5 +1,6 @@
-package de.saxsys.jfx.mvvm;
+package de.saxsys.jfx.mvvm.viewloader;
 
+import de.saxsys.jfx.mvvm.base.MVVMView;
 import javafx.scene.Parent;
 
 /**

@@ -1,4 +1,4 @@
-package de.saxsys.jfx.mvvm;
+package de.saxsys.jfx.mvvm.base;
 
 import javafx.fxml.Initializable;
 
