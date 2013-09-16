@@ -33,8 +33,23 @@ import de.saxsys.jfx.mvvm.base.View;
  */
 public class ViewLoader {
 
-	private static final Logger LOG = LoggerFactory
-			.getLogger(ViewLoader.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ViewLoader.class);
+
+	/**
+	 * Load the view (Code behind + Node from FXML) by a given Code behind
+	 * class. Care - The fxml has to be in the same package like the clazz.
+	 * 
+	 * @param clazz
+	 *            which is the code behind of a fxml
+	 * @return the tuple
+	 */
+	public ViewTuple loadViewTuple(Class<View<?>> clazz) {
+		String pathToFXML = "/"
+				+ clazz.getPackage().getName().replaceAll("\\.", "/") + "/"
+				+ clazz.getSimpleName() + ".fxml";
+
+		return loadViewTuple(pathToFXML);
+	}
 
 	/**
 	 * Load the view (Code behind + Node from FXML) by a given resource path.

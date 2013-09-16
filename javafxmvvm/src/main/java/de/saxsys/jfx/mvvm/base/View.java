@@ -54,13 +54,15 @@ public abstract class View<ViewModelType extends ViewModel> implements
 	}
 
 	/**
-	 * This method is called before the viewmodel is going to be set.
+	 * This method is called before the viewmodel is going to be set. You should
+	 * not call this method by hand.
 	 */
-	public abstract void beforeViewModelInitialization();
+	protected abstract void beforeViewModelInitialization();
 
 	/**
-	 * This method is called after the viewmodel was set.
+	 * This method is called after the viewmodel was set. You should not call
+	 * this method by hand.
 	 */
-	public abstract void afterViewModelInitialization();
+	protected abstract void afterViewModelInitialization();
 
 }
