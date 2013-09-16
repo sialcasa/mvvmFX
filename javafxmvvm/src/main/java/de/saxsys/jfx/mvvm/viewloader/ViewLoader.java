@@ -24,17 +24,17 @@ import javafx.scene.Parent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.saxsys.jfx.mvvm.base.MVVMView;
+import de.saxsys.jfx.mvvm.base.View;
 
 /**
  * Loader class for loading FXML and code behind from Fs.
  * 
  * @author alexander.casall
  */
-public class MVVMViewLoader {
+public class ViewLoader {
 
 	private static final Logger LOG = LoggerFactory
-			.getLogger(MVVMViewLoader.class);
+			.getLogger(ViewLoader.class);
 
 	/**
 	 * Load the view (Code behind + Node from FXML) by a given resource path.
@@ -43,7 +43,7 @@ public class MVVMViewLoader {
 	 *            to load the controller from
 	 * @return tuple which is <code>null</code> if an error occures.
 	 */
-	public MVVMViewTuple loadViewTuple(final String resource) {
+	public ViewTuple loadViewTuple(final String resource) {
 		// Load FXML file
 		final URL location = getClass().getResource(resource);
 		if (location == null) {
@@ -60,8 +60,8 @@ public class MVVMViewLoader {
 		} catch (final IOException ex) {
 			LOG.error("Error loading FXML :", ex);
 		}
-		final MVVMViewTuple controllerTuple = new MVVMViewTuple(
-				(MVVMView<?>) fxmlLoader.getController(), view);
+		final ViewTuple controllerTuple = new ViewTuple(
+				(View<?>) fxmlLoader.getController(), view);
 		return controllerTuple;
 	}
 }

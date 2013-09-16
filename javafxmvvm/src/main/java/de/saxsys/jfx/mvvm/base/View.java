@@ -19,21 +19,20 @@ import javafx.fxml.Initializable;
 
 /**
  * Abstract class for a MVVMView - you have to say which viewmodel it uses. Then
- * you can use the embedded {@link MVVMViewModel} property which is typed
- * correctly.
+ * you can use the embedded {@link ViewModel} property which is typed correctly.
  * 
  * @author alexander.casall
  * 
  * @param <ViewModel>
  *            type
  */
-public abstract class MVVMView<ViewModel extends MVVMViewModel> implements
+public abstract class View<ViewModelType extends ViewModel> implements
 		Initializable {
 
 	/**
 	 * Viewmodel.
 	 */
-	protected ViewModel viewModel;
+	protected ViewModelType viewModel;
 
 	/**
 	 * Set the Viewmodel.
@@ -41,7 +40,7 @@ public abstract class MVVMView<ViewModel extends MVVMViewModel> implements
 	 * @param viewModel
 	 *            to set
 	 */
-	public final void setViewModel(final ViewModel viewModel) {
+	public final void setViewModel(final ViewModelType viewModel) {
 		beforeViewModelInitialization();
 		this.viewModel = viewModel;
 		afterViewModelInitialization();
@@ -50,7 +49,7 @@ public abstract class MVVMView<ViewModel extends MVVMViewModel> implements
 	/**
 	 * @return the viewmodel
 	 */
-	public ViewModel getViewModel() {
+	public ViewModelType getViewModel() {
 		return viewModel;
 	}
 

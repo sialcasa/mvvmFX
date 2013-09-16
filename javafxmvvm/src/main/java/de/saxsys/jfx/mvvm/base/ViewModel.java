@@ -13,23 +13,19 @@
  *See the License for the specific language governing permissions and
  *limitations under the License.
  */
-package de.saxsys.jfx.mvvm.notifications;
+package de.saxsys.jfx.mvvm.base;
 
 /**
- * Observer for getting notifications.
+ * Marker inferface for a ViewModel. Some additional hints to this layer:
  * 
- * @author sialcasa
+ * Never create a dependency to the view in this layer - if you have to create a
+ * new view after a business step, notify the view with the @MVVMNotificationCenter
+ * or a callback that the view can create the new view. When you write a new @MVVMView
+ * you should create the associated @MVVMViewModel with tests before.
+ * 
+ * @author alexander.casall
  * 
  */
-public interface MVVMNotificationObserver {
-	/**
-	 * Handle the Notification which is passed by the @MVVMNotificationCenter.
-	 * An @Object[] could be shipped.
-	 * 
-	 * @param key
-	 *            notification name
-	 * @param objects
-	 *            which are passed
-	 */
-	public void receivedNotification(String key, Object... objects);
+public interface ViewModel {
+
 }

@@ -24,14 +24,14 @@ package de.saxsys.jfx.mvvm.notifications;
  * @author sialcasa
  * 
  */
-public abstract class MVVMNotificationCenter {
+public abstract class NotificationCenter {
 
-	private static final MVVMDefaultNotificationCenter DEFAULT_NOTIFICATION_CENTER = new MVVMDefaultNotificationCenter();
+	private static final DefaultNotificationCenter DEFAULT_NOTIFICATION_CENTER = new DefaultNotificationCenter();
 
 	/**
 	 * @return default implementation of a @MVVMNotificationCenter
 	 */
-	public static MVVMNotificationCenter getDefaultNotificationCenter() {
+	public static NotificationCenter getDefaultNotificationCenter() {
 		return DEFAULT_NOTIFICATION_CENTER;
 	}
 
@@ -45,7 +45,7 @@ public abstract class MVVMNotificationCenter {
 	 *            which listens for the notification
 	 */
 	public abstract void addObserverForName(String name,
-			MVVMNotificationObserver observer);
+			NotificationObserver observer);
 
 	/**
 	 * Removes an observer from the @MVVMNotificationCenter.
@@ -56,7 +56,7 @@ public abstract class MVVMNotificationCenter {
 	 *            which listens for the notification
 	 */
 	public abstract void removeObserverForName(String name,
-			MVVMNotificationObserver observer);
+			NotificationObserver observer);
 
 	/**
 	 * Remove all registrations of an @MVVMNotificationObserver.
@@ -64,7 +64,7 @@ public abstract class MVVMNotificationCenter {
 	 * @param observer
 	 *            for remove all notifications
 	 */
-	public abstract void removeObserver(MVVMNotificationObserver observer);
+	public abstract void removeObserver(NotificationObserver observer);
 
 	/**
 	 * Post a notification to all @MVVMNotificationObserver which are registered

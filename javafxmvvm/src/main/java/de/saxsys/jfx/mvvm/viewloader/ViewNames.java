@@ -19,14 +19,14 @@ package de.saxsys.jfx.mvvm.viewloader;
 /**
  * Possible ViewControllers.
  */
-public enum MVVMViewNames {
+public enum ViewNames {
 	PERSONWELCOME(
 			"/de/saxsys/jfx/exampleapplication/view/personwelcome/PersonWelcomeView.fxml"), PERSONLOGIN(
 			"/de/saxsys/jfx/exampleapplication/view/personlogin/PersonLoginView.fxml");
 
 	private String resource;
 
-	private MVVMViewNames(final String resource) {
+	private ViewNames(final String resource) {
 		this.resource = resource;
 	}
 

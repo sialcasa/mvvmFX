@@ -21,7 +21,7 @@ import org.mockito.Mockito;
 
 import com.google.common.collect.Lists;
 
-public class MVVMDefaultNotificationCenterTest {
+public class DefaultNotificationCenterTest {
 
 	private static final String TEST_NOTIFICATION = "test_notification";
 	private static final String TEST_NOTIFICATION_2 = TEST_NOTIFICATION
@@ -29,7 +29,7 @@ public class MVVMDefaultNotificationCenterTest {
 	private static final Object[] OBJECT_ARRAY_FOR_NOTIFICATION = Lists
 			.newArrayList("test").toArray();
 
-	private MVVMNotificationCenter defaultCenter;
+	private NotificationCenter defaultCenter;
 	DummyNotificationObserver observer1;
 	DummyNotificationObserver observer2;
 	DummyNotificationObserver observer3;
@@ -39,7 +39,7 @@ public class MVVMDefaultNotificationCenterTest {
 		observer1 = Mockito.mock(DummyNotificationObserver.class);
 		observer2 = Mockito.mock(DummyNotificationObserver.class);
 		observer3 = Mockito.mock(DummyNotificationObserver.class);
-		defaultCenter = Mockito.spy(new MVVMDefaultNotificationCenter());
+		defaultCenter = Mockito.spy(new DefaultNotificationCenter());
 	}
 
 	@Test
@@ -98,7 +98,7 @@ public class MVVMDefaultNotificationCenterTest {
 				TEST_NOTIFICATION);
 	}
 
-	private class DummyNotificationObserver implements MVVMNotificationObserver {
+	private class DummyNotificationObserver implements NotificationObserver {
 		@Override
 		public void receivedNotification(String key, Object... objects) {
 

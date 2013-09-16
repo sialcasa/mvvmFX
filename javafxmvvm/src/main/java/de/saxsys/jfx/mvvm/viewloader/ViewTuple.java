@@ -16,14 +16,14 @@ package de.saxsys.jfx.mvvm.viewloader;
  *limitations under the License.
  */
 import javafx.scene.Parent;
-import de.saxsys.jfx.mvvm.base.MVVMView;
+import de.saxsys.jfx.mvvm.base.View;
 
 /**
  * Tuple for carriing view / code-behind pair.
  */
-public class MVVMViewTuple {
+public class ViewTuple {
 
-	private final MVVMView<?> codeBehind;
+	private final View<?> codeBehind;
 	private final Parent view;
 
 	/**
@@ -32,7 +32,7 @@ public class MVVMViewTuple {
 	 * @param view
 	 *            to set
 	 */
-	public MVVMViewTuple(final MVVMView<?> codeBehind, final Parent view) {
+	public ViewTuple(final View<?> codeBehind, final Parent view) {
 		this.codeBehind = codeBehind;
 		this.view = view;
 	}
@@ -40,7 +40,7 @@ public class MVVMViewTuple {
 	/**
 	 * @return the viewmodel
 	 */
-	public MVVMView<?> getCodeBehind() {
+	public View<?> getCodeBehind() {
 		return codeBehind;
 	}
 

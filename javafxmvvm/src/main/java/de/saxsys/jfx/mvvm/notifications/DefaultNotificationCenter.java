@@ -27,32 +27,32 @@ import com.google.common.collect.Multimap;
  * @author sialcasa
  * 
  */
-class MVVMDefaultNotificationCenter extends MVVMNotificationCenter {
+class DefaultNotificationCenter extends NotificationCenter {
 
-	private Multimap<String, MVVMNotificationObserver> observersForName = ArrayListMultimap
-			.<String, MVVMNotificationObserver> create();
+	private Multimap<String, NotificationObserver> observersForName = ArrayListMultimap
+			.<String, NotificationObserver> create();
 
 	@Override
 	public void addObserverForName(String name,
-			MVVMNotificationObserver observer) {
+			NotificationObserver observer) {
 		this.observersForName.put(name, observer);
 	}
 
 	@Override
 	public void removeObserverForName(String name,
-			MVVMNotificationObserver observer) {
+			NotificationObserver observer) {
 		this.observersForName.remove(name, observer);
 	}
 
 	@Override
-	public void removeObserver(MVVMNotificationObserver observer) {
+	public void removeObserver(NotificationObserver observer) {
 		Iterator<String> iterator = this.observersForName.keySet().iterator();
 		while (iterator.hasNext()) {
 			String key = iterator.next();
-			Iterator<MVVMNotificationObserver> iterator2 = this.observersForName
+			Iterator<NotificationObserver> iterator2 = this.observersForName
 					.get(key).iterator();
 			while (iterator2.hasNext()) {
-				MVVMNotificationObserver actualObserver = iterator2.next();
+				NotificationObserver actualObserver = iterator2.next();
 				if (actualObserver == observer) {
 					this.observersForName.removeAll(key);
 					break;
@@ -63,9 +63,9 @@ class MVVMDefaultNotificationCenter extends MVVMNotificationCenter {
 
 	@Override
 	public void postNotification(String name, Object... objects) {
-		Collection<MVVMNotificationObserver> notificationReceivers = observersForName
+		Collection<NotificationObserver> notificationReceivers = observersForName
 				.get(name);
-		for (MVVMNotificationObserver observer : notificationReceivers) {
+		for (NotificationObserver observer : notificationReceivers) {
 			observer.receivedNotification(name, objects);
 		}
 	}
