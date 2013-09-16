@@ -31,9 +31,12 @@ import de.saxsys.jfx.mvvm.base.View;
  * 
  * @author alexander.casall
  */
-public class ViewLoader {
+public final class ViewLoader {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ViewLoader.class);
+
+	private ViewLoader() {
+	}
 
 	/**
 	 * Load the view (Code behind + Node from FXML) by a given Code behind
@@ -43,7 +46,7 @@ public class ViewLoader {
 	 *            which is the code behind of a fxml
 	 * @return the tuple
 	 */
-	public ViewTuple loadViewTuple(Class<View<?>> clazz) {
+	public static ViewTuple loadViewTuple(Class<View<?>> clazz) {
 		String pathToFXML = "/"
 				+ clazz.getPackage().getName().replaceAll("\\.", "/") + "/"
 				+ clazz.getSimpleName() + ".fxml";
@@ -58,9 +61,9 @@ public class ViewLoader {
 	 *            to load the controller from
 	 * @return tuple which is <code>null</code> if an error occures.
 	 */
-	public ViewTuple loadViewTuple(final String resource) {
+	public static ViewTuple loadViewTuple(final String resource) {
 		// Load FXML file
-		final URL location = getClass().getResource(resource);
+		final URL location = ViewLoader.class.getResource(resource);
 		if (location == null) {
 			LOG.error("Error loading FXML - can't load from given resourcepath: "
 					+ resource);
