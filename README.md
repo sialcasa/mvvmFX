@@ -44,7 +44,7 @@ __de.saxsys.jfx.mvvm.notifications__
 This package provides an observer mechanism that you can use to send notifications which are identified by a string throught all of the application. You can pass objects with an notification.
 
 
-#####Send a notification####
+#####Listen for a notification####
 ```
 NotificationCenter notificationCenter = NotificationCenter.getDefaultNotificationCenter();
 
@@ -58,7 +58,7 @@ notificationCenter.addObserverForName("someNotification",
 		}
 	);
 ```
-##### Receive a notification #####
+##### Send a notification #####
 ```
 NotificationCenter notificationCenter = NotificationCenter.getDefaultNotificationCenter();
 
