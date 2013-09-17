@@ -2,7 +2,7 @@
 
 __mvvm(FX)__ is an application framework for implementing the MVVM pattern with JavaFX. 
 
-__MVVM__ is a WPF (__.NET__) specific pattern. WPF and JavaFX does have parallels like Databinding and descriptive UI declaration (FXML/XAML). That is the reason I tryed to adopt best practices of the development with WPF.
+__MVVM__ is a WPF ( __.NET__ ) specific pattern. WPF and JavaFX does have parallels like Databinding and descriptive UI declaration (FXML/XAML). That is the reason I tryed to adopt best practices of the development with WPF.
 
 #####Short overview#####
 
