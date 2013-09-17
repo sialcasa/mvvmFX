@@ -46,7 +46,7 @@ public final class ViewLoader {
 	 *            which is the code behind of a fxml
 	 * @return the tuple
 	 */
-	public static ViewTuple loadViewTuple(Class<View<?>> clazz) {
+	public static ViewTuple loadViewTuple(Class<? extends View<?>> clazz) {
 		String pathToFXML = "/"
 				+ clazz.getPackage().getName().replaceAll("\\.", "/") + "/"
 				+ clazz.getSimpleName() + ".fxml";
