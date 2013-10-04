@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.saxsys</groupId>
-	<artifactId>javafxmvvm</artifactId>
+	<artifactId>mvvmFX</artifactId>
 	<packaging>jar</packaging>
 	<version>0.0.1</version>
 	<name>Application Framework for MVVM with JavaFX</name>
@@ -83,7 +83,11 @@
 			<version>1.8.4</version>
 			<scope>test</scope>
 		</dependency>
-
+	<dependency>
+  			<groupId>com.cathive.fx</groupId>
+  			<artifactId>fx-guice</artifactId>
+  			<version>2.1.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>

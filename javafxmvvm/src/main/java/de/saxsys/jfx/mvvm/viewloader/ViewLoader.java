@@ -18,11 +18,15 @@ package de.saxsys.jfx.mvvm.viewloader;
 import java.io.IOException;
 import java.net.URL;
 
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.cathive.fx.guice.GuiceFXMLLoader;
+import com.cathive.fx.guice.GuiceFXMLLoader.Result;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import de.saxsys.jfx.mvvm.base.View;
 
@@ -31,11 +35,21 @@ import de.saxsys.jfx.mvvm.base.View;
  * 
  * @author alexander.casall
  */
+@Singleton
 public final class ViewLoader {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ViewLoader.class);
 
-	private ViewLoader() {
+	// Using GuiceFXMLLoader instead of FXMLLoader to provide Guice support.
+	@Inject
+	private GuiceFXMLLoader fxmlLoader;
+
+	// TODO Hide constructor
+	/**
+	 * Use Guice @Inject to create Object,
+	 */
+	@Deprecated
+	public ViewLoader() {
 	}
 
 	/**
@@ -46,7 +60,8 @@ public final class ViewLoader {
 	 *            which is the code behind of a fxml
 	 * @return the tuple
 	 */
-	public static ViewTuple loadViewTuple(Class<? extends View<?>> clazz) {
+	public ViewTuple loadViewTuple(
+			@SuppressWarnings("rawtypes") Class<? extends View> clazz) {
 		String pathToFXML = "/"
 				+ clazz.getPackage().getName().replaceAll("\\.", "/") + "/"
 				+ clazz.getSimpleName() + ".fxml";
@@ -61,25 +76,24 @@ public final class ViewLoader {
 	 *            to load the controller from
 	 * @return tuple which is <code>null</code> if an error occures.
 	 */
-	public static ViewTuple loadViewTuple(final String resource) {
+	public ViewTuple loadViewTuple(final String resource) {
 		// Load FXML file
-		final URL location = ViewLoader.class.getResource(resource);
+		final URL location = getClass().getResource(resource);
 		if (location == null) {
 			LOG.error("Error loading FXML - can't load from given resourcepath: "
 					+ resource);
 			return null;
 		}
 
-		final FXMLLoader fxmlLoader = new FXMLLoader();
-		fxmlLoader.setLocation(location);
-		Parent view = null;
+		Result view = null;
 		try {
-			view = (Parent) fxmlLoader.load(location.openStream());
+			view = (Result) fxmlLoader.load(location);
 		} catch (final IOException ex) {
 			LOG.error("Error loading FXML :", ex);
 		}
+
 		final ViewTuple controllerTuple = new ViewTuple(
-				(View<?>) fxmlLoader.getController(), view);
+				(View<?>) view.getController(), (Parent) view.getRoot());
 		return controllerTuple;
 	}
 }
