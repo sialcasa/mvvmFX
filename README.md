@@ -32,6 +32,7 @@ public class PersonView extends View<PersonViewModel>{
 ...
 }
 ```
+__If you create View the belonging ViewModel will be created automatically. You can get the instance by using getViewModel() on the View Class__
 
 ```
 public class PersonViewModel implements ViewModel{
