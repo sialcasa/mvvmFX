@@ -43,6 +43,18 @@ public abstract class View<ViewModelType extends ViewModel> implements
 		Initializable {
 
 	/**
+	 * Creates a View. If no View model was set and the child class is no
+	 * 
+	 * @ViewWithoutViewModel, an exception is going to be thrown.
+	 */
+	public View() {
+		if (returnedClass() == null && !(this instanceof ViewWithoutViewModel)) {
+			throw new IllegalStateException(
+					"The View has no defined View Model. If you want to achive this use the class ViewWithoutViewModel.java instead of View.java for the inheritance");
+		}
+	}
+
+	/**
 	 * Viewmodel.
 	 */
 	private ViewModelType viewModel;
@@ -54,10 +66,11 @@ public abstract class View<ViewModelType extends ViewModel> implements
 	private Injector injector;
 
 	/**
-	 * @return the viewmodel
+	 * @return the viewmodel which represents the data that should be displayed
+	 *         by the view
 	 */
 	public final ViewModelType getViewModel() {
-		if (viewModel == null) {
+		if (viewModel == null && !(viewModel instanceof ViewWithoutViewModel)) {
 			viewModel = injector.getInstance(returnedClass());
 		}
 		return viewModel;
