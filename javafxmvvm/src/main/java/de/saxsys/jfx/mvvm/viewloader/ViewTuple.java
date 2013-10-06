@@ -19,7 +19,8 @@ import javafx.scene.Parent;
 import de.saxsys.jfx.mvvm.base.view.View;
 
 /**
- * Tuple for carriing view / code-behind pair.
+ * Tuple for carrying view / code-behind pair. The code-behind part is the class
+ * which is known as the controller class behind a FXML file.
  */
 public class ViewTuple {
 
@@ -38,7 +39,8 @@ public class ViewTuple {
 	}
 
 	/**
-	 * @return the viewmodel
+	 * @return the code behind of the FXML File (known as controller class in
+	 *         JavaFX)
 	 */
 	public View<?> getCodeBehind() {
 		return codeBehind;

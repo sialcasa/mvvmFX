@@ -121,6 +121,7 @@ public class SelectableItemList<ListType> implements SelectableStringList {
 				if (index != -1) {
 					selectedIndex.set(index);
 				} else {
+					// If item not found - Rollback
 					selectedItem.set(oldVal);
 				}
 

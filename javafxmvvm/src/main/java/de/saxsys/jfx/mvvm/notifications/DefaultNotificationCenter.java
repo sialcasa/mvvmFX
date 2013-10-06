@@ -22,7 +22,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 /**
- * Default implementation of @MVVMNotificationCenter.
+ * Default implementation of {@link NotificationCenter}.
  * 
  * @author sialcasa
  * 
@@ -33,14 +33,12 @@ class DefaultNotificationCenter extends NotificationCenter {
 			.<String, NotificationObserver> create();
 
 	@Override
-	public void addObserverForName(String name,
-			NotificationObserver observer) {
+	public void addObserverForName(String name, NotificationObserver observer) {
 		this.observersForName.put(name, observer);
 	}
 
 	@Override
-	public void removeObserverForName(String name,
-			NotificationObserver observer) {
+	public void removeObserverForName(String name, NotificationObserver observer) {
 		this.observersForName.remove(name, observer);
 	}
 

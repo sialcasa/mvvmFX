@@ -33,8 +33,9 @@ import com.google.inject.Injector;
 import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
 
 /**
- * Abstract class for a MVVMView - you have to say which viewmodel it uses. Then
- * you can use the embedded {@link ViewModel} property which is typed correctly.
+ * Abstract class for a MVVMView - you have to say which View Model it uses.
+ * Then you can use the embedded {@link ViewModel} property which is typed
+ * correctly.
  * 
  * @author alexander.casall
  * 
@@ -47,7 +48,7 @@ public abstract class View<ViewModelType extends ViewModel> implements
 	/**
 	 * Creates a View. If no View model was set and the child class is no
 	 * 
-	 * @ViewWithoutViewModel, an exception is going to be thrown.
+	 * {@link ViewWithoutViewModel}, an exception is going to be thrown.
 	 */
 	public View() {
 		if (returnedClass() == null && !(this instanceof ViewWithoutViewModel)) {
@@ -83,7 +84,7 @@ public abstract class View<ViewModelType extends ViewModel> implements
 	 * Method returns class implementing EntityInterface which was used in class
 	 * extending AbstractDAO
 	 * 
-	 * @return Class<T extends EntityInterface>
+	 * @return Class<T extends ViewModelType>
 	 */
 	@SuppressWarnings("unchecked")
 	private Class<ViewModelType> returnedClass() {
