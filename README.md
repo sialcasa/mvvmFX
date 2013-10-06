@@ -5,11 +5,16 @@ __mvvm(FX)__ is an application framework for implementing the MVVM pattern with 
 __MVVM__ is a WPF ( __.NET__ ) specific pattern. WPF and JavaFX does have parallels like Databinding and descriptive UI declaration (FXML/XAML). That is the reason I tried to adopt best practices of the development with WPF.
 
 #####Short overview#####
+You have 2 options to implement MVVM with JavaFX. It depents whether you want to use JavaFX-Properties in your model or not. 
 
-__Hint__ Commands are Callbacks
+If __no__, you should go for the first image.
 
-![MVVM principle](http://i.msdn.microsoft.com/dynimg/IC564167.png)
-[source](http://msdn.microsoft.com/en-us/library/hh848246.aspx "Short Description")
+<img src="http://buildpath.de/mvvm/mvvm.png" alt="Drawing" style="width: 200px;padding-left:20px;"/>
+<img src="http://buildpath.de/mvvm/mvvm_2.png" alt="Drawing" style="width: 200px;padding-left:60px;"/>
+
+If __yes__ go for the second image. If you use Properties in your model, you have the benefit of using their databinding and the observer mechanism.
+
+
 
 #####Further information#####
 
@@ -18,6 +23,9 @@ __Hint__ Commands are Callbacks
 [Long description](http://msdn.microsoft.com/en-us/magazine/dd419663.aspx "Long Description")
 
 #The Framework#
+##How to implement##
+<img src="http://buildpath.de/mvvm/mvvm_steps.png" alt="Drawing" style="width: 500px;padding:50px;"/>
+
 ##Parts##
 ### Base implementations ###
 
