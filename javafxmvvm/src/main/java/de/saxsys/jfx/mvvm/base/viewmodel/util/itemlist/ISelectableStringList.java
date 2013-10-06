@@ -13,7 +13,7 @@
  *See the License for the specific language governing permissions and
  *limitations under the License.
  */
-package de.saxsys.jfx.mvvm.base.viewmodel.util.selectableitemlist;
+package de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyListProperty;
@@ -24,7 +24,7 @@ import javafx.beans.property.ReadOnlyListProperty;
  * @author sialcasa
  * 
  */
-public interface SelectableStringList {
+public interface ISelectableStringList {
 
 	/**
 	 * String list which can be used by the UI to present the data.

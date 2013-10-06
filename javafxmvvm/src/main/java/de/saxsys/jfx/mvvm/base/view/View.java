@@ -46,8 +46,7 @@ public abstract class View<ViewModelType extends ViewModel> implements
 		Initializable {
 
 	/**
-	 * Creates a View. If no View model was set and the child class is no
-	 * 
+	 * Creates a View. If no View model has been set and the child class not a
 	 * {@link ViewWithoutViewModel}, an exception is going to be thrown.
 	 */
 	public View() {

@@ -1,8 +1,22 @@
-package de.saxsys.mvvm.base.viewmodel.util.selectableitemlist;
+/*
+ * Copyright 2013 Alexander Casall - Saxonia Systems AG
+ *
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+package de.saxsys.mvvm.base.viewmodel.util.itemlist;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
@@ -11,7 +25,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.saxsys.jfx.mvvm.base.viewmodel.util.selectableitemlist.SelectableItemList;
+import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.SelectableItemList;
 
 /**
  * Tests for {@link SelectableItemList}.
@@ -25,7 +39,6 @@ public class SelectableItemListTest {
 	private ObservableList<Integer> itemList;
 	private SelectableItemList<Integer> selectableItemList;
 	private IntegerProperty selectedIndex;
-	private ReadOnlyListProperty<String> stringList;
 	private ObjectProperty<Integer> selectedItem;
 
 	/**
@@ -58,7 +71,6 @@ public class SelectableItemListTest {
 		selectableItemList = new SelectableItemList<Integer>(itemList,
 				stringConverter);
 		selectedIndex = selectableItemList.selectedIndexProperty();
-		stringList = selectableItemList.stringListProperty();
 		selectedItem = selectableItemList.selectedItemProperty();
 	}
 
@@ -69,17 +81,6 @@ public class SelectableItemListTest {
 	public void testStartState() {
 		Assert.assertEquals(0, selectedIndex.get());
 		Assert.assertEquals(itemList.get(0), selectedItem.get());
-	}
-
-	/**
-	 * Check whether the string list changes when the item list changes.
-	 */
-	@Test
-	public void addItemToItemList() {
-		Assert.assertEquals(0, selectedIndex.get());
-		Assert.assertEquals(3, stringList.size());
-		itemList.add(4);
-		Assert.assertEquals(4, stringList.size());
 	}
 
 	/**
