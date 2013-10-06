@@ -9,8 +9,8 @@ You have 2 options to implement MVVM with JavaFX. It depents whether you want to
 
 If __no__, you should go for the first image.
 
-<img src="http://buildpath.de/mvvm/mvvm.png" alt="Drawing" style="width: 200px;padding-left:20px;"/>
-<img src="http://buildpath.de/mvvm/mvvm_2.png" alt="Drawing" style="width: 200px;padding-left:60px;"/>
+<img src="http://buildpath.de/mvvm/mvvm.png" alt="Drawing" width="200px" style="width: 200px;padding-left:20px;"/>
+<img src="http://buildpath.de/mvvm/mvvm_2.png" alt="Drawing" width="200px" style="width: 200px;padding-left:60px;"/>
 
 If __yes__ go for the second image. If you use Properties in your model, you have the benefit of using their databinding and the observer mechanism.
 
