@@ -56,19 +56,15 @@ public abstract class View<ViewModelType extends ViewModel> implements
 		}
 	}
 
-	/**
-	 * Viewmodel.
-	 */
+	// View Model
 	private ViewModelType viewModel;
 
-	/**
-	 * Guice Injector.
-	 */
+	// Guice Injector
 	@Inject
 	private Injector injector;
 
 	/**
-	 * @return the viewmodel which represents the data that should be displayed
+	 * @return the View Model which represents the data that should be displayed
 	 *         by the view
 	 */
 	public final ViewModelType getViewModel() {
@@ -80,8 +76,7 @@ public abstract class View<ViewModelType extends ViewModel> implements
 
 	// http://stackoverflow.com/questions/3403909/get-generic-type-of-class-at-runtime
 	/**
-	 * Method returns class implementing EntityInterface which was used in class
-	 * extending AbstractDAO
+	 * Method returns class.
 	 * 
 	 * @return Class<T extends ViewModelType>
 	 */
@@ -100,7 +95,7 @@ public abstract class View<ViewModelType extends ViewModel> implements
 	 * @return the underlying class
 	 */
 	@SuppressWarnings("rawtypes")
-	private static Class<?> getClass(Type type) {
+	private Class<?> getClass(Type type) {
 		if (type instanceof Class) {
 			return (Class) type;
 		} else if (type instanceof ParameterizedType) {
@@ -130,7 +125,7 @@ public abstract class View<ViewModelType extends ViewModel> implements
 	 * @return a list of the raw classes for the actual type arguments.
 	 */
 	@SuppressWarnings("rawtypes")
-	public static <T> List<Class<?>> getTypeArguments(Class<T> baseClass,
+	public <T> List<Class<?>> getTypeArguments(Class<T> baseClass,
 			Class<? extends T> childClass) {
 		Map<Type, Type> resolvedTypes = new HashMap<Type, Type>();
 		Type type = childClass;

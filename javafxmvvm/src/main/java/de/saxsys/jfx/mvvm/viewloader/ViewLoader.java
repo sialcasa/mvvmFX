@@ -31,7 +31,15 @@ import com.google.inject.Singleton;
 import de.saxsys.jfx.mvvm.base.view.View;
 
 /**
- * Loader class for loading FXML and code behind from Fs.
+ * Loader class for loading FXML and code behind from Fs. There are following
+ * options for loading the FXML:
+ * 
+ * <ul>
+ * <li>Providing the code behind class (controller) by calling
+ * {@link #loadViewTuple(Class)}</li>
+ * <li>Providing a path to the FXML file by calling
+ * {@link #loadViewTuple(String)}</li>
+ * </ul>
  * 
  * @author alexander.casall
  */
@@ -44,12 +52,11 @@ public final class ViewLoader {
 	@Inject
 	private GuiceFXMLLoader fxmlLoader;
 
-	// TODO Hide constructor
 	/**
 	 * Use Guice @Inject to create Object,
 	 */
-	@Deprecated
-	public ViewLoader() {
+	@Inject
+	private ViewLoader() {
 	}
 
 	/**
