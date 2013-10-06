@@ -130,6 +130,7 @@ public class SelectableItemList<ListType> implements SelectableStringList {
 
 	// If the list changed we want the recreate the string
 	private void createListEvents() {
+		// TODO Remove Listener from itemList anywhen - prevent memory leak
 		itemList.addListener(new ListChangeListener<ListType>() {
 			@Override
 			public void onChanged(
