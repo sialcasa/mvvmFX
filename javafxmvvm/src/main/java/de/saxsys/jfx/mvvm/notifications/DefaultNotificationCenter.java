@@ -20,6 +20,8 @@ import java.util.Iterator;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Default implementation of {@link NotificationCenter}.
@@ -27,7 +29,12 @@ import com.google.common.collect.Multimap;
  * @author sialcasa
  * 
  */
-class DefaultNotificationCenter extends NotificationCenter {
+@Singleton
+class DefaultNotificationCenter implements NotificationCenter {
+
+	@Inject
+	DefaultNotificationCenter() {
+	}
 
 	private Multimap<String, NotificationObserver> observersForName = ArrayListMultimap
 			.<String, NotificationObserver> create();

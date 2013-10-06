@@ -15,6 +15,7 @@
  */
 package de.saxsys.jfx.mvvm.notifications;
 
+
 /**
  * Central component to provide a notification mechanism. You can add observers
  * by using keys to get notifications for it. If you want you can pass an
@@ -24,16 +25,7 @@ package de.saxsys.jfx.mvvm.notifications;
  * @author sialcasa
  * 
  */
-public abstract class NotificationCenter {
-
-	private static final DefaultNotificationCenter DEFAULT_NOTIFICATION_CENTER = new DefaultNotificationCenter();
-
-	/**
-	 * @return default implementation of a @MVVMNotificationCenter
-	 */
-	public static NotificationCenter getDefaultNotificationCenter() {
-		return DEFAULT_NOTIFICATION_CENTER;
-	}
+public interface NotificationCenter {
 
 	/**
 	 * Add an observer to the @MVVMNotificationCenter which gets notifications

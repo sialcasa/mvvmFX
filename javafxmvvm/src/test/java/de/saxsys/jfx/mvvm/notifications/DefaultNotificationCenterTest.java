@@ -30,6 +30,7 @@ public class DefaultNotificationCenterTest {
 			.newArrayList("test").toArray();
 
 	private NotificationCenter defaultCenter;
+
 	DummyNotificationObserver observer1;
 	DummyNotificationObserver observer2;
 	DummyNotificationObserver observer3;
