@@ -13,7 +13,7 @@
  *See the License for the specific language governing permissions and
  *limitations under the License.
  */
-package de.saxsys.jfx.mvvm.base;
+package de.saxsys.jfx.mvvm.base.view;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
@@ -29,6 +29,8 @@ import javafx.fxml.Initializable;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+
+import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
 
 /**
  * Abstract class for a MVVMView - you have to say which viewmodel it uses. Then

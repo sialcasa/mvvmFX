@@ -1,4 +1,5 @@
-package de.saxsys.jfx.mvvm.base;
+package de.saxsys.jfx.mvvm.base.view;
+
 
 @SuppressWarnings("rawtypes")
 /**

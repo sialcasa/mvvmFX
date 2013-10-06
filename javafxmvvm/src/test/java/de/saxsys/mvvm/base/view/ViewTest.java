@@ -1,4 +1,4 @@
-package de.saxsys.jfx.mvvm.base;
+package de.saxsys.mvvm.base.view;
 
 /*
  * Copyright 2013 Alexander Casall - Saxonia Systems AG
@@ -19,6 +19,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import org.junit.Test;
+
+import de.saxsys.jfx.mvvm.base.view.View;
+import de.saxsys.jfx.mvvm.base.view.ViewWithoutViewModel;
+import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
 
 /**
  * Tests for the View implementation.

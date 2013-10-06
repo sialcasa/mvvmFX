@@ -28,7 +28,7 @@ import com.cathive.fx.guice.GuiceFXMLLoader.Result;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import de.saxsys.jfx.mvvm.base.View;
+import de.saxsys.jfx.mvvm.base.view.View;
 
 /**
  * Loader class for loading FXML and code behind from Fs.

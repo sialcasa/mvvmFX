@@ -1,5 +1,3 @@
-package de.saxsys.jfx.mvvm.viewloader;
-
 /*
  * Copyright 2013 Alexander Casall - Saxonia Systems AG
  *
@@ -15,39 +13,30 @@ package de.saxsys.jfx.mvvm.viewloader;
  *See the License for the specific language governing permissions and
  *limitations under the License.
  */
-import javafx.scene.Parent;
-import de.saxsys.jfx.mvvm.base.view.View;
+package de.saxsys.jfx.mvvm.base.viewmodel.util.selectableitemlist;
+
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyListProperty;
 
 /**
- * Tuple for carriing view / code-behind pair.
+ * Interface to hide the visibility to an {@link SelectableItemList} in a view.
+ * 
+ * @author sialcasa
+ * 
  */
-public class ViewTuple {
-
-	private final View<?> codeBehind;
-	private final Parent view;
+public interface SelectableStringList {
 
 	/**
-	 * @param codeBehind
-	 *            to set
-	 * @param view
-	 *            to set
+	 * String list which can be used by the UI to present the data.
+	 * 
+	 * @return string list
 	 */
-	public ViewTuple(final View<?> codeBehind, final Parent view) {
-		this.codeBehind = codeBehind;
-		this.view = view;
-	}
+	public ReadOnlyListProperty<String> stringListProperty();
 
 	/**
-	 * @return the viewmodel
+	 * Represents an {@link Integer} which is the current selection index.
+	 * 
+	 * @return the index property
 	 */
-	public View<?> getCodeBehind() {
-		return codeBehind;
-	}
-
-	/**
-	 * @return the view
-	 */
-	public Parent getView() {
-		return view;
-	}
+	public IntegerProperty selectedIndexProperty();
 }

@@ -13,7 +13,7 @@
  *See the License for the specific language governing permissions and
  *limitations under the License.
  */
-package de.saxsys.jfx.mvvm.base;
+package de.saxsys.jfx.mvvm.base.viewmodel;
 
 /**
  * Marker inferface for a ViewModel. Some additional hints to this layer:
