@@ -1,13 +1,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
 	<groupId>de.saxsys</groupId>
 	<artifactId>mvvmFX</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.1</version>
+	<version>0.1-alpha-1-SNAPSHOT</version>
 	<name>Application Framework for MVVM with JavaFX</name>
+	<description>This Framework provides base classes and additional tooling to implement the MVVM pattern with JavaFX.</description>
 	<url>http://www.saxsys.de</url>
-	
+	<developers>
+		<developer>
+			<email>alexander.casall@saxsys.de</email>
+			<name>Alexander Casall</name>
+			<url>http://www.alexander-casall.de</url>
+			<id>sialcasa</id>
+		</developer>
+	</developers>
+
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -22,34 +38,27 @@
 
 
 	<scm>
-		<url>https://github.com/sialcasa/jfx-mvvm</url>
-		<connection>scm:git:git://github.com/sialcasa/jfx-mvvm.git</connection>
-		<developerConnection>scm:git:git@github.com:sialcasa/jfx-mvvm.git</developerConnection>
+		<url>https://github.com/sialcasa/mvvmFX</url>
+		<connection>scm:git:git://github.com/sialcasa/mvvmFX.git</connection>
+		<developerConnection>scm:git:git@github.com:sialcasa/mvvmFX.git</developerConnection>
 	</scm>
-
-	<developers>
-		<developer>
-			<email>alexander.casall@saxsys.de</email>
-			<name>Alexander Casall</name>
-			<url>http://www.alexander-casall.de</url>
-			<id>sialcasa</id>
-		</developer>
-	</developers>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
+	<!-- <profiles> <profile> <id>release-sign-artifacts</id> <activation> <property> 
+		<name>performRelease</name> <value>true</value> </property> </activation> 
+		<build> <plugins> <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-gpg-plugin</artifactId> 
+		<version>1.4</version> <executions> <execution> <id>sign-artifacts</id> <phase>verify</phase> 
+		<goals> <goal>sign</goal> </goals> </execution> </executions> </plugin> </plugins> 
+		</build> </profile> </profiles> -->
 
 	<dependencies>
 		<!-- You have to resolve the dependency by yourself. Maybe like this: <dependency> 
 			<groupId>com.oracle</groupId> <artifactId>javafx</artifactId> <version>2.2.3</version> 
 			<scope>system</scope> <systemPath>${project.basedir}/lib/jfxrt.jar</systemPath> 
 			</dependency> -->
-		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>javafx</artifactId>
-			<version>2.2</version>
-		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -61,7 +70,6 @@
 			<artifactId>commons-lang</artifactId>
 			<version>2.6</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -71,6 +79,11 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.6.6</version>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>javafx</artifactId>
+			<version>2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -83,24 +96,89 @@
 			<version>1.8.4</version>
 			<scope>test</scope>
 		</dependency>
-	<dependency>
-  			<groupId>com.cathive.fx</groupId>
-  			<artifactId>fx-guice</artifactId>
-  			<version>2.1.2</version>
+		<dependency>
+			<groupId>com.cathive.fx</groupId>
+			<artifactId>fx-guice</artifactId>
+			<version>2.1.2</version>
 		</dependency>
 	</dependencies>
 
 	<build>
-		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>2.5.1</version>
 				<configuration>
+					<encoding>UTF-8</encoding>
 					<source>1.7</source>
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<quiet>true</quiet>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-doc</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>release-and-sign-mvvmfx</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins></plugins>
+			</build>
+		</profile>
+	</profiles>
+
+
+
+	<organization>
+		<name>Saxonia Systems AG</name>
+		<url>www.saxsys.de</url>
+	</organization>
 </project>
