@@ -27,7 +27,28 @@ If __yes__ go for the second image. If you use Properties in your model, you hav
 <img src="http://buildpath.de/mvvm/mvvm_steps.png" alt="Drawing" style="width: 500px;padding:50px;"/>
 
 ##Parts##
-### Base implementations ###
+###Custom Application Type###
+If you want to use _mvvmFX_ you have to extend from __de.saxsys.jfx.mvvm.MVVMApplication__ instead of __javafx.Application__
+
+```
+public class Starter extends MVVMApplication {
+
+	public static void main(final String[] args) {
+		launch(args);
+	}
+
+	@Override
+	public void start(final Stage stage) throws Exception {
+	}
+
+	@Override
+	public void initGuiceModules(List<Module> modules) throws Exception {
+		//add Guice Modules if you want
+	}
+
+}
+```
+### MVVM Base Classes ###
 
 __de.saxsys.jfx.mvvm.base__
 
@@ -47,6 +68,37 @@ public class PersonViewModel implements ViewModel{
 ...
 }
 ```
+
+
+#### Extended FXML Loader ####
+__de.saxsys.jfx.mvvm.viewloader__
+
+The __ViewLoader__ loads tuples of a given FXML file. The tuple carries the code behind part (controller class) and the loaded __node__ which is represented by the FXML.
+
+You have two options to use the __ViewLoader__
+##### Use ViewLoader with resource path#####
+```
+@Inject
+private ViewLoader viewLoader;
+
+[…]
+
+viewLoader.loadViewTuple("resource/path/to/FXML")
+```
+##### Use ViewLoader by a given code behind class#####
+The FXML File which is related to the code behind part has to be in the same package and has to have the same name like the code behind!
+
+If the code behind class is __de.saxsys.PersonView__ the FXML has to be in the package __de.saxsys__ and has to be named __PersonView.fxml__.
+
+```
+@Inject
+private ViewLoader viewLoader;
+
+[…]
+
+viewLoader.loadViewTuple(CodeBehind.class);
+```
+
 ### Notifications ###
 __de.saxsys.jfx.mvvm.notifications__
 
@@ -55,7 +107,10 @@ This package provides an observer mechanism that you can use to send notificatio
 
 #####Listen for a notification####
 ```
-NotificationCenter notificationCenter = NotificationCenter.getDefaultNotificationCenter();
+@Inject
+private NotificationCenter notificationCenter;
+
+[...]
 
 notificationCenter.addObserverForName("someNotification",
 			new NotificationObserver() {
@@ -69,29 +124,13 @@ notificationCenter.addObserverForName("someNotification",
 ```
 ##### Send a notification #####
 ```
-NotificationCenter notificationCenter = NotificationCenter.getDefaultNotificationCenter();
+@Inject
+private NotificationCenter notificationCenter;
+
+[...]
 
 notificationCenter.postNotification("someNotification");
 
 notificationCenter.postNotification("someNotification","arg1",new CustomArgTwo());
 ```
 
-#### Extended FXML Loader ####
-__de.saxsys.jfx.mvvm.viewloader__
-
-The __ViewLoader__ loads tuples of a given FXML file. The tuple carries the code behind part (controller class) and the loaded __node__ which is represented by the FXML.
-
-You have two options to use the __ViewLoader__
-##### Use ViewLoader with resource path#####
-```
-ViewLoader.loadViewTuple("resource/path/to/FXML")
-```
-##### Use ViewLoader by a given code behind class#####
-The FXML File which is related to the code behind part has to be in the same package and has to have the same name like the code behind!
-
-If the code behind class is __de.saxsys.PersonView__ the FXML has to be in the package __de.saxsys__ and has to be named __PersonView.fxml__.
-
-```
-//CodeBehind implements Initializable
-ViewLoader.loadViewTuple(CodeBehind.class);
-```
