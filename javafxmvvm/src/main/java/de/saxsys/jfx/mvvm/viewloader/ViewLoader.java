@@ -18,17 +18,18 @@ package de.saxsys.jfx.mvvm.viewloader;
 import java.io.IOException;
 import java.net.URL;
 
+import javax.inject.Inject;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cathive.fx.guice.GuiceFXMLLoader;
-import com.cathive.fx.guice.GuiceFXMLLoader.Result;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import de.saxsys.jfx.mvvm.base.view.View;
+import de.saxsys.jfx.mvvm.di.FXMLLoaderWrapper;
 
 /**
  * Loader class for loading FXML and code behind from Fs. There are following
@@ -43,21 +44,12 @@ import de.saxsys.jfx.mvvm.base.view.View;
  * 
  * @author alexander.casall
  */
-@Singleton
 public final class ViewLoader {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ViewLoader.class);
 
-	// Using GuiceFXMLLoader instead of FXMLLoader to provide Guice support.
 	@Inject
-	private GuiceFXMLLoader fxmlLoader;
-
-	/**
-	 * Use Guice @Inject to create Object,
-	 */
-	@Inject
-	private ViewLoader() {
-	}
+	private FXMLLoaderWrapper fxmlLoaderWrapper;
 
 	/**
 	 * Load the view (Code behind + Node from FXML) by a given Code behind
@@ -91,16 +83,15 @@ public final class ViewLoader {
 					+ resource);
 			return null;
 		}
-
-		Result view = null;
+		
 		try {
-			view = (Result) fxmlLoader.load(location);
+			
+			final ViewTuple controllerTuple = fxmlLoaderWrapper.load(location);
+			return controllerTuple;
 		} catch (final IOException ex) {
 			LOG.error("Error loading FXML :", ex);
+			return null;
 		}
 
-		final ViewTuple controllerTuple = new ViewTuple(
-				(View<?>) view.getController(), (Parent) view.getRoot());
-		return controllerTuple;
 	}
 }

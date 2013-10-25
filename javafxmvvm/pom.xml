@@ -22,6 +22,10 @@
 			<url>http://www.alexander-casall.de</url>
 			<id>sialcasa</id>
 		</developer>
+		<developer>
+			<email>manuel.mauky@saxsys.de</email>
+			<name>Manuel Mauky</name>
+		</developer>
 	</developers>
 
 	<licenses>
@@ -64,12 +68,27 @@
 			<version>2.2</version>
 			<systemPath>${java.home}/lib/jfxrt.jar</systemPath>
 		</dependency>
+
+		<!-- Annotations for Dependency Injection -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.weld.se</groupId>
+			<artifactId>weld-se</artifactId>
+			<version>2.1.0.Final</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
@@ -90,16 +109,25 @@
 			<artifactId>guava</artifactId>
 			<version>12.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.cathive.fx</groupId>
+			<artifactId>fx-guice</artifactId>
+			<version>2.1.2</version>
+		</dependency>
+
+		<!-- Testing Frameworks -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>1.9.5</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.cathive.fx</groupId>
-			<artifactId>fx-guice</artifactId>
-			<version>2.1.2</version>
 		</dependency>
 	</dependencies>
 

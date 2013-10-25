@@ -1,8 +1,11 @@
 *.class
 target
+
+# eclipse #
 *.prefs
 .classpath
 .project
+.metadata
 
 
 # Package Files #

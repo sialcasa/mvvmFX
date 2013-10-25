@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://xmlns.jcp.org/xml/ns/javaee">
+
+	<!-- Guice classes must not be available for injection by CDI. Without this 
+		configuration you would need to add @Alternative annotation to all Guice 
+		specific classes that implement an interface for which there is also a CDI 
+		implementation (like wrapper classes that are introduced to encapsulate the 
+		DI framework) -->
+	<scan>
+		<exclude name="de.saxsys.jfx.mvvm.di.guice.**" />
+	</scan>
+
+
+</beans>
