@@ -1,4 +1,4 @@
-package de.saxsys.mvvm.base.view;
+package de.saxsys.jfx.mvvm.base.view;
 
 /*
  * Copyright 2013 Alexander Casall - Saxonia Systems AG

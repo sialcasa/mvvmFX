@@ -1,4 +1,4 @@
-package de.saxsys.mvvm.base.viewmodel.util.itemlist;
+package de.saxsys.jfx.mvvm.viewmodel.util.itemlist;
 
 /*
  * Copyright 2013 Alexander Casall - Saxonia Systems AG

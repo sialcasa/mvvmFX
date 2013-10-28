@@ -13,7 +13,7 @@
  *See the License for the specific language governing permissions and
  *limitations under the License.
  */
-package de.saxsys.mvvm.base.viewmodel.util.itemlist;
+package de.saxsys.jfx.mvvm.viewmodel.util.itemlist;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
