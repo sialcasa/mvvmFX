@@ -1,37 +1,37 @@
 package de.saxsys.jfx;
 
-import java.util.List;
-
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import com.google.inject.Inject;
-import com.google.inject.Module;
+import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 
 import de.saxsys.jfx.exampleapplication.view.maincontainer.MainContainerView;
-import de.saxsys.jfx.mvvm.di.guice.MvvmGuiceApplication;
+import de.saxsys.jfx.mvvm.di.cdi.StartupEvent;
 import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
 import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
 
 /**
- * Entry point of the application.
+ * This class is invoked by the CDI container with the {@link StartupEvent}. It
+ * contains the JavaFX specific code to start the application.
  * 
- * @author sialcasa
+ * @author manuel.mauky
  * 
  */
-public class Starter extends MvvmGuiceApplication {
+public class App {
 
 	// Get the MVVM View Loader
 	@Inject
 	private ViewLoader viewLoader;
 
-	public static void main(final String[] args) {
-		launch(args);
-	}
+	/**
+	 * Listen for the {@link StartupEvent} and create the main scene for the
+	 * application.
+	 */
+	public void startApplication(@Observes StartupEvent startupEvent) {
+		Stage stage = startupEvent.getPrimaryStage();
 
-	@Override
-	public void start(final Stage stage) throws Exception {
 		final ViewTuple tuple = viewLoader
 				.loadViewTuple(MainContainerView.class);
 		// Locate View for loaded FXML file
@@ -40,11 +40,6 @@ public class Starter extends MvvmGuiceApplication {
 		final Scene scene = new Scene(view);
 		stage.setScene(scene);
 		stage.show();
-	}
-
-	@Override
-	public void initGuiceModules(List<Module> modules) throws Exception {
-
 	}
 
 }

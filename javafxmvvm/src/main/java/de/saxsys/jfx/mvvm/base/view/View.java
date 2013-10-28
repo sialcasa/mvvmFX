@@ -25,12 +25,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import javafx.fxml.Initializable;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-
 import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
+import de.saxsys.jfx.mvvm.di.InjectionWrapper;
 
 /**
  * Abstract class for a MVVMView - you have to say which View Model it uses.
@@ -59,17 +59,17 @@ public abstract class View<ViewModelType extends ViewModel> implements
 	// View Model
 	private ViewModelType viewModel;
 
-	// Guice Injector
 	@Inject
-	private Injector injector;
-
+	private InjectionWrapper injectionFacade;
+	
+	
 	/**
 	 * @return the View Model which represents the data that should be displayed
 	 *         by the view
 	 */
 	public final ViewModelType getViewModel() {
 		if (viewModel == null && !(viewModel instanceof ViewWithoutViewModel)) {
-			viewModel = injector.getInstance(returnedClass());
+			viewModel = injectionFacade.getInstance(returnedClass());
 		}
 		return viewModel;
 	}
