@@ -27,11 +27,11 @@ If __yes__ go for the second image. If you use Properties in your model, you hav
 <img src="http://buildpath.de/mvvm/mvvm_steps.png" alt="Drawing" style="width: 500px;padding:50px;"/>
 
 ##Parts##
-###Custom Application Type###
-If you want to use _mvvmFX_ you have to extend from __de.saxsys.jfx.mvvm.MVVMApplication__ instead of __javafx.Application__
+###2 new Custom Application Type###
+####__MvvmGuiceApplication__ instead of __javafx.Application__ for Guice support####
 
 ```
-public class Starter extends MVVMApplication {
+public class Starter extends MvvmGuiceApplication {
 
 	public static void main(final String[] args) {
 		launch(args);
@@ -48,6 +48,46 @@ public class Starter extends MVVMApplication {
 
 }
 ```
+####__MvvmCdiApplication__ instead of __javafx.Application__ for CDI-Weld support####
+
+```
+public class Starter extends MvvmCdiApplication{
+	
+	public static void main(String...args){
+		launch(args);
+	}
+}
+```
+
+in addition you have to provide an App class, which receives the StartUp Event of the weld-container
+
+```
+	public class App {
+
+	// Get the MVVM View Loader
+	@Inject
+	private ViewLoader viewLoader;
+
+	/**
+	 * Listen for the {@link StartupEvent} and create the main scene for the
+	 * application.
+	 */
+	public void startApplication(@Observes StartupEvent startupEvent) {
+		Stage stage = startupEvent.getPrimaryStage();
+
+		final ViewTuple tuple = viewLoader
+				.loadViewTuple(MainContainerView.class);
+		// Locate View for loaded FXML file
+		final Parent view = tuple.getView();
+
+		final Scene scene = new Scene(view);
+		stage.setScene(scene);
+		stage.show();
+		}
+	}
+}
+```
+
 ### MVVM Base Classes ###
 
 __de.saxsys.jfx.mvvm.base__
@@ -69,6 +109,12 @@ public class PersonViewModel implements ViewModel{
 }
 ```
 
+__de.saxsys.jfx.mvvm.base.viewmodel.util__
+
+__de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist__
+
+This class provides a __ItemList__ which maps from an Object representation to a String. You can use this to map lists from the model to the view on an abstract way. In addition there is a __SelectableItemList__ which provides an addition funcitonality to select an index by setting the index value __OR__ an object in the object list.
+__ incomplete documentation __ 
 
 #### Extended FXML Loader ####
 __de.saxsys.jfx.mvvm.viewloader__
@@ -86,9 +132,9 @@ private ViewLoader viewLoader;
 viewLoader.loadViewTuple("resource/path/to/FXML")
 ```
 ##### Use ViewLoader by a given code behind class#####
-The FXML File which is related to the code behind part has to be in the same package and has to have the same name like the code behind!
+The FXML File which is related to the code behind part has to be in the corresponding resource folder and has to have the same name like the code behind!
 
-If the code behind class is __de.saxsys.PersonView__ the FXML has to be in the package __de.saxsys__ and has to be named __PersonView.fxml__.
+If the code behind class is __de.saxsys.PersonView__ the FXML has to be in the resource folder __de/saxsys__ and has to be named __PersonView.fxml__.
 
 ```
 @Inject
@@ -133,4 +179,49 @@ notificationCenter.postNotification("someNotification");
 
 notificationCenter.postNotification("someNotification","arg1",new CustomArgTwo());
 ```
+### SizeBindings ###
+__de.saxsys.jfx.mvvm.utils.SizeBindings__
 
+We often had the case, that an element should have the same size or at least the width of another element. You would have to do it on this way:
+
+```
+a.minWidthProperty().bind(b.widthProperty());
+a.minheightProperty().bind(b.heightProperty())
+a.maxWidthProperty().bind(b.widthProperty());
+a.maxheightProperty().bind(b.heightProperty())
+```
+
+With the SizeBindings class you can do instead things like
+
+```
+SizeBindings.bindSize(a,b);
+```
+
+### ListenerCleaner ###
+__de.saxsys.jfx.mvvm.utils.ListenerCleaner__
+
+This class is used for housekeeping of listeners. If you have an element which registers Listeners to a long living Property you have to remove the listener by hand when you want to throw the element away.
+
+You can use the Interface ICleanable to make your element cleanable. You should call the clean function of the element, when you remove it from the scene graph / throw it away. 
+
+```
+public class CustomPane extends Pane implements ICleanable{
+
+@Inject
+ListenerCleaner cleaner;
+
+	public CustomPane(SomeLongLiving longLiving){
+		ChangeListener<Double> listener = new ChangeListener().......
+	
+		longLiving.fooProperty().addListener(listener);
+		cleaner.put(longLiving.fooProperty(),listener);
+	}
+	
+	@Override
+	public void clean(){
+		//Kills all Listeners
+		cleaner.clean();
+	}
+
+}
+```
