@@ -17,14 +17,15 @@ package de.saxsys.jfx.mvvm.viewloader;
  */
 import javafx.scene.Parent;
 import de.saxsys.jfx.mvvm.base.view.View;
+import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
 
 /**
  * Tuple for carrying view / code-behind pair. The code-behind part is the class
  * which is known as the controller class behind a FXML file.
  */
-public class ViewTuple {
+public class ViewTuple <ViewModelType extends ViewModel> {
 
-	private final View<?> codeBehind;
+	private final View<ViewModelType> codeBehind;
 	private final Parent view;
 
 	/**
@@ -33,7 +34,7 @@ public class ViewTuple {
 	 * @param view
 	 *            to set
 	 */
-	public ViewTuple(final View<?> codeBehind, final Parent view) {
+	public ViewTuple(final View<ViewModelType> codeBehind, final Parent view) {
 		this.codeBehind = codeBehind;
 		this.view = view;
 	}
@@ -42,7 +43,7 @@ public class ViewTuple {
 	 * @return the code behind of the FXML File (known as controller class in
 	 *         JavaFX)
 	 */
-	public View<?> getCodeBehind() {
+	public View<ViewModelType> getCodeBehind() {
 		return codeBehind;
 	}
 

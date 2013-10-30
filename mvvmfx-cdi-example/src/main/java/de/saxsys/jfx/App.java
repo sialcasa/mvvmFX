@@ -8,6 +8,7 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import de.saxsys.jfx.exampleapplication.view.maincontainer.MainContainerView;
+import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
 import de.saxsys.jfx.mvvm.di.cdi.StartupEvent;
 import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
 import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
@@ -32,7 +33,7 @@ public class App {
 	public void startApplication(@Observes StartupEvent startupEvent) {
 		Stage stage = startupEvent.getPrimaryStage();
 
-		final ViewTuple tuple = viewLoader
+		final ViewTuple<ViewModel> tuple = viewLoader
 				.loadViewTuple(MainContainerView.class);
 		// Locate View for loaded FXML file
 		final Parent view = tuple.getView();

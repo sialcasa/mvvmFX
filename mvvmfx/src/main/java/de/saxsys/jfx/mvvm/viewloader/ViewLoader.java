@@ -27,8 +27,8 @@ import javafx.scene.Parent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import de.saxsys.jfx.mvvm.base.view.View;
+import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
 import de.saxsys.jfx.mvvm.di.FXMLLoaderWrapper;
 
 /**
@@ -59,11 +59,11 @@ public final class ViewLoader {
 	 *            which is the code behind of a fxml
 	 * @return the tuple
 	 */
-	public ViewTuple loadViewTuple(
-			@SuppressWarnings("rawtypes") Class<? extends View> clazz) {
+	public <ViewType extends ViewModel> ViewTuple<ViewType> loadViewTuple(
+			Class<? extends View> ViewType) {
 		String pathToFXML = "/"
-				+ clazz.getPackage().getName().replaceAll("\\.", "/") + "/"
-				+ clazz.getSimpleName() + ".fxml";
+				+ ViewType.getPackage().getName().replaceAll("\\.", "/") + "/"
+				+ ViewType.getSimpleName() + ".fxml";
 
 		return loadViewTuple(pathToFXML);
 	}
