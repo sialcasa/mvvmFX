@@ -7,9 +7,16 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+
+import javax.inject.Inject;
+
 import de.saxsys.jfx.exampleapplication.view.personlogin.PersonLoginView;
 import de.saxsys.jfx.exampleapplication.view.personwelcome.PersonWelcomeView;
+import de.saxsys.jfx.exampleapplication.viewmodel.personwelcome.PersonWelcomeViewModel;
 import de.saxsys.jfx.mvvm.base.view.ViewWithoutViewModel;
+import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
+import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
 
 /**
  * Main View which creates the necessary subviews, and manages them. Does not
@@ -29,13 +36,12 @@ public class MainContainerView extends ViewWithoutViewModel {
 	private PersonLoginView loginViewController;
 
 	@FXML
-	// Injection of the login which is declared in the FXML File
-	private StackPane welcomeView; // Value injected by FXMLLoader
+	// Injection of the vbox where the person welcome area will be
+	private VBox personInfoVbox;
 
-	@FXML
-	// Inject the Code behind instance of the welcomeView by using the
-	// nameconvention ...Controller
-	private PersonWelcomeView welcomeViewController;
+	@Inject
+	// ViewLoder
+	private ViewLoader viewLoader;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -46,11 +52,14 @@ public class MainContainerView extends ViewWithoutViewModel {
 					@Override
 					public void changed(ObservableValue<? extends Number> arg0,
 							Number oldValue, Number newValue) {
-						welcomeViewController.getViewModel().setPersonId(
-								newValue.intValue());
+						ViewTuple<PersonWelcomeViewModel> loadViewTuple = viewLoader
+								.loadViewTuple(PersonWelcomeView.class);
+						loadViewTuple.getCodeBehind().getViewModel()
+								.setPersonId(newValue.intValue());
+						personInfoVbox.getChildren().add(
+								loadViewTuple.getView());
 					}
 				});
 
-		welcomeView.setVisible(true);
 	}
 }
