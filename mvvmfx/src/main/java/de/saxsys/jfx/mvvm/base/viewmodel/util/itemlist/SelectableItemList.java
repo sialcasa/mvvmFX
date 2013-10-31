@@ -25,7 +25,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
-import javafx.util.StringConverter;
 
 /**
  * Element that you can use in a View Model to transform any list to a string
@@ -42,10 +41,11 @@ import javafx.util.StringConverter;
  * }
  * </code>
  * 
- * </b> You have to provide a {@link StringConverter} to define how to convert a
- * string. In addition you have properties which represents the actual selection
- * state of a list. You can set either the {@link #selectedIndexProperty()} or
- * the {@link #selectedItemProperty()} and the other will change automatically.
+ * </b> You have to provide a {@link ModelToStringMapper} to define how to map
+ * from your model representation to a string. In addition you have properties
+ * which represents the actual selection state of a list. You can set either the
+ * {@link #selectedIndexProperty()} or the {@link #selectedItemProperty()} and
+ * the other will change automatically.
  * 
  * @author sialcasa
  * 
@@ -62,16 +62,16 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 
 	/**
 	 * Creates a {@link SelectableItemList} by a given list of items and a
-	 * string converter.
+	 * {@link ModelToStringMapper}.
 	 * 
 	 * @param itemList
 	 *            which should be transformed for the UI
-	 * @param stringConverter
+	 * @param modelToStringMapper
 	 *            which is used for transformation
 	 */
 	public SelectableItemList(ObservableList<ListType> itemList,
-			final StringConverter<ListType> stringConverter) {
-		super(itemList, stringConverter);
+			final ModelToStringMapper<ListType> modelToStringMapper) {
+		super(itemList, modelToStringMapper);
 		// Order of processing is important!
 		selectedItem.set(itemList.get(selectedIndex.get()));
 		createIndexEvents();

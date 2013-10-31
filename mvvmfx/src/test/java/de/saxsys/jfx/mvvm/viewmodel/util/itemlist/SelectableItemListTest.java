@@ -20,12 +20,12 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.util.StringConverter;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ModelToStringMapper;
 import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.SelectableItemList;
 
 /**
@@ -39,7 +39,7 @@ public class SelectableItemListTest {
 	private final Person person3 = new Person("Person 1");
 	private final Person person2 = new Person("Person 2");
 	private final Person person1 = new Person("Person 3");
-	private StringConverter<Person> stringConverter;
+	private ModelToStringMapper<Person> stringMapper;
 	private ObservableList<Person> listWithModelObjects;
 	private SelectableItemList<Person> selectableItemList;
 	private IntegerProperty selectedIndex;
@@ -58,21 +58,16 @@ public class SelectableItemListTest {
 		listWithModelObjects.add(person3);
 
 		// Create the converter
-		stringConverter = new StringConverter<Person>() {
+		stringMapper = new ModelToStringMapper<Person>() {
 			@Override
-			public Person fromString(String name) {
-				return new Person(name);
-			}
-
-			@Override
-			public String toString(Person person) {
-				return person.toString();
+			public String toString(Person object) {
+				return object.name;
 			}
 		};
 
 		// Convenience
 		selectableItemList = new SelectableItemList<Person>(
-				listWithModelObjects, stringConverter);
+				listWithModelObjects, stringMapper);
 		selectedIndex = selectableItemList.selectedIndexProperty();
 		selectedItem = selectableItemList.selectedItemProperty();
 	}

@@ -17,13 +17,13 @@ package de.saxsys.jfx.mvvm.viewmodel.util.itemlist;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.util.StringConverter;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ItemList;
+import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ModelToStringMapper;
 
 /**
  * Tests for {@link ItemList}.
@@ -33,10 +33,12 @@ import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ItemList;
  */
 public class ItemListTest {
 
+	private static final String PERSON3_NAME = "Person3";
+	private static final String PREFIX = "SOME WORDS ";
 	// List which comes from the model and should be displayed in a view.
 	private ObservableList<Person> listWithModelObjects;
 	// Defines the mapping between model elements and view representation
-	private StringConverter<Person> stringConverter;
+	private ModelToStringMapper<Person> stringMapper;
 	// New element which encapsulates and maps the 2 lists
 	private ItemList<Person> itemList;
 
@@ -50,22 +52,27 @@ public class ItemListTest {
 		listWithModelObjects = FXCollections.observableArrayList();
 		listWithModelObjects.add(new Person("Person1"));
 		listWithModelObjects.add(new Person("Person2"));
-		listWithModelObjects.add(new Person("Person3"));
+		listWithModelObjects.add(new Person(PERSON3_NAME));
 
-		// Create the converter
-		stringConverter = new StringConverter<Person>() {
+		// Create the mapper
+		stringMapper = new ModelToStringMapper<Person>() {
 			@Override
-			public Person fromString(String name) {
-				return new Person(name);
-			}
-
-			@Override
-			public String toString(Person person) {
-				return person.toString();
+			public String toString(Person object) {
+				return PREFIX + object.name;
 			}
 		};
 
-		itemList = new ItemList<>(listWithModelObjects, stringConverter);
+		itemList = new ItemList<>(listWithModelObjects, stringMapper);
+	}
+
+	/**
+	 * Checks whether the mapping from the model to the string representation
+	 * works.
+	 */
+	@Test
+	public void mapFromModelToString() {
+		Assert.assertEquals(PREFIX + PERSON3_NAME, itemList
+				.stringListProperty().get(2));
 	}
 
 	/**
@@ -79,7 +86,6 @@ public class ItemListTest {
 		listWithModelObjects.add(new Person("addedPerson"));
 		Assert.assertEquals(4, itemList.stringListProperty().size());
 		Assert.assertEquals(4, listWithModelObjects.size());
-
 	}
 
 	/**

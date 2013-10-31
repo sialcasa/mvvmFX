@@ -23,7 +23,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
-import javafx.util.StringConverter;
 
 /**
  * Element that you can use in a View Model to transform any list to a string
@@ -38,7 +37,7 @@ import javafx.util.StringConverter;
  * }
  * </code>
  * 
- * </b> You have to provide a {@link StringConverter} to define how to map
+ * </b> You have to provide a {@link ModelToStringMapper} to define how to map
  * between the model type and a string and back. In addition you have properties
  * which represents the actual selection state of a list.
  * 
@@ -50,7 +49,7 @@ import javafx.util.StringConverter;
  */
 public class ItemList<ListType> {
 	// Converter
-	private final StringConverter<ListType> stringConverter;
+	private final ModelToStringMapper<ListType> modelToStringMapper;
 
 	// The two lists - List which was provided and the String representation of
 	// the list
@@ -64,12 +63,12 @@ public class ItemList<ListType> {
 	 * 
 	 * @param itemList
 	 *            which should be transformed for the UI
-	 * @param stringConverter
+	 * @param modelToStringMapper
 	 *            which is used for transformation
 	 */
 	public ItemList(ObservableList<ListType> itemList,
-			final StringConverter<ListType> stringConverter) {
-		this.stringConverter = stringConverter;
+			final ModelToStringMapper<ListType> modelToStringMapper) {
+		this.modelToStringMapper = modelToStringMapper;
 		createListEvents();
 		this.itemListProperty().set(itemList);
 	}
@@ -83,7 +82,8 @@ public class ItemList<ListType> {
 					javafx.collections.ListChangeListener.Change<? extends ListType> listEvent) {
 				stringList.clear();
 				for (ListType item : listEvent.getList()) {
-					stringList.add(ItemList.this.stringConverter.toString(item));
+					stringList.add(ItemList.this.modelToStringMapper
+							.toString(item));
 				}
 			}
 		});
