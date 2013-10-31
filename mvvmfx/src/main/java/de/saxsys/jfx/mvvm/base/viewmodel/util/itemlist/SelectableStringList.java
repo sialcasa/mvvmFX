@@ -16,7 +16,7 @@
 
 package de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist;
 
-import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 
 /**
@@ -25,7 +25,7 @@ import javafx.beans.property.ReadOnlyListProperty;
  * @author sialcasa
  * 
  */
-public interface ISelectableStringList {
+public interface SelectableStringList {
 
 	/**
 	 * String list which can be used by the UI to present the data.
@@ -39,5 +39,15 @@ public interface ISelectableStringList {
 	 * 
 	 * @return the index property
 	 */
-	public IntegerProperty selectedIndexProperty();
+	public ReadOnlyIntegerProperty selectedIndexProperty();
+
+	/**
+	 * @see #selectedIndexProperty()
+	 */
+	public int getSelectedIndex();
+
+	/**
+	 * @see #selectedIndexProperty();
+	 */
+	public void select(int personId);
 }

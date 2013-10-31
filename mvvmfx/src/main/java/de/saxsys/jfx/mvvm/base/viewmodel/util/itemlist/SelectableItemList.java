@@ -16,15 +16,15 @@
 
 package de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist;
 
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SingleSelectionModel;
 
 /**
  * Element that you can use in a View Model to transform any list to a string
@@ -32,7 +32,7 @@ import javafx.scene.control.ListView;
  * {@link ListView}. <b>You should only expose the {@link #stringListProperty()}
  * and/or the {@link #selectedIndexProperty()} to the view, otherwise you create
  * a visibility of the view to the model. If you want to expose it more
- * convenient, use the {@link ISelectableStringList} interface to hide all
+ * convenient, use the {@link SelectableStringList} interface to hide all
  * dependencies to the model. Create something like this in your View Model:
  * 
  * <code>
@@ -54,10 +54,21 @@ import javafx.scene.control.ListView;
  *            list
  */
 public class SelectableItemList<ListType> extends ItemList<ListType> implements
-		ISelectableStringList {
+		SelectableStringList {
 
 	// Indeces
-	private IntegerProperty selectedIndex = new SimpleIntegerProperty();
+	private SingleSelectionModel<ListType> selectionModel = new SingleSelectionModel<ListType>() {
+		@Override
+		protected int getItemCount() {
+			return itemListProperty().size();
+		}
+
+		@Override
+		protected ListType getModelItem(int arg0) {
+			return itemListProperty().get(arg0);
+		}
+	};
+
 	private ObjectProperty<ListType> selectedItem = new SimpleObjectProperty<>();
 
 	/**
@@ -73,27 +84,30 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 			final ModelToStringMapper<ListType> modelToStringMapper) {
 		super(itemList, modelToStringMapper);
 		// Order of processing is important!
-		selectedItem.set(itemList.get(selectedIndex.get()));
+
+		selectedItem.set(null);
 		createIndexEvents();
 	}
 
 	// When the index property changed we have to change the selected item too
 	// When the selected item changed we want to set the index property too
 	private void createIndexEvents() {
-		selectedIndex.addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> bean,
-					Number oldVal, Number newVal) {
-				try {
-					int index = newVal.intValue();
-					ListType item = itemListProperty().get(index);
-					selectedItem.set(item);
-				} catch (IndexOutOfBoundsException e) {
-					// If it was an invalid index, reset to the old value
-					selectedIndex.set(oldVal.intValue());
-				}
-			}
-		});
+		selectionModel.selectedIndexProperty().addListener(
+				new ChangeListener<Number>() {
+					@Override
+					public void changed(ObservableValue<? extends Number> bean,
+							Number oldVal, Number newVal) {
+						try {
+							int index = newVal.intValue();
+							ListType item = itemListProperty().get(index);
+							selectedItem.set(item);
+						} catch (IndexOutOfBoundsException e) {
+							// If it was an invalid index, reset to the old
+							// value
+							selectionModel.select(oldVal.intValue());
+						}
+					}
+				});
 
 		selectedItem.addListener(new ChangeListener<ListType>() {
 			@Override
@@ -102,7 +116,7 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 
 				int index = itemListProperty().get().indexOf(newVal);
 				if (index != -1) {
-					selectedIndex.set(index);
+					selectionModel.select(index);
 				} else {
 					// If item not found - Rollback
 					selectedItem.set(oldVal);
@@ -121,8 +135,13 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	 * @return the index property
 	 */
 	@Override
-	public IntegerProperty selectedIndexProperty() {
-		return this.selectedIndex;
+	public ReadOnlyIntegerProperty selectedIndexProperty() {
+		return this.selectionModel.selectedIndexProperty();
+	}
+
+	@Override
+	public int getSelectedIndex() {
+		return selectedIndexProperty().get();
 	}
 
 	/**
@@ -136,4 +155,17 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	public ObjectProperty<ListType> selectedItemProperty() {
 		return this.selectedItem;
 	}
+
+	/**
+	 * @see #selectedItemProperty()
+	 */
+	public ListType getSelectedItem() {
+		return this.selectedItem.get();
+	}
+
+	@Override
+	public void select(int index) {
+		this.selectionModel.select(index);
+	}
+
 }

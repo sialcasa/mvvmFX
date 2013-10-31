@@ -16,8 +16,8 @@
 
 package de.saxsys.jfx.mvvm.viewmodel.util.itemlist;
 
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -42,7 +42,7 @@ public class SelectableItemListTest {
 	private ModelToStringMapper<Person> stringMapper;
 	private ObservableList<Person> listWithModelObjects;
 	private SelectableItemList<Person> selectableItemList;
-	private IntegerProperty selectedIndex;
+	private ReadOnlyIntegerProperty selectedIndex;
 	private ObjectProperty<Person> selectedItem;
 
 	/**
@@ -77,8 +77,8 @@ public class SelectableItemListTest {
 	 */
 	@Test
 	public void checkStartState() {
-		Assert.assertEquals(0, selectedIndex.get());
-		Assert.assertEquals(listWithModelObjects.get(0), selectedItem.get());
+		Assert.assertEquals(-1, selectedIndex.get());
+		Assert.assertEquals(null, selectedItem.get());
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class SelectableItemListTest {
 	 */
 	@Test
 	public void setSelectedItemByIndex() {
-		selectedIndex.set(1);
+		selectableItemList.select(1);
 		Assert.assertEquals(listWithModelObjects.get(1), selectedItem.get());
 	}
 
@@ -107,6 +107,7 @@ public class SelectableItemListTest {
 	 */
 	@Test
 	public void setSelectedIndexWithInvalidItem() {
+		selectedItem.set(person1);
 		Assert.assertEquals(0, selectedIndex.get());
 		Assert.assertEquals(person1, selectedItem.get());
 		selectedItem.set(null);
