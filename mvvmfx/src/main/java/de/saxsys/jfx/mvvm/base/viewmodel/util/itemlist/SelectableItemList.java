@@ -159,6 +159,13 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	/**
 	 * @see #selectedItemProperty()
 	 */
+	public void select(ListType item) {
+		this.selectedItem.set(item);
+	}
+
+	/**
+	 * @see #selectedItemProperty()
+	 */
 	public ListType getSelectedItem() {
 		return this.selectedItem.get();
 	}
