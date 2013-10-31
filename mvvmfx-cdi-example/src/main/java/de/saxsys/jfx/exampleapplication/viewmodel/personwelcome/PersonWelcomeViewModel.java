@@ -1,10 +1,10 @@
 package de.saxsys.jfx.exampleapplication.viewmodel.personwelcome;
 
-import javax.inject.Inject;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+
+import javax.inject.Inject;
 
 import de.saxsys.jfx.exampleapplication.model.Person;
 import de.saxsys.jfx.exampleapplication.model.Repository;

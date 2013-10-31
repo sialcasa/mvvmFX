@@ -39,7 +39,10 @@ public class Repository {
 	 * @return person
 	 */
 	public Person getPersonById(final int id) {
-		return persons.get(id);
+		for (Person person : persons)
+			if (id == person.getId())
+				return person;
+		return null;
 	}
 
 }

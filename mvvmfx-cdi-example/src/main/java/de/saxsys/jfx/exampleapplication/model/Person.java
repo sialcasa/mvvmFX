@@ -1,5 +1,7 @@
 package de.saxsys.jfx.exampleapplication.model;
 
+import java.util.Random;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -11,6 +13,8 @@ import javafx.beans.property.StringProperty;
  * 
  */
 public class Person {
+
+	private int technicalID;
 	private final StringProperty firstName = new SimpleStringProperty();
 	private final StringProperty lastName = new SimpleStringProperty();
 
@@ -69,4 +73,17 @@ public class Person {
 	public void setLastName(final String firstName) {
 		firstNameProperty().set(firstName);
 	}
+
+	/**
+	 * Gets the technical id.
+	 * 
+	 * @return technical id
+	 */
+	public int getId() {
+		if (technicalID == 0) {
+			technicalID = new Random().nextInt();
+		}
+		return technicalID;
+	}
+
 }

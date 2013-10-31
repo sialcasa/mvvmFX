@@ -3,6 +3,8 @@ package de.saxsys.jfx.exampleapplication.view.personlogin;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
@@ -23,14 +25,24 @@ public class PersonLoginView extends View<PersonLoginViewModel> {
 
 	@Override
 	public void initialize(final URL arg0, final ResourceBundle arg1) {
-		personsChoiceBox.itemsProperty().bind(getViewModel().personsProperty());
+		personsChoiceBox.itemsProperty()
+				.bind(getViewModel().selectablePersonsProperty()
+						.stringListProperty());
+
+		personsChoiceBox.getSelectionModel().selectedIndexProperty()
+				.addListener(new ChangeListener<Number>() {
+					@Override
+					public void changed(ObservableValue<? extends Number> arg0,
+							Number oldVal, Number newVal) {
+						getViewModel().selectablePersonsProperty().select(
+								newVal.intValue());
+					}
+				});
 	}
 
 	@FXML
 	void loginButtonPressed(final ActionEvent event) {
-		final int personId = personsChoiceBox.getSelectionModel()
-				.getSelectedIndex();
-		getViewModel().pickedPersonProperty().set(personId);
+		getViewModel().login();
 	}
 
 }
