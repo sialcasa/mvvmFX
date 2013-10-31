@@ -36,11 +36,14 @@ import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.SelectableItemList;
  */
 public class SelectableItemListTest {
 
-	private StringConverter<Integer> stringConverter;
-	private ObservableList<Integer> itemList;
-	private SelectableItemList<Integer> selectableItemList;
+	private final Person person3 = new Person("Person 1");
+	private final Person person2 = new Person("Person 2");
+	private final Person person1 = new Person("Person 3");
+	private StringConverter<Person> stringConverter;
+	private ObservableList<Person> listWithModelObjects;
+	private SelectableItemList<Person> selectableItemList;
 	private IntegerProperty selectedIndex;
-	private ObjectProperty<Integer> selectedItem;
+	private ObjectProperty<Person> selectedItem;
 
 	/**
 	 * Prepares the test.
@@ -48,29 +51,28 @@ public class SelectableItemListTest {
 	@Before
 	public void init() {
 
-		// Create the items
-		itemList = FXCollections.observableArrayList();
-		itemList.clear();
-		itemList.add(1);
-		itemList.add(2);
-		itemList.add(3);
+		// Create the items in the model
+		listWithModelObjects = FXCollections.observableArrayList();
+		listWithModelObjects.add(person1);
+		listWithModelObjects.add(person2);
+		listWithModelObjects.add(person3);
 
 		// Create the converter
-		stringConverter = new StringConverter<Integer>() {
+		stringConverter = new StringConverter<Person>() {
 			@Override
-			public Integer fromString(String arg0) {
-				return Integer.parseInt(arg0);
+			public Person fromString(String name) {
+				return new Person(name);
 			}
 
 			@Override
-			public String toString(Integer arg0) {
-				return arg0.toString();
+			public String toString(Person person) {
+				return person.toString();
 			}
 		};
 
 		// Convenience
-		selectableItemList = new SelectableItemList<Integer>(itemList,
-				stringConverter);
+		selectableItemList = new SelectableItemList<Person>(
+				listWithModelObjects, stringConverter);
 		selectedIndex = selectableItemList.selectedIndexProperty();
 		selectedItem = selectableItemList.selectedItemProperty();
 	}
@@ -79,9 +81,9 @@ public class SelectableItemListTest {
 	 * Check whether the internal state is correct.
 	 */
 	@Test
-	public void testStartState() {
+	public void checkStartState() {
 		Assert.assertEquals(0, selectedIndex.get());
-		Assert.assertEquals(itemList.get(0), selectedItem.get());
+		Assert.assertEquals(listWithModelObjects.get(0), selectedItem.get());
 	}
 
 	/**
@@ -91,7 +93,7 @@ public class SelectableItemListTest {
 	@Test
 	public void setSelectedItemByIndex() {
 		selectedIndex.set(1);
-		Assert.assertEquals(itemList.get(1), selectedItem.get());
+		Assert.assertEquals(listWithModelObjects.get(1), selectedItem.get());
 	}
 
 	/**
@@ -100,7 +102,7 @@ public class SelectableItemListTest {
 	 */
 	@Test
 	public void setSelectedIndexByItem() {
-		selectedItem.set(3);
+		selectedItem.set(person3);
 		Assert.assertEquals(2, selectedIndex.get());
 	}
 
@@ -111,29 +113,13 @@ public class SelectableItemListTest {
 	@Test
 	public void setSelectedIndexWithInvalidItem() {
 		Assert.assertEquals(0, selectedIndex.get());
-		Assert.assertEquals(1, (int) selectedItem.get());
-		selectedItem.set(100);
+		Assert.assertEquals(person1, selectedItem.get());
+		selectedItem.set(null);
 		Assert.assertEquals(0, selectedIndex.get());
-		Assert.assertEquals(1, (int) selectedItem.get());
-		selectedItem.set(2);
+		Assert.assertEquals(person1, selectedItem.get());
+		selectedItem.set(person2);
 		Assert.assertEquals(1, selectedIndex.get());
-		Assert.assertEquals(2, (int) selectedItem.get());
-	}
-
-	/**
-	 * Check whether changes are refused when an invalid {@link #selectedIndex}
-	 * was set.
-	 */
-	@Test
-	public void setSelectedItemWithInvalidIndex() {
-		Assert.assertEquals(0, selectedIndex.get());
-		Assert.assertEquals(1, (int) selectedItem.get());
-		selectedIndex.set(100);
-		Assert.assertEquals(0, selectedIndex.get());
-		Assert.assertEquals(1, (int) selectedItem.get());
-		selectedIndex.set(1);
-		Assert.assertEquals(1, selectedIndex.get());
-		Assert.assertEquals(2, (int) selectedItem.get());
+		Assert.assertEquals(person2, selectedItem.get());
 	}
 
 }

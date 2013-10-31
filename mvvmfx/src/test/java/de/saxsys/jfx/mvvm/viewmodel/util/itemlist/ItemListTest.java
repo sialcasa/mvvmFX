@@ -15,7 +15,6 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.viewmodel.util.itemlist;
 
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
@@ -33,9 +32,13 @@ import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ItemList;
  * 
  */
 public class ItemListTest {
-	private StringConverter<Integer> stringConverter;
-	private ObservableList<Integer> itemList;
-	private ItemList<Integer> selectableItemList;
+
+	// List which comes from the model and should be displayed in a view.
+	private ObservableList<Person> listWithModelObjects;
+	// Defines the mapping between model elements and view representation
+	private StringConverter<Person> stringConverter;
+	// New element which encapsulates and maps the 2 lists
+	private ItemList<Person> itemList;
 
 	/**
 	 * Prepares the test.
@@ -43,37 +46,53 @@ public class ItemListTest {
 	@Before
 	public void init() {
 
-		// Create the items
-		itemList = FXCollections.observableArrayList();
-		itemList.clear();
-		itemList.add(1);
-		itemList.add(2);
-		itemList.add(3);
+		// Create the items in the model
+		listWithModelObjects = FXCollections.observableArrayList();
+		listWithModelObjects.add(new Person("Person1"));
+		listWithModelObjects.add(new Person("Person2"));
+		listWithModelObjects.add(new Person("Person3"));
 
 		// Create the converter
-		stringConverter = new StringConverter<Integer>() {
+		stringConverter = new StringConverter<Person>() {
 			@Override
-			public Integer fromString(String arg0) {
-				return Integer.parseInt(arg0);
+			public Person fromString(String name) {
+				return new Person(name);
 			}
 
 			@Override
-			public String toString(Integer arg0) {
-				return arg0.toString();
+			public String toString(Person person) {
+				return person.toString();
 			}
 		};
 
-		// Convenience
-		selectableItemList = new ItemList<Integer>(itemList, stringConverter);
+		itemList = new ItemList<>(listWithModelObjects, stringConverter);
 	}
 
 	/**
-	 * Check whether the string list changes when the item list changes.
+	 * Check whether the string list changes when the item list changes (add
+	 * item).
 	 */
 	@Test
 	public void addItemToItemList() {
-		Assert.assertEquals(3, selectableItemList.stringListProperty().size());
-		itemList.add(4);
-		Assert.assertEquals(4, selectableItemList.stringListProperty().size());
+		Assert.assertEquals(3, itemList.stringListProperty().size());
+		Assert.assertEquals(3, listWithModelObjects.size());
+		listWithModelObjects.add(new Person("addedPerson"));
+		Assert.assertEquals(4, itemList.stringListProperty().size());
+		Assert.assertEquals(4, listWithModelObjects.size());
+
 	}
+
+	/**
+	 * Check whether the string list changes when the item list changes (remove
+	 * item).
+	 */
+	@Test
+	public void removeItemFromList() {
+		Assert.assertEquals(3, itemList.stringListProperty().size());
+		Assert.assertEquals(3, listWithModelObjects.size());
+		listWithModelObjects.remove(0);
+		Assert.assertEquals(2, itemList.stringListProperty().size());
+		Assert.assertEquals(2, listWithModelObjects.size());
+	}
+
 }

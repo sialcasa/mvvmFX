@@ -33,14 +33,14 @@ import javafx.util.StringConverter;
  * like this in your View Model:
  * 
  * <code>
- * public SelectableStringList stringListProperty(){
+ * public ObservableList<String> stringListProperty(){
  * 		return itemList.stringListProperty();
  * }
  * </code>
  * 
- * </b> You have to provide a {@link StringConverter} to define how to convert a
- * string. In addition you have properties which represents the actual selection
- * state of a list.
+ * </b> You have to provide a {@link StringConverter} to define how to map
+ * between the model type and a string and back. In addition you have properties
+ * which represents the actual selection state of a list.
  * 
  * @author sialcasa
  * 
