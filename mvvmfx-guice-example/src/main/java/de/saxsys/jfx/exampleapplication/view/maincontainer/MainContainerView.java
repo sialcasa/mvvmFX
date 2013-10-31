@@ -41,7 +41,7 @@ public class MainContainerView extends ViewWithoutViewModel {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// When the login button of the loginView, the pickedPersonProperty is
 		// going to have the index of the selected person
-		loginViewController.getViewModel().pickedPersonProperty()
+		loginViewController.getViewModel().loggedInPersonIdProperty()
 				.addListener(new ChangeListener<Number>() {
 					@Override
 					public void changed(ObservableValue<? extends Number> arg0,

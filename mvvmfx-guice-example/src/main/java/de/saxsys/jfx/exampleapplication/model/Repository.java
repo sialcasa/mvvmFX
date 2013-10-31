@@ -3,7 +3,7 @@ package de.saxsys.jfx.exampleapplication.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.inject.Singleton;
+import javax.inject.Singleton;
 
 /**
  * Service class for providing some dummy data.
@@ -39,7 +39,10 @@ public class Repository {
 	 * @return person
 	 */
 	public Person getPersonById(final int id) {
-		return persons.get(id);
+		for (Person person : persons)
+			if (id == person.getId())
+				return person;
+		return null;
 	}
 
 }

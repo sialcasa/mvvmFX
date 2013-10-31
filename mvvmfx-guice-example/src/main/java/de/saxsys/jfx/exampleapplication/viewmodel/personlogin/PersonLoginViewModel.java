@@ -1,18 +1,17 @@
 package de.saxsys.jfx.exampleapplication.viewmodel.personlogin;
 
-import java.util.List;
-
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 
 import de.saxsys.jfx.exampleapplication.model.Person;
 import de.saxsys.jfx.exampleapplication.model.Repository;
 import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
+import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ModelToStringMapper;
+import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.SelectableItemList;
+import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.SelectableStringList;
 
 /**
  * ViewModel for a login view for the persons. It provides the data which should
@@ -26,18 +25,22 @@ import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
 
 public class PersonLoginViewModel implements ViewModel {
 
-
 	// Properties which are used by the view.
-	private final ListProperty<String> persons = new SimpleListProperty<>(
-			FXCollections.<String> observableArrayList());
-	private IntegerProperty pickedPerson = new SimpleIntegerProperty(-1);
+	private final SelectableItemList<Person> selectablePersons;
+
+	private final IntegerProperty loggedInPersonId = new SimpleIntegerProperty();
 
 	@Inject
 	public PersonLoginViewModel(Repository repository) {
-		final List<Person> personsInRepo = repository.getPersons();
-		for (final Person person : personsInRepo) {
-			persons.add(person.getFirstName() + " " + person.getLastName());
-		}
+		ModelToStringMapper<Person> personMapper = new ModelToStringMapper<Person>() {
+			@Override
+			public String toString(Person person) {
+				return person.getFirstName() + " " + person.getLastName();
+			}
+		};
+		selectablePersons = new SelectableItemList<Person>(
+				FXCollections.observableArrayList(repository.getPersons()),
+				personMapper);
 	}
 
 	/**
@@ -45,16 +48,23 @@ public class PersonLoginViewModel implements ViewModel {
 	 * 
 	 * @return persons
 	 */
-	public ListProperty<String> personsProperty() {
-		return persons;
+	public SelectableStringList selectablePersonsProperty() {
+		return selectablePersons;
 	}
 
 	/**
-	 * Person ID which was picked.
+	 * Person which is logged in.
 	 * 
-	 * @return id
+	 * @return person
 	 */
-	public IntegerProperty pickedPersonProperty() {
-		return pickedPerson;
+	public IntegerProperty loggedInPersonIdProperty() {
+		return loggedInPersonId;
+	}
+
+	/**
+	 * Action when the login button was clicked.
+	 */
+	public void login() {
+		loggedInPersonId.set(selectablePersons.getSelectedItem().getId());
 	}
 }

@@ -6,7 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
+
 import com.google.inject.Module;
 
 import de.saxsys.jfx.exampleapplication.view.maincontainer.MainContainerView;
