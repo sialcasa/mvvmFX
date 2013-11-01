@@ -27,6 +27,7 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import de.saxsys.jfx.mvvm.base.view.View;
+import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
 import de.saxsys.jfx.mvvm.di.FXMLLoaderWrapper;
 import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
 
@@ -61,11 +62,11 @@ public class CdiFXMLLoaderWrapper implements FXMLLoaderWrapper {
 	}
 
 	@Override
-	public ViewTuple load(URL location) throws IOException {
+	public ViewTuple<? extends ViewModel> load(URL location) throws IOException {
 		fxmlLoader.setLocation(location);
 		fxmlLoader.load(location.openStream());
 
-		return new ViewTuple((View<?>) fxmlLoader.getController(),
+		return new ViewTuple<>((View<?>) fxmlLoader.getController(),
 				(Parent) fxmlLoader.getRoot());
 	}
 

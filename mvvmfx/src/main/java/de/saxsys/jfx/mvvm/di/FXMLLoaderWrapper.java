@@ -18,8 +18,8 @@ package de.saxsys.jfx.mvvm.di;
 import java.io.IOException;
 import java.net.URL;
 
+import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
 import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
-
 import javafx.fxml.FXMLLoader;
 
 /**
@@ -37,5 +37,5 @@ public interface FXMLLoaderWrapper {
 	 * Loads the fxml document for the given {@link URL}. There is no exception handling provided by this 
 	 * method.
 	 */
-	ViewTuple load(URL location) throws IOException;
+	ViewTuple<? extends ViewModel> load(URL location) throws IOException;
 }

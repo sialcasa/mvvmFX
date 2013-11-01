@@ -21,10 +21,6 @@ import java.net.URL;
 
 import javax.inject.Inject;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,13 +56,15 @@ public final class ViewLoader {
 	 *            which is the code behind of a fxml
 	 * @return the tuple
 	 */
+	@SuppressWarnings("unchecked")
 	public <ViewType extends ViewModel> ViewTuple<ViewType> loadViewTuple(
-			Class<? extends View> ViewType) {
+			Class<? extends View<ViewType>> ViewType) {
 		String pathToFXML = "/"
 				+ ViewType.getPackage().getName().replaceAll("\\.", "/") + "/"
 				+ ViewType.getSimpleName() + ".fxml";
 
-		return loadViewTuple(pathToFXML);
+		return (ViewTuple<ViewType>) loadViewTuple(pathToFXML);
+
 	}
 
 	/**
@@ -76,7 +74,7 @@ public final class ViewLoader {
 	 *            to load the controller from
 	 * @return tuple which is <code>null</code> if an error occures.
 	 */
-	public ViewTuple loadViewTuple(final String resource) {
+	public ViewTuple<? extends ViewModel> loadViewTuple(final String resource) {
 		// Load FXML file
 		final URL location = getClass().getResource(resource);
 		if (location == null) {
@@ -87,8 +85,7 @@ public final class ViewLoader {
 		
 		try {
 			
-			final ViewTuple controllerTuple = fxmlLoaderWrapper.load(location);
-			return controllerTuple;
+			return fxmlLoaderWrapper.load(location);
 		} catch (final IOException ex) {
 			LOG.error("Error loading FXML :", ex);
 			return null;

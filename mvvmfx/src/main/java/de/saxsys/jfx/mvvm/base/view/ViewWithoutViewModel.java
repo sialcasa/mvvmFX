@@ -16,10 +16,11 @@
 
 package de.saxsys.jfx.mvvm.base.view;
 
-@SuppressWarnings("rawtypes")
+import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
+
 /**
  * @View without a View Model.
  * @author sialcasa
  */
-public abstract class ViewWithoutViewModel extends View {
+public abstract class ViewWithoutViewModel extends View<ViewModel> {
 }
