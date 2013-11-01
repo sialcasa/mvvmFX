@@ -24,10 +24,10 @@ import javafx.util.Callback;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.New;
 import javax.inject.Inject;
 
 import de.saxsys.jfx.mvvm.base.view.View;
+import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
 import de.saxsys.jfx.mvvm.di.FXMLLoaderWrapper;
 import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
 
@@ -40,20 +40,33 @@ import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
  * 
  */
 public class CdiFXMLLoaderWrapper implements FXMLLoaderWrapper {
-
 	@Inject
-	private Instance<FXMLLoader> fxmlLoaderInstances;
-	
+	private Instance<Object> instance;
+
+	private FXMLLoader fxmlLoader;
+
+	/**
+	 * Creates an instance of the {@link FXMLLoader} that has a CDI specific
+	 * ControllerFactory assigned.
+	 */
+	@PostConstruct
+	void createFxmlLoader() {
+		fxmlLoader = new FXMLLoader();
+		fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
+			@Override
+			public Object call(Class<?> classType) {
+				return classType == null ? null : instance.select(classType)
+						.get();
+			}
+		});
+	}
 
 	@Override
-	public ViewTuple load(URL location) throws IOException {
-		
-		FXMLLoader fxmlLoader = fxmlLoaderInstances.get();
-		
+	public ViewTuple<? extends ViewModel> load(URL location) throws IOException {
 		fxmlLoader.setLocation(location);
 		fxmlLoader.load(location.openStream());
 
-		return new ViewTuple((View<?>) fxmlLoader.getController(),
+		return new ViewTuple<>((View<?>) fxmlLoader.getController(),
 				(Parent) fxmlLoader.getRoot());
 	}
 

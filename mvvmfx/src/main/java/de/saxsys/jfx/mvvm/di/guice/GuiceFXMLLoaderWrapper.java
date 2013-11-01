@@ -26,6 +26,7 @@ import com.cathive.fx.guice.GuiceFXMLLoader;
 import com.cathive.fx.guice.GuiceFXMLLoader.Result;
 
 import de.saxsys.jfx.mvvm.base.view.View;
+import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
 import de.saxsys.jfx.mvvm.di.FXMLLoaderWrapper;
 import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
 
@@ -44,11 +45,10 @@ public class GuiceFXMLLoaderWrapper implements FXMLLoaderWrapper {
 	private GuiceFXMLLoader fxmlLoader;
 
 	@Override
-	public ViewTuple load(URL location) throws IOException {
+	public ViewTuple<? extends ViewModel> load(URL location) throws IOException {
 		Result result = fxmlLoader.load(location);
 
-		return new ViewTuple((View<?>) result.getController(),
-				(Parent) result.getRoot());
+		return new ViewTuple<>((View<?>) result.getController(), (Parent) result.getRoot());
 	}
 
 }
