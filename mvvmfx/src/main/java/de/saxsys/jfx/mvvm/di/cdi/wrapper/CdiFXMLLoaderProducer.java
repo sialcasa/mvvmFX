@@ -15,46 +15,40 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.di.cdi.wrapper;
 
-import java.io.IOException;
-import java.net.URL;
-
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.util.Callback;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.New;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import de.saxsys.jfx.mvvm.base.view.View;
-import de.saxsys.jfx.mvvm.di.FXMLLoaderWrapper;
-import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
-
 /**
- * CDI specific implementation of {@link FXMLLoaderWrapper}. It uses an CDI
- * enabled FXMLLoader to load fxml content and create and inject controller
- * classes.
+ * CDI-Producer for {@link FXMLLoader} instances.
  * 
  * @author manuel.mauky
  * 
  */
-public class CdiFXMLLoaderWrapper implements FXMLLoaderWrapper {
+public class CdiFXMLLoaderProducer {
 
 	@Inject
-	private Instance<FXMLLoader> fxmlLoaderInstances;
-	
+	private Instance<Object> instance;
 
-	@Override
-	public ViewTuple load(URL location) throws IOException {
-		
-		FXMLLoader fxmlLoader = fxmlLoaderInstances.get();
-		
-		fxmlLoader.setLocation(location);
-		fxmlLoader.load(location.openStream());
+	/**
+	 * Creates an instance of the {@link FXMLLoader} that has a CDI specific
+	 * ControllerFactory assigned.
+	 */
+	@Produces
+	public FXMLLoader produceFXMLLoader() {
+		final FXMLLoader fxmlLoader = new FXMLLoader();
+		fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
+			@Override
+			public Object call(Class<?> classType) {
+				return classType == null ? null : instance.select(classType)
+						.get();
+			}
+		});
 
-		return new ViewTuple((View<?>) fxmlLoader.getController(),
-				(Parent) fxmlLoader.getRoot());
+		return fxmlLoader;
 	}
 
 }
