@@ -3,6 +3,7 @@ package de.saxsys.jfx.exampleapplication.view.maincontainer;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -15,6 +16,8 @@ import de.saxsys.jfx.exampleapplication.view.personlogin.PersonLoginView;
 import de.saxsys.jfx.exampleapplication.view.personwelcome.PersonWelcomeView;
 import de.saxsys.jfx.exampleapplication.viewmodel.personwelcome.PersonWelcomeViewModel;
 import de.saxsys.jfx.mvvm.base.view.ViewWithoutViewModel;
+import de.saxsys.jfx.mvvm.notifications.NotificationCenter;
+import de.saxsys.jfx.mvvm.notifications.NotificationObserver;
 import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
 import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
 
@@ -43,8 +46,23 @@ public class MainContainerView extends ViewWithoutViewModel {
 	// ViewLoder
 	private ViewLoader viewLoader;
 
+	@Inject
+	// Notification Center
+	private NotificationCenter notificationCenter;
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+
+		// Listen for close notifications
+		notificationCenter.addObserverForName("closeApplication",
+				new NotificationObserver() {
+					@Override
+					public void receivedNotification(String key,
+							Object... objects) {
+						Platform.exit();
+					}
+				});
+
 		// When the login button of the loginView, the pickedPersonProperty is
 		// going to have the index of the selected person
 		loginViewController.getViewModel().loggedInPersonIdProperty()
