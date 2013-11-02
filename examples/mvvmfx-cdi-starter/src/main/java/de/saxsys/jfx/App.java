@@ -29,8 +29,6 @@ public class App {
 	 */
 	public void startApplication(@Observes StartupEvent startupEvent) {
 		Stage stage = startupEvent.getPrimaryStage();
-		// Locate View for loaded FXML file
-
 		final Scene scene = new Scene(new Pane(), 300, 300);
 		stage.setScene(scene);
 		stage.show();
