@@ -1,17 +1,14 @@
 package de.saxsys.jfx;
 
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import de.saxsys.jfx.exampleapplication.view.maincontainer.MainContainerView;
-import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
 import de.saxsys.jfx.mvvm.di.cdi.StartupEvent;
 import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
-import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
 
 /**
  * This class is invoked by the CDI container with the {@link StartupEvent}. It
@@ -32,13 +29,9 @@ public class App {
 	 */
 	public void startApplication(@Observes StartupEvent startupEvent) {
 		Stage stage = startupEvent.getPrimaryStage();
-
-		final ViewTuple<ViewModel> tuple = viewLoader
-				.loadViewTuple(MainContainerView.class);
 		// Locate View for loaded FXML file
-		final Parent view = tuple.getView();
 
-		final Scene scene = new Scene(view);
+		final Scene scene = new Scene(new Pane(), 300, 300);
 		stage.setScene(scene);
 		stage.show();
 	}
