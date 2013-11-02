@@ -82,10 +82,21 @@ public final class ViewLoader {
 					+ resource);
 			return null;
 		}
-		
+
 		try {
-			
-			return fxmlLoaderWrapper.load(location);
+			ViewTuple<? extends ViewModel> tuple = fxmlLoaderWrapper
+					.load(location);
+			if (tuple.getCodeBehind() == null) {
+				LOG.warn("Could not load the code behind class for the following FXML file: "
+						+ resource
+						+ " please check whether you have set the fx:controller attribute in the FXML!");
+			}
+			if (tuple.getView() == null) {
+				LOG.error("Could not load the view for the following FXML file: "
+						+ resource
+						+ " This is an serious error and cause an exception.");
+			}
+			return tuple;
 		} catch (final IOException ex) {
 			LOG.error("Error loading FXML :", ex);
 			return null;
