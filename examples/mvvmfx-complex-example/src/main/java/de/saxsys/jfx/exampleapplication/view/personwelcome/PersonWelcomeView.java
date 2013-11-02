@@ -39,7 +39,8 @@ public class PersonWelcomeView extends View<PersonWelcomeViewModel> {
 	// Handler for Button[Button[id=null, styleClass=button]] onAction
 	public void closeApplicationButtonPressed(ActionEvent event) {
 		// MainContainerView.java will handle it
-		notificationCenter.postNotification("closeApplication");
+		notificationCenter.postNotification("hidePersonWelcome", getViewModel()
+				.getPersonId());
 	}
 
 }

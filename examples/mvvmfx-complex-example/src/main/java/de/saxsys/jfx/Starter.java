@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import com.google.inject.Module;
 
 import de.saxsys.jfx.exampleapplication.view.maincontainer.MainContainerView;
-import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
+import de.saxsys.jfx.exampleapplication.viewmodel.maincontainer.MainContainerViewModel;
 import de.saxsys.jfx.mvvm.di.guice.MvvmGuiceApplication;
 import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
 import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
@@ -34,7 +34,7 @@ public class Starter extends MvvmGuiceApplication {
 
 	@Override
 	public void start(final Stage stage) throws Exception {
-		final ViewTuple<ViewModel> tuple = viewLoader
+		final ViewTuple<MainContainerViewModel> tuple = viewLoader
 				.loadViewTuple(MainContainerView.class);
 		// Locate View for loaded FXML file
 		final Parent view = tuple.getView();

@@ -3,19 +3,21 @@ package de.saxsys.jfx.exampleapplication.view.maincontainer;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 
 import de.saxsys.jfx.exampleapplication.view.personlogin.PersonLoginView;
 import de.saxsys.jfx.exampleapplication.view.personwelcome.PersonWelcomeView;
+import de.saxsys.jfx.exampleapplication.viewmodel.maincontainer.MainContainerViewModel;
 import de.saxsys.jfx.exampleapplication.viewmodel.personwelcome.PersonWelcomeViewModel;
-import de.saxsys.jfx.mvvm.base.view.ViewWithoutViewModel;
+import de.saxsys.jfx.mvvm.base.view.View;
+import de.saxsys.jfx.mvvm.base.view.util.viewlist.ViewListCellFactory;
+import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
 import de.saxsys.jfx.mvvm.notifications.NotificationCenter;
 import de.saxsys.jfx.mvvm.notifications.NotificationObserver;
 import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
@@ -27,7 +29,7 @@ import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
  * look on the FXML file to see, how to include different views into a
  * MasterView.
  */
-public class MainContainerView extends ViewWithoutViewModel {
+public class MainContainerView extends View<MainContainerViewModel> {
 
 	@FXML
 	// Injection of the login which is declared in the FXML File
@@ -39,8 +41,8 @@ public class MainContainerView extends ViewWithoutViewModel {
 	private PersonLoginView loginViewController;
 
 	@FXML
-	// Injection of the vbox where the person welcome area will be
-	private VBox personInfoVbox;
+	// Inject the Code behind instance of the ListView
+	private ListView<Integer> personWelcomeListView;
 
 	@Inject
 	// ViewLoder
@@ -54,13 +56,14 @@ public class MainContainerView extends ViewWithoutViewModel {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
 		// Listen for close notifications
-		notificationCenter.addObserverForName("closeApplication",
+		notificationCenter.addObserverForName("hidePersonWelcome",
 				new NotificationObserver() {
-
 					@Override
 					public void receivedNotification(String key,
 							Object... objects) {
-						Platform.exit();
+						int personIdToHide = (int) objects[0];
+						getViewModel().displayedPersonsProperty().remove(
+								new Integer(personIdToHide));
 					}
 				});
 
@@ -71,14 +74,25 @@ public class MainContainerView extends ViewWithoutViewModel {
 					@Override
 					public void changed(ObservableValue<? extends Number> arg0,
 							Number oldValue, Number newValue) {
-						ViewTuple<PersonWelcomeViewModel> loadViewTuple = viewLoader
-								.loadViewTuple(PersonWelcomeView.class);
-						loadViewTuple.getCodeBehind().getViewModel()
-								.setPersonId(newValue.intValue());
-						personInfoVbox.getChildren().add(
-								loadViewTuple.getView());
+						int id = newValue.intValue();
+						getViewModel().displayedPersonsProperty().add(id);
 					}
 				});
 
+		// Configure List with views
+		personWelcomeListView.setCellFactory(new ViewListCellFactory<Integer>() {
+			@Override
+			public ViewTuple<? extends ViewModel> map(Integer element) {
+				ViewTuple<PersonWelcomeViewModel> loadViewTuple = viewLoader
+						.loadViewTuple(PersonWelcomeView.class);
+				loadViewTuple.getCodeBehind().getViewModel()
+						.setPersonId(element);
+				return loadViewTuple;
+			}
+		});
+
+		// Bind list
+		personWelcomeListView.itemsProperty().bind(
+				getViewModel().displayedPersonsProperty());
 	}
 }

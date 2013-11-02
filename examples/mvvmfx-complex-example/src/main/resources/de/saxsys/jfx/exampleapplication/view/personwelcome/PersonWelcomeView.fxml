@@ -13,6 +13,6 @@
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" fx:id="x1" />
       </VBox.margin>
     </Label>
-    <Button mnemonicParsing="false" onAction="#closeApplicationButtonPressed" text="Exit by notification" VBox.margin="$x1" />
+    <Button mnemonicParsing="false" onAction="#closeApplicationButtonPressed" text="Hide" VBox.margin="$x1" />
   </children>
 </fx:root>

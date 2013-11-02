@@ -11,7 +11,9 @@ public class PersonWelcomeViewModelTest {
 
 	@Test
 	public void testWelcomeStringInViewModel() throws Exception {
+		// You should mock this repo.
 		Repository repository = new Repository();
+
 		final PersonWelcomeViewModel personWelcomeViewModel = new PersonWelcomeViewModel(
 				repository);
 		personWelcomeViewModel.setPersonId(repository.getPersons().get(0)
@@ -19,5 +21,8 @@ public class PersonWelcomeViewModelTest {
 		assertEquals(
 				"Willkommen Herr Casall, oder wollen Sie Alexander genannt werden?",
 				personWelcomeViewModel.welcomeStringProperty().get());
+
+		assertEquals(repository.getPersons().get(0).getId(),
+				personWelcomeViewModel.getPersonId());
 	}
 }

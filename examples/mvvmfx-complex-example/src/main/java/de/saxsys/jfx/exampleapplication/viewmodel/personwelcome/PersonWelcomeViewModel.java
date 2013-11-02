@@ -25,6 +25,8 @@ public class PersonWelcomeViewModel implements ViewModel {
 	// Properties which are used by the view.
 	private final StringProperty welcomeString = new SimpleStringProperty();
 
+	private Person person;
+
 	/**
 	 * Create a {@link PersonWelcomeViewModel}.
 	 * 
@@ -49,9 +51,18 @@ public class PersonWelcomeViewModel implements ViewModel {
 	 * Set Person id for the screen * @param personId for the screen
 	 */
 	public void setPersonId(int personId) {
-		final Person person = repository.getPersonById(personId);
+		person = repository.getPersonById(personId);
 		welcomeString.bind(Bindings.concat("Willkommen Herr ",
 				person.lastNameProperty(), ", oder wollen Sie ",
 				person.firstNameProperty(), " genannt werden?"));
+	}
+
+	/**
+	 * Returns the id of the displayed person.
+	 * 
+	 * @return id
+	 */
+	public int getPersonId() {
+		return person.getId();
 	}
 }
