@@ -52,9 +52,10 @@ public class PersonWelcomeViewModel implements ViewModel {
 	 */
 	public void setPersonId(int personId) {
 		person = repository.getPersonById(personId);
-		welcomeString.bind(Bindings.concat("Willkommen Herr ",
-				person.lastNameProperty(), ", oder wollen Sie ",
-				person.firstNameProperty(), " genannt werden?"));
+		welcomeString.bind(Bindings.concat("Willkommen ",
+				person.isMale() ? "Herr " : "Frau ", person.lastNameProperty(),
+				", oder wollen Sie ", person.firstNameProperty(),
+				" genannt werden?"));
 	}
 
 	/**

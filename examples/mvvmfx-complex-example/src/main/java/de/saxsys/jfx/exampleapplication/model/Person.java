@@ -2,6 +2,8 @@ package de.saxsys.jfx.exampleapplication.model;
 
 import java.util.Random;
 
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -17,6 +19,7 @@ public class Person {
 	private int technicalID;
 	private final StringProperty firstName = new SimpleStringProperty();
 	private final StringProperty lastName = new SimpleStringProperty();
+	private final ReadOnlyBooleanWrapper male = new ReadOnlyBooleanWrapper();
 
 	/**
 	 * Creates a person with given name.
@@ -26,9 +29,10 @@ public class Person {
 	 * @param lastName
 	 *            of person
 	 */
-	public Person(final String firstName, final String lastName) {
+	public Person(final String firstName, final String lastName, final boolean isMale) {
 		this.firstName.set(firstName);
 		this.lastName.set(lastName);
+		this.male.set(isMale);
 	}
 
 	/**
@@ -45,6 +49,13 @@ public class Person {
 		return lastName;
 	}
 
+	/**
+	 * @return male as {@link ReadOnlyBooleanProperty}
+	 */
+	public ReadOnlyBooleanProperty maleProperty() {
+		return male.getReadOnlyProperty();
+	}
+	
 	/**
 	 * @return firstname as {@link String}
 	 */
@@ -74,6 +85,13 @@ public class Person {
 		firstNameProperty().set(firstName);
 	}
 
+	/**
+	 * @return male as boolean
+	 */
+	public boolean isMale() {
+		return male.get();
+	}
+	
 	/**
 	 * Gets the technical id.
 	 * 

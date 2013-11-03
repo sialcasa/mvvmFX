@@ -25,4 +25,20 @@ public class PersonWelcomeViewModelTest {
 		assertEquals(repository.getPersons().get(0).getId(),
 				personWelcomeViewModel.getPersonId());
 	}
+	
+	@Test
+	public void welcomeStringForFemalePersonIsDifferent() throws Exception {
+		Repository repository = new Repository();
+		
+		final PersonWelcomeViewModel personWelcomeViewModel = new PersonWelcomeViewModel(
+				repository);
+		personWelcomeViewModel.setPersonId(repository.getPersons().get(2)
+				.getId());
+		assertEquals(
+				"Willkommen Frau Schulze, oder wollen Sie Anna genannt werden?",
+				personWelcomeViewModel.welcomeStringProperty().get());
+
+		assertEquals(repository.getPersons().get(2).getId(),
+				personWelcomeViewModel.getPersonId());
+	}
 }
