@@ -19,9 +19,9 @@ public class Repository {
 	 * Creates the Repo.
 	 */
 	public Repository() {
-		persons.add(new Person("Alexander", "Casall"));
-		persons.add(new Person("Bernd", "Grams"));
-		persons.add(new Person("Anna", "Schulze"));
+		persons.add(new Person("Alexander", "Casall", true));
+		persons.add(new Person("Bernd", "Grams", true));
+		persons.add(new Person("Anna", "Schulze", false));
 	}
 
 	/**

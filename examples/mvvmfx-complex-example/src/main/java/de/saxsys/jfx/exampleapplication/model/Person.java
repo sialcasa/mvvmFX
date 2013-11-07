@@ -2,6 +2,8 @@ package de.saxsys.jfx.exampleapplication.model;
 
 import java.util.Random;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -17,6 +19,7 @@ public class Person {
 	private int technicalID;
 	private final StringProperty firstName = new SimpleStringProperty();
 	private final StringProperty lastName = new SimpleStringProperty();
+	private final BooleanProperty male = new SimpleBooleanProperty();
 
 	/**
 	 * Creates a person with given name.
@@ -26,9 +29,10 @@ public class Person {
 	 * @param lastName
 	 *            of person
 	 */
-	public Person(final String firstName, final String lastName) {
+	public Person(final String firstName, final String lastName, final boolean isMale) {
 		this.firstName.set(firstName);
 		this.lastName.set(lastName);
+		this.male.set(isMale);
 	}
 
 	/**
@@ -45,6 +49,13 @@ public class Person {
 		return lastName;
 	}
 
+	/**
+	 * @return male as {@link BooleanProperty}
+	 */
+	public BooleanProperty maleProperty() {
+		return male;
+	}
+	
 	/**
 	 * @return firstname as {@link String}
 	 */
@@ -70,10 +81,25 @@ public class Person {
 	/**
 	 * @see #getLastName()
 	 */
-	public void setLastName(final String firstName) {
-		firstNameProperty().set(firstName);
+	public void setLastName(final String lastName) {
+		lastNameProperty().set(lastName);
 	}
 
+	/**
+	 * @return male as boolean
+	 */
+	public boolean isMale() {
+		return male.get();
+	}
+	
+	/**
+	 * @see #isMale()
+	 * @param male whether the person is male
+	 */
+	public void setMale(boolean male) {
+		this.male.set(male);
+	}
+	
 	/**
 	 * Gets the technical id.
 	 * 
