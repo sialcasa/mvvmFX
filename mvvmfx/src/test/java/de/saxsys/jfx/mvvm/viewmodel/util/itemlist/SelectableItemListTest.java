@@ -82,8 +82,8 @@ public class SelectableItemListTest {
 	@Test
 	public void setSelectedItemByIndex() {
 		selectableItemList.select(1);
-		Assert.assertEquals(listWithModelObjects.get(1),
-				selectableItemList.getSelectedItem());
+		Assert.assertEquals(listWithModelObjects.get(1), selectableItemList
+				.selectedItemProperty().get());
 	}
 
 	/**
@@ -111,6 +111,20 @@ public class SelectableItemListTest {
 		selectableItemList.select(person2);
 		Assert.assertEquals(1, selectableItemList.getSelectedIndex());
 		Assert.assertEquals(person2, selectableItemList.getSelectedItem());
+	}
+
+	/**
+	 * Check whether changes are refused when an invalid {@link #selectedItem}
+	 * was set.
+	 */
+	@Test
+	public void setSelectedItemWithInvalidIndex() {
+		selectableItemList.select(person1);
+		Assert.assertEquals(0, selectableItemList.getSelectedIndex());
+		Assert.assertEquals(person1, selectableItemList.getSelectedItem());
+		selectableItemList.select(100);
+		Assert.assertEquals(0, selectableItemList.getSelectedIndex());
+		Assert.assertEquals(person1, selectableItemList.getSelectedItem());
 	}
 
 }

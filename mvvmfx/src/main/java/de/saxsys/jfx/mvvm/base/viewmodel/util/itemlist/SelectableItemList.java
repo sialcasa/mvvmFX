@@ -96,15 +96,9 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 					@Override
 					public void changed(ObservableValue<? extends Number> bean,
 							Number oldVal, Number newVal) {
-						try {
 							int index = newVal.intValue();
 							ListType item = itemListProperty().get(index);
 							selectedItem.set(item);
-						} catch (IndexOutOfBoundsException e) {
-							// If it was an invalid index, reset to the old
-							// value
-							selectionModel.select(oldVal.intValue());
-						}
 					}
 				});
 
