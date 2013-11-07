@@ -1,6 +1,9 @@
 package de.saxsys.jfx.exampleapplication.viewmodel.personwelcome;
 
+import java.util.concurrent.Callable;
+
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -48,14 +51,27 @@ public class PersonWelcomeViewModel implements ViewModel {
 	}
 
 	/**
-	 * Set Person id for the screen * @param personId for the screen
+	 * Set Person id for the screen
+	 * 
+	 * @param personId
+	 *            for the screen
 	 */
 	public void setPersonId(int personId) {
 		person = repository.getPersonById(personId);
-		welcomeString.bind(Bindings.concat("Willkommen ",
-				person.isMale() ? "Herr " : "Frau ", person.lastNameProperty(),
-				", oder wollen Sie ", person.firstNameProperty(),
-				" genannt werden?"));
+		StringBinding titleBinding = Bindings.createStringBinding(
+				new Callable<String>() {
+					@Override
+					public String call() throws Exception {
+						if (person.isMale()) {
+							return "Herr ";
+						} else {
+							return "Frau ";
+						}
+					}
+				}, person.maleProperty());
+		welcomeString.bind(Bindings.concat("Willkommen ", titleBinding,
+				person.lastNameProperty(), ", oder wollen Sie ",
+				person.firstNameProperty(), " genannt werden?"));
 	}
 
 	/**
