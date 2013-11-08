@@ -96,7 +96,7 @@ public class ItemListTest {
 	 * item).
 	 */
 	@Test
-	public void removeItemFromList() {
+	public void removeItemFromItemList() {
 		Assert.assertEquals(3, itemList.stringListProperty().size());
 		Assert.assertEquals(3, listWithModelObjects.size());
 		listWithModelObjects.remove(0);
@@ -105,7 +105,7 @@ public class ItemListTest {
 	}
 	
 	@Test
-	public void removeMultipleItemsFromList() {
+	public void removeMultipleItemsFromItemList() {
 		listWithModelObjects.removeAll(person1, person2);
 		Assert.assertEquals(1, listWithModelObjects.size());
 		Assert.assertEquals(1, itemList.stringListProperty().size());
@@ -122,7 +122,7 @@ public class ItemListTest {
 	}
 	
 	@Test
-	public void addMultipleItemsToList() {
+	public void addMultipleItemsToItemList() {
 		listWithModelObjects.addAll(new Person("added1"), new Person("added2"));
 		Assert.assertEquals(5, listWithModelObjects.size());
 		Assert.assertEquals(5, itemList.stringListProperty().size());
@@ -131,7 +131,7 @@ public class ItemListTest {
 	}
 	
 	@Test
-	public void replaceItemAtIndex() {
+	public void replaceItemInItemListAtIndex() {
 		listWithModelObjects.set(1, new Person("replacedPerson"));
 		Assert.assertEquals(3, listWithModelObjects.size());
 		Assert.assertEquals(3, itemList.stringListProperty().size());
