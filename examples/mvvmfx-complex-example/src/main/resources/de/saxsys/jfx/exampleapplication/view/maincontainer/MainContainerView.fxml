@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.VBox?>
+
+<Pane id="personInfoVbox" prefHeight="334.0" xmlns:fx="http://javafx.com/fxml" fx:controller="de.saxsys.jfx.exampleapplication.view.maincontainer.MainContainerView">
+  <!-- TODO Add Nodes -->
+  <children>
+    <VBox prefHeight="-1.0" prefWidth="461.0">
+      <children>
+        <!-- Take care for setting the ID to use the injected objects in the code-behind -->
+        <fx:include fx:id="loginView" source="../personlogin/PersonLoginView.fxml" />
+        <ListView fx:id="personWelcomeListView" blendMode="SRC_OVER" prefHeight="200.0" prefWidth="200.0" />
+      </children>
+    </VBox>
+  </children>
+</Pane>

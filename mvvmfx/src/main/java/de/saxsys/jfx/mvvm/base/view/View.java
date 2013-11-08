@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-
 package de.saxsys.jfx.mvvm.base.view;
 
 import java.lang.reflect.Array;
