@@ -63,8 +63,8 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 		}
 
 		@Override
-		protected ListType getModelItem(int arg0) {
-			return itemListProperty().get(arg0);
+		protected ListType getModelItem(int index) {
+			return index == -1 ? null : itemListProperty().get(index);
 		}
 	};
 
@@ -96,9 +96,10 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 					@Override
 					public void changed(ObservableValue<? extends Number> bean,
 							Number oldVal, Number newVal) {
-							int index = newVal.intValue();
-							ListType item = itemListProperty().get(index);
-							selectedItem.set(item);
+						int index = newVal.intValue();
+						ListType item = index == -1 ? null : itemListProperty()
+								.get(index);
+						selectedItem.set(item);
 					}
 				});
 
@@ -107,12 +108,20 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 			public void changed(ObservableValue<? extends ListType> arg0,
 					ListType oldVal, ListType newVal) {
 
-				int index = itemListProperty().get().indexOf(newVal);
-				if (index != -1) {
-					selectionModel.select(index);
+				// Item null
+				if (newVal == null) {
+					selectionModel.select(-1);
+					selectedItem.set(null);
+
 				} else {
-					// If item not found - Rollback
-					selectedItem.set(oldVal);
+					int index = itemListProperty().get().indexOf(newVal);
+					// Item not found
+					if (index != -1) {
+						selectionModel.select(index);
+					} else {
+						// If item not found - Rollback
+						selectedItem.set(oldVal);
+					}
 				}
 
 			}
@@ -161,6 +170,11 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	 */
 	public ListType getSelectedItem() {
 		return this.selectedItem.get();
+	}
+
+	@Override
+	public void clearSelection() {
+		this.selectionModel.clearSelection();
 	}
 
 	@Override
