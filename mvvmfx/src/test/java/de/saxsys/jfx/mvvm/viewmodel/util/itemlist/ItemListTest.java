@@ -41,6 +41,9 @@ public class ItemListTest {
 	private ModelToStringMapper<Person> stringMapper;
 	// New element which encapsulates and maps the 2 lists
 	private ItemList<Person> itemList;
+	private Person person1= new Person("Person1");
+	private Person person2 = new Person("Person2");
+	private Person person3= new Person(PERSON3_NAME);
 
 	/**
 	 * Prepares the test.
@@ -50,9 +53,9 @@ public class ItemListTest {
 
 		// Create the items in the model
 		listWithModelObjects = FXCollections.observableArrayList();
-		listWithModelObjects.add(new Person("Person1"));
-		listWithModelObjects.add(new Person("Person2"));
-		listWithModelObjects.add(new Person(PERSON3_NAME));
+		listWithModelObjects.add(person1);
+		listWithModelObjects.add(person2);
+		listWithModelObjects.add(person3);
 
 		// Create the mapper
 		stringMapper = new ModelToStringMapper<Person>() {
@@ -93,12 +96,46 @@ public class ItemListTest {
 	 * item).
 	 */
 	@Test
-	public void removeItemFromList() {
+	public void removeItemFromItemList() {
 		Assert.assertEquals(3, itemList.stringListProperty().size());
 		Assert.assertEquals(3, listWithModelObjects.size());
 		listWithModelObjects.remove(0);
 		Assert.assertEquals(2, itemList.stringListProperty().size());
 		Assert.assertEquals(2, listWithModelObjects.size());
+	}
+	
+	@Test
+	public void removeMultipleItemsFromItemList() {
+		listWithModelObjects.removeAll(person1, person2);
+		Assert.assertEquals(1, listWithModelObjects.size());
+		Assert.assertEquals(1, itemList.stringListProperty().size());
+		Assert.assertEquals(person3, listWithModelObjects.get(0));
+		Assert.assertEquals(PREFIX + PERSON3_NAME , itemList.stringListProperty().get(0));
+	}
+	
+	@Test
+	public void addItemToItemListAtIndex() {
+		listWithModelObjects.add(1, new Person("addedPerson"));
+		Assert.assertEquals(4, itemList.stringListProperty().size());
+		Assert.assertEquals(4, listWithModelObjects.size());
+		Assert.assertEquals(PREFIX + "addedPerson", itemList.stringListProperty().get(1));
+	}
+	
+	@Test
+	public void addMultipleItemsToItemList() {
+		listWithModelObjects.addAll(new Person("added1"), new Person("added2"));
+		Assert.assertEquals(5, listWithModelObjects.size());
+		Assert.assertEquals(5, itemList.stringListProperty().size());
+		Assert.assertEquals(PREFIX + "added1", itemList.stringListProperty().get(3));
+		Assert.assertEquals(PREFIX + "added2", itemList.stringListProperty().get(4));
+	}
+	
+	@Test
+	public void replaceItemInItemListAtIndex() {
+		listWithModelObjects.set(1, new Person("replacedPerson"));
+		Assert.assertEquals(3, listWithModelObjects.size());
+		Assert.assertEquals(3, itemList.stringListProperty().size());
+		Assert.assertEquals(PREFIX + "replacedPerson", itemList.stringListProperty().get(1));
 	}
 
 }
