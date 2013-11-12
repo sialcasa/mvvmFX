@@ -39,7 +39,7 @@ import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
  * @author manuel.mauky
  * 
  */
-public class CdiFXMLLoaderWrapper implements FXMLLoaderWrapper {
+class CdiFXMLLoaderWrapper implements FXMLLoaderWrapper {
 	@Inject
 	private Instance<Object> instance;
 

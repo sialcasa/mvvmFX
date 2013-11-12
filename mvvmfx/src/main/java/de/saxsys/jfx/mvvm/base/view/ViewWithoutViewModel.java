@@ -18,7 +18,7 @@ package de.saxsys.jfx.mvvm.base.view;
 import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
 
 /**
- * @View without a View Model.
+ * {@link View} without a View Model.
  * @author sialcasa
  */
 public abstract class ViewWithoutViewModel extends View<ViewModel> {
