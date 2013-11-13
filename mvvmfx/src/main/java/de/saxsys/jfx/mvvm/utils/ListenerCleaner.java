@@ -30,8 +30,10 @@ import com.google.common.collect.Multimap;
  * 
  *         Worker for caching created listener dependencies to clean them up
  *         when clean method is called.
+ *         
+ * @deprecated this class will be removed in the future. Please use {@link ListenerManager} instead.
  */
-
+@Deprecated
 @SuppressWarnings("rawtypes")
 public class ListenerCleaner implements ICleanable {
 

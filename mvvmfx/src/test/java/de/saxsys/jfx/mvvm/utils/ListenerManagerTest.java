@@ -15,11 +15,17 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.utils;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,73 +36,112 @@ import org.junit.Test;
  * @author manuel.mauky
  * 
  */
+@SuppressWarnings({"unchecked" })
 public class ListenerManagerTest {
 
-	private ChangeListener<String> changeListener = mock(ChangeListener.class);
+    private ChangeListener<String> changeListener = mock(ChangeListener.class);
 
-	private ChangeListener<String> anotherListener = mock(ChangeListener.class);
+    private ChangeListener<String> anotherListener = mock(ChangeListener.class);
 
-	private StringProperty stringProperty = new SimpleStringProperty();
+    private ListChangeListener<String> listChangeListener = mock(ListChangeListener.class);
 
-	private ListenerManager manager;
+    private InvalidationListener invalidationListener = mock(InvalidationListener.class);
 
-	@Before
-	public void setup() {
-		manager = new ListenerManager();
-	}
+    private StringProperty stringProperty = new SimpleStringProperty();
+    private ListProperty<String> simpleListProperty = new SimpleListProperty<>();
 
-	/**
-	 * The ListenerManager adds the given Listener when the
-	 * {@link ListenerManager#register(ObservableValue, ChangeListener)} method
-	 * is called. When {@link ListenerManager#clean()} is called the listener is
-	 * removed.
-	 */
-	@Test
-	public void testStringPropertyListener() {
-		manager.register(stringProperty, changeListener);
+    private ListenerManager manager;
 
-		stringProperty.set("test1");
+    @Before
+    public void setup() {
+        manager = new ListenerManager();
+        simpleListProperty.set(FXCollections.<String> observableArrayList());
+    }
 
-		// the listener was added by the ListenerManager and so it is called
-		// here.
-		verify(changeListener).changed(stringProperty, null, "test1");
+    /**
+     * The ListenerManager adds the given Listener when the
+     * {@link ListenerManager#register(ObservableValue, ChangeListener)} method is called. When
+     * {@link ListenerManager#clean()} is called the listener is removed.
+     */
+    @Test
+    public void testStringPropertyListener() {
+        manager.register(stringProperty, changeListener);
 
-		manager.clean();
+        stringProperty.set("test1");
 
-		// after cleanup the listener isn't called anymore.
-		stringProperty.set("test2");
+        // the listener was added by the ListenerManager and so it is called
+        // here.
+        verify(changeListener).changed(stringProperty, null, "test1");
 
-		verifyNoMoreInteractions(changeListener);
-	}
+        manager.clean();
 
-	/**
-	 * A Listener that was added by hand isn't effected by the
-	 * {@link ListenerManager#clean()} method and will still be called after the
-	 * cleanup.
-	 */
-	@Test
-	public void testOtherListenersStillCalledAfterClean() {
-		manager.register(stringProperty, changeListener);
+        // after cleanup the listener isn't called anymore.
+        stringProperty.set("test2");
 
-		// add another listener by hand
-		stringProperty.addListener(anotherListener);
+        verifyNoMoreInteractions(changeListener);
+    }
 
-		stringProperty.set("test1");
+    /**
+     * A Listener that was added by hand isn't effected by the {@link ListenerManager#clean()} method and will still
+     * be called after the cleanup.
+     */
+    @Test
+    public void testOtherListenersStillCalledAfterClean() {
+        manager.register(stringProperty, changeListener);
 
-		// both listeners are called
-		verify(anotherListener).changed(stringProperty, null, "test1");
-		verify(changeListener).changed(stringProperty, null, "test1");
+        // add another listener by hand
+        stringProperty.addListener(anotherListener);
 
-		manager.clean();
+        stringProperty.set("test1");
 
-		stringProperty.set("test2");
+        // both listeners are called
+        verify(anotherListener).changed(stringProperty, null, "test1");
+        verify(changeListener).changed(stringProperty, null, "test1");
 
-		// the "managed" listener isn't called anymore ...
-		verifyNoMoreInteractions(changeListener);
+        manager.clean();
 
-		// ... but the other listener that was added by hand is still active
-		verify(anotherListener).changed(stringProperty, "test1", "test2");
+        stringProperty.set("test2");
 
-	}
+        // the "managed" listener isn't called anymore ...
+        verifyNoMoreInteractions(changeListener);
+
+        // ... but the other listener that was added by hand is still active
+        verify(anotherListener).changed(stringProperty, "test1", "test2");
+    }
+
+    /**
+     * A ChangeListener is added to a ListProperty. Verify that the listener is called and can be cleaned.
+     */
+    @Test
+    public void testListPropertyWithChangeListener() {
+        manager.register(simpleListProperty, listChangeListener);
+
+        simpleListProperty.add("test1");
+        verify(listChangeListener, times(1)).onChanged(any(ListChangeListener.Change.class));
+
+        // remove will fire the changeListener a second time.
+        simpleListProperty.remove("test1");
+        verify(listChangeListener, times(2)).onChanged(any(ListChangeListener.Change.class));
+
+        manager.clean();
+        simpleListProperty.add("test2");
+        verifyNoMoreInteractions(listChangeListener);
+    }
+
+    /**
+     * An InvalidationListener is added to a Property. Verify that the listener is called and can be cleaned.
+     */
+    @Test
+    public void testListPropertyWithInvalidationListener() {
+        manager.register(stringProperty, invalidationListener);
+
+        stringProperty.set("test1");
+        verify(invalidationListener).invalidated(stringProperty);
+
+        manager.clean();
+        stringProperty.set("test2");
+        verifyNoMoreInteractions(invalidationListener);
+
+    }
 
 }
