@@ -15,14 +15,17 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.di.guice;
 
+import static de.saxsys.jfx.mvvm.di.guice.ModuleFactory.createModule;
+
 import java.util.List;
 
 import com.cathive.fx.guice.GuiceApplication;
 import com.google.inject.Module;
 
-import de.saxsys.jfx.mvvm.di.guice.modules.FXMLLoaderWrapperModule;
-import de.saxsys.jfx.mvvm.di.guice.modules.InjectionWrapperModule;
-import de.saxsys.jfx.mvvm.di.guice.modules.NotificationCenterModule;
+import de.saxsys.jfx.mvvm.di.FXMLLoaderWrapper;
+import de.saxsys.jfx.mvvm.di.InjectionWrapper;
+import de.saxsys.jfx.mvvm.notifications.DefaultNotificationCenter;
+import de.saxsys.jfx.mvvm.notifications.NotificationCenter;
 
 
 /**
@@ -33,9 +36,10 @@ import de.saxsys.jfx.mvvm.di.guice.modules.NotificationCenterModule;
 public abstract class MvvmGuiceApplication extends GuiceApplication {
 	@Override
 	public void init(List<Module> modules) throws Exception {
-		modules.add(new NotificationCenterModule());
-		modules.add(new FXMLLoaderWrapperModule());
-		modules.add(new InjectionWrapperModule());
+		modules.add(createModule(FXMLLoaderWrapper.class, GuiceFXMLLoaderWrapper.class));
+		modules.add(createModule(InjectionWrapper.class, GuiceInjectionWrapper.class));
+		modules.add(createModule(NotificationCenter.class, DefaultNotificationCenter.class));
+		
 		initGuiceModules(modules);
 	}
 

@@ -26,7 +26,7 @@ import de.saxsys.jfx.mvvm.di.InjectionWrapper;
  * @author manuel.mauky
  * 
  */
-public class CdiInjectionWrapper implements InjectionWrapper {
+class CdiInjectionWrapper implements InjectionWrapper {
 
 	@Inject
 	private Instance<Object> instance;
