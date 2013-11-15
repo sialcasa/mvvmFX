@@ -49,4 +49,9 @@ public interface SelectableStringList {
 	 * @see #selectedIndexProperty();
 	 */
 	public void select(int personId);
+
+	/**
+	 * Removes the selection.
+	 */
+	public void clearSelection();
 }

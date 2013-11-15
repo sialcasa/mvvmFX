@@ -80,9 +80,40 @@ public class ItemList<ListType> {
 			@Override
 			public void onChanged(
 					javafx.collections.ListChangeListener.Change<? extends ListType> listEvent) {
-				stringList.clear();
-				for (ListType item : listEvent.getList()) {
-					stringList.add(ItemList.this.modelToStringMapper
+				while (listEvent.next()) {
+					if (listEvent.wasUpdated()) {
+						replaceElements(listEvent);
+					} else if (listEvent.wasReplaced()) {
+						replaceElements(listEvent);
+					} else if (listEvent.wasAdded()) {
+						addElements(listEvent);
+					} else if (listEvent.wasRemoved()) {
+						removeElements(listEvent);
+					}
+				}
+			}
+
+			private void addElements(
+					javafx.collections.ListChangeListener.Change<? extends ListType> listEvent) {
+				for (int i = listEvent.getFrom(); i < listEvent.getTo(); i++) {
+					ListType item = listEvent.getList().get(i);
+					stringList.add(i, ItemList.this.modelToStringMapper
+							.toString(item));
+				}
+			}
+
+			private void removeElements(
+					javafx.collections.ListChangeListener.Change<? extends ListType> listEvent) {
+				for (int i = 0; i < listEvent.getRemovedSize(); i++) {
+					stringList.remove(listEvent.getFrom());
+				}
+			}
+
+			private void replaceElements(
+					javafx.collections.ListChangeListener.Change<? extends ListType> listEvent) {
+				for (int i = listEvent.getFrom(); i < listEvent.getTo(); i++) {
+					ListType item = listEvent.getList().get(i);
+					stringList.set(i, ItemList.this.modelToStringMapper
 							.toString(item));
 				}
 			}
