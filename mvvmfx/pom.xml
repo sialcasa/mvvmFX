@@ -26,7 +26,7 @@
 	<groupId>de.saxsys</groupId>
 	<artifactId>mvvmFX</artifactId>
 	<packaging>jar</packaging>
-	<version>0.1-alpha-1-SNAPSHOT</version>
+	<version>0.1.1-SNAPSHOT</version>
 	<name>Application Framework for MVVM with JavaFX</name>
 	<description>This Framework provides base classes and additional tooling to implement the MVVM pattern with JavaFX.</description>
 	<url>http://www.saxsys.de</url>
