@@ -22,6 +22,7 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.WeakListChangeListener;
 import javafx.scene.control.ListView;
 
 /**
@@ -51,32 +52,34 @@ public class ItemList<ListType> {
 	// Converter
 	private final ModelToStringMapper<ListType> modelToStringMapper;
 
-	// The two lists - List which was provided and the String representation of
-	// the list
+	// The two lists - List from the model and the String representation of the
+	// list
 	private ReadOnlyListWrapper<String> stringList = new ReadOnlyListWrapper<>(
 			FXCollections.<String> observableArrayList());
-	private ListProperty<ListType> itemList = new SimpleListProperty<>();
+	private ListProperty<ListType> modelList = new SimpleListProperty<>();
+
+	// Reference to the listener to use it by a wrapped listchangelistener
+	private ListChangeListener<ListType> listChangeListener;
 
 	/**
 	 * Creates a {@link ItemList} by a given list of items and a string
 	 * converter.
 	 * 
-	 * @param itemList
+	 * @param modelList
 	 *            which should be transformed for the UI
 	 * @param modelToStringMapper
 	 *            which is used for transformation
 	 */
-	public ItemList(ObservableList<ListType> itemList,
+	public ItemList(ObservableList<ListType> modelList,
 			final ModelToStringMapper<ListType> modelToStringMapper) {
 		this.modelToStringMapper = modelToStringMapper;
-		createListEvents();
-		this.itemListProperty().set(itemList);
+		initListEvents();
+		this.modelListProperty().set(modelList);
 	}
 
 	// If the list changed we want the recreate the string
-	private void createListEvents() {
-		// TODO Remove Listener from itemList anywhen - prevent memory leak
-		itemListProperty().addListener(new ListChangeListener<ListType>() {
+	private void initListEvents() {
+		listChangeListener = new ListChangeListener<ListType>() {
 			@Override
 			public void onChanged(
 					javafx.collections.ListChangeListener.Change<? extends ListType> listEvent) {
@@ -97,8 +100,8 @@ public class ItemList<ListType> {
 					javafx.collections.ListChangeListener.Change<? extends ListType> listEvent) {
 				for (int i = listEvent.getFrom(); i < listEvent.getTo(); i++) {
 					ListType item = listEvent.getList().get(i);
-					stringList.add(i, ItemList.this.modelToStringMapper
-							.toString(item));
+					stringList.add(i,
+							ItemList.this.modelToStringMapper.toString(item));
 				}
 			}
 
@@ -113,22 +116,24 @@ public class ItemList<ListType> {
 					javafx.collections.ListChangeListener.Change<? extends ListType> listEvent) {
 				for (int i = listEvent.getFrom(); i < listEvent.getTo(); i++) {
 					ListType item = listEvent.getList().get(i);
-					stringList.set(i, ItemList.this.modelToStringMapper
-							.toString(item));
+					stringList.set(i,
+							ItemList.this.modelToStringMapper.toString(item));
 				}
 			}
-		});
+		};
+		modelListProperty().addListener(
+				new WeakListChangeListener<>(listChangeListener));
 	}
 
 	/**
 	 * @return List of elements which should be transformed.
 	 */
-	public ListProperty<ListType> itemListProperty() {
-		return itemList;
+	public ListProperty<ListType> modelListProperty() {
+		return modelList;
 	}
 
 	/**
-	 * @return String representation of {@link #itemListProperty()}.
+	 * @return String representation of {@link #modelListProperty()}.
 	 */
 	public ReadOnlyListProperty<String> stringListProperty() {
 		return stringList.getReadOnlyProperty();
