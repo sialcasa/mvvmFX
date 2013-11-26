@@ -15,22 +15,15 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.base.view;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
+import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
+import de.saxsys.jfx.mvvm.di.DependencyInjector;
+import javafx.fxml.Initializable;
+
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javafx.fxml.Initializable;
-
-import javax.inject.Inject;
-
-import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
-import de.saxsys.jfx.mvvm.di.InjectionWrapper;
 
 /**
  * Abstract class for a MVVMView - you have to say which View Model it uses.
@@ -39,7 +32,7 @@ import de.saxsys.jfx.mvvm.di.InjectionWrapper;
  * 
  * @author alexander.casall
  * 
- * @param <ViewModel>
+ * @param <ViewModelType>
  *            type
  */
 public abstract class View<ViewModelType extends ViewModel> implements
@@ -59,8 +52,7 @@ public abstract class View<ViewModelType extends ViewModel> implements
 	// View Model
 	private ViewModelType viewModel;
 
-	@Inject
-	private InjectionWrapper injectionFacade;
+	private DependencyInjector injectionFacade = DependencyInjector.getInstance();
 
 	/**
 	 * @return the View Model which represents the data that should be displayed
@@ -68,7 +60,7 @@ public abstract class View<ViewModelType extends ViewModel> implements
 	 */
 	public final ViewModelType getViewModel() {
 		if (viewModel == null && !(viewModel instanceof ViewWithoutViewModel)) {
-			viewModel = injectionFacade.getInstance(returnedClass());
+			viewModel = injectionFacade.instanceOf(returnedClass());
 		}
 		return viewModel;
 	}

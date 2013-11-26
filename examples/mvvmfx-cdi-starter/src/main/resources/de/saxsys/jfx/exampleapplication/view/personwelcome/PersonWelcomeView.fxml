@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.StackPane?>
+
+<fx:root type="javafx.scene.layout.VBox" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="de.saxsys.jfx.exampleapplication.view.personwelcome.PersonWelcomeView">
+  <children>
+    <Label fx:id="welcomeLabel" alignment="CENTER" text="The upcoming text">
+      <VBox.margin>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" fx:id="x1" />
+      </VBox.margin>
+    </Label>
+    <Button mnemonicParsing="false" onAction="#closeApplicationButtonPressed" text="Hide" VBox.margin="$x1" />
+  </children>
+</fx:root>

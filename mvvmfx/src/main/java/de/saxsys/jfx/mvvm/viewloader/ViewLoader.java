@@ -15,17 +15,14 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.viewloader;
 
-import java.io.IOException;
-import java.net.URL;
-
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.saxsys.jfx.mvvm.base.view.View;
 import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
 import de.saxsys.jfx.mvvm.di.FXMLLoaderWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * Loader class for loading FXML and code behind from Fs. There are following
@@ -44,23 +41,22 @@ public final class ViewLoader {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ViewLoader.class);
 
-	@Inject
-	private FXMLLoaderWrapper fxmlLoaderWrapper;
+    private FXMLLoaderWrapper fxmlLoaderWrapper = new FXMLLoaderWrapper();
 
 	/**
 	 * Load the view (Code behind + Node from FXML) by a given Code behind
 	 * class. Care - The fxml has to be in the same package like the clazz.
 	 * 
-	 * @param clazz
+	 * @param viewType
 	 *            which is the code behind of a fxml
 	 * @return the tuple
 	 */
 	@SuppressWarnings("unchecked")
 	public <ViewType extends ViewModel> ViewTuple<ViewType> loadViewTuple(
-			Class<? extends View<ViewType>> ViewType) {
+			Class<? extends View<ViewType>> viewType) {
 		String pathToFXML = "/"
-				+ ViewType.getPackage().getName().replaceAll("\\.", "/") + "/"
-				+ ViewType.getSimpleName() + ".fxml";
+				+ viewType.getPackage().getName().replaceAll("\\.", "/") + "/"
+				+ viewType.getSimpleName() + ".fxml";
 
 		return (ViewTuple<ViewType>) loadViewTuple(pathToFXML);
 
@@ -83,7 +79,8 @@ public final class ViewLoader {
 		}
 
 		try {
-			ViewTuple<? extends ViewModel> tuple = fxmlLoaderWrapper
+
+            ViewTuple<? extends ViewModel> tuple = fxmlLoaderWrapper
 					.load(location);
 			if (tuple.getCodeBehind() == null) {
 				LOG.warn("Could not load the code behind class for the following FXML file: "
