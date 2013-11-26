@@ -15,7 +15,6 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.viewloader;
 
-
 import javafx.scene.Parent;
 import de.saxsys.jfx.mvvm.base.view.View;
 import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
@@ -24,7 +23,7 @@ import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
  * Tuple for carrying view / code-behind pair. The code-behind part is the class
  * which is known as the controller class behind a FXML file.
  */
-public class ViewTuple <ViewModelType extends ViewModel> {
+public class ViewTuple<ViewModelType extends ViewModel> {
 
 	private final View<ViewModelType> codeBehind;
 	private final Parent view;
