@@ -17,14 +17,14 @@ public class DependencyInjector {
 
     private static DependencyInjector singleton = new DependencyInjector();
 
-    private DependencyInjector(){
+    DependencyInjector(){
     }
 
     public static DependencyInjector getInstance(){
         return singleton;
     }
 
-    public <T> T instanceOf(Class<? extends T> type){
+    public <T> T getInstanceOf(Class<? extends T> type){
         if(isCustomInjectorDefined()){
             return (T) customInjector.call(type);
         }else{

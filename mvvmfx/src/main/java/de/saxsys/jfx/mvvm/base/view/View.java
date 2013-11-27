@@ -60,7 +60,7 @@ public abstract class View<ViewModelType extends ViewModel> implements
 	 */
 	public final ViewModelType getViewModel() {
 		if (viewModel == null && !(viewModel instanceof ViewWithoutViewModel)) {
-			viewModel = injectionFacade.instanceOf(returnedClass());
+			viewModel = injectionFacade.getInstanceOf(returnedClass());
 		}
 		return viewModel;
 	}
