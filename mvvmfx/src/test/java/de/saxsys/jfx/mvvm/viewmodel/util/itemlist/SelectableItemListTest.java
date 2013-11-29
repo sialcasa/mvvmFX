@@ -105,7 +105,7 @@ public class SelectableItemListTest {
 		selectableItemList.select(person1);
 		Assert.assertEquals(0, selectableItemList.getSelectedIndex());
 		Assert.assertEquals(person1, selectableItemList.getSelectedItem());
-		selectableItemList.select(null);
+		selectableItemList.select(new Person("Roflcopter"));
 		Assert.assertEquals(0, selectableItemList.getSelectedIndex());
 		Assert.assertEquals(person1, selectableItemList.getSelectedItem());
 		selectableItemList.select(person2);
@@ -125,6 +125,39 @@ public class SelectableItemListTest {
 		selectableItemList.select(100);
 		Assert.assertEquals(0, selectableItemList.getSelectedIndex());
 		Assert.assertEquals(person1, selectableItemList.getSelectedItem());
+	}
+
+	@Test
+	public void unselectBySettingSelectedItemToNull() {
+		selectableItemList.select(person2);
+		Assert.assertEquals(1, selectableItemList.getSelectedIndex());
+		Assert.assertEquals(person2, selectableItemList.selectedItemProperty()
+				.get());
+		selectableItemList.select(null);
+		Assert.assertEquals(-1, selectableItemList.getSelectedIndex());
+		Assert.assertNull(selectableItemList.selectedItemProperty().get());
+	}
+
+	@Test
+	public void unselectBySettingSelectedIndexToMinus1() {
+		selectableItemList.select(person2);
+		Assert.assertEquals(1, selectableItemList.getSelectedIndex());
+		Assert.assertEquals(person2, selectableItemList.selectedItemProperty()
+				.get());
+		selectableItemList.select(-1);
+		Assert.assertEquals(-1, selectableItemList.getSelectedIndex());
+		Assert.assertNull(selectableItemList.selectedItemProperty().get());
+	}
+
+	@Test
+	public void unselectByClearSelection() {
+		selectableItemList.select(person2);
+		Assert.assertEquals(1, selectableItemList.getSelectedIndex());
+		Assert.assertEquals(person2, selectableItemList.selectedItemProperty()
+				.get());
+		selectableItemList.clearSelection();
+		Assert.assertEquals(-1, selectableItemList.getSelectedIndex());
+		Assert.assertNull(selectableItemList.selectedItemProperty().get());
 	}
 
 }
