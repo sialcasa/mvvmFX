@@ -15,14 +15,11 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.notifications;
 
-import java.util.Collection;
-import java.util.Iterator;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Default implementation of {@link NotificationCenter}.
@@ -30,10 +27,8 @@ import com.google.common.collect.Multimap;
  * @author sialcasa
  * 
  */
-@Singleton
-public class DefaultNotificationCenter implements NotificationCenter {
+class DefaultNotificationCenter implements NotificationCenter {
 
-	@Inject
 	DefaultNotificationCenter() {
 	}
 

@@ -1,13 +1,14 @@
 package de.saxsys.jfx;
 
+import de.saxsys.jfx.exampleapplication.view.maincontainer.MainContainerView;
+import de.saxsys.jfx.exampleapplication.viewmodel.maincontainer.MainContainerViewModel;
+import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import de.saxsys.jfx.mvvm.di.cdi.StartupEvent;
 import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
 
 /**
@@ -17,19 +18,19 @@ import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
  * @author manuel.mauky
  * 
  */
-public class App {
+public class App{
 
 	// Get the MVVM View Loader
 	@Inject
 	private ViewLoader viewLoader;
 
-	/**
-	 * Listen for the {@link StartupEvent} and create the main scene for the
-	 * application.
-	 */
-	public void startApplication(@Observes StartupEvent startupEvent) {
-		Stage stage = startupEvent.getPrimaryStage();
-		final Scene scene = new Scene(new Pane(), 300, 300);
+	public void startApplication(Stage stage) {
+        final ViewTuple<MainContainerViewModel> tuple = viewLoader
+                .loadViewTuple(MainContainerView.class);
+
+        Parent view = tuple.getView();
+
+        final Scene scene = new Scene(view);
 		stage.setScene(scene);
 		stage.show();
 	}

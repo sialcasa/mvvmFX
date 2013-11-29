@@ -17,8 +17,7 @@ package de.saxsys.jfx.mvvm.viewloader;
 
 import java.io.IOException;
 import java.net.URL;
-
-import javax.inject.Inject;
+import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,26 +43,20 @@ public final class ViewLoader {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ViewLoader.class);
 
-	@Inject
-	private FXMLLoaderWrapper fxmlLoaderWrapper;
+	private FXMLLoaderWrapper fxmlLoaderWrapper = new FXMLLoaderWrapper();
 
 	/**
 	 * Load the view (Code behind + Node from FXML) by a given Code behind
 	 * class. Care - The fxml has to be in the same package like the clazz.
 	 * 
-	 * @param clazz
+	 * @param viewType
 	 *            which is the code behind of a fxml
 	 * @return the tuple
 	 */
 	@SuppressWarnings("unchecked")
 	public <ViewType extends ViewModel> ViewTuple<ViewType> loadViewTuple(
-			Class<? extends View<ViewType>> ViewType) {
-		String pathToFXML = "/"
-				+ ViewType.getPackage().getName().replaceAll("\\.", "/") + "/"
-				+ ViewType.getSimpleName() + ".fxml";
-
-		return (ViewTuple<ViewType>) loadViewTuple(pathToFXML);
-
+			Class<? extends View<ViewType>> viewType) {
+		return (ViewTuple<ViewType>) loadViewTuple(viewType, null);
 	}
 
 	/**
@@ -74,6 +67,42 @@ public final class ViewLoader {
 	 * @return tuple which is <code>null</code> if an error occures.
 	 */
 	public ViewTuple<? extends ViewModel> loadViewTuple(final String resource) {
+		return loadViewTuple(resource, null);
+	}
+
+	/**
+	 * Load the view (Code behind + Node from FXML) by a given Code behind
+	 * class. Care - The fxml has to be in the same package like the clazz.
+	 * 
+	 * @param viewType
+	 *            which is the code behind of a fxml
+	 * @param resourceBundle
+	 *            which is passed to the viewloader
+	 * @return the tuple
+	 */
+	@SuppressWarnings("unchecked")
+	public <ViewType extends ViewModel> ViewTuple<ViewType> loadViewTuple(
+			Class<? extends View<ViewType>> viewType,
+			ResourceBundle resourceBundle) {
+		String pathToFXML = "/"
+				+ viewType.getPackage().getName().replaceAll("\\.", "/") + "/"
+				+ viewType.getSimpleName() + ".fxml";
+
+		return (ViewTuple<ViewType>) loadViewTuple(pathToFXML, resourceBundle);
+
+	}
+
+	/**
+	 * Load the view (Code behind + Node from FXML) by a given resource path.
+	 * 
+	 * @param resource
+	 *            to load the controller from
+	 * @param resourceBundle
+	 *            which is passed to the viewloader
+	 * @return tuple which is <code>null</code> if an error occures.
+	 */
+	public ViewTuple<? extends ViewModel> loadViewTuple(final String resource,
+			ResourceBundle resourceBundle) {
 		// Load FXML file
 		final URL location = getClass().getResource(resource);
 		if (location == null) {
@@ -83,8 +112,9 @@ public final class ViewLoader {
 		}
 
 		try {
-			ViewTuple<? extends ViewModel> tuple = fxmlLoaderWrapper
-					.load(location);
+
+			ViewTuple<? extends ViewModel> tuple = fxmlLoaderWrapper.load(
+					location, resourceBundle);
 			if (tuple.getCodeBehind() == null) {
 				LOG.warn("Could not load the code behind class for the following FXML file: "
 						+ resource

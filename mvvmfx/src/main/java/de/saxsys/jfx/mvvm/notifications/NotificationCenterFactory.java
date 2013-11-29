@@ -1,40 +1,29 @@
 /*******************************************************************************
- * Copyright 2013 Alexander Casall
- * 
+ * Copyright 2013 Alexander Casall, Manuel Mauky
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package de.saxsys.jfx.mvvm.di.guice;
-
-import javax.inject.Inject;
-
-import com.google.inject.Injector;
-
-import de.saxsys.jfx.mvvm.di.InjectionWrapper;
+package de.saxsys.jfx.mvvm.notifications;
 
 /**
- * Guice specific implementation of the {@link InjectionWrapper}.
- * 
- * @author manuel.mauky
- * 
+ * This class is used to get instances of the {@link NotificationCenter} interface.
  */
-public class GuiceInjectionWrapper implements InjectionWrapper {
+public class NotificationCenterFactory {
 
-	@Inject
-	private Injector injector;
+    private static NotificationCenter singleton = new DefaultNotificationCenter();
 
-	@Override
-	public <T> T getInstance(Class<T> type) {
-		return injector.getInstance(type);
-	}
+    public static NotificationCenter getNotificationCenter() {
+        return singleton;
+    }
 
 }
