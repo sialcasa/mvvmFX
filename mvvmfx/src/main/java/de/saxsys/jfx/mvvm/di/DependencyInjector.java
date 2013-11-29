@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2013 Alexander Casall, Manuel Mauky
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+******************************************************************************/
 package de.saxsys.jfx.mvvm.di;
 
 import javafx.util.Callback;
@@ -24,6 +39,17 @@ public class DependencyInjector {
         return singleton;
     }
 
+    /**
+     * Returns an instance of the given type. When there is a custom injector defined (See: {@link #setCustomInjector(javafx.util.Callback)})
+     * then this injector is used.
+     * Otherwise a new instance of the desired type is created. This is done by a call to {@link Class#newInstance()} which means that all constraints
+     * of the newInstance method are also need to be
+     *
+     *
+     * @param type
+     * @param <T>
+     * @return
+     */
     public <T> T getInstanceOf(Class<? extends T> type){
         if(isCustomInjectorDefined()){
             return (T) customInjector.call(type);

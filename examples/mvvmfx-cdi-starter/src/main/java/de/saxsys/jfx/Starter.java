@@ -24,11 +24,9 @@ public class Starter extends Application{
     public void start(Stage stage) throws Exception {
 
         WeldContainer weldContainer = new Weld().initialize();
-
-
         CdiInjector cdiInjector = weldContainer.instance().select(CdiInjector.class).get();
 
-        MvvmFX.getDependencyInjector().setCustomInjector(cdiInjector);
+        MvvmFX.setCustomDependencyInjector(cdiInjector);
 
 
         weldContainer.instance().select(App.class).get().startApplication(stage);

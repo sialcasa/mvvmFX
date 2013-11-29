@@ -3,7 +3,8 @@ package de.saxsys.jfx;
 import com.cathive.fx.guice.GuiceApplication;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import de.saxsys.jfx.exampleapplication.ExampleModule;
+import de.saxsys.jfx.exampleapplication.GuiceInjector;
+import de.saxsys.jfx.exampleapplication.guice.ExampleModule;
 import de.saxsys.jfx.exampleapplication.view.maincontainer.MainContainerView;
 import de.saxsys.jfx.exampleapplication.viewmodel.maincontainer.MainContainerViewModel;
 import de.saxsys.jfx.mvvm.api.MvvmFX;
@@ -30,7 +31,7 @@ public class Starter extends GuiceApplication {
 	private ViewLoader viewLoader;
 
     @Inject
-    private Injector injector;
+    private GuiceInjector injector;
 
 	public static void main(final String[] args) {
 		launch(args);
@@ -40,12 +41,7 @@ public class Starter extends GuiceApplication {
 	public void start(final Stage stage) throws Exception {
 
         // We need to tell mvvmFX how our Dependency-Injection works.
-        MvvmFX.getDependencyInjector().setCustomInjector(new Callback<Class<?>, Object>() {
-            @Override
-            public Object call(Class<?> type) {
-                return injector.getInstance(type);
-            }
-        });
+        MvvmFX.setCustomDependencyInjector(injector);
 
 
 
