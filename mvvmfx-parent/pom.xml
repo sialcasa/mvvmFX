@@ -24,11 +24,11 @@
 	</parent>
 
 	<groupId>de.saxsys</groupId>
-	<artifactId>mvvmFX</artifactId>
-	<packaging>jar</packaging>
+	<artifactId>mvvmFX-parent</artifactId>
+	<packaging>pom</packaging>
 	<version>0.1.1-SNAPSHOT</version>
-	<name>Application Framework for MVVM with JavaFX</name>
-	<description>This Framework provides base classes and additional tooling to implement the MVVM pattern with JavaFX.</description>
+	<name>mvvmFX parent</name>
+	<description>Application Framework for MVVM with JavaFX.</description>
 	<url>http://www.saxsys.de</url>
 	<developers>
 		<developer>
@@ -41,7 +41,12 @@
 			<email>manuel.mauky@saxsys.de</email>
 			<name>Manuel Mauky</name>
 		</developer>
+    
 	</developers>
+  	<organization>
+		<name>Saxonia Systems AG</name>
+		<url>www.saxsys.de</url>
+	</organization>
 
 	<licenses>
 		<license>
@@ -68,13 +73,14 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 	</properties>
 
-	<!-- <profiles> <profile> <id>release-sign-artifacts</id> <activation> <property> 
-		<name>performRelease</name> <value>true</value> </property> </activation> 
-		<build> <plugins> <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-gpg-plugin</artifactId> 
-		<version>1.4</version> <executions> <execution> <id>sign-artifacts</id> <phase>verify</phase> 
-		<goals> <goal>sign</goal> </goals> </execution> </executions> </plugin> </plugins> 
-		</build> </profile> </profiles> -->
+	<modules>
+		<module>mvvmfx</module>
+		<module>mvvmfx-cdi</module>
+		<module>mvvmfx-guice</module>
+	</modules>
+	
 
+	<dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>javafx</groupId>
@@ -110,119 +116,24 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>1.9.5</version>
-			<scope>test</scope>
 		</dependency>
 				<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4</artifactId>
 			<version>1.5.1</version>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-api-mockito</artifactId>
 			<version>1.5.1</version>
-			<scope>test</scope>
 		</dependency>
 		
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.7</version>
-				<configuration>
-					<javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
-					<quiet>true</quiet>
-				</configuration>
-				<executions>
-					<execution>
-						<id>attach-doc</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.1.2</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.1</version>
-			</plugin>
-		</plugins>
-	</build>
-	<profiles>
-		<profile>
-			<id>release-and-sign-mvvmfx</id>
-			<activation>
-				<property>
-					<name>performRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>clean-deploy</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-	<organization>
-		<name>Saxonia Systems AG</name>
-		<url>www.saxsys.de</url>
-	</organization>
+</dependencyManagement>
 </project>
