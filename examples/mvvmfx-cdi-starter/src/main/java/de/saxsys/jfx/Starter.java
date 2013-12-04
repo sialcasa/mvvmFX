@@ -1,34 +1,40 @@
 package de.saxsys.jfx;
 
-import de.saxsys.jfx.cdi.CdiInjector;
-import de.saxsys.jfx.mvvm.api.MvvmFX;
-import javafx.application.Application;
+import de.saxsys.jfx.exampleapplication.view.maincontainer.MainContainerView;
+import de.saxsys.jfx.exampleapplication.viewmodel.maincontainer.MainContainerViewModel;
+import de.saxsys.jfx.mvvm.cdi.MvvmfxCdiApplication;
+import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
+import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
+
+import javax.inject.Inject;
 
 /**
- * The application entry point. The JavaFX specific code 
- * with access to the primary {@link Stage} is located in {@link App}.
+ * The application entry point.
  * 
  * @author manuel.mauky
  *
  */
-public class Starter extends Application{
+public class Starter extends MvvmfxCdiApplication{
 	
 	public static void main(String...args){
-		launch(args);
+        launch(args);
 	}
 
+    @Inject
+    private ViewLoader viewLoader;
+
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage){
+        final ViewTuple<MainContainerViewModel> tuple = viewLoader
+                .loadViewTuple(MainContainerView.class);
 
-        WeldContainer weldContainer = new Weld().initialize();
-        CdiInjector cdiInjector = weldContainer.instance().select(CdiInjector.class).get();
+        Parent view = tuple.getView();
 
-        MvvmFX.setCustomDependencyInjector(cdiInjector);
-
-
-        weldContainer.instance().select(App.class).get().startApplication(stage);
+        final Scene scene = new Scene(view);
+        stage.setScene(scene);
+        stage.show();
     }
 }
