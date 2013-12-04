@@ -7,11 +7,11 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import com.google.inject.Inject;
-
 import de.saxsys.jfx.exampleapplication.model.Person;
 import de.saxsys.jfx.exampleapplication.model.Repository;
 import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
+
+import javax.inject.Inject;
 
 /**
  * ViewModel for a welcome view for a person. It provides the data which should

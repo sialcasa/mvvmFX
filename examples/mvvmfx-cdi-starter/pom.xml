@@ -40,6 +40,12 @@
             <artifactId>mvvmFX-cdi</artifactId>
             <version>0.1.1-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>de.saxsys</groupId>
+            <artifactId>mvvmfx-complex</artifactId>
+            <version>0.1.1-SNAPSHOT</version>
+        </dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
