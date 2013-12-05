@@ -15,6 +15,9 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.ReadOnlyListWrapper;
@@ -80,44 +83,86 @@ public class ItemList<ListType> {
 			@Override
 			public void onChanged(
 					javafx.collections.ListChangeListener.Change<? extends ListType> listEvent) {
+
+				// We have to stage delete events, because if we process them
+				// separatly, there will be unwanted Changeevents on the
+				// stringlist
+				List<String> deleteStaging = new ArrayList<>();
+
 				while (listEvent.next()) {
 					if (listEvent.wasUpdated()) {
-						replaceElements(listEvent);
+						processReplaceEvent(listEvent);
 					} else if (listEvent.wasReplaced()) {
-						replaceElements(listEvent);
+						processReplaceEvent(listEvent);
 					} else if (listEvent.wasAdded()) {
-						addElements(listEvent);
+						processAddEvent(listEvent);
 					} else if (listEvent.wasRemoved()) {
-						removeElements(listEvent);
+						processRemoveEvent(listEvent, deleteStaging);
 					}
 				}
-			}
 
-			private void addElements(
-					javafx.collections.ListChangeListener.Change<? extends ListType> listEvent) {
-				for (int i = listEvent.getFrom(); i < listEvent.getTo(); i++) {
-					ListType item = listEvent.getList().get(i);
-					stringList.add(i, ItemList.this.modelToStringMapper
-							.toString(item));
-				}
-			}
-
-			private void removeElements(
-					javafx.collections.ListChangeListener.Change<? extends ListType> listEvent) {
-				for (int i = 0; i < listEvent.getRemovedSize(); i++) {
-					stringList.remove(listEvent.getFrom());
-				}
-			}
-
-			private void replaceElements(
-					javafx.collections.ListChangeListener.Change<? extends ListType> listEvent) {
-				for (int i = listEvent.getFrom(); i < listEvent.getTo(); i++) {
-					ListType item = listEvent.getList().get(i);
-					stringList.set(i, ItemList.this.modelToStringMapper
-							.toString(item));
-				}
+				// Process the staged elements
+				processStagingLists(deleteStaging);
 			}
 		});
+	}
+
+	/**
+	 * Maps an add event of the model list to new elements of the
+	 * {@link #stringList}.
+	 * 
+	 * @param listEvent
+	 *            to analyze
+	 */
+	private void processAddEvent(
+			javafx.collections.ListChangeListener.Change<? extends ListType> listEvent) {
+		for (int i = listEvent.getFrom(); i < listEvent.getTo(); i++) {
+			ListType item = listEvent.getList().get(i);
+			stringList.add(i, ItemList.this.modelToStringMapper.toString(item));
+		}
+	}
+
+	/**
+	 * Maps an remove event of the model list to new elements of the
+	 * {@link #stringList}.
+	 * 
+	 * @param listEvent
+	 *            to process
+	 * @param deleteStaging
+	 *            for staging the delete events
+	 */
+	private void processRemoveEvent(
+			javafx.collections.ListChangeListener.Change<? extends ListType> listEvent,
+			List<String> deleteStaging) {
+		for (int i = 0; i < listEvent.getRemovedSize(); i++) {
+			deleteStaging.add(stringList.get(listEvent.getFrom() + i));
+		}
+	}
+
+	/**
+	 * Maps an replace event of the model list to new elements of the
+	 * {@link #stringList}.
+	 * 
+	 * @param listEvent
+	 *            to process
+	 */
+	private void processReplaceEvent(
+			javafx.collections.ListChangeListener.Change<? extends ListType> listEvent) {
+		for (int i = listEvent.getFrom(); i < listEvent.getTo(); i++) {
+			ListType item = listEvent.getList().get(i);
+			stringList.set(i, ItemList.this.modelToStringMapper.toString(item));
+		}
+	}
+
+	/**
+	 * Process staging events.
+	 * 
+	 * @param deleteStaging
+	 *            to process
+	 */
+	private void processStagingLists(List<String> deleteStaging) {
+		stringList.removeAll(deleteStaging);
+		deleteStaging.clear();
 	}
 
 	/**
