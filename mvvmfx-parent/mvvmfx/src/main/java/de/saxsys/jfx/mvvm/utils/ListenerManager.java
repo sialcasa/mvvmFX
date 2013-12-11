@@ -42,9 +42,10 @@ import com.google.common.collect.Multimap;
  */
 public class ListenerManager implements ICleanable {
 
+	@SuppressWarnings("rawtypes")
 	private final Multimap<ObservableValue<?>, ChangeListener> simpleChangeListeners = ArrayListMultimap
 			.<ObservableValue<?>, ChangeListener> create();
-
+	@SuppressWarnings("rawtypes")
 	private final Multimap<ObservableList<?>, ListChangeListener> listChangeListeners = ArrayListMultimap
 			.<ObservableList<?>, ListChangeListener> create();
 
