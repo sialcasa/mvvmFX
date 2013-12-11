@@ -106,10 +106,13 @@
 				<version>2.1.2</version>
 				<executions>
 					<execution>
-						<id>attach-sources</id>
+						<id>attach-doc</id>
 						<goals>
 							<goal>jar</goal>
 						</goals>
+						<configuration>
+                			<additionalparam>-Xdoclint:none</additionalparam>
+            			</configuration>
 					</execution>
 				</executions>
 			</plugin>
