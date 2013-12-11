@@ -1,0 +1,139 @@
+<!--
+  Copyright 2013 Alexander Casall
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+    http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
+	<groupId>de.saxsys</groupId>
+	<artifactId>mvvmFX-parent</artifactId>
+	<packaging>pom</packaging>
+	<version>0.1.1-SNAPSHOT</version>
+	<name>mvvmFX parent</name>
+	<description>Application Framework for MVVM with JavaFX.</description>
+	<url>http://www.saxsys.de</url>
+	<developers>
+		<developer>
+			<email>alexander.casall@saxsys.de</email>
+			<name>Alexander Casall</name>
+			<url>http://www.alexander-casall.de</url>
+			<id>sialcasa</id>
+		</developer>
+		<developer>
+			<email>manuel.mauky@saxsys.de</email>
+			<name>Manuel Mauky</name>
+		</developer>
+    
+	</developers>
+  	<organization>
+		<name>Saxonia Systems AG</name>
+		<url>www.saxsys.de</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<issueManagement>
+		<url>https://github.com/sialcasa/jfx-mvvm/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+
+
+	<scm>
+		<url>https://github.com/sialcasa/mvvmFX</url>
+		<connection>scm:git:git://github.com/sialcasa/mvvmFX.git</connection>
+		<developerConnection>scm:git:git@github.com:sialcasa/mvvmFX.git</developerConnection>
+	</scm>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+	</properties>
+
+	<modules>
+		<module>mvvmfx</module>
+		<module>mvvmfx-cdi</module>
+		<module>mvvmfx-guice</module>
+	</modules>
+	
+
+	<dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>javafx</groupId>
+			<artifactId>javafx</artifactId>
+			<scope>system</scope>
+			<version>2.2</version>
+			<systemPath>${java.home}/lib/jfxrt.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.6.6</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>12.0</version>
+		</dependency>
+
+		<!-- Testing Frameworks -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.5</version>
+		</dependency>
+				<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>1.5.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
+			<version>1.5.1</version>
+		</dependency>
+		
+	</dependencies>
+</dependencyManagement>
+</project>
