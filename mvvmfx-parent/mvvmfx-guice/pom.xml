@@ -22,6 +22,7 @@
 		<artifactId>mvvmFX-parent</artifactId>
 		<version>0.1.1-SNAPSHOT</version>
 	</parent>
+	
 	<artifactId>mvvmFX-guice</artifactId>
 	<packaging>jar</packaging>
 	<name>mvvmFX Guice</name>
@@ -36,7 +37,7 @@
         <dependency>
             <groupId>de.saxsys</groupId>
             <artifactId>mvvmFX</artifactId>
-            <version>0.1.1-SNAPSHOT</version>
+            <version>${mvvmFX.version} </version>
             <scope>provided</scope>
         </dependency>
 
