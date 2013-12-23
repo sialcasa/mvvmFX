@@ -22,6 +22,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -35,6 +36,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
  * 
  */
 
+@Ignore
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ Pane.class, ScrollPane.class, Rectangle.class })
 public class SizeBindingsTest {
