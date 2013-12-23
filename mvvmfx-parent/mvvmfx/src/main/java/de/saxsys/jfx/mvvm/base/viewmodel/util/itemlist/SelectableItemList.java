@@ -59,12 +59,12 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	private SingleSelectionModel<ListType> selectionModel = new SingleSelectionModel<ListType>() {
 		@Override
 		protected int getItemCount() {
-			return itemListProperty().size();
+			return modelListProperty().size();
 		}
 
 		@Override
 		protected ListType getModelItem(int index) {
-			return index == -1 ? null : itemListProperty().get(index);
+			return index == -1 ? null : modelListProperty().get(index);
 		}
 	};
 
@@ -97,7 +97,7 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 					public void changed(ObservableValue<? extends Number> bean,
 							Number oldVal, Number newVal) {
 						int index = newVal.intValue();
-						ListType item = index == -1 ? null : itemListProperty()
+						ListType item = index == -1 ? null : modelListProperty()
 								.get(index);
 						selectedItem.set(item);
 					}
@@ -114,7 +114,7 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 					selectedItem.set(null);
 
 				} else {
-					int index = itemListProperty().get().indexOf(newVal);
+					int index = modelListProperty().get().indexOf(newVal);
 					// Item not found
 					if (index != -1) {
 						selectionModel.select(index);
