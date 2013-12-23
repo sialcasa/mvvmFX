@@ -22,11 +22,8 @@
 		<artifactId>mvvmFX-parent</artifactId>
 		<version>0.1.1-SNAPSHOT</version>
 	</parent>
-
-	<groupId>de.saxsys</groupId>
 	<artifactId>mvvmFX-guice</artifactId>
 	<packaging>jar</packaging>
-	<version>0.1.1-SNAPSHOT</version>
 	<name>mvvmFX Guice</name>
 	<description>This module contains extensions to use mvvmFX with Guice Dependency Injection</description>
 
