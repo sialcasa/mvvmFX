@@ -19,7 +19,7 @@
 	<parent>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmFX-parent</artifactId>
-		<version>0.1.2-SNAPSHOT</version>
+		<version>0.1.1-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>mvvmFX-cdi</artifactId>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>de.saxsys</groupId>
             <artifactId>mvvmFX</artifactId>
-            <version>0.1.2-SNAPSHOT</version>
+            <version>0.1.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
