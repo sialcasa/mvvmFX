@@ -1,16 +1,20 @@
-jfx-mvvm
-========
+mvvmfx complex example
+======================
 
-An example how to implement a small project with the MVVM pattern. 
+This module contains the business logic and user interface implementation of the example.
+Not part of this maven module is the startup code to run the application itself. This can be done with either
+[mvvmfx-cdi-starter](https://github.com/sialcasa/mvvmFX/tree/develop/examples/mvvmfx-cdi-starter) or
+[mvvmfx-guice-starter](https://github.com/sialcasa/mvvmFX/tree/develop/examples/mvvmfx-guice-starter) depending on the dependency injection framework you want to use.
 
-This example uses my open source library [mvvmFX](https://github.com/sialcasa/mvvmFX) which is currently in development. It provides following features:
+This separation is possible because both guice and cdi can use the `@Inject` annotation (which is used in this module)
+for dependency injection configuration.
 
-- Guice Support
-- Custom FXML Loader
-- MVVM Base Implementations
-- Notification Mechanism
+To see this example in action you need to:
 
-**If you want to run it, you have to set the propper JAVA_HOME that the JavaFX dependency can be resolved.**
+1. first build this module with `mvn clean install`
+2. use the `Starter` class of either [mvvmfx-cdi-example](https://github.com/sialcasa/mvvmFX/blob/develop/examples/mvvmfx-cdi-starter/src/main/java/de/saxsys/jfx/Starter.java)
+ or [mvvmfx-guice-example](https://github.com/sialcasa/mvvmFX/blob/develop/examples/mvvmfx-guice-starter/src/main/java/de/saxsys/jfx/Starter.java).
+3. If are using java 7 you need to have the `JAVA_HOME` property defined correctly because the JavaFX runtime is resolved this directory.
 
 ##Parts of the project##
 
