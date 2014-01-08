@@ -28,11 +28,6 @@
 	<description>This module contains extensions to use mvvmFX with Guice Dependency Injection</description>
 
 	<dependencies>
-		<dependency>
-			<groupId>javafx</groupId>
-			<artifactId>javafx</artifactId>
-		</dependency>
-
         <dependency>
             <groupId>de.saxsys</groupId>
             <artifactId>mvvmFX</artifactId>
