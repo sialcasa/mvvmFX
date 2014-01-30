@@ -31,7 +31,7 @@
         <dependency>
             <groupId>de.saxsys</groupId>
             <artifactId>mvvmFX</artifactId>
-            <version>0.1.3-SNAPSHOT</version>
+            <version>${project.parent.version}</version>
             <scope>provided</scope>
         </dependency>
 
