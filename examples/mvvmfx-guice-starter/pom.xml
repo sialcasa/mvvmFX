@@ -10,7 +10,7 @@
 	  	This example shows the usage of the mvvmFX framework with Guice Dependency Injection.
 	</description>
 	<properties>
-		<mvvmfx.version>0.1.3-SNAPSHOT</mvvmfx.version>
+		<mvvmfx.version>0.1.3</mvvmfx.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
