@@ -3,8 +3,8 @@ mvvmfx complex example
 
 This module contains the business logic and user interface implementation of the example.
 Not part of this maven module is the startup code to run the application itself. This can be done with either
-[mvvmfx-cdi-starter](https://github.com/sialcasa/mvvmFX/tree/develop/examples/mvvmfx-cdi-starter) or
-[mvvmfx-guice-starter](https://github.com/sialcasa/mvvmFX/tree/develop/examples/mvvmfx-guice-starter) depending on the dependency injection framework you want to use.
+[mvvmfx-cdi-starter](/examples/mvvmfx-cdi-starter) or
+[mvvmfx-guice-starter](/examples/mvvmfx-guice-starter) depending on the dependency injection framework you want to use.
 
 This separation is possible because both guice and cdi can use the `@Inject` annotation (which is used in this module)
 for dependency injection configuration.
@@ -12,8 +12,8 @@ for dependency injection configuration.
 To see this example in action you need to:
 
 1. first build this module with `mvn clean install`
-2. use the `Starter` class of either [mvvmfx-cdi-example](https://github.com/sialcasa/mvvmFX/blob/develop/examples/mvvmfx-cdi-starter/src/main/java/de/saxsys/jfx/Starter.java)
- or [mvvmfx-guice-example](https://github.com/sialcasa/mvvmFX/blob/develop/examples/mvvmfx-guice-starter/src/main/java/de/saxsys/jfx/Starter.java).
+2. use the `Starter` class of either [mvvmfx-cdi-example](/examples/mvvmfx-cdi-starter/src/main/java/de/saxsys/jfx/Starter.java)
+ or [mvvmfx-guice-example](/examples/mvvmfx-guice-starter/src/main/java/de/saxsys/jfx/Starter.java).
 3. If are using java 7 you need to have the `JAVA_HOME` property defined correctly because the JavaFX runtime is resolved this directory.
 
 ##Parts of the project##
