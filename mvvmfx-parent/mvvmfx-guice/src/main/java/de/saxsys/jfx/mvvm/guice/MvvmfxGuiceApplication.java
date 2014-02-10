@@ -16,11 +16,11 @@
 package de.saxsys.jfx.mvvm.guice;
 
 import com.cathive.fx.guice.GuiceApplication;
+import com.google.inject.Inject;
 import com.google.inject.Module;
 import de.saxsys.jfx.mvvm.api.MvvmFX;
 import javafx.stage.Stage;
 
-import javax.inject.Inject;
 import java.util.List;
 
 /**

@@ -1,5 +1,6 @@
 package de.saxsys.jfx;
 
+import com.google.inject.Inject;
 import com.google.inject.Module;
 import de.saxsys.jfx.exampleapplication.view.maincontainer.MainContainerView;
 import de.saxsys.jfx.exampleapplication.viewmodel.maincontainer.MainContainerViewModel;
@@ -10,7 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import javax.inject.Inject;
 import java.util.List;
 
 /**
