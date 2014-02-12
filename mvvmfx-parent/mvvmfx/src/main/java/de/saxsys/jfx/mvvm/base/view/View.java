@@ -17,8 +17,8 @@ package de.saxsys.jfx.mvvm.base.view;
 
 import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
 import de.saxsys.jfx.mvvm.di.DependencyInjector;
-import de.saxsys.jfx.mvvm.internal.utils.GenericTypeResolver;
 import javafx.fxml.Initializable;
+import net.jodah.typetools.TypeResolver;
 
 /**
  * Abstract class for a MVVMView - you have to say which View Model it uses.
@@ -67,7 +67,11 @@ public abstract class View<ViewModelType extends ViewModel> implements
 	 */
 	@SuppressWarnings("unchecked")
 	private Class<ViewModelType> returnedClass() {
-		return (Class<ViewModelType>) GenericTypeResolver.getTypeArguments(View.class, getClass())
-				.get(0);
+        Class<?> type = TypeResolver.resolveRawArgument(View.class, getClass());
+        if(type == TypeResolver.Unknown.class){
+            return null;
+        }else{
+            return (Class<ViewModelType>) type;
+        }
 	}
 }
