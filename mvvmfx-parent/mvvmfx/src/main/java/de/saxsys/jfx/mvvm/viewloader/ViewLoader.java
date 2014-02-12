@@ -123,7 +123,7 @@ public final class ViewLoader {
 			if (tuple.getView() == null) {
 				LOG.error("Could not load the view for the following FXML file: "
 						+ resource
-						+ " This is an serious error and cause an exception.");
+						+ " This is a serious error and caused an exception.");
 			}
 			return tuple;
 		} catch (final IOException ex) {
