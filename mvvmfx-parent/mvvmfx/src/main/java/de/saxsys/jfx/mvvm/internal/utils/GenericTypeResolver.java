@@ -8,22 +8,20 @@ import java.util.Map;
 
 /**
  * This class is used to resolve the generic type of a class at runtime.
- *
+ * <p/>
  * // http://stackoverflow.com/questions/3403909/get-generic-type-of-class-at-runtime
  */
 public class GenericTypeResolver {
 
 
     /**
-     * Get the underlying class for a type, or null if the type is a variable
-     * type.
+     * Get the underlying class for a type, or null if the type is a variable type.
      *
-     * @param type
-     *            the type
+     * @param type the type
      * @return the underlying class
      */
     @SuppressWarnings("rawtypes")
-    public static Class<?> getClass(Type type) {
+    static Class<?> getClass(Type type) {
         if (type instanceof Class) {
             return (Class) type;
         } else if (type instanceof ParameterizedType) {
@@ -44,21 +42,26 @@ public class GenericTypeResolver {
 
 
     /**
-     * Get the actual type arguments a child class has used to extend a generic
-     * base class.
+     * Get the actual type arguments a child class has used to extend a generic base class.
      *
-     * @param baseClass
-     *            the base class
-     * @param childClass
-     *            the child class
+     * @param baseClass  the base class, may not be an interface type
+     * @param childClass the child class
      * @return a list of the raw classes for the actual type arguments.
      */
     @SuppressWarnings("rawtypes")
     public static <T> List<Class<?>> getTypeArguments(Class<T> baseClass,
-                                               Class<? extends T> childClass) {
+                                                      Class<? extends T> childClass) {
+
+        if (baseClass.isInterface()) {
+            throw new IllegalArgumentException("The base class parameter has to be a class and not an interface. " +
+                    "At the moment, type parameter can only be resolved for interface base types");
+        }
+
         Map<Type, Type> resolvedTypes = new HashMap<>();
         Type type = childClass;
         // start walking up the inheritance hierarchy until we hit baseClass
+
+
         while (!getClass(type).equals(baseClass)) {
             if (type instanceof Class) {
                 // there is no useful information for us in raw types, so just
