@@ -19,6 +19,6 @@ To create an application that is powered by CDI / Weld you have to extend `Mvvmf
         }
     }
 
-A simple example for this is available at [mvvmfx-cdi-starter](https://github.com/sialcasa/mvvmFX/tree/develop/examples/mvvmfx-cdi-starter)
+A simple example for this is available at [mvvmfx-cdi-starter](/examples/mvvmfx-cdi-starter)
 
-If you prefer Guice as a dependency injection framework you can use [mvvnfx-guice](https://github.com/sialcasa/mvvmFX/tree/develop/mvvmfx-parent/mvvmfx-guice)
+If you prefer Guice as a dependency injection framework you can use [mvvnfx-guice](/mvvmfx-parent/mvvmfx-guice)

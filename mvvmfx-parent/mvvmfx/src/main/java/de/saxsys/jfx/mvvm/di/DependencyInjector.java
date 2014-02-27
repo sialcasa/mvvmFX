@@ -58,7 +58,8 @@ public class DependencyInjector {
                 // use default creation
                 return type.newInstance();
             } catch (InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException("Can't create instance of type " + type.getName() ,e);
+                throw new RuntimeException("Can't create instance of type " + type.getName() +
+                        ". Make sure that the class has a public no-arg constructor." ,e);
             }
         }
     }

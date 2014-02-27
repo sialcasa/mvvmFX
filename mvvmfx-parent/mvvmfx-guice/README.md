@@ -27,6 +27,6 @@ To create an application that is powered by Guice you have to extend `MvvmfxGuic
     }
 
 
-A simple example for this is available at [mvvmfx-guice-starter](https://github.com/sialcasa/mvvmFX/tree/develop/examples/mvvmfx-guice-starter)
+A simple example for this is available at [mvvmfx-guice-starter](/examples/mvvmfx-guice-starter)
 
-If you prefer CDI as a dependency injection framework you can use [mvvnfx-cdi](https://github.com/sialcasa/mvvmFX/tree/develop/mvvmfx-parent/mvvmfx-cdi)
+If you prefer CDI as a dependency injection framework you can use [mvvnfx-cdi](/mvvmfx-parent/mvvmfx-cdi)
