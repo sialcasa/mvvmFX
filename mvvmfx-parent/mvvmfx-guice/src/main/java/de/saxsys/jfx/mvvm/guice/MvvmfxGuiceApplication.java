@@ -43,7 +43,7 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication {
 
     /**
      * This method is overridden to initialize the mvvmFX framework. Override the {@link
-     * #startMvvmfx(javafx.stage.Stage) method for your application entry point and startup code instead of this
+     * #startMvvmfx(javafx.stage.Stage)} method for your application entry point and startup code instead of this
      * method.
      */
     public final void start(Stage stage) throws Exception {
