@@ -50,9 +50,9 @@
 			<version>${mvvmfx.version}</version>
 		</dependency>
 		<dependency>
-				<groupId>de.saxsys</groupId>
-				<artifactId>mvvmFX-guice</artifactId>
-				<version>${mvvmfx.version}</version>
+            <groupId>de.saxsys</groupId>
+            <artifactId>mvvmFX-guice</artifactId>
+            <version>${mvvmfx.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.saxsys</groupId>
