@@ -15,11 +15,10 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.guice;
 
+import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 import javafx.util.Callback;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * This class is used as custom dependency injector for {@link de.saxsys.jfx.mvvm.api.MvvmFX#setCustomDependencyInjector(javafx.util.Callback)}.

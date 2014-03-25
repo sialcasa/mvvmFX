@@ -25,7 +25,7 @@
 	<groupId>de.saxsys</groupId>
 	<artifactId>mvvmFX-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>0.1.3</version>
+	<version>0.1.4</version>
 	<name>mvvmFX parent</name>
 	<description>Application Framework for MVVM with JavaFX.</description>
 	<url>http://www.saxsys.de</url>
@@ -70,6 +70,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
+        <sonar.java.source>1.7</sonar.java.source>
 	</properties>
 
 	<modules>
@@ -88,18 +89,18 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.6.6</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>1.6.6</version>
+			<version>1.7.6</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>12.0</version>
 		</dependency>
+        <dependency>
+            <groupId>net.jodah</groupId>
+            <artifactId>typetools</artifactId>
+            <version>0.3.1</version>
+        </dependency>
 
 		<!-- Testing Frameworks -->
 		<dependency>
@@ -123,6 +124,12 @@
 			<artifactId>powermock-api-mockito</artifactId>
 			<version>1.5.1</version>
 		</dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>1.2.0</version>
+        </dependency>
 	</dependencies>
 </dependencyManagement>
 

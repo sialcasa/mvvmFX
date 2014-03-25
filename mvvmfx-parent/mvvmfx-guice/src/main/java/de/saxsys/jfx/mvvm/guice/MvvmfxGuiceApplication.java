@@ -16,11 +16,11 @@
 package de.saxsys.jfx.mvvm.guice;
 
 import com.cathive.fx.guice.GuiceApplication;
+import com.google.inject.Inject;
 import com.google.inject.Module;
 import de.saxsys.jfx.mvvm.api.MvvmFX;
 import javafx.stage.Stage;
 
-import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -43,7 +43,7 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication {
 
     /**
      * This method is overridden to initialize the mvvmFX framework. Override the {@link
-     * #startMvvmfx(javafx.stage.Stage) method for your application entry point and startup code instead of this
+     * #startMvvmfx(javafx.stage.Stage)} method for your application entry point and startup code instead of this
      * method.
      */
     public final void start(Stage stage) throws Exception {

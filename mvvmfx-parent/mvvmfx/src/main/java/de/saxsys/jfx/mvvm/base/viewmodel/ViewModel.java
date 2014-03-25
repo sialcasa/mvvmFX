@@ -19,7 +19,7 @@ import de.saxsys.jfx.mvvm.base.view.View;
 import de.saxsys.jfx.mvvm.notifications.NotificationCenter;
 
 /**
- * Marker inferface for a View Model. Some additional hints to this layer:
+ * Marker interface for a View Model. Some additional hints to this layer:
  * 
  * Never create a dependency to the view in this layer - if you have to create a
  * new view after a business step, notify the view with the
