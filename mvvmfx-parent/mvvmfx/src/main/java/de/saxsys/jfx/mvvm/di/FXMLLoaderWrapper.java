@@ -28,6 +28,8 @@ import java.util.ResourceBundle;
 
 /**
  * This is a wrapper for javaFX`s {@link FXMLLoader}. It is used to load a {@link ViewTuple} for a fxml file.
+ * 
+ * @author manuel.mauky, alexander.casall 
  */
 public class FXMLLoaderWrapper {
 

@@ -1,4 +1,4 @@
-package de.saxsys.jfx.mvvm.viewloader;
+package de.saxsys.jfx.mvvm.viewloader.example;
 
 import de.saxsys.jfx.mvvm.api.ViewModel;
 

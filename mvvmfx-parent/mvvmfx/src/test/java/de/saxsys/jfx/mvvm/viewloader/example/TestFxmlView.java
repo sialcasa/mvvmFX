@@ -1,8 +1,6 @@
-package de.saxsys.jfx.mvvm.viewloader;
+package de.saxsys.jfx.mvvm.viewloader.example;
 
 import de.saxsys.jfx.mvvm.api.FxmlView;
-import de.saxsys.jfx.mvvm.base.view.View;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
 import java.net.URL;
@@ -10,11 +8,15 @@ import java.util.ResourceBundle;
 
 
 /**
- * This class is used as example View class.
+ * This class is used as example View class that uses FXML.
+ * 
+ * @author manuel.mauky 
  */
-public class TestView implements FxmlView<TestViewModel>, Initializable{
+public class TestFxmlView implements FxmlView<TestViewModel>, Initializable{
     public URL url;
     public ResourceBundle resourceBundle;
+    
+    public TestViewModel viewModel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -24,6 +26,6 @@ public class TestView implements FxmlView<TestViewModel>, Initializable{
 
     @Override
     public void setViewModel(TestViewModel viewModel) {
-
+        this.viewModel = viewModel;
     }
 }

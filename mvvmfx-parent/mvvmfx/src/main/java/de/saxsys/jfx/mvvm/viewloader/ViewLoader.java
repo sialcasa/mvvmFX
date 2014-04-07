@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Alexander Casall
+ * Copyright 2013 Alexander Casall, Manuel Mauky
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import java.util.ResourceBundle;
  * <ul> <li>Providing the code behind class (controller) by calling {@link #loadViewTuple(Class)}</li> <li>Providing a
  * path to the FXML file by calling {@link #loadViewTuple(String)}</li> </ul>
  *
- * @author alexander.casall
+ * @author alexander.casall, manuel.mauky
  */
 public final class ViewLoader {
 
@@ -77,14 +77,19 @@ public final class ViewLoader {
         if (type != null) {
             LOG.debug("Loading view '{}' of type {}.", type, FxmlView.class.getSimpleName());
 
-            return fxmlViewLoader.loadFxmlViewTuple(viewType, resourceBundle);
+            Class<? extends FxmlView<ViewType>> fxmlViewType = (Class<? extends FxmlView<ViewType>>) viewType;
+            
+            return fxmlViewLoader.loadFxmlViewTuple(fxmlViewType, resourceBundle);
         }
 
         type = TypeResolver.resolveGenericType(JavaView.class, viewType);
 
         if (type != null) {
             LOG.debug("Loading view '{}' of type {}.", type, JavaView.class.getSimpleName());
-            return javaViewLoader.loadJavaViewTuple(viewType, resourceBundle);
+
+            Class<? extends JavaView<ViewType>> javaViewType = (Class<? extends JavaView<ViewType>>) viewType;
+            
+            return javaViewLoader.loadJavaViewTuple(javaViewType, resourceBundle);
         }
 
         String errorMessage = String.format("Loading view '%s' failed. Can't detect the view type. Your view has to implement '%s' or '%s'.",

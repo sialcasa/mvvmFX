@@ -28,6 +28,7 @@ import net.jodah.typetools.TypeResolver;
  * The user can define how instances should be retrieved by setting an callback that
  * returns an instance for a given class type (see {@link DependencyInjector#setCustomInjector}.
  *
+ * @author manuel.mauky 
  */
 public class DependencyInjector {
 
