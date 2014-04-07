@@ -1,6 +1,10 @@
 package de.saxsys.jfx.mvvm.viewloader;
 
 
+import de.saxsys.jfx.mvvm.api.FxmlView;
+import de.saxsys.jfx.mvvm.api.ViewModel;
+import de.saxsys.jfx.mvvm.base.view.View;
+import de.saxsys.jfx.mvvm.base.view.ViewWithoutViewModel;
 import javafx.scene.layout.VBox;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,6 +88,24 @@ public class ViewLoaderIntegrationTest {
     public void testLoadFailNoValidContentInFxmlFile(){
         ViewTuple<?> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/wrong.fxml");
         assertThat(viewTuple).isNull();
+    }
+
+
+    /**
+     * An exception may be thrown when you try to load a {@link de.saxsys.jfx.mvvm.base.view.View} without
+     * specifying a ViewModel type.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testLoadViewWithoutViewModelFail(){
+        
+        class MyView implements View<ViewModel> {
+            @Override
+            public void setViewModel(ViewModel viewModel) {
+                
+            }
+        }
+        
+        viewLoader.loadViewTuple(MyView.class);
     }
 
 }

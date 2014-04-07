@@ -15,7 +15,10 @@
 ******************************************************************************/
 package de.saxsys.jfx.mvvm.di;
 
+import de.saxsys.jfx.mvvm.api.ViewModel;
+import de.saxsys.jfx.mvvm.base.view.View;
 import javafx.util.Callback;
+import net.jodah.typetools.TypeResolver;
 
 /**
  * This class handles the dependency injection for the mvvmFX framework.
@@ -51,6 +54,28 @@ public class DependencyInjector {
      * @return
      */
     public <T> T getInstanceOf(Class<? extends T> type){
+        T instance = getUninitializedInstanceOf(type);
+
+        if(instance instanceof View){
+            injectViewModel((View) instance);
+        }
+
+        return instance;
+    }
+
+    private <T> void injectViewModel(View instance) {
+        View view = instance;
+
+        Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
+
+        if(viewModelType != TypeResolver.Unknown.class){
+            Object viewModel = DependencyInjector.getInstance().getInstanceOf(viewModelType);
+
+            view.setViewModel((ViewModel) viewModel);
+        }
+    }
+
+    private <T> T getUninitializedInstanceOf(Class<? extends T> type){
         if(isCustomInjectorDefined()){
             return (T) customInjector.call(type);
         }else{

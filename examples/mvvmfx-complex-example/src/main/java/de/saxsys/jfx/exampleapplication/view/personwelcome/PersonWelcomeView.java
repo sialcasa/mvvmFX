@@ -3,8 +3,10 @@ package de.saxsys.jfx.exampleapplication.view.personwelcome;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import de.saxsys.jfx.mvvm.api.FxmlView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
 import javax.inject.Inject;
@@ -19,7 +21,7 @@ import de.saxsys.jfx.mvvm.notifications.NotificationCenter;
  * 
  * @author alexander.casall
  */
-public class PersonWelcomeView extends View<PersonWelcomeViewModel> {
+public class PersonWelcomeView implements FxmlView<PersonWelcomeViewModel>, Initializable{
 
 	@FXML
 	// Injection of the label which is declared in the FXML File and shows the
@@ -28,19 +30,29 @@ public class PersonWelcomeView extends View<PersonWelcomeViewModel> {
 
 	@Inject
 	private NotificationCenter notificationCenter;
-
-	@Override
-	public void initialize(final URL arg0, final ResourceBundle arg1) {
-		welcomeLabel.textProperty()
-				.bind(getViewModel().welcomeStringProperty());
-	}
+    private PersonWelcomeViewModel viewModel;
 
 	@FXML
 	// Handler for Button[Button[id=null, styleClass=button]] onAction
 	public void closeApplicationButtonPressed(ActionEvent event) {
 		// MainContainerView.java will handle it
-		notificationCenter.postNotification("hidePersonWelcome", getViewModel()
-				.getPersonId());
+		notificationCenter.postNotification("hidePersonWelcome", viewModel
+                .getPersonId());
 	}
 
+    @Override
+    public void setViewModel(final PersonWelcomeViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
+
+
+    public PersonWelcomeViewModel getViewModel() {
+        return viewModel;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        welcomeLabel.textProperty()
+                .bind(viewModel.welcomeStringProperty());
+    }
 }

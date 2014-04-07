@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2013 Alexander Casall
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,121 +15,106 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.viewloader;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import de.saxsys.jfx.mvvm.api.FxmlView;
+import de.saxsys.jfx.mvvm.api.JavaView;
+import de.saxsys.jfx.mvvm.api.ViewModel;
+import de.saxsys.jfx.mvvm.base.view.View;
+import de.saxsys.jfx.mvvm.di.FXMLLoaderWrapper;
+import net.jodah.typetools.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.saxsys.jfx.mvvm.base.view.View;
-import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
-import de.saxsys.jfx.mvvm.di.FXMLLoaderWrapper;
+import java.lang.reflect.Type;
+import java.util.ResourceBundle;
 
 /**
- * Loader class for loading FXML and code behind from Fs. There are following
- * options for loading the FXML:
- * 
- * <ul>
- * <li>Providing the code behind class (controller) by calling
- * {@link #loadViewTuple(Class)}</li>
- * <li>Providing a path to the FXML file by calling
- * {@link #loadViewTuple(String)}</li>
- * </ul>
- * 
+ * Loader class for loading FXML and code behind from Fs. There are following options for loading the FXML:
+ * <p/>
+ * <ul> <li>Providing the code behind class (controller) by calling {@link #loadViewTuple(Class)}</li> <li>Providing a
+ * path to the FXML file by calling {@link #loadViewTuple(String)}</li> </ul>
+ *
  * @author alexander.casall
  */
 public final class ViewLoader {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ViewLoader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ViewLoader.class);
 
-	private FXMLLoaderWrapper fxmlLoaderWrapper = new FXMLLoaderWrapper();
+    private FXMLLoaderWrapper fxmlLoaderWrapper = new FXMLLoaderWrapper();
 
-	/**
-	 * Load the view (Code behind + Node from FXML) by a given Code behind
-	 * class. Care - The fxml has to be in the same package like the clazz.
-	 * 
-	 * @param viewType
-	 *            which is the code behind of a fxml
-	 * @return the tuple
-	 */
-	@SuppressWarnings("unchecked")
-	public <ViewType extends ViewModel> ViewTuple<ViewType> loadViewTuple(
-			Class<? extends View<ViewType>> viewType) {
-		return (ViewTuple<ViewType>) loadViewTuple(viewType, null);
-	}
+    private FxmlViewLoader fxmlViewLoader = new FxmlViewLoader();
 
-	/**
-	 * Load the view (Code behind + Node from FXML) by a given resource path.
-	 * 
-	 * @param resource
-	 *            to load the controller from
-	 * @return tuple which is <code>null</code> if an error occures.
-	 */
-	public ViewTuple<? extends ViewModel> loadViewTuple(final String resource) {
-		return loadViewTuple(resource, null);
-	}
+    private JavaViewLoader javaViewLoader = new JavaViewLoader();
 
-	/**
-	 * Load the view (Code behind + Node from FXML) by a given Code behind
-	 * class. Care - The fxml has to be in the same package like the clazz.
-	 * 
-	 * @param viewType
-	 *            which is the code behind of a fxml
-	 * @param resourceBundle
-	 *            which is passed to the viewloader
-	 * @return the tuple
-	 */
-	@SuppressWarnings("unchecked")
-	public <ViewType extends ViewModel> ViewTuple<ViewType> loadViewTuple(
-			Class<? extends View<ViewType>> viewType,
-			ResourceBundle resourceBundle) {
-		String pathToFXML = "/"
-				+ viewType.getPackage().getName().replaceAll("\\.", "/") + "/"
-				+ viewType.getSimpleName() + ".fxml";
+    /**
+     * Load a ViewTuple for the given View type. The view type has to implement either the {@link
+     * de.saxsys.jfx.mvvm.api.FxmlView} or {@link de.saxsys.jfx.mvvm.api.JavaView} interface.
+     *
+     * @param viewType   the class type of the view to be loaded.
+     * @param <ViewType> the generic type of the ViewModel.
+     *
+     * @return the ViewTuple that contains the view and the viewModel.
+     */
+    public <ViewType extends ViewModel> ViewTuple<ViewType> loadViewTuple(Class<? extends View<ViewType>> viewType) {
+        return loadViewTuple(viewType, null);
+    }
 
-		return (ViewTuple<ViewType>) loadViewTuple(pathToFXML, resourceBundle);
+    /**
+     * Load a ViewTuple for the given View type. The view type has to implement either the {@link
+     * de.saxsys.jfx.mvvm.api.FxmlView} or {@link de.saxsys.jfx.mvvm.api.JavaView} interface.
+     * <p/>
+     * This method can be used when you need to load a {@link java.util.ResourceBundle} with the view.
+     *
+     * @param viewType       the class type of the view to be loaded.
+     * @param resourceBundle the resourceBundle that is loaded with the view.
+     * @param <ViewType>     the generic type of the ViewModel.
+     *
+     * @return the ViewTuple that contains the view and the viewModel.
+     */
+    public <ViewType extends ViewModel> ViewTuple<ViewType> loadViewTuple(Class<? extends View<ViewType>> viewType,
+            ResourceBundle resourceBundle) {
+        Type type = TypeResolver.resolveGenericType(FxmlView.class, viewType);
 
-	}
+        if (type != null) {
+            LOG.debug("Loading view '{}' of type {}.", type, FxmlView.class.getSimpleName());
 
-	/**
-	 * Load the view (Code behind + Node from FXML) by a given resource path.
-	 * 
-	 * @param resource
-	 *            to load the controller from
-	 * @param resourceBundle
-	 *            which is passed to the viewloader
-	 * @return tuple which is <code>null</code> if an error occures.
-	 */
-	public ViewTuple<? extends ViewModel> loadViewTuple(final String resource,
-			ResourceBundle resourceBundle) {
-		// Load FXML file
-		final URL location = getClass().getResource(resource);
-		if (location == null) {
-			LOG.error("Error loading FXML - can't load from given resourcepath: "
-					+ resource);
-			return null;
-		}
+            return fxmlViewLoader.loadFxmlViewTuple(viewType, resourceBundle);
+        }
 
-		try {
+        type = TypeResolver.resolveGenericType(JavaView.class, viewType);
 
-			ViewTuple<? extends ViewModel> tuple = fxmlLoaderWrapper.load(
-					location, resourceBundle);
-			if (tuple.getCodeBehind() == null) {
-				LOG.warn("Could not load the code behind class for the following FXML file: "
-						+ resource
-						+ " please check whether you have set the fx:controller attribute in the FXML!");
-			}
-			if (tuple.getView() == null) {
-				LOG.error("Could not load the view for the following FXML file: "
-						+ resource
-						+ " This is a serious error and caused an exception.");
-			}
-			return tuple;
-		} catch (final IOException ex) {
-			LOG.error("Error loading FXML :", ex);
-			return null;
-		}
+        if (type != null) {
+            LOG.debug("Loading view '{}' of type {}.", type, JavaView.class.getSimpleName());
+            return javaViewLoader.loadJavaViewTuple(viewType, resourceBundle);
+        }
 
-	}
+        String errorMessage = String.format("Loading view '%s' failed. Can't detect the view type. Your view has to implement '%s' or '%s'.",
+                viewType, FxmlView.class.getName(), JavaView.class.getName());
+        throw new IllegalArgumentException(errorMessage);
+    }
+
+
+    /**
+     * Load the view (Code behind + Node from FXML) by a given resource path.
+     *
+     * @param resource to load the controller from
+     *
+     * @return tuple which is <code>null</code> if an error occures.
+     */
+    public ViewTuple<? extends ViewModel> loadViewTuple(final String resource) {
+        return loadViewTuple(resource, null);
+    }
+
+    /**
+     * Load the view (Code behind + Node from FXML) by a given resource path.
+     *
+     * @param resource       to load the controller from
+     * @param resourceBundle which is passed to the viewloader
+     *
+     * @return tuple which is <code>null</code> if an error occures.
+     */
+    public ViewTuple<? extends ViewModel> loadViewTuple(final String resource,
+            ResourceBundle resourceBundle) {
+        return fxmlViewLoader.loadFxmlViewTuple(resource, resourceBundle);
+    }
+    
 }

@@ -19,7 +19,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
 import de.saxsys.jfx.mvvm.base.view.View;
-import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
+import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
 
 /**

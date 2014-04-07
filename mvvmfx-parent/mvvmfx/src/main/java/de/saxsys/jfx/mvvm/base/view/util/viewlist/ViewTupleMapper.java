@@ -15,7 +15,7 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.base.view.util.viewlist;
 
-import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
+import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
 
 /**

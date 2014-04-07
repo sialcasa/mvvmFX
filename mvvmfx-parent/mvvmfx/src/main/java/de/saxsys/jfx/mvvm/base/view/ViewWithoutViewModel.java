@@ -15,11 +15,11 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.base.view;
 
-import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
+import de.saxsys.jfx.mvvm.api.ViewModel;
 
 /**
  * {@link View} without a View Model.
  * @author sialcasa
  */
-public abstract class ViewWithoutViewModel extends View<ViewModel> {
+public interface ViewWithoutViewModel extends View<ViewModel> {
 }

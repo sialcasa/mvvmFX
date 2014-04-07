@@ -9,7 +9,7 @@ import javafx.beans.property.StringProperty;
 
 import de.saxsys.jfx.exampleapplication.model.Person;
 import de.saxsys.jfx.exampleapplication.model.Repository;
-import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
+import de.saxsys.jfx.mvvm.api.ViewModel;
 
 import javax.inject.Inject;
 

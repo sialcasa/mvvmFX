@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package de.saxsys.jfx.mvvm.base.viewmodel;
+package de.saxsys.jfx.mvvm.api;
 
 import de.saxsys.jfx.mvvm.base.view.View;
 import de.saxsys.jfx.mvvm.notifications.NotificationCenter;
