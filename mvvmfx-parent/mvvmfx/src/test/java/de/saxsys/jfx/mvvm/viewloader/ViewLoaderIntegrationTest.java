@@ -81,7 +81,7 @@ public class ViewLoaderIntegrationTest {
 
     @Test
     public void testLoadWithStringPath() {
-        ViewTuple<?> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example/testFxmlView.fxml");
+        ViewTuple<?> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example/TestFxmlView.fxml");
         assertThat(viewTuple).isNotNull();
 
         assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
@@ -103,7 +103,7 @@ public class ViewLoaderIntegrationTest {
     @Test
     public void testLoadFailNoControllerDefined() {
         ViewTuple<?> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example" +
-                "/testFxmlViewWithoutController.fxml");
+                "/TestFxmlViewWithoutController.fxml");
         assertThat(viewTuple).isNotNull();
 
         assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
