@@ -2,8 +2,9 @@ package de.saxsys.jfx.mvvm.utils;
 
 import de.saxsys.jfx.mvvm.JavaFXThreadingRule;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
+import javafx.scene.control.Control;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 import org.junit.Before;
 import org.junit.Rule;
@@ -15,10 +16,10 @@ import static org.assertj.core.api.Assertions.*;
 public class SizeBindingsBuilderTest{
 
     private static final double SIZEVAL = 100d;
-    private Pane fromPaneMock;
-    private Pane toPane;
-    private ScrollPane fromScrollPaneMock;
-    private ScrollPane toScrollPane;
+    private Region fromRegionMock;
+    private Region toRegion;
+    private Control fromControlMock;
+    private Control toControl;
     private Rectangle fromRectangleMock;
     private Rectangle toRectangle;
 
@@ -31,15 +32,15 @@ public class SizeBindingsBuilderTest{
      */
     @Before
     public void setUp(){
-        fromPaneMock = new Pane();
-        mockSize(fromPaneMock);
-        fromScrollPaneMock = new ScrollPane();
-        mockSize(fromScrollPaneMock);
+        fromRegionMock = new Region();
+        mockSize(fromRegionMock);
+        fromControlMock = new ScrollPane();
+        mockSize(fromControlMock);
         fromRectangleMock = new Rectangle();
         mockSize(fromRectangleMock);
 
-        toPane = new Pane();
-        toScrollPane = new ScrollPane();
+        toRegion = new Region();
+        toControl = new ScrollPane();
         toRectangle = new Rectangle();
     }
 
@@ -57,69 +58,52 @@ public class SizeBindingsBuilderTest{
 
 
     @Test
-    public void bindSizeFromPaneToPane(){
-        SizeBindingsBuilder.size().from(fromPaneMock).to(toPane);
-        assertCorrectSize(toPane);
+    public void bindSizeFromRegionToRegion(){
+        SizeBindingsBuilder.size().from(fromRegionMock).to(toRegion);
+        assertCorrectSize(toRegion);
     }
 
-    /**
-     * Bind a Pane to a ScrollPane.
-     */
     @Test
-    public void bindSizeFromPaneToScrollPane() {
-        SizeBindingsBuilder.size().from(fromPaneMock).to(toScrollPane);
-        assertCorrectSize(toScrollPane);
+    public void bindSizeFromRegionToControl() {
+        SizeBindingsBuilder.size().from(fromRegionMock).to(toControl);
+        assertCorrectSize(toControl);
     }
 
-    /**
-     * Bind a Pane to a Rectangle.
-     */
     @Test
-    public void bindSizeFromPaneToRectangle() {
-        SizeBindingsBuilder.size().from(fromPaneMock).to(toRectangle);
+    public void bindSizeFromRegionToRectangle() {
+        SizeBindingsBuilder.size().from(fromRegionMock).to(toRectangle);
         assertCorrectSize(toRectangle);
     }
 
-
-
-
-
-    /**
-     * Bind a Scrollpane to a Pane.
-     */
     @Test
-    public void bindSizeFromScrollPaneToPane() {
-        SizeBindingsBuilder.size().from(fromScrollPaneMock).to(toPane);
-        assertCorrectSize(toPane);
+    public void bindSizeFromControlToRegion() {
+        SizeBindingsBuilder.size().from(fromControlMock).to(toRegion);
+        assertCorrectSize(toRegion);
     }
 
 
     @Test
-    public void bindSizeFromScrollPaneToScrollPane(){
-        SizeBindingsBuilder.size().from(fromScrollPaneMock).to(toScrollPane);
-        assertCorrectSize(toScrollPane);
+    public void bindSizeFromControlToControl(){
+        SizeBindingsBuilder.size().from(fromControlMock).to(toControl);
+        assertCorrectSize(toControl);
     }
 
     @Test
-    public void bindSizeFromScrollPaneToRectangle(){
-        SizeBindingsBuilder.size().from(fromScrollPaneMock).to(toRectangle);
+    public void bindSizeFromControlToRectangle(){
+        SizeBindingsBuilder.size().from(fromControlMock).to(toRectangle);
         assertCorrectSize(toRectangle);
     }
 
-
-    /**
-     * Bind a Rectangle to a Pane.
-     */
     @Test
-    public void bindSizeFromRectangleToPane() {
-        SizeBindingsBuilder.size().from(fromRectangleMock).to(toPane);
-        assertCorrectSize(toPane);
+    public void bindSizeFromRectangleToRegion() {
+        SizeBindingsBuilder.size().from(fromRectangleMock).to(toRegion);
+        assertCorrectSize(toRegion);
     }
 
     @Test
-    public void bindSizeFromRectangleToScrollPane(){
-        SizeBindingsBuilder.size().from(fromRectangleMock).to(toScrollPane);
-        assertCorrectSize(toScrollPane);
+    public void bindSizeFromRectangleToControl(){
+        SizeBindingsBuilder.size().from(fromRectangleMock).to(toControl);
+        assertCorrectSize(toControl);
     }
 
     @Test
@@ -134,26 +118,26 @@ public class SizeBindingsBuilderTest{
     // HEIGHT Bindings
 
     @Test
-    public void bindHeightFromPaneToPane(){
-        SizeBindingsBuilder.height().from(fromPaneMock).to(toPane);
-        assertCorrectHeight(toPane);
+    public void bindHeightFromRegionToRegion(){
+        SizeBindingsBuilder.height().from(fromRegionMock).to(toRegion);
+        assertCorrectHeight(toRegion);
     }
 
     /**
-     * Bind a Pane to a ScrollPane.
+     * Bind a Region to a Control.
      */
     @Test
-    public void bindHeightFromPaneToScrollPane() {
-        SizeBindingsBuilder.height().from(fromPaneMock).to(toScrollPane);
-        assertCorrectHeight(toScrollPane);
+    public void bindHeightFromRegionToControl() {
+        SizeBindingsBuilder.height().from(fromRegionMock).to(toControl);
+        assertCorrectHeight(toControl);
     }
 
     /**
-     * Bind a Pane to a Rectangle.
+     * Bind a Region to a Rectangle.
      */
     @Test
-    public void bindHeightFromPaneToRectangle() {
-        SizeBindingsBuilder.height().from(fromPaneMock).to(toRectangle);
+    public void bindHeightFromRegionToRectangle() {
+        SizeBindingsBuilder.height().from(fromRegionMock).to(toRectangle);
         assertCorrectHeight(toRectangle);
     }
 
@@ -162,41 +146,41 @@ public class SizeBindingsBuilderTest{
 
 
     /**
-     * Bind a Scrollpane to a Pane.
+     * Bind a Control to a Region.
      */
     @Test
-    public void bindHeightFromScrollPaneToPane() {
-        SizeBindingsBuilder.height().from(fromScrollPaneMock).to(toPane);
-        assertCorrectHeight(toPane);
+    public void bindHeightFromControlToRegion() {
+        SizeBindingsBuilder.height().from(fromControlMock).to(toRegion);
+        assertCorrectHeight(toRegion);
     }
 
 
     @Test
-    public void bindHeightFromScrollPaneToScrollPane(){
-        SizeBindingsBuilder.height().from(fromScrollPaneMock).to(toScrollPane);
-        assertCorrectHeight(toScrollPane);
+    public void bindHeightFromControlToControl(){
+        SizeBindingsBuilder.height().from(fromControlMock).to(toControl);
+        assertCorrectHeight(toControl);
     }
 
     @Test
-    public void bindHeightFromScrollPaneToRectangle(){
-        SizeBindingsBuilder.height().from(fromScrollPaneMock).to(toRectangle);
+    public void bindHeightFromControlToRectangle(){
+        SizeBindingsBuilder.height().from(fromControlMock).to(toRectangle);
         assertCorrectHeight(toRectangle);
     }
 
 
     /**
-     * Bind a Rectangle to a Pane.
+     * Bind a Rectangle to a Region.
      */
     @Test
-    public void bindHeightFromRectangleToPane() {
-        SizeBindingsBuilder.height().from(fromRectangleMock).to(toPane);
-        assertCorrectHeight(toPane);
+    public void bindHeightFromRectangleToRegion() {
+        SizeBindingsBuilder.height().from(fromRectangleMock).to(toRegion);
+        assertCorrectHeight(toRegion);
     }
 
     @Test
-    public void bindHeightFromRectangleToScrollPane(){
-        SizeBindingsBuilder.height().from(fromRectangleMock).to(toScrollPane);
-        assertCorrectHeight(toScrollPane);
+    public void bindHeightFromRectangleToControl(){
+        SizeBindingsBuilder.height().from(fromRectangleMock).to(toControl);
+        assertCorrectHeight(toControl);
     }
 
     @Test
@@ -210,26 +194,26 @@ public class SizeBindingsBuilderTest{
     // WIDTH Bindings
 
     @Test
-    public void bindWidthFromPaneToPane(){
-        SizeBindingsBuilder.width().from(fromPaneMock).to(toPane);
-        assertCorrectWidth(toPane);
+    public void bindWidthFromRegionToRegion(){
+        SizeBindingsBuilder.width().from(fromRegionMock).to(toRegion);
+        assertCorrectWidth(toRegion);
     }
 
     /**
-     * Bind a Pane to a ScrollPane.
+     * Bind a Region to a Control.
      */
     @Test
-    public void bindWidthFromPaneToScrollPane() {
-        SizeBindingsBuilder.width().from(fromPaneMock).to(toScrollPane);
-        assertCorrectWidth(toScrollPane);
+    public void bindWidthFromRegionToControl() {
+        SizeBindingsBuilder.width().from(fromRegionMock).to(toControl);
+        assertCorrectWidth(toControl);
     }
 
     /**
-     * Bind a Pane to a Rectangle.
+     * Bind a Region to a Rectangle.
      */
     @Test
-    public void bindWidthFromPaneToRectangle() {
-        SizeBindingsBuilder.width().from(fromPaneMock).to(toRectangle);
+    public void bindWidthFromRegionToRectangle() {
+        SizeBindingsBuilder.width().from(fromRegionMock).to(toRectangle);
         assertCorrectWidth(toRectangle);
     }
 
@@ -238,41 +222,41 @@ public class SizeBindingsBuilderTest{
 
 
     /**
-     * Bind a Scrollpane to a Pane.
+     * Bind a Control to a Region.
      */
     @Test
-    public void bindWidthFromScrollPaneToPane() {
-        SizeBindingsBuilder.width().from(fromScrollPaneMock).to(toPane);
-        assertCorrectWidth(toPane);
+    public void bindWidthFromControlToRegion() {
+        SizeBindingsBuilder.width().from(fromControlMock).to(toRegion);
+        assertCorrectWidth(toRegion);
     }
 
 
     @Test
-    public void bindWidthFromScrollPaneToScrollPane(){
-        SizeBindingsBuilder.width().from(fromScrollPaneMock).to(toScrollPane);
-        assertCorrectWidth(toScrollPane);
+    public void bindWidthFromControlToControl(){
+        SizeBindingsBuilder.width().from(fromControlMock).to(toControl);
+        assertCorrectWidth(toControl);
     }
 
     @Test
-    public void bindWidthFromScrollPaneToRectangle(){
-        SizeBindingsBuilder.width().from(fromScrollPaneMock).to(toRectangle);
+    public void bindWidthFromControlToRectangle(){
+        SizeBindingsBuilder.width().from(fromControlMock).to(toRectangle);
         assertCorrectWidth(toRectangle);
     }
 
 
     /**
-     * Bind a Rectangle to a Pane.
+     * Bind a Rectangle to a Region.
      */
     @Test
-    public void bindWidthFromRectangleToPane() {
-        SizeBindingsBuilder.width().from(fromRectangleMock).to(toPane);
-        assertCorrectWidth(toPane);
+    public void bindWidthFromRectangleToRegion() {
+        SizeBindingsBuilder.width().from(fromRectangleMock).to(toRegion);
+        assertCorrectWidth(toRegion);
     }
 
     @Test
-    public void bindWidthFromRectangleToScrollPane(){
-        SizeBindingsBuilder.width().from(fromRectangleMock).to(toScrollPane);
-        assertCorrectWidth(toScrollPane);
+    public void bindWidthFromRectangleToControl(){
+        SizeBindingsBuilder.width().from(fromRectangleMock).to(toControl);
+        assertCorrectWidth(toControl);
     }
 
     @Test
@@ -294,14 +278,14 @@ public class SizeBindingsBuilderTest{
     }
 
 
-    private void assertCorrectSize(ScrollPane scrollPane){
-        assertCorrectHeight(scrollPane);
-        assertCorrectWidth(scrollPane);
+    private void assertCorrectSize(Control control){
+        assertCorrectHeight(control);
+        assertCorrectWidth(control);
     }
 
-    private void assertCorrectSize(Pane pane){
-        assertCorrectHeight(pane);
-        assertCorrectWidth(pane);
+    private void assertCorrectSize(Region region){
+        assertCorrectHeight(region);
+        assertCorrectWidth(region);
     }
 
 
@@ -310,14 +294,14 @@ public class SizeBindingsBuilderTest{
     }
 
 
-    private void assertCorrectHeight(ScrollPane scrollPane){
-        assertThat(scrollPane.getMaxHeight()).isEqualTo(SIZEVAL);
-        assertThat(scrollPane.getMinHeight()).isEqualTo(SIZEVAL);
+    private void assertCorrectHeight(Control control){
+        assertThat(control.getMaxHeight()).isEqualTo(SIZEVAL);
+        assertThat(control.getMinHeight()).isEqualTo(SIZEVAL);
     }
 
-    private void assertCorrectHeight(Pane pane){
-        assertThat(pane.getMaxHeight()).isEqualTo(SIZEVAL);
-        assertThat(pane.getMinHeight()).isEqualTo(SIZEVAL);
+    private void assertCorrectHeight(Region region){
+        assertThat(region.getMaxHeight()).isEqualTo(SIZEVAL);
+        assertThat(region.getMinHeight()).isEqualTo(SIZEVAL);
     }
 
 
@@ -326,13 +310,13 @@ public class SizeBindingsBuilderTest{
     }
 
 
-    private void assertCorrectWidth(ScrollPane scrollPane){
-        assertThat(scrollPane.getMaxWidth()).isEqualTo(SIZEVAL);
-        assertThat(scrollPane.getMinWidth()).isEqualTo(SIZEVAL);
+    private void assertCorrectWidth(Control control){
+        assertThat(control.getMaxWidth()).isEqualTo(SIZEVAL);
+        assertThat(control.getMinWidth()).isEqualTo(SIZEVAL);
     }
 
-    private void assertCorrectWidth(Pane pane){
-        assertThat(pane.getMaxWidth()).isEqualTo(SIZEVAL);
-        assertThat(pane.getMinWidth()).isEqualTo(SIZEVAL);
+    private void assertCorrectWidth(Region region){
+        assertThat(region.getMaxWidth()).isEqualTo(SIZEVAL);
+        assertThat(region.getMinWidth()).isEqualTo(SIZEVAL);
     }
 }

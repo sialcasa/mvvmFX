@@ -2,7 +2,6 @@ package de.saxsys.jfx.mvvm.utils;
 
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.control.Control;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 
@@ -76,7 +75,7 @@ public class SizeBindingsBuilder {
                 this.height = height;
             }
 
-            public void to(Pane target) {
+            public void to(Region target) {
                 target.maxHeightProperty().bind(height);
                 target.minHeightProperty().bind(height);
             }
@@ -91,7 +90,7 @@ public class SizeBindingsBuilder {
             }
         }
 
-        public FromHeightBuilderStep from(Pane source) {
+        public FromHeightBuilderStep from(Region source) {
             return new FromHeightBuilderStep(source.heightProperty());
         }
 
@@ -117,7 +116,7 @@ public class SizeBindingsBuilder {
                 this.height = height;
             }
 
-            public void to(Pane target){
+            public void to(Region target){
                 target.maxWidthProperty().bind(width);
                 target.minWidthProperty().bind(width);
 
@@ -140,7 +139,7 @@ public class SizeBindingsBuilder {
         }
 
 
-        public FromSizeBuilderStep from(Pane source) {
+        public FromSizeBuilderStep from(Region source) {
             return new FromSizeBuilderStep(source.widthProperty(),source.heightProperty());
         }
 
@@ -152,9 +151,4 @@ public class SizeBindingsBuilder {
             return new FromSizeBuilderStep(source.widthProperty(), source.heightProperty());
         }
     }
-
-
-
-
-
 }
