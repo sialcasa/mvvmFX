@@ -1,25 +1,18 @@
 package de.saxsys.jfx.mvvm.utils;
 
-import javafx.beans.property.SimpleDoubleProperty;
+import de.saxsys.jfx.mvvm.JavaFXThreadingRule;
+import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.internal.util.reflection.Whitebox;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ Pane.class, ScrollPane.class, Rectangle.class })
-public class SizeBindingsBuilderTest {
+public class SizeBindingsBuilderTest{
 
     private static final double SIZEVAL = 100d;
     private Pane fromPaneMock;
@@ -30,34 +23,33 @@ public class SizeBindingsBuilderTest {
     private Rectangle toRectangle;
 
 
+    @Rule
+    public JavaFXThreadingRule rule = new JavaFXThreadingRule();
+
     /**
      * Create elements which will bind to each other.
      */
     @Before
-    public void setUp() {
-        fromPaneMock = PowerMockito.mock(Pane.class);
-        fromScrollPaneMock = PowerMockito.mock(ScrollPane.class);
-        fromRectangleMock = PowerMockito.mock(Rectangle.class);
-
-        PowerMockito.when(fromPaneMock.getWidth()).thenReturn(SIZEVAL);
-        PowerMockito.when(fromRectangleMock.getWidth()).thenReturn(SIZEVAL);
-        PowerMockito.when(fromScrollPaneMock.getWidth()).thenReturn(SIZEVAL);
-        PowerMockito.when(fromPaneMock.widthProperty()).thenReturn(
-            new SimpleDoubleProperty(SIZEVAL));
-        PowerMockito.when(fromRectangleMock.widthProperty()).thenReturn(
-            new SimpleDoubleProperty(SIZEVAL));
-        PowerMockito.when(fromScrollPaneMock.widthProperty()).thenReturn(
-            new SimpleDoubleProperty(SIZEVAL));
-        PowerMockito.when(fromPaneMock.heightProperty()).thenReturn(
-            new SimpleDoubleProperty(SIZEVAL));
-        PowerMockito.when(fromRectangleMock.heightProperty()).thenReturn(
-            new SimpleDoubleProperty(SIZEVAL));
-        PowerMockito.when(fromScrollPaneMock.heightProperty()).thenReturn(
-            new SimpleDoubleProperty(SIZEVAL));
+    public void setUp(){
+        fromPaneMock = new Pane();
+        mockSize(fromPaneMock);
+        fromScrollPaneMock = new ScrollPane();
+        mockSize(fromScrollPaneMock);
+        fromRectangleMock = new Rectangle();
+        mockSize(fromRectangleMock);
 
         toPane = new Pane();
         toScrollPane = new ScrollPane();
         toRectangle = new Rectangle();
+    }
+
+    /**
+     * Mock the internal storage of the width and height. This is a workaround because we
+     * can't use PowerMock in this case due to conflicts with Javafx 8 initialization of controls.
+     */
+    private void mockSize(Object object){
+        Whitebox.setInternalState(object, "width", new ReadOnlyDoubleWrapper(SIZEVAL));
+        Whitebox.setInternalState(object, "height", new ReadOnlyDoubleWrapper(SIZEVAL));
     }
 
 
