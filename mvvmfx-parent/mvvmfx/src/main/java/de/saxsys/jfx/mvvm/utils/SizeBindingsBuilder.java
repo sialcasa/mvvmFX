@@ -12,24 +12,25 @@ import javafx.scene.shape.Rectangle;
  */
 public class SizeBindingsBuilder {
 
-    public static SizeBuilderStep size(){
-        return new SizeBuilderStep();
+    public static BindSizeBuilderStep bindSize(){
+        return new BindSizeBuilderStep();
     }
 
-    public static WidthBuilderStep width(){
-        return new WidthBuilderStep();
+    public static BindWidthBuilderStep bindWidth(){
+        return new BindWidthBuilderStep();
     }
 
-    public static HeightBuilderStep height(){
-        return new HeightBuilderStep();
+    public static BindHeightBuilderStep bindHeight(){
+        return new BindHeightBuilderStep();
     }
 
-    public static class WidthBuilderStep {
 
-        public static class FromWidthBuilderStep {
+    public static class BindWidthBuilderStep {
+
+        public static class FromBindWidthBuilderStep {
             private final ReadOnlyDoubleProperty width;
 
-            FromWidthBuilderStep(ReadOnlyDoubleProperty width){
+            FromBindWidthBuilderStep(ReadOnlyDoubleProperty width){
                 this.width = width;
             }
 
@@ -52,20 +53,20 @@ public class SizeBindingsBuilder {
             }
         }
 
-        public FromWidthBuilderStep from(Region source) {
-            return new FromWidthBuilderStep(source.widthProperty());
+        public FromBindWidthBuilderStep from(Region source) {
+            return new FromBindWidthBuilderStep(source.widthProperty());
         }
 
-        public FromWidthBuilderStep from(Control source){
-            return new FromWidthBuilderStep(source.widthProperty());
+        public FromBindWidthBuilderStep from(Control source){
+            return new FromBindWidthBuilderStep(source.widthProperty());
         }
 
-        public FromWidthBuilderStep from(Rectangle source) {
-            return new FromWidthBuilderStep(source.widthProperty());
+        public FromBindWidthBuilderStep from(Rectangle source) {
+            return new FromBindWidthBuilderStep(source.widthProperty());
         }
 
-        public FromWidthBuilderStep from(ImageView source){
-            return new FromWidthBuilderStep(source.fitWidthProperty());
+        public FromBindWidthBuilderStep from(ImageView source){
+            return new FromBindWidthBuilderStep(source.fitWidthProperty());
         }
     }
 
@@ -73,14 +74,14 @@ public class SizeBindingsBuilder {
 
 
 
-    public static class HeightBuilderStep {
+    public static class BindHeightBuilderStep {
 
 
-        public static class FromHeightBuilderStep {
+        public static class FromBindHeightBuilderStep {
 
             private final ReadOnlyDoubleProperty height;
 
-            FromHeightBuilderStep(ReadOnlyDoubleProperty height){
+            FromBindHeightBuilderStep(ReadOnlyDoubleProperty height){
                 this.height = height;
             }
 
@@ -103,32 +104,32 @@ public class SizeBindingsBuilder {
             }
         }
 
-        public FromHeightBuilderStep from(Region source) {
-            return new FromHeightBuilderStep(source.heightProperty());
+        public FromBindHeightBuilderStep from(Region source) {
+            return new FromBindHeightBuilderStep(source.heightProperty());
         }
 
-        public FromHeightBuilderStep from(Control source) {
-            return new FromHeightBuilderStep(source.heightProperty());
+        public FromBindHeightBuilderStep from(Control source) {
+            return new FromBindHeightBuilderStep(source.heightProperty());
         }
 
-        public FromHeightBuilderStep from(Rectangle source) {
-            return new FromHeightBuilderStep(source.heightProperty());
+        public FromBindHeightBuilderStep from(Rectangle source) {
+            return new FromBindHeightBuilderStep(source.heightProperty());
         }
 
-        public FromHeightBuilderStep from(ImageView source){
-            return new FromHeightBuilderStep(source.fitHeightProperty());
+        public FromBindHeightBuilderStep from(ImageView source){
+            return new FromBindHeightBuilderStep(source.fitHeightProperty());
         }
     }
 
 
-    public static class SizeBuilderStep {
+    public static class BindSizeBuilderStep {
 
-        public static class FromSizeBuilderStep {
+        public static class FromBindSizeBuilderStep {
 
             private final ReadOnlyDoubleProperty width;
             private final ReadOnlyDoubleProperty height;
 
-            FromSizeBuilderStep(ReadOnlyDoubleProperty width, ReadOnlyDoubleProperty height){
+            FromBindSizeBuilderStep(ReadOnlyDoubleProperty width, ReadOnlyDoubleProperty height){
                 this.width = width;
                 this.height = height;
             }
@@ -161,20 +162,20 @@ public class SizeBindingsBuilder {
         }
 
 
-        public FromSizeBuilderStep from(Region source) {
-            return new FromSizeBuilderStep(source.widthProperty(),source.heightProperty());
+        public FromBindSizeBuilderStep from(Region source) {
+            return new FromBindSizeBuilderStep(source.widthProperty(),source.heightProperty());
         }
 
-        public FromSizeBuilderStep from(Control source) {
-            return new FromSizeBuilderStep(source.widthProperty(), source.heightProperty());
+        public FromBindSizeBuilderStep from(Control source) {
+            return new FromBindSizeBuilderStep(source.widthProperty(), source.heightProperty());
         }
 
-        public FromSizeBuilderStep from(Rectangle source) {
-            return new FromSizeBuilderStep(source.widthProperty(), source.heightProperty());
+        public FromBindSizeBuilderStep from(Rectangle source) {
+            return new FromBindSizeBuilderStep(source.widthProperty(), source.heightProperty());
         }
 
-        public FromSizeBuilderStep from(ImageView source){
-            return new FromSizeBuilderStep(source.fitWidthProperty(), source.fitHeightProperty());
+        public FromBindSizeBuilderStep from(ImageView source){
+            return new FromBindSizeBuilderStep(source.fitWidthProperty(), source.fitHeightProperty());
         }
     }
 }
