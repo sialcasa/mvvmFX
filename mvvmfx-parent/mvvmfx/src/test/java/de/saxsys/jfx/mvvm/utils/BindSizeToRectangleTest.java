@@ -1,8 +1,5 @@
 package de.saxsys.jfx.mvvm.utils;
 
-import javafx.scene.control.Control;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,10 +13,9 @@ public class BindSizeToRectangleTest extends SizeBindingsBuilderTestBase {
      * Create elements which will bind to each other.
      */
     @Before
-    public void setUp(){
+    public void setUp() {
         toRectangle = new Rectangle();
     }
-
 
     // SIZE BINDINGS
 
@@ -29,27 +25,26 @@ public class BindSizeToRectangleTest extends SizeBindingsBuilderTestBase {
         assertCorrectSize(toRectangle);
     }
 
-
     @Test
-    public void bindSizeFromControlToRectangle(){
+    public void bindSizeFromControlToRectangle() {
         SizeBindingsBuilder.size().from(fromControl).to(toRectangle);
         assertCorrectSize(toRectangle);
     }
 
     @Test
-    public void bindSizeFromRectangleToRectangle(){
+    public void bindSizeFromRectangleToRectangle() {
         SizeBindingsBuilder.size().from(fromRectangle).to(toRectangle);
         assertCorrectSize(toRectangle);
     }
 
-
-
+    @Test
+    public void bindSizeFromImageViewToRectangle() {
+        SizeBindingsBuilder.size().from(fromImageView).to(toRectangle);
+        assertCorrectSize(toRectangle);
+    }
 
     // HEIGHT Bindings
 
-    /**
-     * Bind a Region to a Rectangle.
-     */
     @Test
     public void bindHeightFromRegionToRectangle() {
         SizeBindingsBuilder.height().from(fromRegion).to(toRectangle);
@@ -57,42 +52,46 @@ public class BindSizeToRectangleTest extends SizeBindingsBuilderTestBase {
     }
 
     @Test
-    public void bindHeightFromControlToRectangle(){
+    public void bindHeightFromControlToRectangle() {
         SizeBindingsBuilder.height().from(fromControl).to(toRectangle);
         assertCorrectHeight(toRectangle);
     }
 
-
     @Test
-    public void bindHeightFromRectangleToRectangle(){
+    public void bindHeightFromRectangleToRectangle() {
         SizeBindingsBuilder.height().from(fromRectangle).to(toRectangle);
         assertCorrectHeight(toRectangle);
     }
 
-
+    @Test
+    public void bindHeightFromImageViewToRectangle() {
+        SizeBindingsBuilder.height().from(fromImageView).to(toRectangle);
+        assertCorrectHeight(toRectangle);
+    }
 
     // WIDTH Bindings
 
-
-    /**
-     * Bind a Region to a Rectangle.
-     */
     @Test
     public void bindWidthFromRegionToRectangle() {
         SizeBindingsBuilder.width().from(fromRegion).to(toRectangle);
         assertCorrectWidth(toRectangle);
     }
 
-
     @Test
-    public void bindWidthFromControlToRectangle(){
+    public void bindWidthFromControlToRectangle() {
         SizeBindingsBuilder.width().from(fromControl).to(toRectangle);
         assertCorrectWidth(toRectangle);
     }
 
     @Test
-    public void bindWidthFromRectangleToRectangle(){
+    public void bindWidthFromRectangleToRectangle() {
         SizeBindingsBuilder.width().from(fromRectangle).to(toRectangle);
+        assertCorrectWidth(toRectangle);
+    }
+
+    @Test
+    public void bindWidthFromImageViewToRectangle() {
+        SizeBindingsBuilder.width().from(fromImageView).to(toRectangle);
         assertCorrectWidth(toRectangle);
     }
 }

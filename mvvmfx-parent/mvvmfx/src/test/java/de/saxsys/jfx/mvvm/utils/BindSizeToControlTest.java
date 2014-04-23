@@ -2,8 +2,6 @@ package de.saxsys.jfx.mvvm.utils;
 
 import javafx.scene.control.Control;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Region;
-import javafx.scene.shape.Rectangle;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,10 +11,9 @@ public class BindSizeToControlTest extends SizeBindingsBuilderTestBase {
 
 
     @Before
-    public void setUp(){
+    public void setUp() {
         toControl = new ScrollPane();
     }
-
 
     // SIZE BINDINGS
 
@@ -26,68 +23,73 @@ public class BindSizeToControlTest extends SizeBindingsBuilderTestBase {
         assertCorrectSize(toControl);
     }
 
-
     @Test
-    public void bindSizeFromControlToControl(){
+    public void bindSizeFromControlToControl() {
         SizeBindingsBuilder.size().from(fromControl).to(toControl);
         assertCorrectSize(toControl);
     }
 
-
     @Test
-    public void bindSizeFromRectangleToControl(){
+    public void bindSizeFromRectangleToControl() {
         SizeBindingsBuilder.size().from(fromRectangle).to(toControl);
         assertCorrectSize(toControl);
     }
 
-
+    @Test
+    public void bindSizeFromImageViewToControl() {
+        SizeBindingsBuilder.size().from(fromImageView).to(toControl);
+        assertCorrectSize(toControl);
+    }
 
     // HEIGHT Bindings
 
-    /**
-     * Bind a Region to a Control.
-     */
     @Test
     public void bindHeightFromRegionToControl() {
         SizeBindingsBuilder.height().from(fromRegion).to(toControl);
         assertCorrectHeight(toControl);
     }
 
-
     @Test
-    public void bindHeightFromControlToControl(){
+    public void bindHeightFromControlToControl() {
         SizeBindingsBuilder.height().from(fromControl).to(toControl);
         assertCorrectHeight(toControl);
     }
 
     @Test
-    public void bindHeightFromRectangleToControl(){
+    public void bindHeightFromRectangleToControl() {
         SizeBindingsBuilder.height().from(fromRectangle).to(toControl);
         assertCorrectHeight(toControl);
     }
 
+    @Test
+    public void bindHeightFromImageViewToControl() {
+        SizeBindingsBuilder.height().from(fromImageView).to(toControl);
+        assertCorrectHeight(toControl);
+    }
 
     // WIDTH Bindings
 
-    /**
-     * Bind a Region to a Control.
-     */
     @Test
     public void bindWidthFromRegionToControl() {
         SizeBindingsBuilder.width().from(fromRegion).to(toControl);
         assertCorrectWidth(toControl);
     }
 
-
     @Test
-    public void bindWidthFromControlToControl(){
+    public void bindWidthFromControlToControl() {
         SizeBindingsBuilder.width().from(fromControl).to(toControl);
         assertCorrectWidth(toControl);
     }
 
     @Test
-    public void bindWidthFromRectangleToControl(){
+    public void bindWidthFromRectangleToControl() {
         SizeBindingsBuilder.width().from(fromRectangle).to(toControl);
+        assertCorrectWidth(toControl);
+    }
+
+    @Test
+    public void bindWidthFromImageViewToControl() {
+        SizeBindingsBuilder.width().from(fromImageView).to(toControl);
         assertCorrectWidth(toControl);
     }
 }

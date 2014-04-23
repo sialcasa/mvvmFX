@@ -2,6 +2,7 @@ package de.saxsys.jfx.mvvm.utils;
 
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.control.Control;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 
@@ -45,6 +46,10 @@ public class SizeBindingsBuilder {
             public void to(Rectangle target) {
                 target.widthProperty().bind(width);
             }
+
+            public void to(ImageView target){
+                target.fitWidthProperty().bind(width);
+            }
         }
 
         public FromWidthBuilderStep from(Region source) {
@@ -57,6 +62,10 @@ public class SizeBindingsBuilder {
 
         public FromWidthBuilderStep from(Rectangle source) {
             return new FromWidthBuilderStep(source.widthProperty());
+        }
+
+        public FromWidthBuilderStep from(ImageView source){
+            return new FromWidthBuilderStep(source.fitWidthProperty());
         }
     }
 
@@ -88,6 +97,10 @@ public class SizeBindingsBuilder {
             public void to(Rectangle target) {
                 target.heightProperty().bind(height);
             }
+
+            public void to(ImageView target){
+                target.fitHeightProperty().bind(height);
+            }
         }
 
         public FromHeightBuilderStep from(Region source) {
@@ -100,6 +113,10 @@ public class SizeBindingsBuilder {
 
         public FromHeightBuilderStep from(Rectangle source) {
             return new FromHeightBuilderStep(source.heightProperty());
+        }
+
+        public FromHeightBuilderStep from(ImageView source){
+            return new FromHeightBuilderStep(source.fitHeightProperty());
         }
     }
 
@@ -136,6 +153,11 @@ public class SizeBindingsBuilder {
                 target.widthProperty().bind(width);
                 target.heightProperty().bind(height);
             }
+
+            public void to(ImageView target){
+                target.fitWidthProperty().bind(width);
+                target.fitHeightProperty().bind(height);
+            }
         }
 
 
@@ -149,6 +171,10 @@ public class SizeBindingsBuilder {
 
         public FromSizeBuilderStep from(Rectangle source) {
             return new FromSizeBuilderStep(source.widthProperty(), source.heightProperty());
+        }
+
+        public FromSizeBuilderStep from(ImageView source){
+            return new FromSizeBuilderStep(source.fitWidthProperty(), source.fitHeightProperty());
         }
     }
 }

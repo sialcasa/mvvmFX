@@ -4,22 +4,20 @@ import javafx.scene.layout.Region;
 import org.junit.Before;
 import org.junit.Test;
 
-public class BindSizeToRegionTest extends SizeBindingsBuilderTestBase{
+public class BindSizeToRegionTest extends SizeBindingsBuilderTestBase {
 
     private Region toRegion;
 
 
     @Before
-    public void setUp(){
+    public void setUp() {
         toRegion = new Region();
     }
 
-
     // SIZE BINDINGS
 
-
     @Test
-    public void bindSizeFromRegionToRegion(){
+    public void bindSizeFromRegionToRegion() {
         SizeBindingsBuilder.size().from(fromRegion).to(toRegion);
         assertCorrectSize(toRegion);
     }
@@ -36,58 +34,61 @@ public class BindSizeToRegionTest extends SizeBindingsBuilderTestBase{
         assertCorrectSize(toRegion);
     }
 
+    @Test
+    public void bindSizeFromImageViewToRegion() {
+        SizeBindingsBuilder.size().from(fromImageView).to(toRegion);
+        assertCorrectSize(toRegion);
+    }
 
     // HEIGHT Bindings
 
     @Test
-    public void bindHeightFromRegionToRegion(){
+    public void bindHeightFromRegionToRegion() {
         SizeBindingsBuilder.height().from(fromRegion).to(toRegion);
         assertCorrectHeight(toRegion);
     }
 
-
-    /**
-     * Bind a Control to a Region.
-     */
     @Test
     public void bindHeightFromControlToRegion() {
         SizeBindingsBuilder.height().from(fromControl).to(toRegion);
         assertCorrectHeight(toRegion);
     }
 
-
-    /**
-     * Bind a Rectangle to a Region.
-     */
     @Test
     public void bindHeightFromRectangleToRegion() {
         SizeBindingsBuilder.height().from(fromRectangle).to(toRegion);
         assertCorrectHeight(toRegion);
     }
 
+    @Test
+    public void bindHeightFromImageViewToRegion() {
+        SizeBindingsBuilder.height().from(fromImageView).to(toRegion);
+        assertCorrectHeight(toRegion);
+    }
+
     // WIDTH Bindings
 
     @Test
-    public void bindWidthFromRegionToRegion(){
+    public void bindWidthFromRegionToRegion() {
         SizeBindingsBuilder.width().from(fromRegion).to(toRegion);
         assertCorrectWidth(toRegion);
     }
 
-    /**
-     * Bind a Control to a Region.
-     */
     @Test
     public void bindWidthFromControlToRegion() {
         SizeBindingsBuilder.width().from(fromControl).to(toRegion);
         assertCorrectWidth(toRegion);
     }
 
-    /**
-     * Bind a Rectangle to a Region.
-     */
     @Test
     public void bindWidthFromRectangleToRegion() {
         SizeBindingsBuilder.width().from(fromRectangle).to(toRegion);
+        assertCorrectWidth(toRegion);
+    }
+
+    @Test
+    public void bindWidthFromImageViewToRegion() {
+        SizeBindingsBuilder.width().from(fromImageView).to(toRegion);
         assertCorrectWidth(toRegion);
     }
 }
