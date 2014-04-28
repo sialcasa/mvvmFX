@@ -21,6 +21,11 @@ import javafx.scene.layout.VBox;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -38,8 +43,10 @@ public class JavaViewLoaderTest {
     } 
     
     @Test
-    public void testLoadJavaViewTuple(){
-        ViewTuple<TestViewModel> viewTuple = javaViewLoader.loadJavaViewTuple(TestJavaView.class, null);
+    public void testLoadJavaViewTuple() throws IOException{
+        ResourceBundle resourceBundle = new PropertyResourceBundle(new StringReader(""));
+
+        ViewTuple<TestViewModel> viewTuple = javaViewLoader.loadJavaViewTuple(TestJavaView.class, resourceBundle);
         
         assertThat(viewTuple).isNotNull();
         
@@ -48,6 +55,9 @@ public class JavaViewLoaderTest {
         
         TestJavaView codeBehind = (TestJavaView) viewTuple.getCodeBehind();
         assertThat(codeBehind.viewModel).isNotNull();
+        assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
+
+        assertThat(codeBehind.viewModelWasNull).isFalse();
     }
     
 }

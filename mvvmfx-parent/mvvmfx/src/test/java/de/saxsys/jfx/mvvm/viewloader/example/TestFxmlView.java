@@ -1,6 +1,7 @@
 package de.saxsys.jfx.mvvm.viewloader.example;
 
 import de.saxsys.jfx.mvvm.api.FxmlView;
+import de.saxsys.jfx.mvvm.api.InjectViewModel;
 import javafx.fxml.Initializable;
 
 import java.net.URL;
@@ -16,16 +17,17 @@ public class TestFxmlView implements FxmlView<TestViewModel>, Initializable{
     public URL url;
     public ResourceBundle resourceBundle;
     
+    @InjectViewModel
     public TestViewModel viewModel;
+    
+    public boolean viewModelWasNull = true;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.url = url;
         this.resourceBundle = resourceBundle;
+        
+        viewModelWasNull = viewModel == null;
     }
 
-    @Override
-    public void setViewModel(TestViewModel viewModel) {
-        this.viewModel = viewModel;
-    }
 }

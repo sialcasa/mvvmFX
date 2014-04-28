@@ -125,10 +125,6 @@ public class ViewLoaderIntegrationTest {
     public void testLoadViewWithoutViewModelFail() {
 
         class MyView implements View<ViewModel> {
-            @Override
-            public void setViewModel(ViewModel viewModel) {
-
-            }
         }
 
         viewLoader.loadViewTuple(MyView.class);

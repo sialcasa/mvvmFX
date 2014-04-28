@@ -19,6 +19,7 @@ import de.saxsys.jfx.mvvm.api.JavaView;
 import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.base.view.View;
 import de.saxsys.jfx.mvvm.di.DependencyInjector;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 
 import java.util.ResourceBundle;
@@ -36,7 +37,12 @@ class JavaViewLoader {
         DependencyInjector injectionFacade = DependencyInjector.getInstance();
 
         View<ViewType> view = injectionFacade.getInstanceOf(viewType);
-
+        
+        if(view instanceof Initializable){
+            Initializable initializable = (Initializable) view;
+            initializable.initialize(null, resourceBundle);
+        }
+        
         return new ViewTuple<>(view, (Parent) view);
     }
 

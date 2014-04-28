@@ -31,6 +31,4 @@ import net.jodah.typetools.TypeResolver;
  */
 public interface View<ViewModelType extends ViewModel> {
 
-    void setViewModel(ViewModelType viewModel);
-
 }

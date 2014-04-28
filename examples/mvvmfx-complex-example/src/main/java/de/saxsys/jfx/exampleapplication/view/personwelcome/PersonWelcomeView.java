@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import de.saxsys.jfx.mvvm.api.FxmlView;
+import de.saxsys.jfx.mvvm.api.InjectViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,6 +31,8 @@ public class PersonWelcomeView implements FxmlView<PersonWelcomeViewModel>, Init
 
 	@Inject
 	private NotificationCenter notificationCenter;
+    
+    @InjectViewModel
     private PersonWelcomeViewModel viewModel;
 
 	@FXML
@@ -39,12 +42,6 @@ public class PersonWelcomeView implements FxmlView<PersonWelcomeViewModel>, Init
 		notificationCenter.postNotification("hidePersonWelcome", viewModel
                 .getPersonId());
 	}
-
-    @Override
-    public void setViewModel(final PersonWelcomeViewModel viewModel) {
-        this.viewModel = viewModel;
-    }
-
 
     public PersonWelcomeViewModel getViewModel() {
         return viewModel;
