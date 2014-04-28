@@ -1,14 +1,14 @@
 package de.saxsys.jfx.mvvm.utils;
 
-import de.saxsys.jfx.mvvm.JavaFXThreadingRule;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
+import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.Control;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 import org.junit.Before;
-import org.junit.Rule;
+import org.junit.BeforeClass;
 import org.mockito.internal.util.reflection.Whitebox;
 
 import static org.assertj.core.api.Assertions.*;
@@ -18,10 +18,6 @@ public class SizeBindingsBuilderTestBase {
 
     private static final double SIZEVAL = 100d;
 
-    @Rule
-    public JavaFXThreadingRule rule = new JavaFXThreadingRule();
-
-
     protected Region fromRegion;
 
     protected Control fromControl;
@@ -29,6 +25,12 @@ public class SizeBindingsBuilderTestBase {
     protected Rectangle fromRectangle;
 
     protected ImageView fromImageView;
+    
+    
+    @BeforeClass
+    public static void initJavaFXThread(){
+        new JFXPanel();
+    }
 
     @Before
     public void setup() {
