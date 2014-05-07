@@ -35,7 +35,7 @@ abstract class ViewListCell<T> extends ListCell<T> implements
 		ViewTupleMapper<T> {
 
 	@Override
-	public abstract ViewTuple<? extends ViewModel> map(T element);
+	public abstract ViewTuple<? extends View, ? extends ViewModel> map(T element);
 
 	@Override
 	protected void updateItem(T item, boolean empty) {

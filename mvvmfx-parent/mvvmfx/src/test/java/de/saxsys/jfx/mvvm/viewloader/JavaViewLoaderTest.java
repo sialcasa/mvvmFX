@@ -16,8 +16,11 @@
 package de.saxsys.jfx.mvvm.viewloader;
 
 import de.saxsys.jfx.mvvm.api.JavaView;
+import de.saxsys.jfx.mvvm.api.ViewModel;
+import de.saxsys.jfx.mvvm.base.view.View;
 import de.saxsys.jfx.mvvm.viewloader.example.TestJavaView;
 import de.saxsys.jfx.mvvm.viewloader.example.TestJavaViewWithImplicitInit;
+import de.saxsys.jfx.mvvm.viewloader.example.TestJavaViewWithoutViewModel;
 import de.saxsys.jfx.mvvm.viewloader.example.TestViewModel;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.VBox;
@@ -50,18 +53,36 @@ public class JavaViewLoaderTest {
     public void testLoadJavaViewTuple() throws IOException{
         ResourceBundle resourceBundle = new PropertyResourceBundle(new StringReader(""));
 
-        ViewTuple<TestViewModel> viewTuple = javaViewLoader.loadJavaViewTuple(TestJavaView.class, resourceBundle);
+        ViewTuple<TestJavaView,TestViewModel> viewTuple = javaViewLoader.loadJavaViewTuple(TestJavaView.class, resourceBundle);
         
         assertThat(viewTuple).isNotNull();
         
         assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
         assertThat(viewTuple.getCodeBehind()).isNotNull();
         
-        TestJavaView codeBehind = (TestJavaView) viewTuple.getCodeBehind();
+        TestJavaView codeBehind = viewTuple.getCodeBehind();
         assertThat(codeBehind.viewModel).isNotNull();
         assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
 
         assertThat(codeBehind.viewModelWasNull).isFalse();
+    }
+
+    
+    @Test
+    public void testLoadJavaViewTupleWithoutViewModel () {
+        
+        ViewTuple viewTuple = javaViewLoader.loadJavaViewTuple(TestJavaViewWithoutViewModel.class, null);
+        
+        assertThat(viewTuple).isNotNull();
+        
+        assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
+        
+        assertThat(viewTuple.getCodeBehind()).isNotNull();
+
+        final TestJavaViewWithoutViewModel codeBehind = (TestJavaViewWithoutViewModel)viewTuple.getCodeBehind();
+
+        assertThat(codeBehind.wasInitialized).isTrue();
+        assertThat(codeBehind.viewModel).isNull();
     }
 
     /**
@@ -85,21 +106,20 @@ public class JavaViewLoaderTest {
     public void testImplicitInitialization() throws IOException{
         ResourceBundle resourceBundle = new PropertyResourceBundle(new StringReader(""));
 
-        ViewTuple<TestViewModel> viewTuple = javaViewLoader.loadJavaViewTuple(TestJavaViewWithImplicitInit.class, resourceBundle);
+        ViewTuple<TestJavaViewWithImplicitInit, TestViewModel> viewTuple = javaViewLoader.loadJavaViewTuple(TestJavaViewWithImplicitInit.class, resourceBundle);
 
         assertThat(viewTuple).isNotNull();
 
         assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
         assertThat(viewTuple.getCodeBehind()).isNotNull();
 
-        TestJavaViewWithImplicitInit codeBehind = (TestJavaViewWithImplicitInit) viewTuple.getCodeBehind();
+        TestJavaViewWithImplicitInit codeBehind = viewTuple.getCodeBehind();
         assertThat(codeBehind.viewModel).isNotNull();
         assertThat(codeBehind.resources).isEqualTo(resourceBundle);
 
         assertThat(codeBehind.wasInitialized).isTrue();
         assertThat(codeBehind.viewModelWasNull).isFalse();
         assertThat(codeBehind.resourcesWasNull).isFalse();
-        
     }
 
     
@@ -113,8 +133,10 @@ public class JavaViewLoaderTest {
         
         ResourceBundle noResourceBundle = null;
 
-        TestView view = (TestView)javaViewLoader.loadJavaViewTuple(TestView.class, 
-                noResourceBundle).getCodeBehind();
+        final ViewTuple<TestView, TestViewModel> viewTuple = javaViewLoader.loadJavaViewTuple(TestView.class, 
+                noResourceBundle);
+        
+        TestView view = viewTuple.getCodeBehind();
 
         assertThat(view.explicitInitWasCalled).isTrue();
         assertThat(view.implicitInitWasCalled).isFalse();

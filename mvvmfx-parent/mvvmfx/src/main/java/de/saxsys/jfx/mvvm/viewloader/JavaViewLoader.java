@@ -62,13 +62,13 @@ class JavaViewLoader {
      *
      * @return a fully loaded and initialized instance of the view.
      */
-    <ViewType extends ViewModel> ViewTuple<ViewType> loadJavaViewTuple(Class<? extends JavaView<ViewType>>
+    <ViewType extends View<ViewModelType>, ViewModelType extends ViewModel>  ViewTuple<ViewType, ViewModelType> loadJavaViewTuple(Class<? extends ViewType>
             viewType, ResourceBundle resourceBundle) {
         DependencyInjector injectionFacade = DependencyInjector.getInstance();
 
-        View<ViewType> view = injectionFacade.getInstanceOf(viewType);
+       final ViewType view = injectionFacade.getInstanceOf(viewType);
 
-        if (view instanceof Initializable) {
+       if (view instanceof Initializable) {
             Initializable initializable = (Initializable) view;
             initializable.initialize(null, resourceBundle);
         } else {
@@ -88,9 +88,9 @@ class JavaViewLoader {
      * This method is package scoped for better testability.
      *
      * @param view       the view instance of which the initialize method will be invoked.
-     * @param <ViewType> the generic type of the view.
+     * @param <ViewModelType> the generic type of the view.
      */
-    <ViewType extends ViewModel> void callInitialize(View<ViewType> view) {
+    <ViewModelType extends ViewModel> void callInitialize(View<ViewModelType> view) {
         try {
             final Method initializeMethod = view.getClass().getMethod(NAMING_CONVENTION_INITIALIZE_IDENTIFIER);
 
@@ -116,9 +116,9 @@ class JavaViewLoader {
      *
      * @param view           the view instance that gets the resourceBundle injected.
      * @param resourceBundle the resourceBundle instance that will be injected.
-     * @param <ViewType>     the generic type of the view.
+     * @param <ViewModelType>     the generic type of the view.
      */
-    <ViewType extends ViewModel> void injectResourceBundle(View<ViewType> view, ResourceBundle resourceBundle) {
+    <ViewModelType extends ViewModel> void injectResourceBundle(View<ViewModelType> view, ResourceBundle resourceBundle) {
         try {
             Field resourcesField = view.getClass().getField(NAMING_CONVENTION_RESOURCES_IDENTIFIER);
 

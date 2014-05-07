@@ -15,7 +15,10 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.viewloader;
 
+import de.saxsys.jfx.mvvm.api.ViewModel;
+import de.saxsys.jfx.mvvm.base.view.View;
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlView;
+import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithoutViewModel;
 import de.saxsys.jfx.mvvm.viewloader.example.TestViewModel;
 import javafx.scene.layout.VBox;
 import org.junit.Before;
@@ -46,18 +49,35 @@ public class FxmlViewLoaderTest {
     public void testLoadFxmlViewTuple() throws IOException{
         ResourceBundle resourceBundle = new PropertyResourceBundle(new StringReader(""));
 
-        ViewTuple<TestViewModel> viewTuple = fxmlViewLoader.loadFxmlViewTuple(TestFxmlView.class, resourceBundle);
+        ViewTuple<TestFxmlView, TestViewModel> viewTuple = fxmlViewLoader.loadFxmlViewTuple(TestFxmlView.class, resourceBundle);
 
         assertThat(viewTuple).isNotNull();
 
         assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
         assertThat(viewTuple.getCodeBehind()).isNotNull();
 
-        TestFxmlView codeBehind = (TestFxmlView) viewTuple.getCodeBehind();
+        TestFxmlView codeBehind = viewTuple.getCodeBehind();
         assertThat(codeBehind.viewModel).isNotNull();
         assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
         
         assertThat(codeBehind.viewModelWasNull).isFalse();
+    }
+    
+    @Test
+    public void testLoadFxmlViewTupleWithoutViewModel(){
+
+        ViewTuple viewTuple = fxmlViewLoader.loadFxmlViewTuple
+                (TestFxmlViewWithoutViewModel.class, null);
+        
+        assertThat(viewTuple).isNotNull();
+    
+        assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
+        assertThat(viewTuple.getCodeBehind()).isNotNull().isInstanceOf(TestFxmlViewWithoutViewModel.class);
+
+        TestFxmlViewWithoutViewModel codeBehind = (TestFxmlViewWithoutViewModel)viewTuple.getCodeBehind();
+        
+        assertThat(codeBehind.wasInitialized).isTrue();
+        assertThat(codeBehind.viewModel).isNull();
     }
     
 }

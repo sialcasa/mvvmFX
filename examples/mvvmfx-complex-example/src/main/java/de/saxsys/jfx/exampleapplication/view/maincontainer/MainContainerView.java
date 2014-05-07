@@ -88,11 +88,12 @@ public class MainContainerView implements FxmlView<MainContainerViewModel>, Init
         // Configure List with views
         personWelcomeListView.setCellFactory(new ViewListCellFactory<Integer>() {
             @Override
-            public ViewTuple<? extends ViewModel> map(Integer element) {
-                ViewTuple<PersonWelcomeViewModel> loadViewTuple = viewLoader
+            public ViewTuple<? extends View, ? extends ViewModel> map(Integer element) {
+                ViewTuple<PersonWelcomeView, PersonWelcomeViewModel> loadViewTuple
+                        = viewLoader
                         .loadViewTuple(PersonWelcomeView.class);
 
-                PersonWelcomeView codeBehind = (PersonWelcomeView)loadViewTuple.getCodeBehind();
+                PersonWelcomeView codeBehind = loadViewTuple.getCodeBehind();
 
                 codeBehind.getViewModel()
                         .setPersonId(element);
