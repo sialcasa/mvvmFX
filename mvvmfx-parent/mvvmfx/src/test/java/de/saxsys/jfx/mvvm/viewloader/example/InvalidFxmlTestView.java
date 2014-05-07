@@ -12,9 +12,4 @@ import java.util.ResourceBundle;
 public class InvalidFxmlTestView implements FxmlView<TestViewModel> {
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
-
-    @Override
-    public void setViewModel(TestViewModel viewModel) {
-
-    }
 }

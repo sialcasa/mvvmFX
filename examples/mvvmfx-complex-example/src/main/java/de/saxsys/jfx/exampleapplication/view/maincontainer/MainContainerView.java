@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import de.saxsys.jfx.mvvm.api.FxmlView;
+import de.saxsys.jfx.mvvm.api.InjectViewModel;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -55,12 +56,8 @@ public class MainContainerView implements FxmlView<MainContainerViewModel>, Init
 	private NotificationCenter notificationCenter;
 
 
+    @InjectViewModel
     private MainContainerViewModel viewModel;
-
-    @Override
-    public void setViewModel(final MainContainerViewModel viewModel) {
-        this.viewModel = viewModel;
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -91,11 +88,12 @@ public class MainContainerView implements FxmlView<MainContainerViewModel>, Init
         // Configure List with views
         personWelcomeListView.setCellFactory(new ViewListCellFactory<Integer>() {
             @Override
-            public ViewTuple<? extends ViewModel> map(Integer element) {
-                ViewTuple<PersonWelcomeViewModel> loadViewTuple = viewLoader
+            public ViewTuple<? extends View, ? extends ViewModel> map(Integer element) {
+                ViewTuple<PersonWelcomeView, PersonWelcomeViewModel> loadViewTuple
+                        = viewLoader
                         .loadViewTuple(PersonWelcomeView.class);
 
-                PersonWelcomeView codeBehind = (PersonWelcomeView)loadViewTuple.getCodeBehind();
+                PersonWelcomeView codeBehind = loadViewTuple.getCodeBehind();
 
                 codeBehind.getViewModel()
                         .setPersonId(element);

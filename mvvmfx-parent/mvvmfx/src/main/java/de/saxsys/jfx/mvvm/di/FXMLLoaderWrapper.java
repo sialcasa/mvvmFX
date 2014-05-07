@@ -36,16 +36,17 @@ public class FXMLLoaderWrapper {
     /**
      * @see FXMLLoader#load(URL)
      */
-    public ViewTuple<? extends ViewModel> load(URL location) throws IOException {
+    public ViewTuple<? extends View, ? extends ViewModel> load(URL location) throws IOException {
         FXMLLoader fxmlLoader = createFxmlLoader(location, null);
-        return new ViewTuple<>((View<?>) fxmlLoader.getController(),
+        
+        return new ViewTuple((View)fxmlLoader.getController(),
                 (Parent) fxmlLoader.getRoot());
     }
 
     /**
      * @see FXMLLoader#load(URL, ResourceBundle)
      */
-    public ViewTuple<? extends ViewModel> load(URL location,
+    public ViewTuple<? extends View, ? extends ViewModel> load(URL location,
             ResourceBundle resourceBundle) throws IOException {
         FXMLLoader fxmlLoader = createFxmlLoader(location, resourceBundle);
         return new ViewTuple<>((View<?>) fxmlLoader.getController(),

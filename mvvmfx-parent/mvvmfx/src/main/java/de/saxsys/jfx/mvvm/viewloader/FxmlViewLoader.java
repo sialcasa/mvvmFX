@@ -17,6 +17,7 @@ package de.saxsys.jfx.mvvm.viewloader;
 
 import de.saxsys.jfx.mvvm.api.FxmlView;
 import de.saxsys.jfx.mvvm.api.ViewModel;
+import de.saxsys.jfx.mvvm.base.view.View;
 import de.saxsys.jfx.mvvm.di.FXMLLoaderWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,19 +41,19 @@ class FxmlViewLoader {
     /**
      * Load the viewTuple by it`s ViewType.
      */
-    <ViewType extends ViewModel> ViewTuple<ViewType> loadFxmlViewTuple(Class<? extends FxmlView<ViewType>>
+    <ViewType extends View<ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(Class<? extends ViewType>
             viewType, ResourceBundle resourceBundle) {
         String pathToFXML = "/"
                 + viewType.getPackage().getName().replaceAll("\\.", "/") + "/"
                 + viewType.getSimpleName() + ".fxml";
 
-        return (ViewTuple<ViewType>) loadFxmlViewTuple(pathToFXML, resourceBundle);
+        return loadFxmlViewTuple(pathToFXML, resourceBundle);
     }
 
     /**
      * Load the viewTuple by the path of the fxml file.
      */
-    ViewTuple<? extends ViewModel> loadFxmlViewTuple(final String resource,
+    <ViewType extends View<ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(final String resource,
             ResourceBundle resourceBundle) {
         // Load FXML file
         final URL location = FxmlViewLoader.class.getResource(resource);
@@ -64,7 +65,7 @@ class FxmlViewLoader {
 
         try {
 
-            ViewTuple<? extends ViewModel> tuple = fxmlLoaderWrapper.load(
+            ViewTuple<? extends View, ? extends ViewModel> tuple = fxmlLoaderWrapper.load(
                     location, resourceBundle);
             if (tuple.getCodeBehind() == null) {
                 LOG.warn("Could not load the code behind class for the following FXML file: "
@@ -77,11 +78,10 @@ class FxmlViewLoader {
                         + " This is a serious error and caused an exception.");
             }
 
-            return tuple;
+            return (ViewTuple<ViewType, ViewModelType>)tuple;
         } catch (final IOException ex) {
             LOG.error("Error loading FXML :", ex);
             return null;
         }
     }
-
 }

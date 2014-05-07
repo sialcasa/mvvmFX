@@ -39,8 +39,6 @@ public final class ViewLoader {
 
     private static final Logger LOG = LoggerFactory.getLogger(ViewLoader.class);
 
-    private FXMLLoaderWrapper fxmlLoaderWrapper = new FXMLLoaderWrapper();
-
     private FxmlViewLoader fxmlViewLoader = new FxmlViewLoader();
 
     private JavaViewLoader javaViewLoader = new JavaViewLoader();
@@ -54,7 +52,7 @@ public final class ViewLoader {
      *
      * @return the ViewTuple that contains the view and the viewModel.
      */
-    public <ViewType extends ViewModel> ViewTuple<ViewType> loadViewTuple(Class<? extends View<ViewType>> viewType) {
+    public <ViewType extends View<ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadViewTuple(Class<? extends ViewType> viewType) {
         return loadViewTuple(viewType, null);
     }
 
@@ -70,16 +68,14 @@ public final class ViewLoader {
      *
      * @return the ViewTuple that contains the view and the viewModel.
      */
-    public <ViewType extends ViewModel> ViewTuple<ViewType> loadViewTuple(Class<? extends View<ViewType>> viewType,
+    public <ViewType extends View<ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadViewTuple(Class<? extends ViewType> viewType,
             ResourceBundle resourceBundle) {
         Type type = TypeResolver.resolveGenericType(FxmlView.class, viewType);
 
         if (type != null) {
             LOG.debug("Loading view '{}' of type {}.", type, FxmlView.class.getSimpleName());
-
-            Class<? extends FxmlView<ViewType>> fxmlViewType = (Class<? extends FxmlView<ViewType>>) viewType;
             
-            return fxmlViewLoader.loadFxmlViewTuple(fxmlViewType, resourceBundle);
+            return fxmlViewLoader.loadFxmlViewTuple(viewType, resourceBundle);
         }
 
         type = TypeResolver.resolveGenericType(JavaView.class, viewType);
@@ -87,9 +83,7 @@ public final class ViewLoader {
         if (type != null) {
             LOG.debug("Loading view '{}' of type {}.", type, JavaView.class.getSimpleName());
 
-            Class<? extends JavaView<ViewType>> javaViewType = (Class<? extends JavaView<ViewType>>) viewType;
-            
-            return javaViewLoader.loadJavaViewTuple(javaViewType, resourceBundle);
+            return javaViewLoader.loadJavaViewTuple(viewType, resourceBundle);
         }
 
         String errorMessage = String.format("Loading view '%s' failed. Can't detect the view type. Your view has to implement '%s' or '%s'.",
@@ -105,7 +99,7 @@ public final class ViewLoader {
      *
      * @return tuple which is <code>null</code> if an error occures.
      */
-    public ViewTuple<? extends ViewModel> loadViewTuple(final String resource) {
+    public <ViewType extends View<ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadViewTuple(final String resource) {
         return loadViewTuple(resource, null);
     }
 
@@ -117,7 +111,7 @@ public final class ViewLoader {
      *
      * @return tuple which is <code>null</code> if an error occures.
      */
-    public ViewTuple<? extends ViewModel> loadViewTuple(final String resource,
+    public <ViewType extends View<ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadViewTuple(final String resource,
             ResourceBundle resourceBundle) {
         return fxmlViewLoader.loadFxmlViewTuple(resource, resourceBundle);
     }

@@ -13,23 +13,23 @@ import javax.inject.Inject;
 
 /**
  * The application entry point.
- * 
- * @author manuel.mauky
  *
+ * @author manuel.mauky
  */
-public class Starter extends MvvmfxCdiApplication{
-	
-	public static void main(String...args){
+public class Starter extends MvvmfxCdiApplication {
+
+    public static void main(String... args) {
         launch(args);
-	}
+    }
 
     @Inject
     private ViewLoader viewLoader;
 
     @Override
-    public void start(Stage stage){
-        final ViewTuple<MainContainerViewModel> tuple = viewLoader
-                .loadViewTuple(MainContainerView.class);
+    public void start(Stage stage) {
+        ViewTuple<MainContainerView, MainContainerViewModel> tuple =
+                viewLoader
+                        .loadViewTuple(MainContainerView.class);
 
         Parent view = tuple.getView();
 

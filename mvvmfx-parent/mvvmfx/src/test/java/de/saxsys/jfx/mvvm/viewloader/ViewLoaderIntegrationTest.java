@@ -20,7 +20,9 @@ import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.base.view.View;
 import de.saxsys.jfx.mvvm.viewloader.example.InvalidFxmlTestView;
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlView;
+import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithoutViewModel;
 import de.saxsys.jfx.mvvm.viewloader.example.TestJavaView;
+import de.saxsys.jfx.mvvm.viewloader.example.TestJavaViewWithoutViewModel;
 import de.saxsys.jfx.mvvm.viewloader.example.TestViewModel;
 import javafx.scene.layout.VBox;
 import org.junit.Before;
@@ -59,7 +61,7 @@ public class ViewLoaderIntegrationTest {
      */
     @Test
     public void testLoadJavaView() {
-        ViewTuple<TestViewModel> viewTuple = viewLoader.loadViewTuple(TestJavaView.class, null);
+        ViewTuple<TestJavaView, TestViewModel> viewTuple = viewLoader.loadViewTuple(TestJavaView.class, null);
 
         assertThat(viewTuple).isNotNull();
     }
@@ -74,14 +76,14 @@ public class ViewLoaderIntegrationTest {
      */
     @Test
     public void testLoadFxmlView() {
-        ViewTuple<TestViewModel> viewTuple = viewLoader.loadViewTuple(TestFxmlView.class, null);
+        ViewTuple<TestFxmlView, TestViewModel> viewTuple = viewLoader.loadViewTuple(TestFxmlView.class, null);
 
         assertThat(viewTuple).isNotNull();
     }
 
     @Test
     public void testLoadWithStringPath() {
-        ViewTuple<?> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example/TestFxmlView.fxml");
+        ViewTuple<? extends View,? extends ViewModel> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example/TestFxmlView.fxml");
         assertThat(viewTuple).isNotNull();
 
         assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
@@ -91,7 +93,7 @@ public class ViewLoaderIntegrationTest {
 
     @Test
     public void testLoadFailNoSuchFxmlFile() {
-        ViewTuple<TestViewModel> viewTuple = viewLoader.loadViewTuple(InvalidFxmlTestView.class);
+        ViewTuple<InvalidFxmlTestView, TestViewModel> viewTuple = viewLoader.loadViewTuple(InvalidFxmlTestView.class);
 
         assertThat(viewTuple).isNull();
     }
@@ -102,7 +104,7 @@ public class ViewLoaderIntegrationTest {
      */
     @Test
     public void testLoadFailNoControllerDefined() {
-        ViewTuple<?> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example" +
+        ViewTuple<? extends View,? extends ViewModel> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example" +
                 "/TestFxmlViewWithoutController.fxml");
         assertThat(viewTuple).isNotNull();
 
@@ -113,25 +115,28 @@ public class ViewLoaderIntegrationTest {
 
     @Test
     public void testLoadFailNoValidContentInFxmlFile() {
-        ViewTuple<?> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example/wrong.fxml");
+        ViewTuple<? extends View,? extends ViewModel> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example/wrong.fxml");
         assertThat(viewTuple).isNull();
     }
 
-    /**
-     * An exception may be thrown when you try to load a {@link de.saxsys.jfx.mvvm.base.view.View} without specifying a
-     * ViewModel type.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testLoadViewWithoutViewModelFail() {
-
-        class MyView implements View<ViewModel> {
-            @Override
-            public void setViewModel(ViewModel viewModel) {
-
-            }
-        }
-
-        viewLoader.loadViewTuple(MyView.class);
+    
+    @Test
+    public void testLoadJavaViewWithoutViewModel(){
+        ViewTuple viewTuple = viewLoader.loadViewTuple(TestJavaViewWithoutViewModel.class);
+        
+        assertThat(viewTuple).isNotNull();
+        
+        assertThat(viewTuple.getView()).isNotNull();
+        assertThat(viewTuple.getCodeBehind()).isNotNull();
     }
+    
+    @Test
+    public void testLoadFxmlViewWithoutViewModel(){
+        ViewTuple viewTuple = viewLoader.loadViewTuple(TestFxmlViewWithoutViewModel.class);
 
+        assertThat(viewTuple).isNotNull();
+
+        assertThat(viewTuple.getView()).isNotNull();
+        assertThat(viewTuple.getCodeBehind()).isNotNull();
+    }
 }

@@ -8,20 +8,16 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-/**
- * This class is used as example View class that is written in pure java. 
- */
-public class TestJavaView extends VBox implements JavaView<TestViewModel> , Initializable{
+public class TestJavaViewWithoutViewModel extends VBox implements JavaView, Initializable {
+
+    // this injection point will be ignored as this view class doesn't define a ViewModelType
     @InjectViewModel
     public TestViewModel viewModel;
-
-    public ResourceBundle resourceBundle;
-
-    public boolean viewModelWasNull = true;
     
+    public boolean wasInitialized = false;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
-        viewModelWasNull = viewModel == null;
+        wasInitialized = true;
     }
 }

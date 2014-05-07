@@ -22,8 +22,9 @@ public class Starter extends Application {
 
         ViewLoader viewLoader = new ViewLoader();
 
-        ViewTuple<HelloWorldViewModel> viewTuple = viewLoader.loadViewTuple(HelloWorldView.class);
-        
+        ViewTuple<HelloWorldView, HelloWorldViewModel> viewTuple = viewLoader
+                .loadViewTuple(HelloWorldView.class);
+
         Parent root = viewTuple.getView();
         stage.setScene(new Scene(root));
         stage.show();

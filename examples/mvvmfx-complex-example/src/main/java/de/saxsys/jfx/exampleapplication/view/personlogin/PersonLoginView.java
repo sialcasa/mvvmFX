@@ -2,6 +2,7 @@ package de.saxsys.jfx.exampleapplication.view.personlogin;
 
 import de.saxsys.jfx.exampleapplication.viewmodel.personlogin.PersonLoginViewModel;
 import de.saxsys.jfx.mvvm.api.FxmlView;
+import de.saxsys.jfx.mvvm.api.InjectViewModel;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -25,6 +26,7 @@ public class PersonLoginView implements FxmlView<PersonLoginViewModel>, Initiali
     private ChoiceBox<String> personsChoiceBox;
 
 
+    @InjectViewModel
     private PersonLoginViewModel viewModel;
 
     @FXML
@@ -32,10 +34,6 @@ public class PersonLoginView implements FxmlView<PersonLoginViewModel>, Initiali
         viewModel.login();
     }
 
-    @Override
-    public void setViewModel(final PersonLoginViewModel viewModel) {
-        this.viewModel = viewModel;
-    }
 
     public PersonLoginViewModel getViewModel() {
         return viewModel;
