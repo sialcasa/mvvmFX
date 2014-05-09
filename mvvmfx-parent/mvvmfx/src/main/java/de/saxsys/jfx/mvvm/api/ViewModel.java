@@ -13,13 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package de.saxsys.jfx.mvvm.base.view;
+package de.saxsys.jfx.mvvm.api;
 
-import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
+import de.saxsys.jfx.mvvm.base.view.View;
+import de.saxsys.jfx.mvvm.notifications.NotificationCenter;
 
 /**
- * {@link View} without a View Model.
- * @author sialcasa
+ * Marker interface for a View Model. Some additional hints to this layer:
+ * 
+ * Never create a dependency to the view in this layer - if you have to create a
+ * new view after a business step, notify the view with the
+ * {@link NotificationCenter} or a callback that the view can create the new
+ * view. When you write a new {@link View} you should create the associated
+ * {@link ViewModel} with tests before.
+ * 
+ * @author alexander.casall
+ * 
  */
-public abstract class ViewWithoutViewModel extends View<ViewModel> {
+public interface ViewModel {
+
 }

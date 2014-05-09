@@ -15,63 +15,20 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.base.view;
 
-import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
+import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.di.DependencyInjector;
-import javafx.fxml.Initializable;
 import net.jodah.typetools.TypeResolver;
 
 /**
- * Abstract class for a MVVMView - you have to say which View Model it uses.
- * Then you can use the embedded {@link ViewModel} property which is typed
- * correctly.
- * 
- * @author alexander.casall
+ *
+ * This Interface is used as base interface for specific view types for mvvmfx.
+ * The generic type defines the View Model that is used.
+
+ * @author alexander.casall, manuel.mauky
  * 
  * @param <ViewModelType>
  *            type
  */
-public abstract class View<ViewModelType extends ViewModel> implements
-		Initializable {
+public interface View<ViewModelType extends ViewModel> {
 
-	/**
-	 * Creates a View. If no View model has been set and the child class not a
-	 * {@link ViewWithoutViewModel}, an exception is going to be thrown.
-	 */
-	public View() {
-		if (returnedClass() == null && !(this instanceof ViewWithoutViewModel)) {
-			throw new IllegalStateException(
-					"The View has no defined View Model. If you want to archive this use the class ViewWithoutViewModel.java instead of View.java for the inheritance");
-		}
-	}
-
-	// View Model
-	private ViewModelType viewModel;
-
-	private DependencyInjector injectionFacade = DependencyInjector.getInstance();
-
-	/**
-	 * @return the View Model which represents the data that should be displayed
-	 *         by the view
-	 */
-	public final ViewModelType getViewModel() {
-		if (viewModel == null && !(viewModel instanceof ViewWithoutViewModel)) {
-			viewModel = injectionFacade.getInstanceOf(returnedClass());
-		}
-		return viewModel;
-	}
-
-	/**
-	 * Method returns class.
-	 * 
-	 * @return Class<T extends ViewModelType>
-	 */
-	@SuppressWarnings("unchecked")
-	private Class<ViewModelType> returnedClass() {
-        Class<?> type = TypeResolver.resolveRawArgument(View.class, getClass());
-        if(type == TypeResolver.Unknown.class){
-            return null;
-        }else{
-            return (Class<ViewModelType>) type;
-        }
-	}
 }

@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 import de.saxsys.jfx.exampleapplication.model.Person;
 import de.saxsys.jfx.exampleapplication.model.Repository;
-import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
+import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ModelToStringMapper;
 import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.SelectableItemList;
 import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.SelectableStringList;

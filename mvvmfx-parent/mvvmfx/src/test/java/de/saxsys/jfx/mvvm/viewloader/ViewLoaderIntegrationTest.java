@@ -1,78 +1,111 @@
+/*******************************************************************************
+ * Copyright 2013 Alexander Casall, Manuel Mauky
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package de.saxsys.jfx.mvvm.viewloader;
 
 
+import de.saxsys.jfx.mvvm.api.ViewModel;
+import de.saxsys.jfx.mvvm.base.view.View;
+import de.saxsys.jfx.mvvm.viewloader.example.InvalidFxmlTestView;
+import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlView;
+import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithoutViewModel;
+import de.saxsys.jfx.mvvm.viewloader.example.TestJavaView;
+import de.saxsys.jfx.mvvm.viewloader.example.TestJavaViewWithoutViewModel;
+import de.saxsys.jfx.mvvm.viewloader.example.TestViewModel;
 import javafx.scene.layout.VBox;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
+import static org.assertj.core.api.Assertions.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * This test verifies the behaviour of the {@link de.saxsys.jfx.mvvm.viewloader.ViewLoader} class.
+ * <p/>
+ * The actual loading of views is only tested on the surface as there are tests for the specific viewLoaders of
+ * different Viewtypes (see {@link de.saxsys.jfx.mvvm.viewloader.JavaViewLoaderTest} and {@link
+ * de.saxsys.jfx.mvvm.viewloader .FxmlViewLoaderTest}).
+ * 
+ * The purpose of this test case is to check the integration of the specific viewLoaders and some error handling.
+ * 
+ * @author manuel.mauky, alexander.casall
+ */
 public class ViewLoaderIntegrationTest {
 
     private ViewLoader viewLoader;
 
     @Before
-    public void setup(){
+    public void setup() {
         viewLoader = new ViewLoader();
     }
 
 
+    /**
+     * The purpose of this test case is to verify that the loading of JavaViews is working correctly. This contains the
+     * resolving of the view type and casting.
+     * <p/>
+     * The actual loading of JavaViews with the {@link de.saxsys.jfx.mvvm.viewloader.JavaViewLoader} is tested in {@link
+     * de.saxsys.jfx.mvvm.viewloader.JavaViewLoaderTest}.
+     */
     @Test
-    public void testLoadViewTuple(){
-        ViewTuple<TestViewModel> viewTuple = viewLoader.loadViewTuple(TestView.class);
+    public void testLoadJavaView() {
+        ViewTuple<TestJavaView, TestViewModel> viewTuple = viewLoader.loadViewTuple(TestJavaView.class, null);
 
         assertThat(viewTuple).isNotNull();
+    }
 
-        assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
-        assertThat(viewTuple.getCodeBehind()).isNotNull();
-        TestView codeBehind = (TestView)viewTuple.getCodeBehind();
-        assertThat(codeBehind.resourceBundle).isNull();
+
+    /**
+     * The purpose of this test case is to verify that the loading of FxmlViews is working correctly. This contains the
+     * resolving of the view type and casting.
+     * <p/>
+     * The actual loading of JavaViews with the {@link de.saxsys.jfx.mvvm.viewloader.FxmlViewLoader} is tested in {@link
+     * de.saxsys.jfx.mvvm.viewloader.FxmlViewLoaderTest}.
+     */
+    @Test
+    public void testLoadFxmlView() {
+        ViewTuple<TestFxmlView, TestViewModel> viewTuple = viewLoader.loadViewTuple(TestFxmlView.class, null);
+
+        assertThat(viewTuple).isNotNull();
     }
 
     @Test
-    public void testLoadWithStringPath(){
-        ViewTuple<?> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/testview.fxml");
+    public void testLoadWithStringPath() {
+        ViewTuple<? extends View,? extends ViewModel> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example/TestFxmlView.fxml");
         assertThat(viewTuple).isNotNull();
 
         assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
-        assertThat(viewTuple.getCodeBehind()).isNotNull().isInstanceOf(TestView.class);
+        assertThat(viewTuple.getCodeBehind()).isNotNull().isInstanceOf(TestFxmlView.class);
     }
 
-    @Test
-    public void testLoadWithResourceBundle() throws IOException {
-        ResourceBundle resourceBundle = new PropertyResourceBundle(new StringReader(""));
-
-        ViewTuple<TestViewModel> viewTuple = viewLoader.loadViewTuple(TestView.class,resourceBundle);
-
-        assertThat(viewTuple).isNotNull();
-
-        assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
-
-
-        assertThat(viewTuple.getCodeBehind()).isNotNull().isInstanceOf(TestView.class);
-        TestView codeBehind = (TestView)viewTuple.getCodeBehind();
-        assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
-    }
 
     @Test
-    public void testLoadFailNoSuchFxmlFile(){
-        ViewTuple<TestViewModel> viewTuple = viewLoader.loadViewTuple(InvalidTestView.class);
+    public void testLoadFailNoSuchFxmlFile() {
+        ViewTuple<InvalidFxmlTestView, TestViewModel> viewTuple = viewLoader.loadViewTuple(InvalidFxmlTestView.class);
 
         assertThat(viewTuple).isNull();
     }
 
     /**
-     * In this test case a fxml file is loaded that has no fx:controller attribute.
-     * Therefore there is no code behind available.
+     * In this test case a fxml file is loaded that has no fx:controller attribute. Therefore there is no code behind
+     * available.
      */
     @Test
-    public void testLoadFailNoControllerDefined(){
-        ViewTuple<?> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/testviewWithoutController.fxml");
+    public void testLoadFailNoControllerDefined() {
+        ViewTuple<? extends View,? extends ViewModel> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example" +
+                "/TestFxmlViewWithoutController.fxml");
         assertThat(viewTuple).isNotNull();
 
         assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
@@ -81,9 +114,29 @@ public class ViewLoaderIntegrationTest {
 
 
     @Test
-    public void testLoadFailNoValidContentInFxmlFile(){
-        ViewTuple<?> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/wrong.fxml");
+    public void testLoadFailNoValidContentInFxmlFile() {
+        ViewTuple<? extends View,? extends ViewModel> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example/wrong.fxml");
         assertThat(viewTuple).isNull();
     }
 
+    
+    @Test
+    public void testLoadJavaViewWithoutViewModel(){
+        ViewTuple viewTuple = viewLoader.loadViewTuple(TestJavaViewWithoutViewModel.class);
+        
+        assertThat(viewTuple).isNotNull();
+        
+        assertThat(viewTuple.getView()).isNotNull();
+        assertThat(viewTuple.getCodeBehind()).isNotNull();
+    }
+    
+    @Test
+    public void testLoadFxmlViewWithoutViewModel(){
+        ViewTuple viewTuple = viewLoader.loadViewTuple(TestFxmlViewWithoutViewModel.class);
+
+        assertThat(viewTuple).isNotNull();
+
+        assertThat(viewTuple.getView()).isNotNull();
+        assertThat(viewTuple.getCodeBehind()).isNotNull();
+    }
 }

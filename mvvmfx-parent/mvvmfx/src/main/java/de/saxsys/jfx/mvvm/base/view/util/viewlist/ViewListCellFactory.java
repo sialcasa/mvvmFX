@@ -19,7 +19,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
 import de.saxsys.jfx.mvvm.base.view.View;
-import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
+import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
 
 /**
@@ -37,13 +37,13 @@ public abstract class ViewListCellFactory<T> implements
 		Callback<ListView<T>, ListCell<T>>, ViewTupleMapper<T> {
 
 	@Override
-	public abstract ViewTuple<? extends ViewModel> map(T element);
+	public abstract ViewTuple<? extends View, ? extends ViewModel> map(T element);
 
 	@Override
 	public ViewListCell<T> call(ListView<T> element) {
 		return new ViewListCell<T>() {
 			@Override
-			public ViewTuple<? extends ViewModel> map(T element) {
+			public ViewTuple<? extends View, ? extends ViewModel> map(T element) {
 				return ViewListCellFactory.this.map(element);
 			}
 		};

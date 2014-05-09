@@ -1,48 +1,58 @@
 package de.saxsys.jfx.exampleapplication.view.personlogin;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import de.saxsys.jfx.exampleapplication.viewmodel.personlogin.PersonLoginViewModel;
+import de.saxsys.jfx.mvvm.api.FxmlView;
+import de.saxsys.jfx.mvvm.api.InjectViewModel;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
-import de.saxsys.jfx.exampleapplication.viewmodel.personlogin.PersonLoginViewModel;
-import de.saxsys.jfx.mvvm.base.view.View;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
- * Code behind the fxml for visualization of the {@link PersonLoginView}. The
- * view binds to the properties of the {@link PersonLoginViewModel}.
- * 
+ * Code behind the fxml for visualization of the {@link PersonLoginView}. The view binds to the properties of the {@link
+ * PersonLoginViewModel}.
+ *
  * @author alexander.casall
  */
-public class PersonLoginView extends View<PersonLoginViewModel> {
+public class PersonLoginView implements FxmlView<PersonLoginViewModel>, Initializable {
 
-	@FXML
-	// Injection of the person choiceBox which is declared in the FXML File
-	private ChoiceBox<String> personsChoiceBox;
+    @FXML
+    // Injection of the person choiceBox which is declared in the FXML File
+    private ChoiceBox<String> personsChoiceBox;
 
-	@Override
-	public void initialize(final URL arg0, final ResourceBundle arg1) {
-		personsChoiceBox.itemsProperty()
-				.bind(getViewModel().selectablePersonsProperty()
-						.stringListProperty());
 
-		personsChoiceBox.getSelectionModel().selectedIndexProperty()
-				.addListener(new ChangeListener<Number>() {
-					@Override
-					public void changed(ObservableValue<? extends Number> arg0,
-							Number oldVal, Number newVal) {
-						getViewModel().selectablePersonsProperty().select(
-								newVal.intValue());
-					}
-				});
-	}
+    @InjectViewModel
+    private PersonLoginViewModel viewModel;
 
-	@FXML
-	void loginButtonPressed(final ActionEvent event) {
-		getViewModel().login();
-	}
+    @FXML
+    void loginButtonPressed(final ActionEvent event) {
+        viewModel.login();
+    }
 
+
+    public PersonLoginViewModel getViewModel() {
+        return viewModel;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        personsChoiceBox.itemsProperty()
+                .bind(viewModel.selectablePersonsProperty()
+                        .stringListProperty());
+
+        personsChoiceBox.getSelectionModel().selectedIndexProperty()
+                .addListener(new ChangeListener<Number>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Number> arg0,
+                            Number oldVal, Number newVal) {
+                        viewModel.selectablePersonsProperty().select(
+                                newVal.intValue());
+                    }
+                });
+    }
 }

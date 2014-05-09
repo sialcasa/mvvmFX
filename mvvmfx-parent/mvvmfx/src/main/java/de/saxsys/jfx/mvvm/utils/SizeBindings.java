@@ -29,8 +29,13 @@ import javafx.scene.shape.Rectangle;
  * {@link Control}
  * 
  * @author alexander.casall
+ *
+ * @deprecated Use {@link de.saxsys.jfx.mvvm.utils.SizeBindingsBuilder} instead.
+ * This class is deprecated because the usage of overloaded methods for different types of components isn't flexible enough.
  * 
  */
+
+@Deprecated
 public final class SizeBindings {
 
 	private SizeBindings() {

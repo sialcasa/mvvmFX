@@ -57,15 +57,6 @@ public class MvvmfxGuiceIntegrationTest {
         assertThat(MyApplication.stage).isNotNull();
         assertThat(MyApplication.parameters).isNotNull();
         assertThat(MyApplication.parameters.getUnnamed()).contains("test");
-
-
-
-        List<String> blub = new ArrayList<>();
-        
-        assertThat(blub).isSorted();
-
-
     }
-
 
 }

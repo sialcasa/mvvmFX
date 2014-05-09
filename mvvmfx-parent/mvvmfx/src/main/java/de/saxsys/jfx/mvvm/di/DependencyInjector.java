@@ -15,7 +15,15 @@
 ******************************************************************************/
 package de.saxsys.jfx.mvvm.di;
 
+import de.saxsys.jfx.mvvm.api.InjectViewModel;
+import de.saxsys.jfx.mvvm.api.ViewModel;
+import de.saxsys.jfx.mvvm.base.view.View;
 import javafx.util.Callback;
+import net.jodah.typetools.TypeResolver;
+
+import java.lang.reflect.Field;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 /**
  * This class handles the dependency injection for the mvvmFX framework.
@@ -25,6 +33,7 @@ import javafx.util.Callback;
  * The user can define how instances should be retrieved by setting an callback that
  * returns an instance for a given class type (see {@link DependencyInjector#setCustomInjector}.
  *
+ * @author manuel.mauky 
  */
 public class DependencyInjector {
 
@@ -43,14 +52,66 @@ public class DependencyInjector {
      * Returns an instance of the given type. When there is a custom injector defined (See: {@link #setCustomInjector(javafx.util.Callback)})
      * then this injector is used.
      * Otherwise a new instance of the desired type is created. This is done by a call to {@link Class#newInstance()} which means that all constraints
-     * of the newInstance method are also need to be
-     *
+     * of the newInstance method are also need to be satisfied.
      *
      * @param type
      * @param <T>
      * @return
      */
     public <T> T getInstanceOf(Class<? extends T> type){
+        T instance = getUninitializedInstanceOf(type);
+
+        if(instance instanceof View){
+            injectViewModel((View) instance);
+        }
+
+        return instance;
+    }
+
+    private void injectViewModel(final View view) {
+
+        final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
+        final Field field = getViewModelField(view.getClass(), viewModelType);
+        
+        if(field != null){
+            AccessController.doPrivileged(new PrivilegedAction<Object>() {
+                @Override
+                public Object run() {
+                    boolean wasAccessible = field.isAccessible();
+
+                    try{
+                        Object viewModel = DependencyInjector.getInstance().getInstanceOf(viewModelType);
+                        field.setAccessible(true);
+                        field.set(view, viewModel);
+                    } catch (IllegalAccessException exception) {
+                        throw new IllegalStateException("Can't inject ViewModel of type <" + viewModelType +"> into the view <" + view + ">");
+                    } finally {
+                        field.setAccessible(wasAccessible);
+                    }
+                    return null;
+                }
+            });
+        }
+        
+    }
+    
+    
+    private Field getViewModelField(Class<?extends View> viewType, Class<?> viewModelType){
+        
+        for(Field field : viewType.getDeclaredFields()){
+            if(field.isAnnotationPresent(InjectViewModel.class)){
+                if(viewModelType != TypeResolver.Unknown.class && field.getType().isAssignableFrom(viewModelType)){
+                    return field;
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    
+
+    private <T> T getUninitializedInstanceOf(Class<? extends T> type){
         if(isCustomInjectorDefined()){
             return (T) customInjector.call(type);
         }else{

@@ -5,7 +5,6 @@ import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 
@@ -23,7 +22,8 @@ public class Starter extends Application {
 
         ViewLoader viewLoader = new ViewLoader();
 
-        ViewTuple<HelloWorldViewModel> viewTuple = viewLoader.loadViewTuple(HelloWorldView.class);
+        ViewTuple<HelloWorldView, HelloWorldViewModel> viewTuple = viewLoader
+                .loadViewTuple(HelloWorldView.class);
 
         Parent root = viewTuple.getView();
         stage.setScene(new Scene(root));

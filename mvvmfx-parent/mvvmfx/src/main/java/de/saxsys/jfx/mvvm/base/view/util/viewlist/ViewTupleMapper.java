@@ -15,7 +15,8 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.base.view.util.viewlist;
 
-import de.saxsys.jfx.mvvm.base.viewmodel.ViewModel;
+import de.saxsys.jfx.mvvm.api.ViewModel;
+import de.saxsys.jfx.mvvm.base.view.View;
 import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
 
 /**
@@ -35,6 +36,6 @@ public interface ViewTupleMapper<T> {
 	 *            to map
 	 * @return created {@link ViewTuple}
 	 */
-	public abstract ViewTuple<? extends ViewModel> map(T element);
+	public abstract ViewTuple<? extends View, ? extends ViewModel> map(T element);
 
 }

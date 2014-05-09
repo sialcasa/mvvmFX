@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 
-<fx:root type="javafx.scene.layout.VBox" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="de.saxsys.jfx.exampleapplication.view.personwelcome.PersonWelcomeView">
+<VBox alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="de.saxsys.jfx.exampleapplication.view.personwelcome.PersonWelcomeView">
   <children>
     <Label fx:id="welcomeLabel" alignment="CENTER" text="The upcoming text">
       <VBox.margin>
@@ -15,4 +15,4 @@
     </Label>
     <Button mnemonicParsing="false" onAction="#closeApplicationButtonPressed" text="Hide" VBox.margin="$x1" />
   </children>
-</fx:root>
+</VBox>
