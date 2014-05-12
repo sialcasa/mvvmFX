@@ -89,6 +89,9 @@ public class MainContainerView implements FxmlView<MainContainerViewModel>, Init
         personWelcomeListView.setCellFactory(new ViewListCellFactory<Integer>() {
             @Override
             public ViewTuple<? extends View, ? extends ViewModel> map(Integer element) {
+
+                System.out.println("create welcome view for id:" + element);
+                
                 ViewTuple<PersonWelcomeView, PersonWelcomeViewModel> loadViewTuple
                         = viewLoader
                         .loadViewTuple(PersonWelcomeView.class);
