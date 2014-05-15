@@ -1,6 +1,8 @@
 package de.saxsys.jfx.exampleapplication.view.maincontainer;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import de.saxsys.jfx.mvvm.api.FxmlView;
@@ -59,6 +61,9 @@ public class MainContainerView implements FxmlView<MainContainerViewModel>, Init
     @InjectViewModel
     private MainContainerViewModel viewModel;
 
+
+    private Map<Integer, ViewTuple<PersonWelcomeView, PersonWelcomeViewModel>> viewMap = new HashMap<>();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Listen for close notifications
@@ -89,15 +94,20 @@ public class MainContainerView implements FxmlView<MainContainerViewModel>, Init
         personWelcomeListView.setCellFactory(new ViewListCellFactory<Integer>() {
             @Override
             public ViewTuple<? extends View, ? extends ViewModel> map(Integer element) {
-                ViewTuple<PersonWelcomeView, PersonWelcomeViewModel> loadViewTuple
-                        = viewLoader
-                        .loadViewTuple(PersonWelcomeView.class);
-
-                PersonWelcomeView codeBehind = loadViewTuple.getCodeBehind();
-
-                codeBehind.getViewModel()
-                        .setPersonId(element);
-                return loadViewTuple;
+                if(!viewMap.containsKey(element)) {
+                    ViewTuple<PersonWelcomeView, PersonWelcomeViewModel> loadedViewTuple
+                            = viewLoader
+                            .loadViewTuple(PersonWelcomeView.class);
+    
+                    PersonWelcomeView codeBehind = loadedViewTuple.getCodeBehind();
+    
+                    codeBehind.getViewModel()
+                            .setPersonId(element);
+                    
+                    viewMap.put(element, loadedViewTuple);
+                }
+                
+                return viewMap.get(element);
             }
         });
 
