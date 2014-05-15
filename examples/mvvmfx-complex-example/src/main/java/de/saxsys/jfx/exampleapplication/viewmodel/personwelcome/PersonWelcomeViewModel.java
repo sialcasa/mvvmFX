@@ -58,18 +58,8 @@ public class PersonWelcomeViewModel implements ViewModel {
 	 */
 	public void setPersonId(int personId) {
 		person = repository.getPersonById(personId);
-		StringBinding titleBinding = Bindings.createStringBinding(
-				new Callable<String>() {
-					@Override
-					public String call() throws Exception {
-						if (person.isMale()) {
-							return "Herr ";
-						} else {
-							return "Frau ";
-						}
-					}
-				}, person.maleProperty());
-		welcomeString.bind(Bindings.concat("Willkommen ", titleBinding,
+        StringBinding salutationBinding = Bindings.when(person.maleProperty()).then("Herr ").otherwise("Frau ");
+		welcomeString.bind(Bindings.concat("Willkommen ", salutationBinding,
 				person.lastNameProperty(), ", oder wollen Sie ",
 				person.firstNameProperty(), " genannt werden?"));
 	}
