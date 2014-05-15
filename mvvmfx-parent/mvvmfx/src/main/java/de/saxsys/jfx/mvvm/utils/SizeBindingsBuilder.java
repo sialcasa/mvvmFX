@@ -15,6 +15,10 @@ public class SizeBindingsBuilder {
     public static BindSizeBuilderStep bindSize(){
         return new BindSizeBuilderStep();
     }
+    
+    public static UnbindSizeBuilderStep unbindSize() {
+        return new UnbindSizeBuilderStep();
+    }
 
     public static BindWidthBuilderStep bindWidth(){
         return new BindWidthBuilderStep();
@@ -70,10 +74,6 @@ public class SizeBindingsBuilder {
         }
     }
 
-
-
-
-
     public static class BindHeightBuilderStep {
 
 
@@ -120,7 +120,6 @@ public class SizeBindingsBuilder {
             return new FromBindHeightBuilderStep(source.fitHeightProperty());
         }
     }
-
 
     public static class BindSizeBuilderStep {
 
@@ -177,5 +176,35 @@ public class SizeBindingsBuilder {
         public FromBindSizeBuilderStep from(ImageView source){
             return new FromBindSizeBuilderStep(source.fitWidthProperty(), source.fitHeightProperty());
         }
+    }
+
+    public static class UnbindSizeBuilderStep {
+        
+        public void of(Region source){
+            source.maxWidthProperty().unbind();
+            source.minWidthProperty().unbind();
+
+            source.maxHeightProperty().unbind();
+            source.minHeightProperty().unbind();
+        }
+        
+        public void of(Control source){
+            source.maxWidthProperty().unbind();
+            source.minWidthProperty().unbind();
+
+            source.maxHeightProperty().unbind();
+            source.minHeightProperty().unbind();
+        }
+        
+        public void of(ImageView source){
+            source.fitWidthProperty().unbind();
+            source.fitHeightProperty().unbind();
+        }
+        
+        public void of(Rectangle source) {
+            source.widthProperty().unbind();
+            source.heightProperty().unbind();
+        }
+        
     }
 }

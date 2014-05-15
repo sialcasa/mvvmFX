@@ -1,5 +1,7 @@
 package de.saxsys.jfx.mvvm.utils;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.Control;
@@ -16,7 +18,7 @@ import static org.assertj.core.api.Assertions.*;
 
 public class SizeBindingsBuilderTestBase {
 
-    private static final double SIZEVAL = 100d;
+    protected static final double SIZEVAL = 100d;
 
     protected Region fromRegion;
 
@@ -115,4 +117,5 @@ public class SizeBindingsBuilderTestBase {
     protected void assertCorrectWidth(ImageView imageView) {
         assertThat(imageView.getFitWidth()).isEqualTo(SIZEVAL);
     }
+
 }
