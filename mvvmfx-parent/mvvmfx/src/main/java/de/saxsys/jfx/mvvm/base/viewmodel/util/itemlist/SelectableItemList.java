@@ -40,7 +40,7 @@ import javafx.scene.control.SingleSelectionModel;
  * }
  * </code>
  * 
- * </b> You have to provide a {@link ModelToStringMapper} to define how to map
+ * </b> You have to provide a {@link ModelToStringFunction} to define how to map
  * from your model representation to a string. In addition you have properties
  * which represents the actual selection state of a list. You can set either the
  * {@link #selectedIndexProperty()} or the {@link #selectedItemProperty()} and
@@ -72,7 +72,7 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 
 	/**
 	 * Creates a {@link SelectableItemList} by a given list of items and a
-	 * {@link ModelToStringMapper}.
+	 * {@link ModelToStringFunction}.
 	 * 
 	 * @param itemList
 	 *            which should be transformed for the UI
@@ -80,7 +80,7 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	 *            which is used for transformation
 	 */
 	public SelectableItemList(ObservableList<ListType> itemList,
-			final ModelToStringMapper<ListType> modelToStringMapper) {
+			final ModelToStringFunction<ListType> modelToStringMapper) {
 		super(itemList, modelToStringMapper);
 		// Order of processing is important!
 

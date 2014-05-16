@@ -16,6 +16,7 @@
 
 package de.saxsys.jfx.mvvm.viewmodel.util.itemlist;
 
+import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ModelToStringFunction;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -23,7 +24,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ModelToStringMapper;
 import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.SelectableItemList;
 
 /**
@@ -37,7 +37,7 @@ public class SelectableItemListTest {
 	private final Person person3 = new Person("Person 1");
 	private final Person person2 = new Person("Person 2");
 	private final Person person1 = new Person("Person 3");
-	private ModelToStringMapper<Person> stringMapper;
+	private ModelToStringFunction<Person> stringMapper;
 	private ObservableList<Person> listWithModelObjects;
 	private SelectableItemList<Person> selectableItemList;
 
@@ -54,9 +54,9 @@ public class SelectableItemListTest {
 		listWithModelObjects.add(person3);
 
 		// Create the converter
-		stringMapper = new ModelToStringMapper<Person>() {
+		stringMapper = new ModelToStringFunction<Person>() {
 			@Override
-			public String toString(Person object) {
+			public String apply(Person object) {
 				return object.name;
 			}
 		};
