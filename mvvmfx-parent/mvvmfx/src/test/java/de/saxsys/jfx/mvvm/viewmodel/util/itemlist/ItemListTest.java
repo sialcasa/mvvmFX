@@ -15,6 +15,7 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.viewmodel.util.itemlist;
 
+import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ModelToStringFunction;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -23,7 +24,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ItemList;
-import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ModelToStringMapper;
 
 /**
  * Tests for {@link ItemList}.
@@ -38,7 +38,7 @@ public class ItemListTest {
 	// List which comes from the model and should be displayed in a view.
 	private ObservableList<Person> listWithModelObjects;
 	// Defines the mapping between model elements and view representation
-	private ModelToStringMapper<Person> stringMapper;
+	private ModelToStringFunction<Person> stringMapper;
 	// New element which encapsulates and maps the 2 lists
 	private ItemList<Person> itemList;
 	private Person person1 = new Person("Person1");
@@ -58,9 +58,9 @@ public class ItemListTest {
 		listWithModelObjects.add(person3);
 
 		// Create the mapper
-		stringMapper = new ModelToStringMapper<Person>() {
+		stringMapper = new ModelToStringFunction<Person>() {
 			@Override
-			public String toString(Person object) {
+			public String apply(Person object) {
 				return PREFIX + object.name;
 			}
 		};
