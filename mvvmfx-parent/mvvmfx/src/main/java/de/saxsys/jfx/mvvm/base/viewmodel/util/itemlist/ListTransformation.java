@@ -13,22 +13,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Binds an {@link javafx.collections.ObservableList} that contains elements of TargetType to another
- * {@link javafx.collections.ObservableList} that contains elements of SourceType. This is different to the
+ * Binds an {@link javafx.collections.ObservableList} that contains elements of {@link  TargetType} to another
+ * {@link javafx.collections.ObservableList} that contains elements of {@link SourceType}. This is different to the
  * normal list binding offered by JavaFX where the lists have to contain elements of the same type.
+ *
+ * @param <SourceType>  
+ * @param <TargetType>
  */
 public class ListTransformation<SourceType, TargetType> {
 
     // Converter
     private final Function<SourceType, TargetType> function;
 
-    // The two lists - List which was provided and the String representation of
+    // The two lists - List which was provided and the TargetType representation of
     // the list
     private ReadOnlyListWrapper<TargetType> viewModelList = new ReadOnlyListWrapper<>(
             FXCollections.<TargetType>observableArrayList());
     private ListProperty<SourceType> modelList = new SimpleListProperty<>();
 
-    // Reference to the listener to use it by a wrapped listchangelistener
+    // Reference to the listener to use it by a wrapped listChangeListener
     private ListChangeListener<SourceType> listChangeListener;
 
     /**
@@ -38,7 +41,7 @@ public class ListTransformation<SourceType, TargetType> {
      * @param function    which is used for transformation
      */
     public ListTransformation(ObservableList<SourceType> modelList,
-                              final Function<SourceType, TargetType> function) {
+            final Function<SourceType, TargetType> function) {
         this.function = function;
         initListEvents();
         this.modelListProperty().set(modelList);
@@ -53,7 +56,7 @@ public class ListTransformation<SourceType, TargetType> {
         this(FXCollections.<SourceType>emptyObservableList(), function);
     }
 
-    // If the list changed we want the recreate the string
+    // If the list changed we want the recreate the targetType representation
     private void initListEvents() {
         this.listChangeListener = new ListChangeListener<SourceType>() {
             @Override
@@ -61,8 +64,8 @@ public class ListTransformation<SourceType, TargetType> {
                     Change<? extends SourceType> listEvent) {
 
                 // We have to stage delete events, because if we process them
-                // separatly, there will be unwanted Changeevents on the
-                // stringlist
+                // separately, there will be unwanted ChangeEvents on the
+                // targetList
                 List<TargetType> deleteStaging = new ArrayList<>();
 
                 while (listEvent.next()) {
@@ -168,7 +171,7 @@ public class ListTransformation<SourceType, TargetType> {
     }
 
     /**
-     * @return String representation of {@link #modelListProperty()}.
+     * @return {@link TargetType} representation of {@link #modelListProperty()}.
      */
     public ReadOnlyListProperty<TargetType> targetListProperty() {
         return viewModelList.getReadOnlyProperty();
