@@ -2,7 +2,7 @@
 
 __mvvm(fx)__ is an application framework which provides you necessary components to implement the [MVVM](../../wiki/MVVM "MVVM") pattern with JavaFX.
 
-__MVVM__ is the enhanced version of the [Presentation Model](http://martinfowler.com/eaaDev/PresentationModel.html "Presentation Model") pattern and was created by Microsoft engeneers for [WPF](http://msdn.microsoft.com/en-us/library/ms754130.aspx "WPF") . JavaFX and WPF does have similarities like Databinding and descriptive UI declaration (FXML/XAML). Because of this fact we aptopt best practices of the development with the Microsoft technology.
+__MVVM__ is the enhanced version of the [Presentation Model](http://martinfowler.com/eaaDev/PresentationModel.html "Presentation Model") pattern and was created by Microsoft engineers for [WPF](http://msdn.microsoft.com/en-us/library/ms754130.aspx "WPF") . JavaFX and WPF does have similarities like Databinding and descriptive UI declaration (FXML/XAML). Because of this fact we aptopt best practices of the development with the Microsoft technology.
 
 ###[Howto](../../wiki "Howto")###
 
