@@ -11,9 +11,10 @@ import javafx.scene.shape.Rectangle;
  *
  */
 public class SizeBindingsBuilder {
+    
 
     public static BindSizeBuilderStep bindSize(){
-        return new BindSizeBuilderStep();
+        return new BindSizeBuilderStepImpl();
     }
     
     public static UnbindSizeBuilderStep unbindSize() {
@@ -21,165 +22,197 @@ public class SizeBindingsBuilder {
     }
 
     public static BindWidthBuilderStep bindWidth(){
-        return new BindWidthBuilderStep();
+        return new BindWidthBuilderStepImpl();
     }
 
     public static BindHeightBuilderStep bindHeight(){
-        return new BindHeightBuilderStep();
+        return new BindHeightBuilderStepImpl();
     }
 
 
-    public static class BindWidthBuilderStep {
+    static interface TargetStep {
+        void to(Region target);
+        void to(Control target);
+        void to(Rectangle target);
+        void to(ImageView target);
+    }
+    
+    static interface SourceStep<A extends TargetStep> {
+        A from(Region source);
+        A from(Control source);
+        A from(Rectangle source);
+        A from(ImageView source);
+    }
 
-        public static class FromBindWidthBuilderStep {
-            private final ReadOnlyDoubleProperty width;
+    public static interface BindWidthBuilderStep extends SourceStep<FromBindWidthBuilderStep> {
+    }
 
-            FromBindWidthBuilderStep(ReadOnlyDoubleProperty width){
-                this.width = width;
-            }
+    public static interface FromBindWidthBuilderStep extends TargetStep {
+    }
 
-            public void to(Region target) {
-                target.maxWidthProperty().bind(width);
-                target.minWidthProperty().bind(width);
-            }
+    public static interface BindHeightBuilderStep extends SourceStep<FromBindHeightBuilderStep> {
+    }
 
-            public void to(Control target) {
-                target.maxWidthProperty().bind(width);
-                target.minWidthProperty().bind(width);
-            }
+    public static interface FromBindHeightBuilderStep extends TargetStep {
+    }
 
-            public void to(Rectangle target) {
-                target.widthProperty().bind(width);
-            }
+    public static interface BindSizeBuilderStep extends SourceStep<FromBindSizeBuilderStep> {
+    }
 
-            public void to(ImageView target){
-                target.fitWidthProperty().bind(width);
-            }
+    public static interface FromBindSizeBuilderStep extends TargetStep {
+    }
+    
+
+
+    public static class BindWidthBuilderStepImpl implements BindWidthBuilderStep, FromBindWidthBuilderStep{
+
+        private ReadOnlyDoubleProperty width;
+
+        @Override
+        public void to(Region target) {
+            target.maxWidthProperty().bind(width);
+            target.minWidthProperty().bind(width);
         }
-
+        @Override
+        public void to(Control target) {
+            target.maxWidthProperty().bind(width);
+            target.minWidthProperty().bind(width);
+        }
+        @Override
+        public void to(Rectangle target) {
+            target.widthProperty().bind(width);
+        }
+        @Override
+        public void to(ImageView target){
+            target.fitWidthProperty().bind(width);
+        }
+        @Override
         public FromBindWidthBuilderStep from(Region source) {
-            return new FromBindWidthBuilderStep(source.widthProperty());
+            width = source.widthProperty();
+            return this;
         }
-
+        @Override
         public FromBindWidthBuilderStep from(Control source){
-            return new FromBindWidthBuilderStep(source.widthProperty());
+            width = source.widthProperty();
+            return this;
         }
-
+        @Override
         public FromBindWidthBuilderStep from(Rectangle source) {
-            return new FromBindWidthBuilderStep(source.widthProperty());
+            width = source.widthProperty();
+            return this;
         }
-
+        @Override
         public FromBindWidthBuilderStep from(ImageView source){
-            return new FromBindWidthBuilderStep(source.fitWidthProperty());
+            width = source.fitWidthProperty();
+            return this;
         }
     }
+     
 
-    public static class BindHeightBuilderStep {
+    public static class BindHeightBuilderStepImpl implements BindHeightBuilderStep, FromBindHeightBuilderStep{
 
+        private ReadOnlyDoubleProperty height;
 
-        public static class FromBindHeightBuilderStep {
-
-            private final ReadOnlyDoubleProperty height;
-
-            FromBindHeightBuilderStep(ReadOnlyDoubleProperty height){
-                this.height = height;
-            }
-
-            public void to(Region target) {
-                target.maxHeightProperty().bind(height);
-                target.minHeightProperty().bind(height);
-            }
-
-            public void to(Control target) {
-                target.maxHeightProperty().bind(height);
-                target.minHeightProperty().bind(height);
-            }
-
-            public void to(Rectangle target) {
-                target.heightProperty().bind(height);
-            }
-
-            public void to(ImageView target){
-                target.fitHeightProperty().bind(height);
-            }
+        @Override
+        public void to(Region target) {
+            target.maxHeightProperty().bind(height);
+            target.minHeightProperty().bind(height);
         }
-
+        @Override
+        public void to(Control target) {
+            target.maxHeightProperty().bind(height);
+            target.minHeightProperty().bind(height);
+        }
+        @Override
+        public void to(Rectangle target) {
+            target.heightProperty().bind(height);
+        }
+        @Override
+        public void to(ImageView target){
+            target.fitHeightProperty().bind(height);
+        }
+        @Override
         public FromBindHeightBuilderStep from(Region source) {
-            return new FromBindHeightBuilderStep(source.heightProperty());
+            height = source.heightProperty();
+            return this;
         }
-
+        @Override
         public FromBindHeightBuilderStep from(Control source) {
-            return new FromBindHeightBuilderStep(source.heightProperty());
+            height = source.heightProperty();
+            return this;
         }
-
+        @Override
         public FromBindHeightBuilderStep from(Rectangle source) {
-            return new FromBindHeightBuilderStep(source.heightProperty());
+            height = source.heightProperty();
+            return this;
         }
-
+        @Override
         public FromBindHeightBuilderStep from(ImageView source){
-            return new FromBindHeightBuilderStep(source.fitHeightProperty());
+            height = source.fitHeightProperty();
+            return this;
         }
     }
 
-    public static class BindSizeBuilderStep {
+    
 
-        public static class FromBindSizeBuilderStep {
+    public static class BindSizeBuilderStepImpl implements BindSizeBuilderStep, FromBindSizeBuilderStep {
+        private FromBindWidthBuilderStep widthStep;
+        private FromBindHeightBuilderStep heightStep;
 
-            private final ReadOnlyDoubleProperty width;
-            private final ReadOnlyDoubleProperty height;
-
-            FromBindSizeBuilderStep(ReadOnlyDoubleProperty width, ReadOnlyDoubleProperty height){
-                this.width = width;
-                this.height = height;
-            }
-
-            public void to(Region target){
-                target.maxWidthProperty().bind(width);
-                target.minWidthProperty().bind(width);
-
-                target.maxHeightProperty().bind(height);
-                target.minHeightProperty().bind(height);
-            }
-
-            public void to(Control target) {
-                target.maxWidthProperty().bind(width);
-                target.minWidthProperty().bind(width);
-
-                target.maxHeightProperty().bind(height);
-                target.minHeightProperty().bind(height);
-            }
-
-            public void to(Rectangle target) {
-                target.widthProperty().bind(width);
-                target.heightProperty().bind(height);
-            }
-
-            public void to(ImageView target){
-                target.fitWidthProperty().bind(width);
-                target.fitHeightProperty().bind(height);
-            }
+        @Override
+        public void to(Region target){
+            widthStep.to(target);
+            heightStep.to(target);
+        }
+    
+        @Override
+        public void to(Control target) {
+            widthStep.to(target);
+            heightStep.to(target);
         }
 
+        @Override
+        public void to(Rectangle target) {
+            widthStep.to(target);
+            heightStep.to(target);
+        }
 
+        @Override
+        public void to(ImageView target){
+            widthStep.to(target);
+            heightStep.to(target);
+        }
+
+        @Override
         public FromBindSizeBuilderStep from(Region source) {
-            return new FromBindSizeBuilderStep(source.widthProperty(),source.heightProperty());
+            widthStep = bindWidth().from(source);
+            heightStep = bindHeight().from(source);
+            return this;
         }
-
+        
+        @Override
         public FromBindSizeBuilderStep from(Control source) {
-            return new FromBindSizeBuilderStep(source.widthProperty(), source.heightProperty());
+            widthStep = bindWidth().from(source);
+            heightStep = bindHeight().from(source);
+            return this;
         }
-
+        
+        @Override
         public FromBindSizeBuilderStep from(Rectangle source) {
-            return new FromBindSizeBuilderStep(source.widthProperty(), source.heightProperty());
+            widthStep = bindWidth().from(source);
+            heightStep = bindHeight().from(source);
+            return this;
         }
-
+        
+        @Override
         public FromBindSizeBuilderStep from(ImageView source){
-            return new FromBindSizeBuilderStep(source.fitWidthProperty(), source.fitHeightProperty());
+            widthStep = bindWidth().from(source);
+            heightStep = bindHeight().from(source);
+            return this;
         }
     }
 
     public static class UnbindSizeBuilderStep {
-        
         public void of(Region source){
             source.maxWidthProperty().unbind();
             source.minWidthProperty().unbind();
@@ -205,6 +238,5 @@ public class SizeBindingsBuilder {
             source.widthProperty().unbind();
             source.heightProperty().unbind();
         }
-        
     }
 }
