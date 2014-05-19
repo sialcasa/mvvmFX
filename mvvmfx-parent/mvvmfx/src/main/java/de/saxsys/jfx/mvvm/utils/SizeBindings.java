@@ -30,7 +30,7 @@ import javafx.scene.shape.Rectangle;
  * 
  * @author alexander.casall
  *
- * @deprecated Use {@link de.saxsys.jfx.mvvm.utils.SizeBindingsBuilder} instead.
+ * @deprecated Use {@link de.saxsys.jfx.mvvm.utils.sizebinding.SizeBindingsBuilder} instead.
  * This class is deprecated because the usage of overloaded methods for different types of components isn't flexible enough.
  * 
  */

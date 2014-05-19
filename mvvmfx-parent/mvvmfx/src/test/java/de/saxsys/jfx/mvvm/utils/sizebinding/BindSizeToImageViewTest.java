@@ -1,10 +1,10 @@
-package de.saxsys.jfx.mvvm.utils;
+package de.saxsys.jfx.mvvm.utils.sizebinding;
 
 import javafx.scene.image.ImageView;
 import org.junit.Before;
 import org.junit.Test;
 
-import static de.saxsys.jfx.mvvm.utils.SizeBindingsBuilder.*;
+import static de.saxsys.jfx.mvvm.utils.sizebinding.SizeBindingsBuilder.*;
 
 public class BindSizeToImageViewTest extends SizeBindingsBuilderTestBase {
     private ImageView toImageView;
