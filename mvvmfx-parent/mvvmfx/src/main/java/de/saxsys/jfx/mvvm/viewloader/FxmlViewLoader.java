@@ -15,7 +15,6 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.viewloader;
 
-import de.saxsys.jfx.mvvm.api.FxmlView;
 import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.base.view.View;
 import de.saxsys.jfx.mvvm.di.FXMLLoaderWrapper;
@@ -41,7 +40,7 @@ class FxmlViewLoader {
     /**
      * Load the viewTuple by it`s ViewType.
      */
-    <ViewType extends View<ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(Class<? extends ViewType>
+    <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(Class<? extends ViewType>
             viewType, ResourceBundle resourceBundle) {
         String pathToFXML = "/"
                 + viewType.getPackage().getName().replaceAll("\\.", "/") + "/"
@@ -53,7 +52,7 @@ class FxmlViewLoader {
     /**
      * Load the viewTuple by the path of the fxml file.
      */
-    <ViewType extends View<ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(final String resource,
+    <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(final String resource,
             ResourceBundle resourceBundle) {
         // Load FXML file
         final URL location = FxmlViewLoader.class.getResource(resource);
@@ -78,7 +77,7 @@ class FxmlViewLoader {
                         + " This is a serious error and caused an exception.");
             }
 
-            return (ViewTuple<ViewType, ViewModelType>)tuple;
+            return (ViewTuple<ViewType, ViewModelType>) tuple;
         } catch (final IOException ex) {
             LOG.error("Error loading FXML :", ex);
             return null;

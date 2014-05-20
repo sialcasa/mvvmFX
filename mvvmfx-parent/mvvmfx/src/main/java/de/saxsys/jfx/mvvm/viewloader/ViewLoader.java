@@ -19,7 +19,6 @@ import de.saxsys.jfx.mvvm.api.FxmlView;
 import de.saxsys.jfx.mvvm.api.JavaView;
 import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.base.view.View;
-import de.saxsys.jfx.mvvm.di.FXMLLoaderWrapper;
 import net.jodah.typetools.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +51,7 @@ public final class ViewLoader {
      *
      * @return the ViewTuple that contains the view and the viewModel.
      */
-    public <ViewType extends View<ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadViewTuple(Class<? extends ViewType> viewType) {
+    public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadViewTuple(Class<? extends ViewType> viewType) {
         return loadViewTuple(viewType, null);
     }
 
@@ -68,7 +67,7 @@ public final class ViewLoader {
      *
      * @return the ViewTuple that contains the view and the viewModel.
      */
-    public <ViewType extends View<ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadViewTuple(Class<? extends ViewType> viewType,
+    public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadViewTuple(Class<? extends ViewType> viewType,
             ResourceBundle resourceBundle) {
         Type type = TypeResolver.resolveGenericType(FxmlView.class, viewType);
 
