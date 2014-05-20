@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import de.saxsys.jfx.exampleapplication.model.Person;
 import de.saxsys.jfx.exampleapplication.model.Repository;
 import de.saxsys.jfx.mvvm.api.ViewModel;
-import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ModelToStringMapper;
+import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ModelToStringFunction;
 import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.SelectableItemList;
 import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.SelectableStringList;
 
@@ -32,9 +32,9 @@ public class PersonLoginViewModel implements ViewModel {
 
 	@Inject
 	public PersonLoginViewModel(Repository repository) {
-		ModelToStringMapper<Person> personMapper = new ModelToStringMapper<Person>() {
+		ModelToStringFunction<Person> personMapper = new ModelToStringFunction<Person>() {
 			@Override
-			public String toString(Person person) {
+			public String apply(Person person) {
 				return person.getFirstName() + " " + person.getLastName();
 			}
 		};
