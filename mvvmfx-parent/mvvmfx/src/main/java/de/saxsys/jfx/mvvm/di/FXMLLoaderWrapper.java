@@ -49,7 +49,7 @@ public class FXMLLoaderWrapper {
     public ViewTuple<? extends View, ? extends ViewModel> load(URL location,
             ResourceBundle resourceBundle) throws IOException {
         FXMLLoader fxmlLoader = createFxmlLoader(location, resourceBundle);
-        return new ViewTuple<>((View<?>) fxmlLoader.getController(),
+        return new ViewTuple((View<?>) fxmlLoader.getController(),
                 (Parent) fxmlLoader.getRoot());
     }
 
