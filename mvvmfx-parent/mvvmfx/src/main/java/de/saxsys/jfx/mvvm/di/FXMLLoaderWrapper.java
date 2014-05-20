@@ -15,59 +15,57 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.di;
 
-import de.saxsys.jfx.mvvm.base.view.View;
-import de.saxsys.jfx.mvvm.api.ViewModel;
-import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.util.Callback;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.util.Callback;
+import de.saxsys.jfx.mvvm.api.ViewModel;
+import de.saxsys.jfx.mvvm.base.view.View;
+import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
+
 /**
- * This is a wrapper for javaFX`s {@link FXMLLoader}. It is used to load a {@link ViewTuple} for a fxml file.
+ * This is a wrapper for javaFX`s {@link FXMLLoader}. It is used to load a
+ * {@link ViewTuple} for a fxml file.
  * 
- * @author manuel.mauky, alexander.casall 
+ * @author manuel.mauky, alexander.casall
  */
 public class FXMLLoaderWrapper {
 
-    /**
-     * @see FXMLLoader#load(URL)
-     */
-    public ViewTuple<? extends View, ? extends ViewModel> load(URL location) throws IOException {
-        FXMLLoader fxmlLoader = createFxmlLoader(location, null);
-        
-        return new ViewTuple((View)fxmlLoader.getController(),
-                (Parent) fxmlLoader.getRoot());
-    }
+	/**
+	 * @see FXMLLoader#load(URL)
+	 */
+	public ViewTuple<? extends View, ? extends ViewModel> load(URL location,
+			ResourceBundle resourceBundle, Object controller, Object root)
+			throws IOException {
+		FXMLLoader fxmlLoader = createFxmlLoader(location, resourceBundle,
+				controller, root);
 
-    /**
-     * @see FXMLLoader#load(URL, ResourceBundle)
-     */
-    public ViewTuple<? extends View, ? extends ViewModel> load(URL location,
-            ResourceBundle resourceBundle) throws IOException {
-        FXMLLoader fxmlLoader = createFxmlLoader(location, resourceBundle);
-        return new ViewTuple((View<?>) fxmlLoader.getController(),
-                (Parent) fxmlLoader.getRoot());
-    }
+		return new ViewTuple((View) fxmlLoader.getController(),
+				(Parent) fxmlLoader.getRoot());
+	}
 
-    private FXMLLoader createFxmlLoader(URL location,
-            ResourceBundle resourceBundle) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader();
+	private FXMLLoader createFxmlLoader(URL location,
+			ResourceBundle resourceBundle, Object controller, Object root)
+			throws IOException {
+		FXMLLoader fxmlLoader = new FXMLLoader();
 
-        fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
-            @Override
-            public Object call(Class<?> aClass) {
-                return DependencyInjector.getInstance().getInstanceOf(aClass);
-            }
-        });
+		fxmlLoader.setRoot(root);
+		fxmlLoader.setResources(resourceBundle);
+		fxmlLoader.setLocation(location);
+		fxmlLoader.setController(controller);
 
-        fxmlLoader.setResources(resourceBundle);
-        fxmlLoader.setLocation(location);
-        fxmlLoader.load(location.openStream());
-        return fxmlLoader;
-    }
+		fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
+			@Override
+			public Object call(Class<?> aClass) {
+				return DependencyInjector.getInstance().getInstanceOf(aClass);
+			}
+		});
+
+		fxmlLoader.load(location.openStream());
+		return fxmlLoader;
+	}
 
 }
