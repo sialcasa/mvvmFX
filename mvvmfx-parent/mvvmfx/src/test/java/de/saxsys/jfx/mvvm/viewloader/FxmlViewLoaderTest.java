@@ -15,69 +15,74 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.viewloader;
 
-import de.saxsys.jfx.mvvm.api.ViewModel;
-import de.saxsys.jfx.mvvm.base.view.View;
-import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlView;
-import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithoutViewModel;
-import de.saxsys.jfx.mvvm.viewloader.example.TestViewModel;
-import javafx.scene.layout.VBox;
-import org.junit.Before;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import javafx.scene.layout.VBox;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlView;
+import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithoutViewModel;
+import de.saxsys.jfx.mvvm.viewloader.example.TestViewModel;
 
 /**
  * Test the loading of FxmlViews.
  * 
- * @author manuel.mauky 
+ * @author manuel.mauky
  */
 public class FxmlViewLoaderTest {
-    
-    private FxmlViewLoader fxmlViewLoader;
-    
-    @Before
-    public void setup(){
-        fxmlViewLoader = new FxmlViewLoader();
-    }
-    
-    @Test
-    public void testLoadFxmlViewTuple() throws IOException{
-        ResourceBundle resourceBundle = new PropertyResourceBundle(new StringReader(""));
 
-        ViewTuple<TestFxmlView, TestViewModel> viewTuple = fxmlViewLoader.loadFxmlViewTuple(TestFxmlView.class, resourceBundle);
+	private FxmlViewLoader fxmlViewLoader;
 
-        assertThat(viewTuple).isNotNull();
+	@Before
+	public void setup() {
+		fxmlViewLoader = new FxmlViewLoader();
+	}
 
-        assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
-        assertThat(viewTuple.getCodeBehind()).isNotNull();
+	@Test
+	public void testLoadFxmlViewTuple() throws IOException {
+		final ResourceBundle resourceBundle = new PropertyResourceBundle(
+				new StringReader(""));
 
-        TestFxmlView codeBehind = viewTuple.getCodeBehind();
-        assertThat(codeBehind.viewModel).isNotNull();
-        assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
-        
-        assertThat(codeBehind.viewModelWasNull).isFalse();
-    }
-    
-    @Test
-    public void testLoadFxmlViewTupleWithoutViewModel(){
+		final ViewTuple<TestFxmlView, TestViewModel> viewTuple = fxmlViewLoader
+				.loadFxmlViewTuple(TestFxmlView.class, resourceBundle, null,
+						null);
 
-        ViewTuple viewTuple = fxmlViewLoader.loadFxmlViewTuple
-                (TestFxmlViewWithoutViewModel.class, null);
-        
-        assertThat(viewTuple).isNotNull();
-    
-        assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
-        assertThat(viewTuple.getCodeBehind()).isNotNull().isInstanceOf(TestFxmlViewWithoutViewModel.class);
+		assertThat(viewTuple).isNotNull();
 
-        TestFxmlViewWithoutViewModel codeBehind = (TestFxmlViewWithoutViewModel)viewTuple.getCodeBehind();
-        
-        assertThat(codeBehind.wasInitialized).isTrue();
-        assertThat(codeBehind.viewModel).isNull();
-    }
-    
+		assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
+		assertThat(viewTuple.getCodeBehind()).isNotNull();
+
+		final TestFxmlView codeBehind = viewTuple.getCodeBehind();
+		assertThat(codeBehind.viewModel).isNotNull();
+		assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
+
+		assertThat(codeBehind.viewModelWasNull).isFalse();
+	}
+
+	@Test
+	public void testLoadFxmlViewTupleWithoutViewModel() {
+
+		final ViewTuple viewTuple = fxmlViewLoader.loadFxmlViewTuple(
+				TestFxmlViewWithoutViewModel.class, null, null, null);
+
+		assertThat(viewTuple).isNotNull();
+
+		assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
+		assertThat(viewTuple.getCodeBehind()).isNotNull().isInstanceOf(
+				TestFxmlViewWithoutViewModel.class);
+
+		final TestFxmlViewWithoutViewModel codeBehind = (TestFxmlViewWithoutViewModel) viewTuple
+				.getCodeBehind();
+
+		assertThat(codeBehind.wasInitialized).isTrue();
+		assertThat(codeBehind.viewModel).isNull();
+	}
+
 }

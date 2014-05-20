@@ -19,12 +19,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.util.Callback;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.base.view.View;
-import de.saxsys.jfx.mvvm.di.FXMLLoaderWrapper;
+import de.saxsys.jfx.mvvm.di.DependencyInjector;
 
 /**
  * This viewLoader is used to load views that are implementing
@@ -36,8 +40,6 @@ class FxmlViewLoader {
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(FxmlViewLoader.class);
-
-	private final FXMLLoaderWrapper fxmlLoaderWrapper = new FXMLLoaderWrapper();
 
 	/**
 	 * Load the viewTuple by it`s ViewType.
@@ -58,33 +60,54 @@ class FxmlViewLoader {
 	<ViewType extends View<ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
 			final String resource, ResourceBundle resourceBundle,
 			final Object controller, final Object root) {
-		// Load FXML file
-		final URL location = FxmlViewLoader.class.getResource(resource);
-		if (location == null) {
-			LOG.error("Error loading FXML - can't load from given resourcepath: "
-					+ resource);
-			return null;
-		}
-
 		try {
+			final FXMLLoader loader = createFxmlLoader(resource,
+					resourceBundle, controller, root);
 
-			final ViewTuple<? extends View, ? extends ViewModel> tuple = fxmlLoaderWrapper
-					.load(location, resourceBundle, controller, root);
-			if (tuple.getCodeBehind() == null) {
-				LOG.warn("Could not load the code behind class for the following FXML file: "
-						+ resource
-						+ " please check whether you have set the fx:controller attribute in the FXML!");
-			}
-			if (tuple.getView() == null) {
-				LOG.error("Could not load the view for the following FXML file: "
-						+ resource
-						+ " This is a serious error and caused an exception.");
+			loader.load();
+
+			final View loadedController = (View) loader.getController();
+			final Parent loadedRoot = (Parent) loader.getRoot();
+
+			if (loadedController == null) {
+				LOG.warn("No code behind class (fx:controller) has been set for the following FXML file: "
+						+ resource);
 			}
 
-			return (ViewTuple<ViewType, ViewModelType>) tuple;
+			return new ViewTuple(loadedController, loadedRoot);
+
 		} catch (final IOException ex) {
 			LOG.error("Error loading FXML :", ex);
 			return null;
 		}
+	}
+
+	private FXMLLoader createFxmlLoader(String resource,
+			ResourceBundle resourceBundle, Object controller, Object root)
+			throws IOException {
+
+		// Load FXML file
+		final URL location = FxmlViewLoader.class.getResource(resource);
+		if (location == null) {
+			throw new IOException(
+					"Error loading FXML - can't load from given resourcepath: "
+							+ resource);
+		}
+
+		final FXMLLoader fxmlLoader = new FXMLLoader();
+
+		fxmlLoader.setRoot(root);
+		fxmlLoader.setResources(resourceBundle);
+		fxmlLoader.setLocation(location);
+		fxmlLoader.setController(controller);
+
+		fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
+			@Override
+			public Object call(Class<?> aClass) {
+				return DependencyInjector.getInstance().getInstanceOf(aClass);
+			}
+		});
+
+		return fxmlLoader;
 	}
 }
