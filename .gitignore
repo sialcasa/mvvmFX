@@ -1,0 +1,23 @@
+
+*.class
+target
+*.bak
+
+# eclipse #
+*.prefs
+.classpath
+.project
+.metadata
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.sha1
+*.sha1
+*.repositories
+
+
+# intelliJ #
+.idea
+*.iml
