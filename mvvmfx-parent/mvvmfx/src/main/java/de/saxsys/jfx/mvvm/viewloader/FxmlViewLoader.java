@@ -63,8 +63,8 @@ class FxmlViewLoader {
 
             loader.load();
 
-            final View loadedController = (View) loader.getController();
-            final Parent loadedRoot = (Parent) loader.getRoot();
+            final View loadedController = loader.getController();
+            final Parent loadedRoot = loader.getRoot();
 
             if (loadedController == null) {
                 LOG.warn("No code behind class (fx:controller) has been set for the following FXML file: "
@@ -96,7 +96,14 @@ class FxmlViewLoader {
         fxmlLoader.setRoot(root);
         fxmlLoader.setResources(resourceBundle);
         fxmlLoader.setLocation(location);
-        fxmlLoader.setController(controller);
+        
+        if(controller != null){
+            fxmlLoader.setController(controller);
+            
+            if(controller instanceof View){
+                DependencyInjector.getInstance().injectViewModel((View)controller);
+            }
+        }
 
         fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
             @Override

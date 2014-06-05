@@ -22,6 +22,7 @@ import java.io.StringReader;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewFxRoot;
 import javafx.scene.layout.VBox;
 
 import org.junit.Before;
@@ -84,5 +85,21 @@ public class FxmlViewLoaderTest {
 		assertThat(codeBehind.wasInitialized).isTrue();
 		assertThat(codeBehind.viewModel).isNull();
 	}
+    
+    @Test
+    public void testLoadFxmlViewWithFxRoot(){
+        TestFxmlViewFxRoot root = new TestFxmlViewFxRoot();
+        
+        ViewTuple<TestFxmlViewFxRoot, TestViewModel> viewTuple = fxmlViewLoader
+                .loadFxmlViewTuple(TestFxmlViewFxRoot.class, null, root, root);
+        
+        assertThat(viewTuple).isNotNull();
+        
+        assertThat(viewTuple.getView()).isNotNull().isEqualTo(root);
+        assertThat(viewTuple.getCodeBehind()).isNotNull().isEqualTo(root);
+        
+        assertThat(viewTuple.getCodeBehind().viewModel).isNotNull();
+        assertThat(viewTuple.getCodeBehind().viewModelWasNull).isFalse();
+    }
 
 }
