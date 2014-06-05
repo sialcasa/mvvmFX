@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package de.saxsys.jfx.mvvm.di;
+package de.saxsys.jfx.mvvm.viewloader;
 
+import de.saxsys.jfx.mvvm.viewloader.DependencyInjector;
 import javafx.util.Callback;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,7 +25,7 @@ import org.mockito.Mockito;
 import static org.junit.Assert.fail;
 
 /**
- * This test verifies the behaviour of the {@link DependencyInjector}.
+ * This test verifies the behaviour of the {@link de.saxsys.jfx.mvvm.viewloader.DependencyInjector}.
  */
 public class DependencyInjectorTest {
 

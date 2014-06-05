@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 ******************************************************************************/
-package de.saxsys.jfx.mvvm.di;
+package de.saxsys.jfx.mvvm.viewloader;
 
 import de.saxsys.jfx.mvvm.api.InjectViewModel;
-import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.base.view.View;
 import javafx.util.Callback;
 import net.jodah.typetools.TypeResolver;
@@ -48,6 +47,21 @@ public class DependencyInjector {
         return singleton;
     }
 
+
+    /**
+     * Define a custom injector that is used to retrieve instances. This can be used
+     * as a bridge to you dependency injection framework.
+     *
+     * The callback has to return an instance for the given class type. This is
+     * same way as it is done in the {@link javafx.fxml.FXMLLoader#setControllerFactory(javafx.util.Callback)}
+     * method.
+     *
+     * @param callback the callback that returns instances of a specific class type.
+     */
+    public void setCustomInjector(Callback<Class<?>, Object> callback){
+        this.customInjector = callback;
+    }
+
     /**
      * Returns an instance of the given type. When there is a custom injector defined (See: {@link #setCustomInjector(javafx.util.Callback)})
      * then this injector is used.
@@ -58,21 +72,20 @@ public class DependencyInjector {
      * @param <T>
      * @return
      */
-    public <T> T getInstanceOf(Class<? extends T> type){
+    <T> T getInstanceOf(Class<? extends T> type){
         T instance = getUninitializedInstanceOf(type);
 
         if(instance instanceof View){
-            injectViewModel((View) instance);
+            injectViewModel((View)instance);
         }
 
         return instance;
     }
 
-    private void injectViewModel(final View view) {
-
+    void injectViewModel(final View view) {
         final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
         final Field field = getViewModelField(view.getClass(), viewModelType);
-        
+
         if(field != null){
             AccessController.doPrivileged(new PrivilegedAction<Object>() {
                 @Override
@@ -96,7 +109,7 @@ public class DependencyInjector {
     }
     
     
-    private Field getViewModelField(Class<?extends View> viewType, Class<?> viewModelType){
+    private Field getViewModelField(Class<?> viewType, Class<?> viewModelType){
         
         for(Field field : viewType.getDeclaredFields()){
             if(field.isAnnotationPresent(InjectViewModel.class)){
@@ -129,28 +142,15 @@ public class DependencyInjector {
      * See {@link #setCustomInjector(javafx.util.Callback)} for more details.
      * @return the defined custom injector if any
      */
-    public Callback<Class<?>, Object> getCustomInjector(){
+    Callback<Class<?>, Object> getCustomInjector(){
         return customInjector;
     }
 
-    /**
-     * Define a custom injector that is used to retrieve instances. This can be used
-     * as a bridge to you dependency injection framework.
-     *
-     * The callback has to return an instance for the given class type. This is
-     * same way as it is done in the {@link javafx.fxml.FXMLLoader#setControllerFactory(javafx.util.Callback)}
-     * method.
-     *
-     * @param callback the callback that returns instances of a specific class type.
-     */
-    public void setCustomInjector(Callback<Class<?>, Object> callback){
-        this.customInjector = callback;
-    }
 
     /**
      * @return true when a custom injector is defined, otherwise false.
      */
-    public boolean isCustomInjectorDefined(){
+    boolean isCustomInjectorDefined(){
         return customInjector != null;
     }
 

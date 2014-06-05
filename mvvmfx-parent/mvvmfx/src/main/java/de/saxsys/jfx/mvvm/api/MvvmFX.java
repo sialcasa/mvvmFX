@@ -15,7 +15,7 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.api;
 
-import de.saxsys.jfx.mvvm.di.DependencyInjector;
+import de.saxsys.jfx.mvvm.viewloader.DependencyInjector;
 import de.saxsys.jfx.mvvm.notifications.NotificationCenter;
 import de.saxsys.jfx.mvvm.notifications.NotificationCenterFactory;
 import javafx.util.Callback;
