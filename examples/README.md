@@ -8,3 +8,4 @@ To run this example you need either mvvmfx-cdi-starter or mvvmfx-guice-starter.
 as dependency injection framework.
 - **mvvmfx-guice-starter**: contains the startup code to run the mvvmfx-complex-example with Guice
 as dependency injection framework. 
+- **mvvmfx-fx-root-example**: contains a small custom control that uses the fx:root element together with mvvmfx.
