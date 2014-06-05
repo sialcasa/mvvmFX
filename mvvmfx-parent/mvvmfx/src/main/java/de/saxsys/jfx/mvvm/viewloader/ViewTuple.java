@@ -23,7 +23,7 @@ import de.saxsys.jfx.mvvm.api.ViewModel;
  * Tuple for carrying view / code-behind pair. The code-behind part is the class
  * which is known as the controller class behind a FXML file.
  */
-public class ViewTuple<ViewType extends View<ViewModelType> , ViewModelType extends ViewModel> {
+public class ViewTuple<ViewType extends View<? extends ViewModelType> , ViewModelType extends ViewModel> {
 
 	private final ViewType codeBehind;
 	private final Parent view;

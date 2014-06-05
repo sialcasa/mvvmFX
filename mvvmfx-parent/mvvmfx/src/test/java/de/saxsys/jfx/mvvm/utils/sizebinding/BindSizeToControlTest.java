@@ -1,11 +1,11 @@
-package de.saxsys.jfx.mvvm.utils;
+package de.saxsys.jfx.mvvm.utils.sizebinding;
 
 import javafx.scene.control.Control;
 import javafx.scene.control.ScrollPane;
 import org.junit.Before;
 import org.junit.Test;
 
-import static de.saxsys.jfx.mvvm.utils.SizeBindingsBuilder.*;
+import static de.saxsys.jfx.mvvm.utils.sizebinding.SizeBindingsBuilder.*;
 
 public class BindSizeToControlTest extends SizeBindingsBuilderTestBase {
 

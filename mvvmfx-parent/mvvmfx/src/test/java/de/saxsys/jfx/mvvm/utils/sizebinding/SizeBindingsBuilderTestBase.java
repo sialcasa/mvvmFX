@@ -1,4 +1,4 @@
-package de.saxsys.jfx.mvvm.utils;
+package de.saxsys.jfx.mvvm.utils.sizebinding;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;

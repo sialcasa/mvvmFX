@@ -15,20 +15,18 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.viewloader;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.util.Callback;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.base.view.View;
 import de.saxsys.jfx.mvvm.di.DependencyInjector;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.util.Callback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * This viewLoader is used to load views that are implementing
@@ -38,76 +36,76 @@ import de.saxsys.jfx.mvvm.di.DependencyInjector;
  */
 class FxmlViewLoader {
 
-	private static final Logger LOG = LoggerFactory
-			.getLogger(FxmlViewLoader.class);
+    private static final Logger LOG = LoggerFactory
+            .getLogger(FxmlViewLoader.class);
 
-	/**
-	 * Load the viewTuple by it`s ViewType.
-	 */
-	<ViewType extends View<ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
-			Class<? extends ViewType> viewType, ResourceBundle resourceBundle,
-			Object controller, Object root) {
-		final String pathToFXML = "/"
-				+ viewType.getPackage().getName().replaceAll("\\.", "/") + "/"
-				+ viewType.getSimpleName() + ".fxml";
+    /**
+     * Load the viewTuple by it`s ViewType.
+     */
+    <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
+            Class<? extends ViewType> viewType, ResourceBundle resourceBundle,
+            Object controller, Object root) {
+        final String pathToFXML = "/"
+                + viewType.getPackage().getName().replaceAll("\\.", "/") + "/"
+                + viewType.getSimpleName() + ".fxml";
 
-		return loadFxmlViewTuple(pathToFXML, resourceBundle, controller, root);
-	}
+        return loadFxmlViewTuple(pathToFXML, resourceBundle, controller, root);
+    }
 
-	/**
-	 * Load the viewTuple by the path of the fxml file.
-	 */
-	<ViewType extends View<ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
-			final String resource, ResourceBundle resourceBundle,
-			final Object controller, final Object root) {
-		try {
-			final FXMLLoader loader = createFxmlLoader(resource,
-					resourceBundle, controller, root);
+    /**
+     * Load the viewTuple by the path of the fxml file.
+     */
+    <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
+            final String resource, ResourceBundle resourceBundle,
+            final Object controller, final Object root) {
+        try {
+            final FXMLLoader loader = createFxmlLoader(resource,
+                    resourceBundle, controller, root);
 
-			loader.load();
+            loader.load();
 
-			final View loadedController = (View) loader.getController();
-			final Parent loadedRoot = (Parent) loader.getRoot();
+            final View loadedController = (View) loader.getController();
+            final Parent loadedRoot = (Parent) loader.getRoot();
 
-			if (loadedController == null) {
-				LOG.warn("No code behind class (fx:controller) has been set for the following FXML file: "
-						+ resource);
-			}
+            if (loadedController == null) {
+                LOG.warn("No code behind class (fx:controller) has been set for the following FXML file: "
+                        + resource);
+            }
 
-			return new ViewTuple(loadedController, loadedRoot);
+            return new ViewTuple(loadedController, loadedRoot);
 
-		} catch (final IOException ex) {
-			LOG.error("Error loading FXML :", ex);
-			return null;
-		}
-	}
+        } catch (final IOException ex) {
+            LOG.error("Error loading FXML :", ex);
+            return null;
+        }
+    }
 
-	private FXMLLoader createFxmlLoader(String resource,
-			ResourceBundle resourceBundle, Object controller, Object root)
-			throws IOException {
+    private FXMLLoader createFxmlLoader(String resource,
+            ResourceBundle resourceBundle, Object controller, Object root)
+            throws IOException {
 
-		// Load FXML file
-		final URL location = FxmlViewLoader.class.getResource(resource);
-		if (location == null) {
-			throw new IOException(
-					"Error loading FXML - can't load from given resourcepath: "
-							+ resource);
-		}
+        // Load FXML file
+        final URL location = FxmlViewLoader.class.getResource(resource);
+        if (location == null) {
+            throw new IOException(
+                    "Error loading FXML - can't load from given resourcepath: "
+                            + resource);
+        }
 
-		final FXMLLoader fxmlLoader = new FXMLLoader();
+        final FXMLLoader fxmlLoader = new FXMLLoader();
 
-		fxmlLoader.setRoot(root);
-		fxmlLoader.setResources(resourceBundle);
-		fxmlLoader.setLocation(location);
-		fxmlLoader.setController(controller);
+        fxmlLoader.setRoot(root);
+        fxmlLoader.setResources(resourceBundle);
+        fxmlLoader.setLocation(location);
+        fxmlLoader.setController(controller);
 
-		fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
-			@Override
-			public Object call(Class<?> aClass) {
-				return DependencyInjector.getInstance().getInstanceOf(aClass);
-			}
-		});
+        fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
+            @Override
+            public Object call(Class<?> aClass) {
+                return DependencyInjector.getInstance().getInstanceOf(aClass);
+            }
+        });
 
-		return fxmlLoader;
-	}
+        return fxmlLoader;
+    }
 }

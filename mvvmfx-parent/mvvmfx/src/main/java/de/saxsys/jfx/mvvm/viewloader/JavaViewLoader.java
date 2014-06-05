@@ -15,7 +15,6 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.viewloader;
 
-import de.saxsys.jfx.mvvm.api.JavaView;
 import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.base.view.View;
 import de.saxsys.jfx.mvvm.di.DependencyInjector;
@@ -62,7 +61,7 @@ class JavaViewLoader {
      *
      * @return a fully loaded and initialized instance of the view.
      */
-    <ViewType extends View<ViewModelType>, ViewModelType extends ViewModel>  ViewTuple<ViewType, ViewModelType> loadJavaViewTuple(Class<? extends ViewType>
+    <ViewType extends View<?extends ViewModelType>, ViewModelType extends ViewModel>  ViewTuple<ViewType, ViewModelType> loadJavaViewTuple(Class<? extends ViewType>
             viewType, ResourceBundle resourceBundle) {
         DependencyInjector injectionFacade = DependencyInjector.getInstance();
 
@@ -90,7 +89,7 @@ class JavaViewLoader {
      * @param view       the view instance of which the initialize method will be invoked.
      * @param <ViewModelType> the generic type of the view.
      */
-    <ViewModelType extends ViewModel> void callInitialize(View<ViewModelType> view) {
+    <ViewModelType extends ViewModel> void callInitialize(View<? extends ViewModelType> view) {
         try {
             final Method initializeMethod = view.getClass().getMethod(NAMING_CONVENTION_INITIALIZE_IDENTIFIER);
 
@@ -118,7 +117,7 @@ class JavaViewLoader {
      * @param resourceBundle the resourceBundle instance that will be injected.
      * @param <ViewModelType>     the generic type of the view.
      */
-    <ViewModelType extends ViewModel> void injectResourceBundle(View<ViewModelType> view, ResourceBundle resourceBundle) {
+    <ViewModelType extends ViewModel> void injectResourceBundle(View<?extends ViewModelType> view, ResourceBundle resourceBundle) {
         try {
             Field resourcesField = view.getClass().getField(NAMING_CONVENTION_RESOURCES_IDENTIFIER);
 
