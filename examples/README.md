@@ -9,3 +9,5 @@ as dependency injection framework.
 - **mvvmfx-guice-starter**: contains the startup code to run the mvvmfx-complex-example with Guice
 as dependency injection framework. 
 - **mvvmfx-fx-root-example**: contains a small custom control that uses the fx:root element together with mvvmfx.
+- **mvvmfx-helloworld-example**: A simple hello world view. This example is used in the [Getting Started/Step-by-Step tutorial](/../../wiki/Getting-Started-HelloWorld-%28deutsch%29).
+- **mvvmfx-helloworld-without-fxml**: A hello world example that shows hot to use MvvmFX with a view implemented in pure Java and not with FXML.
