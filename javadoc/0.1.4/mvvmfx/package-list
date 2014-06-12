@@ -1,0 +1,9 @@
+de.saxsys.jfx.mvvm.api
+de.saxsys.jfx.mvvm.base.view
+de.saxsys.jfx.mvvm.base.view.util.viewlist
+de.saxsys.jfx.mvvm.base.viewmodel
+de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist
+de.saxsys.jfx.mvvm.di
+de.saxsys.jfx.mvvm.notifications
+de.saxsys.jfx.mvvm.utils
+de.saxsys.jfx.mvvm.viewloader
