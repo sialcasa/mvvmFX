@@ -17,7 +17,6 @@ package de.saxsys.jfx.mvvm.viewloader;
 
 import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.base.view.View;
-import de.saxsys.jfx.mvvm.di.DependencyInjector;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import org.slf4j.Logger;

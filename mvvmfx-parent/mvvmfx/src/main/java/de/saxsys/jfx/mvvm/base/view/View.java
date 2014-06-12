@@ -16,8 +16,6 @@
 package de.saxsys.jfx.mvvm.base.view;
 
 import de.saxsys.jfx.mvvm.api.ViewModel;
-import de.saxsys.jfx.mvvm.di.DependencyInjector;
-import net.jodah.typetools.TypeResolver;
 
 /**
  *
