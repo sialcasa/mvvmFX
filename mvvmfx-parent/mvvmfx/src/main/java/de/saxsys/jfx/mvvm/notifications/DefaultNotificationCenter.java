@@ -15,11 +15,12 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.notifications;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Default implementation of {@link NotificationCenter}.
@@ -32,17 +33,25 @@ class DefaultNotificationCenter implements NotificationCenter {
 	DefaultNotificationCenter() {
 	}
 
-	private Multimap<String, NotificationObserver> observersForName = ArrayListMultimap
-			.<String, NotificationObserver> create();
+	private final Map<String, List<NotificationObserver>> observersForName = new HashMap<String, List<NotificationObserver>>();
 
 	@Override
 	public void addObserverForName(String name, NotificationObserver observer) {
-		this.observersForName.put(name, observer);
+		List<NotificationObserver> observers = this.observersForName.get(name);
+		if (observers == null) {
+			this.observersForName.put(name, new ArrayList<NotificationObserver>());
+		}
+		observers = this.observersForName.get(name);
+		observers.add(observer);
 	}
 
 	@Override
 	public void removeObserverForName(String name, NotificationObserver observer) {
-		this.observersForName.remove(name, observer);
+		List<NotificationObserver> observers = this.observersForName.get(name);
+		observers.remove(observer);
+		if (observers.size() == 0) {
+			this.observersForName.remove(name);
+		}
 	}
 
 	@Override
@@ -50,12 +59,11 @@ class DefaultNotificationCenter implements NotificationCenter {
 		Iterator<String> iterator = this.observersForName.keySet().iterator();
 		while (iterator.hasNext()) {
 			String key = iterator.next();
-			Iterator<NotificationObserver> iterator2 = this.observersForName
-					.get(key).iterator();
+			Iterator<NotificationObserver> iterator2 = this.observersForName.get(key).iterator();
 			while (iterator2.hasNext()) {
 				NotificationObserver actualObserver = iterator2.next();
 				if (actualObserver == observer) {
-					this.observersForName.removeAll(key);
+					this.observersForName.remove(key);
 					break;
 				}
 			}
@@ -64,10 +72,11 @@ class DefaultNotificationCenter implements NotificationCenter {
 
 	@Override
 	public void postNotification(String name, Object... objects) {
-		Collection<NotificationObserver> notificationReceivers = observersForName
-				.get(name);
-		for (NotificationObserver observer : notificationReceivers) {
-			observer.receivedNotification(name, objects);
+		Collection<NotificationObserver> notificationReceivers = observersForName.get(name);
+		if (notificationReceivers != null) {
+			for (NotificationObserver observer : notificationReceivers) {
+				observer.receivedNotification(name, objects);
+			}
 		}
 	}
 
