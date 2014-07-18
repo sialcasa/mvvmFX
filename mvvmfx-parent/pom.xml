@@ -96,11 +96,6 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.6</version>
         </dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>12.0</version>
-		</dependency>
         <dependency>
             <groupId>net.jodah</groupId>
             <artifactId>typetools</artifactId>
