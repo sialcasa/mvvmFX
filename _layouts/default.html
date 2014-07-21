@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <meta name="description" content="MvvmFX Project Page">
     <meta name="author" content="Manuel Mauky">
 
     <title>{{ page.title }}</title>
-    
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <!-- Bootstrap -->
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
@@ -26,18 +26,18 @@
       <div class="row">
         <div class="col-md-2" id="main_nav">
           <ul class="nav nav-tabs nav-stacked">
-            <li {%if page.url == '/' %} class="active" {% endif %}><a href="/"><i class="fa fa-home fa-fw"></i> Home</a></li>
-            <li {%if page.url == '/download/' %} class="active" {% endif %}><a href="/download"><i class="fa fa-download fa-fw"></i> Download</a></li>
-            <li {%if page.url == '/news/' %} class="active" {% endif %}><a href="/news"><i class="fa fa-paper-plane fa-fw"></i> News</a></li>
-            <li {%if page.url == '/tutorials/' %} class="active" {% endif %}><a href="/tutorials"><i class="fa fa-rocket fa-fw"></i> Tutorials</a></li>
-            <li {%if page.url == '/docs/' %} class="active" {% endif %}><a href="/docs"><i class="fa fa-book fa-fw"></i> Documentation</a></li>
+            <li {%if page.url == '/' %} class="active" {% endif %}><a href="{{site.baseurl}}/"><i class="fa fa-home fa-fw"></i> Home</a></li>
+            <li {%if page.url == '/download/' %} class="active" {% endif %}><a href="{{site.baseurl}}/download"><i class="fa fa-download fa-fw"></i> Download</a></li>
+            <li {%if page.url == '/news/' %} class="active" {% endif %}><a href="{{site.baseurl}}/news"><i class="fa fa-paper-plane fa-fw"></i> News</a></li>
+            <li {%if page.url == '/tutorials/' %} class="active" {% endif %}><a href="{{site.baseurl}}/tutorials"><i class="fa fa-rocket fa-fw"></i> Tutorials</a></li>
+            <li {%if page.url == '/docs/' %} class="active" {% endif %}><a href="{{site.baseurl}}/docs"><i class="fa fa-book fa-fw"></i> Documentation</a></li>
             <li><a href="https://github.com/sialcasa/mvvmFX"><i class="fa fa-code fa-fw"></i> Source code</a></li>
             <li><a href="https://github.com/sialcasa/mvvmFX/issues"><i class="fa fa-bug fa-fw"></i> Bug tracker</a></li>
           </ul>
         </div>
 
 
-       
+
         <div class="container-fluid col-md-10">
           <div class="row" id="logo">
             <img src="https://camo.githubusercontent.com/f3329a50357fdb04c1ca7b2395f4ed5078881c66/687474703a2f2f7777772e6275696c64706174682e64652f6d76766d2f6d76766d66782e706e67">
@@ -56,4 +56,3 @@
     </div>
   </body>
 </html>
-
