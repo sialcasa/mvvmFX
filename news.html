@@ -1,0 +1,25 @@
+---
+layout: default
+
+title: News
+permalink: /news/
+---
+
+<div >
+  {% for post in site.posts %}
+    <article>
+      <header>
+        <h1><a href="{{post.url}}">{{ post.title }}</a></h1>
+          <strong>
+              <time datetime="{% include date.html date=post.date %}">
+                  {% include date.html date=post.date %}
+              </time>
+          </strong>
+      </header>
+
+      {{ post.content }}
+
+    </article>
+  {% endfor %}
+
+</div>

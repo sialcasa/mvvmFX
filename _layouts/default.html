@@ -16,21 +16,23 @@
     <link rel="stylesheet" media="screen" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" type="text/css"/>
 
     <link rel="stylesheet" href="/css/mvvmfx.css" type="text/css"/>
-    
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
 
   </head>
   <body>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-2" id="main_menu">
+        <div class="col-md-2" id="main_nav">
           <ul class="nav nav-tabs nav-stacked">
-            <li {%if page.url == '/' %} class="active" {% endif %}><a href="/">Home</a></li>
-            <li {%if page.url == '/download/' %} class="active" {% endif %}><a href="/download">Download</a></li>
-            <li {%if page.url == '/news/' %} class="active" {% endif %}><a href="/news">News</a></li>
-            <li {%if page.url == '/tutorials/' %} class="active" {% endif %}><a href="/tutorials">Tutorials</a></li>
-            <li {%if page.url == '/docs/' %} class="active" {% endif %}><a href="/docs">Documentation</a></li>
-            <li><a href="https://github.com/sialcasa/mvvmFX">Source code</a></li>
-            <li><a href="https://github.com/sialcasa/mvvmFX/issues">Bug tracker</a></li>
+            <li {%if page.url == '/' %} class="active" {% endif %}><a href="/"><i class="fa fa-home fa-fw"></i> Home</a></li>
+            <li {%if page.url == '/download/' %} class="active" {% endif %}><a href="/download"><i class="fa fa-download fa-fw"></i> Download</a></li>
+            <li {%if page.url == '/news/' %} class="active" {% endif %}><a href="/news"><i class="fa fa-paper-plane fa-fw"></i> News</a></li>
+            <li {%if page.url == '/tutorials/' %} class="active" {% endif %}><a href="/tutorials"><i class="fa fa-rocket fa-fw"></i> Tutorials</a></li>
+            <li {%if page.url == '/docs/' %} class="active" {% endif %}><a href="/docs"><i class="fa fa-book fa-fw"></i> Documentation</a></li>
+            <li><a href="https://github.com/sialcasa/mvvmFX"><i class="fa fa-code fa-fw"></i> Source code</a></li>
+            <li><a href="https://github.com/sialcasa/mvvmFX/issues"><i class="fa fa-bug fa-fw"></i> Bug tracker</a></li>
           </ul>
         </div>
 

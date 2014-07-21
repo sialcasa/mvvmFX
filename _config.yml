@@ -1,5 +1,19 @@
 name: MvvmFX
 url: http://sialcasa.github.io/mvvmFX
+baseurl: /mvvmFX
+
+encoding: UTF-8
+
+permalink: '/:year/:title'
 
 markdown: redcarpet
-pygments: true
+redcarpet:
+  extensions: ['fenced_code_blocks', "tables"]
+
+highlighter: rouge
+
+
+paginate: 20
+
+
+exclude: ['Gemfile', 'Gemfile.lock']
