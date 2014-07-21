@@ -15,7 +15,7 @@
 
     <link rel="stylesheet" media="screen" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" type="text/css"/>
 
-    <link rel="stylesheet" href="/css/mvvmfx.css" type="text/css"/>
+    <link rel="stylesheet" href="{{site.baseurl}}/css/mvvmfx.css" type="text/css"/>
 
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
@@ -38,7 +38,7 @@
 
 
 
-        <div class="container-fluid col-md-10">
+        <div class="container-fluid col-md-8">
           <div class="row" id="logo">
             <img src="https://camo.githubusercontent.com/f3329a50357fdb04c1ca7b2395f4ed5078881c66/687474703a2f2f7777772e6275696c64706174682e64652f6d76766d2f6d76766d66782e706e67">
           </div>
@@ -54,5 +54,11 @@
         </div><!-- /.container -->
       </div>
     </div>
+
+    <script type="application/javascript">
+      $(document).ready(function(){
+        $('table').addClass('table table-striped table-condensed'); // add bootstrap table class
+      });
+    </script>
   </body>
 </html>
