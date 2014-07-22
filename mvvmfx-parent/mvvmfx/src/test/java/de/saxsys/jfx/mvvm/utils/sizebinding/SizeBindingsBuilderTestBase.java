@@ -1,5 +1,6 @@
 package de.saxsys.jfx.mvvm.utils.sizebinding;
 
+import de.saxsys.javafx.test.JfxRunner;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
@@ -11,12 +12,13 @@ import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
 import org.mockito.internal.util.reflection.Whitebox;
 
 import static org.assertj.core.api.Assertions.*;
 
-
-public class SizeBindingsBuilderTestBase {
+@RunWith(JfxRunner.class)
+public abstract class SizeBindingsBuilderTestBase {
 
     protected static final double SIZEVAL = 100d;
 
@@ -27,12 +29,6 @@ public class SizeBindingsBuilderTestBase {
     protected Rectangle fromRectangle;
 
     protected ImageView fromImageView;
-    
-    
-    @BeforeClass
-    public static void initJavaFXThread(){
-        new JFXPanel();
-    }
 
     @Before
     public void setup() {
