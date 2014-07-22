@@ -5,6 +5,13 @@
 	<artifactId>mvvmfx-fx-root-example</artifactId>
 	<version>0.3.0-SNAPSHOT</version>
 	<name>Example with fx:root</name>
+  
+  <parent>
+		<groupId>de.saxsys</groupId>
+    <artifactId>mvvmFX-examples</artifactId>
+		<version>0.3.0-SNAPSHOT</version>
+	</parent>
+  
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.7</maven.compiler.source>

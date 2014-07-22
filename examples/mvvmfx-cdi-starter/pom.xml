@@ -10,6 +10,12 @@
 	<description>
 	  	This example shows the usage of the mvvmFX framework with CDI Dependency Injection.
 	</description>
+  
+  <parent>
+		<groupId>de.saxsys</groupId>
+    <artifactId>mvvmFX-examples</artifactId>
+		<version>0.3.0-SNAPSHOT</version>
+	</parent>
 
 	<properties>
 		<mvvmfx.version>0.3.0-SNAPSHOT</mvvmfx.version>
