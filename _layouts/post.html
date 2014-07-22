@@ -1,0 +1,20 @@
+---
+layout: default
+---
+
+
+<article>
+  <header>
+    <h2>{{ page.title }}</h2>
+    <p>
+      <strong>
+          <time datetime="{% include date.html date=page.date %}">
+              {% include date.html date=page.date %}
+          </time>
+      </strong>
+    </p>
+  </header>
+
+  {{ content }}
+
+</article>

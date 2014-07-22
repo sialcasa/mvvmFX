@@ -9,12 +9,14 @@ permalink: /news/
   {% for post in site.posts %}
     <article>
       <header>
-        <h1><a href="{{post.url}}">{{ post.title }}</a></h1>
+        <h2><a href="{{site.baseurl}}{{post.url}}">{{ post.title }}</a></h2>
+        <p>
           <strong>
               <time datetime="{% include date.html date=post.date %}">
                   {% include date.html date=post.date %}
               </time>
           </strong>
+        </p>
       </header>
 
       {{ post.content }}
