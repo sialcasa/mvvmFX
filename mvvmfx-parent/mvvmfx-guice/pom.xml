@@ -26,6 +26,23 @@
 	<packaging>jar</packaging>
 	<name>mvvmFX Guice</name>
 	<description>This module contains extensions to use mvvmFX with Guice Dependency Injection</description>
+  
+  
+  <build>
+    <plugins>
+      <plugin>  
+        <groupId>org.apache.maven.plugins</groupId>  
+        <artifactId>maven-deploy-plugin</artifactId>  
+        <executions> 
+          <execution> 
+            <id>default-deploy</id> 
+            <phase>deploy</phase> 
+          </execution>
+        </executions>  
+      </plugin> 
+    </plugins>
+  
+  </build>
 
 	<dependencies>
         <dependency>
