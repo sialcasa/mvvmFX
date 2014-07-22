@@ -18,6 +18,7 @@ package de.saxsys.jfx.mvvm.viewloader;
 import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.base.view.View;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.LoadException;
 import javafx.scene.Parent;
 import javafx.util.Callback;
 import org.slf4j.Logger;
@@ -74,8 +75,7 @@ class FxmlViewLoader {
             return new ViewTuple(loadedController, loadedRoot);
 
         } catch (final IOException ex) {
-            LOG.error("Error loading FXML :", ex);
-            return null;
+            throw new RuntimeException(ex);
         }
     }
 
