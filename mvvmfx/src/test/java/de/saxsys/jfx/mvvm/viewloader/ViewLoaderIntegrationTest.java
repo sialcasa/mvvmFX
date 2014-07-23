@@ -15,6 +15,11 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.viewloader;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import javafx.scene.layout.VBox;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.base.view.View;
@@ -24,22 +29,18 @@ import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithoutViewModel;
 import de.saxsys.jfx.mvvm.viewloader.example.TestJavaView;
 import de.saxsys.jfx.mvvm.viewloader.example.TestJavaViewWithoutViewModel;
 import de.saxsys.jfx.mvvm.viewloader.example.TestViewModel;
-import javafx.fxml.LoadException;
-import javafx.scene.layout.VBox;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.*;
-
 
 /**
- * This test verifies the behaviour of the {@link de.saxsys.jfx.mvvm.viewloader.ViewLoader} class.
+ * This test verifies the behaviour of the
+ * {@link de.saxsys.jfx.mvvm.viewloader.ViewLoader} class.
  * <p/>
- * The actual loading of views is only tested on the surface as there are tests for the specific viewLoaders of
- * different Viewtypes (see {@link de.saxsys.jfx.mvvm.viewloader.JavaViewLoaderTest} and {@link
- * de.saxsys.jfx.mvvm.viewloader .FxmlViewLoaderTest}).
+ * The actual loading of views is only tested on the surface as there are tests
+ * for the specific viewLoaders of different Viewtypes (see
+ * {@link de.saxsys.jfx.mvvm.viewloader.JavaViewLoaderTest} and
+ * {@link de.saxsys.jfx.mvvm.viewloader .FxmlViewLoaderTest}).
  * 
- * The purpose of this test case is to check the integration of the specific viewLoaders and some error handling.
+ * The purpose of this test case is to check the integration of the specific
+ * viewLoaders and some error handling.
  * 
  * @author manuel.mauky, alexander.casall
  */
@@ -52,13 +53,14 @@ public class ViewLoaderIntegrationTest {
         viewLoader = new ViewLoader();
     }
 
-
     /**
-     * The purpose of this test case is to verify that the loading of JavaViews is working correctly. This contains the
-     * resolving of the view type and casting.
+     * The purpose of this test case is to verify that the loading of JavaViews
+     * is working correctly. This contains the resolving of the view type and
+     * casting.
      * <p/>
-     * The actual loading of JavaViews with the {@link de.saxsys.jfx.mvvm.viewloader.JavaViewLoader} is tested in {@link
-     * de.saxsys.jfx.mvvm.viewloader.JavaViewLoaderTest}.
+     * The actual loading of JavaViews with the
+     * {@link de.saxsys.jfx.mvvm.viewloader.JavaViewLoader} is tested in
+     * {@link de.saxsys.jfx.mvvm.viewloader.JavaViewLoaderTest}.
      */
     @Test
     public void testLoadJavaView() {
@@ -67,13 +69,14 @@ public class ViewLoaderIntegrationTest {
         assertThat(viewTuple).isNotNull();
     }
 
-
     /**
-     * The purpose of this test case is to verify that the loading of FxmlViews is working correctly. This contains the
-     * resolving of the view type and casting.
+     * The purpose of this test case is to verify that the loading of FxmlViews
+     * is working correctly. This contains the resolving of the view type and
+     * casting.
      * <p/>
-     * The actual loading of JavaViews with the {@link de.saxsys.jfx.mvvm.viewloader.FxmlViewLoader} is tested in {@link
-     * de.saxsys.jfx.mvvm.viewloader.FxmlViewLoaderTest}.
+     * The actual loading of JavaViews with the
+     * {@link de.saxsys.jfx.mvvm.viewloader.FxmlViewLoader} is tested in
+     * {@link de.saxsys.jfx.mvvm.viewloader.FxmlViewLoaderTest}.
      */
     @Test
     public void testLoadFxmlView() {
@@ -84,52 +87,37 @@ public class ViewLoaderIntegrationTest {
 
     @Test
     public void testLoadWithStringPath() {
-        ViewTuple<? extends View,? extends ViewModel> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example/TestFxmlView.fxml");
+        ViewTuple<? extends View, ? extends ViewModel> viewTuple = viewLoader
+                .loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example/TestFxmlView.fxml");
         assertThat(viewTuple).isNotNull();
 
         assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
         assertThat(viewTuple.getCodeBehind()).isNotNull().isInstanceOf(TestFxmlView.class);
     }
 
-
     @Test(expected = RuntimeException.class)
     public void testLoadFailNoSuchFxmlFile() {
         ViewTuple<InvalidFxmlTestView, TestViewModel> viewTuple = viewLoader.loadViewTuple(InvalidFxmlTestView.class);
     }
 
-    /**
-     * In this test case a fxml file is loaded that has no fx:controller attribute. Therefore there is no code behind
-     * available.
-     */
-    @Test
-    public void testLoadFailNoControllerDefined() {
-        ViewTuple<? extends View,? extends ViewModel> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example" +
-                "/TestFxmlViewWithoutController.fxml");
-        assertThat(viewTuple).isNotNull();
-
-        assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
-        assertThat(viewTuple.getCodeBehind()).isNull();
-    }
-
-
     @Test(expected = RuntimeException.class)
     public void testLoadFailNoValidContentInFxmlFile() {
-        ViewTuple<? extends View,? extends ViewModel> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example/wrong.fxml");
+        ViewTuple<? extends View, ? extends ViewModel> viewTuple = viewLoader
+                .loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example/wrong.fxml");
     }
 
-    
     @Test
-    public void testLoadJavaViewWithoutViewModel(){
+    public void testLoadJavaViewWithoutViewModel() {
         ViewTuple viewTuple = viewLoader.loadViewTuple(TestJavaViewWithoutViewModel.class);
-        
+
         assertThat(viewTuple).isNotNull();
-        
+
         assertThat(viewTuple.getView()).isNotNull();
         assertThat(viewTuple.getCodeBehind()).isNotNull();
     }
-    
+
     @Test
-    public void testLoadFxmlViewWithoutViewModel(){
+    public void testLoadFxmlViewWithoutViewModel() {
         ViewTuple viewTuple = viewLoader.loadViewTuple(TestFxmlViewWithoutViewModel.class);
 
         assertThat(viewTuple).isNotNull();
