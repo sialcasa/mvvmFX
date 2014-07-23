@@ -144,8 +144,11 @@ public final class ViewLoader {
      *
      * @return codeBehind
      */
-    public Object getCodeBehind() {
-        return codeBehind;
+    @SuppressWarnings("unchecked")
+    public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewType getCodeBehind() {
+        // The codeBehind-field is of type Object but the only way to set this field is by the setter, which has a parameter of type `ViewType`.
+        // Therefore we know that the codeBehind can only be of the type `ViewType` and therefore this cast is safe.
+        return (ViewType)codeBehind;
     }
 
     /**
@@ -154,7 +157,7 @@ public final class ViewLoader {
      * @param codeBehind
      *
      */
-    public void setCodeBehind(Object codeBehind) {
+    public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> void setCodeBehind(ViewType codeBehind) {
         this.codeBehind = codeBehind;
     }
 
