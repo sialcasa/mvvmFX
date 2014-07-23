@@ -23,6 +23,7 @@ import java.io.StringReader;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewFxRoot;
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithActionMethod;
 import javafx.fxml.LoadException;
@@ -34,12 +35,14 @@ import org.junit.Test;
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlView;
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithoutViewModel;
 import de.saxsys.jfx.mvvm.viewloader.example.TestViewModel;
+import org.junit.runner.RunWith;
 
 /**
  * Test the loading of FxmlViews.
  * 
  * @author manuel.mauky
  */
+@RunWith(JfxRunner.class)
 public class FxmlViewLoaderTest {
 
 	private FxmlViewLoader fxmlViewLoader;
