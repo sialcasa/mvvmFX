@@ -68,9 +68,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
-		<sonar.java.source>1.7</sonar.java.source>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<sonar.java.source>1.8</sonar.java.source>
 	</properties>
 
 	<modules>
@@ -153,6 +153,7 @@
 				<configuration>
 					<javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
 					<quiet>true</quiet>
+                    <additionalparam>-Xdoclint:none</additionalparam>
 				</configuration>
 				<executions>
 				<execution>
@@ -236,43 +237,6 @@
 				</plugins>
 			</build>
 		</profile>
-        <profile>
-            <id>java7</id>
-            <activation>
-                <jdk>1.7</jdk>
-            </activation>
-            <dependencyManagement>
-                <dependencies>
-                    <dependency>
-                        <groupId>javafx</groupId>
-                        <artifactId>javafx</artifactId>
-                        <scope>system</scope>
-                        <version>2.2</version>
-                        <systemPath>${java.home}/lib/jfxrt.jar</systemPath>
-                    </dependency>
-                </dependencies>
-            </dependencyManagement>
-        </profile>
-        <profile>
-            <id>java8</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.9.1</version>
-                        <configuration>
-                            <additionalparam>-Xdoclint:none</additionalparam>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-
-        </profile>
-	</profiles>
+   	</profiles>
 
 </project>
