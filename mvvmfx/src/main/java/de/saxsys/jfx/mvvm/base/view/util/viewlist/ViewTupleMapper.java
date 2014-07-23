@@ -20,7 +20,7 @@ import de.saxsys.jfx.mvvm.base.view.View;
 import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
 
 /**
- * Delares how to map from a <T> to a {@link ViewTuple}.
+ * Declares how to map from a <T> to a {@link ViewTuple}.
  * 
  * @author sialcasa
  * 
