@@ -23,7 +23,7 @@ public class LabeledTextFieldViewModel implements ViewModel {
             @Override
             public Boolean call() throws Exception {
                 final String text = inputText.get();
-                return text != null && text.isEmpty();
+                return text == null || text.isEmpty();
             }
         }, inputText));
     }
