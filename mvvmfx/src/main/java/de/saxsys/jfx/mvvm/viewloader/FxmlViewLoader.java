@@ -64,7 +64,7 @@ class FxmlViewLoader {
 
             if (loadedController == null) {
                 throw new IOException("Could not load the controller for the View " + resource
-                        + " maybe your are missed fx:controller in your fxml?");
+                        + " maybe your missed the fx:controller in your fxml?");
             }
 
             return new ViewTuple(loadedController, loadedRoot);
