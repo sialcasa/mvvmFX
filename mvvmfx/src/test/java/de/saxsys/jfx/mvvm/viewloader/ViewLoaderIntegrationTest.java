@@ -24,6 +24,7 @@ import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithoutViewModel;
 import de.saxsys.jfx.mvvm.viewloader.example.TestJavaView;
 import de.saxsys.jfx.mvvm.viewloader.example.TestJavaViewWithoutViewModel;
 import de.saxsys.jfx.mvvm.viewloader.example.TestViewModel;
+import javafx.fxml.LoadException;
 import javafx.scene.layout.VBox;
 import org.junit.Before;
 import org.junit.Test;
@@ -91,11 +92,9 @@ public class ViewLoaderIntegrationTest {
     }
 
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void testLoadFailNoSuchFxmlFile() {
         ViewTuple<InvalidFxmlTestView, TestViewModel> viewTuple = viewLoader.loadViewTuple(InvalidFxmlTestView.class);
-
-        assertThat(viewTuple).isNull();
     }
 
     /**
@@ -113,10 +112,9 @@ public class ViewLoaderIntegrationTest {
     }
 
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void testLoadFailNoValidContentInFxmlFile() {
         ViewTuple<? extends View,? extends ViewModel> viewTuple = viewLoader.loadViewTuple("/de/saxsys/jfx/mvvm/viewloader/example/wrong.fxml");
-        assertThat(viewTuple).isNull();
     }
 
     

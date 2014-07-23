@@ -16,6 +16,7 @@
 package de.saxsys.jfx.mvvm.viewloader;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -23,6 +24,8 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewFxRoot;
+import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithActionMethod;
+import javafx.fxml.LoadException;
 import javafx.scene.layout.VBox;
 
 import org.junit.Before;
@@ -102,4 +105,20 @@ public class FxmlViewLoaderTest {
         assertThat(viewTuple.getCodeBehind().viewModelWasNull).isFalse();
     }
 
+
+    /**
+     * When in the fxml file an action method is used that doesn't exists in the specified 
+     * controller, we like to get the javafx exception that is thrown from the pure fxmlLoader.
+     */
+    @Test
+    public void testControllerHasNoActionMethodThatIsDeclaredInFxml(){
+        try{
+            ViewTuple<TestFxmlViewWithActionMethod, TestViewModel> viewTuple = 
+                    fxmlViewLoader.loadFxmlViewTuple(TestFxmlViewWithActionMethod.class, null, null, null);
+            fail("An LoadException from FXMLLoader is expected");
+        }catch(Exception e){
+            assertThat(e).hasCauseInstanceOf(LoadException.class).hasMessageContaining("onAction");
+        }
+    }
+    
 }

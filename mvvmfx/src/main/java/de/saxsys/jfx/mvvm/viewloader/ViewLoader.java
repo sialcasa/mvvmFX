@@ -118,7 +118,7 @@ public final class ViewLoader {
      * @param resource
      * to load the controller from
      *
-     * @return tuple which is <code>null</code> if an error occures.
+     * @return the ViewTuple that contains the view and the viewModel.
      */
     public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadViewTuple(
             final String resource) {
@@ -133,7 +133,7 @@ public final class ViewLoader {
      * @param resourceBundle
      * which is passed to the viewloader
      *
-     * @return tuple which is <code>null</code> if an error occures.
+     * @return the ViewTuple that contains the view and the viewModel.
      */
     public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadViewTuple(
             final String resource, ResourceBundle resourceBundle) {
