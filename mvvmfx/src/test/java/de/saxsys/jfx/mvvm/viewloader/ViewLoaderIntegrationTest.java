@@ -184,8 +184,31 @@ public class ViewLoaderIntegrationTest {
 
 		assertThat(viewTuple.getCodeBehind()).isNotNull();
 		assertThat(viewTuple.getCodeBehind().viewModel).isEqualTo(existingViewModel);
-
 	}
 
+	
+	@Test
+	public void testViewModelIsAvailableInViewTupleForFXMLView(){
+
+		ViewTuple<TestFxmlView, TestViewModel> viewTuple = viewLoader
+				.loadViewTuple(TestFxmlView.class);
+
+		TestViewModel viewModel = viewTuple.getViewModel();
+		
+		assertThat(viewModel).isNotNull();
+		assertThat(viewModel).isEqualTo(viewTuple.getCodeBehind().viewModel);
+	}
+	
+	@Test
+	public void testViewModelIsAvailableInViewTupleForJavaView(){
+
+		ViewTuple<TestJavaView, TestViewModel> viewTuple = viewLoader
+				.loadViewTuple(TestJavaView.class);
+
+		TestViewModel viewModel = viewTuple.getViewModel();
+		
+		assertThat(viewModel).isNotNull();
+		assertThat(viewModel).isEqualTo(viewTuple.getCodeBehind().viewModel);
+	}
 }
 

@@ -18,6 +18,13 @@ package de.saxsys.jfx.mvvm.viewloader;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import de.saxsys.jfx.mvvm.api.ViewModel;
 import javafx.util.Callback;
 
 import net.jodah.typetools.TypeResolver;
@@ -80,36 +87,89 @@ public class DependencyInjector {
 		
 		return instance;
 	}
+
 	
 	void injectViewModel(final View view) {
 		final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
 		final Field field = getViewModelField(view.getClass(), viewModelType);
 		
-		if (field != null) {
-			AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
-				boolean wasAccessible = field.isAccessible();
-				
-				try {
-					Object existingViewModel = field.get(view);
-					
-					if(existingViewModel == null){
-						Object viewModel = DependencyInjector.getInstance().getInstanceOf(viewModelType);
-						field.setAccessible(true);
-						field.set(view, viewModel);
-					}
-				} catch (IllegalAccessException exception) {
-					throw new IllegalStateException("Can't inject ViewModel of type <" + viewModelType
-							+ "> into the view <" + view + ">");
-				} finally {
-					field.setAccessible(wasAccessible);
+		if(field != null){
+			accessFieldAction(field, () -> {
+				Object existingViewModel = field.get(view);
+
+				if (existingViewModel == null) {
+					Object viewModel = DependencyInjector.getInstance().getInstanceOf(viewModelType);
+					field.setAccessible(true);
+					field.set(view, viewModel);
 				}
+
 				return null;
-			});
+			}, "Can't inject ViewModel of type <" + viewModelType
+					+ "> into the view <" + view + ">");
 		}
 		
 	}
-	
-	
+
+
+
+	/**
+	 * This method is used to get the ViewModel instance of a given view/codeBehind.
+	 *
+	 * @param view the view instance where the viewModel will be looked for.
+	 * @param <ViewType> the generic type of the View
+	 * @param <ViewModelType> the generic type of the ViewModel
+	 * @return the ViewModel instance or null if no viewModel could be found.
+	 */
+	<ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewModelType getViewModel(ViewType view){
+
+		final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
+		final Field field = getViewModelField(view.getClass(), viewModelType);
+
+		ViewModelType viewModel = null;
+
+		CompletableFuture<ViewModelType> future = new CompletableFuture<>();
+		
+		if(field != null){
+			accessFieldAction(field, ()->{
+				future.complete((ViewModelType) field.get(view));
+				return null;
+			}, "Can't get the viewModel of type <" + viewModelType + ">");
+		}else{
+			return null;
+		}
+		
+		try{
+			viewModel = future.get();
+		} catch (InterruptedException | ExecutionException e) {
+			throw new IllegalStateException(e);
+		}
+
+		return viewModel;
+	}
+
+	/**
+	 * Helper method to execute a callback on a given field. This method encapsulates the error handling logic and the 
+	 * handling of accessibility of the field.
+	 */
+	private void accessFieldAction(final Field field, final Callable<Void> callable, String errorMessage){
+		AccessController.doPrivileged((PrivilegedAction<Object>) ()->{
+			boolean wasAccessible = field.isAccessible();
+
+			try {
+				if (callable != null) {
+					callable.call();
+				}
+			} catch (Exception exception){
+				throw new IllegalStateException(errorMessage);
+			} finally {
+				field.setAccessible(wasAccessible);
+			}
+
+			return null;
+		});
+	}
+
+
 	private Field getViewModelField(Class<?> viewType, Class<?> viewModelType) {
 		
 		for (Field field : viewType.getDeclaredFields()) {
@@ -122,7 +182,6 @@ public class DependencyInjector {
 		
 		return null;
 	}
-	
 	
 	
 	private <T> T getUninitializedInstanceOf(Class<? extends T> type) {

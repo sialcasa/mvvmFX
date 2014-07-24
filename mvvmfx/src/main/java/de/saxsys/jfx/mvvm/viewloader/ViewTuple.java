@@ -28,6 +28,7 @@ public class ViewTuple<ViewType extends View<? extends ViewModelType>, ViewModel
 	
 	private final ViewType codeBehind;
 	private final Parent view;
+	private final ViewModelType viewModel;
 	
 	/**
 	 * @param codeBehind
@@ -35,13 +36,14 @@ public class ViewTuple<ViewType extends View<? extends ViewModelType>, ViewModel
 	 * @param view
 	 *            to set
 	 */
-	public ViewTuple(final ViewType codeBehind, final Parent view) {
+	public ViewTuple(final ViewType codeBehind, final Parent view, final ViewModelType viewModel) {
 		this.codeBehind = codeBehind;
 		this.view = view;
+		this.viewModel = viewModel;
 	}
 	
 	/**
-	 * @return the code behind of the FXML File (known as controller class in JavaFX)
+	 * @return the code behind of the View. (known as controller class in JavaFX FXML)
 	 */
 	public ViewType getCodeBehind() {
 		return codeBehind;
@@ -52,5 +54,12 @@ public class ViewTuple<ViewType extends View<? extends ViewModelType>, ViewModel
 	 */
 	public Parent getView() {
 		return view;
+	}
+
+	/**
+	 * @return the viewModel
+	 */
+	public ViewModelType getViewModel(){
+		return viewModel;
 	}
 }

@@ -78,8 +78,10 @@ class JavaViewLoader {
 			injectResourceBundle(view, resourceBundle);
 			callInitialize(view);
 		}
-		
-		return new ViewTuple<>(view, (Parent) view);
+
+		final ViewModelType viewModel = DependencyInjector.getInstance().getViewModel(view);
+
+		return new ViewTuple<>(view, (Parent) view, viewModel);
 	}
 	
 	/**
