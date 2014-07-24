@@ -86,23 +86,24 @@ public class DependencyInjector {
 		final Field field = getViewModelField(view.getClass(), viewModelType);
 		
 		if (field != null) {
-			AccessController.doPrivileged(new PrivilegedAction<Object>() {
-				@Override
-				public Object run() {
-					boolean wasAccessible = field.isAccessible();
+			AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+				boolean wasAccessible = field.isAccessible();
+				
+				try {
+					Object existingViewModel = field.get(view);
 					
-					try {
+					if(existingViewModel == null){
 						Object viewModel = DependencyInjector.getInstance().getInstanceOf(viewModelType);
 						field.setAccessible(true);
 						field.set(view, viewModel);
-					} catch (IllegalAccessException exception) {
-						throw new IllegalStateException("Can't inject ViewModel of type <" + viewModelType
-								+ "> into the view <" + view + ">");
-					} finally {
-						field.setAccessible(wasAccessible);
 					}
-					return null;
+				} catch (IllegalAccessException exception) {
+					throw new IllegalStateException("Can't inject ViewModel of type <" + viewModelType
+							+ "> into the view <" + view + ">");
+				} finally {
+					field.setAccessible(wasAccessible);
 				}
+				return null;
 			});
 		}
 		

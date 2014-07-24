@@ -17,6 +17,8 @@ package de.saxsys.jfx.mvvm.viewloader;
 
 import static org.assertj.core.api.Assertions.*;
 
+import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithMissingController;
+import javafx.fxml.LoadException;
 import javafx.scene.layout.VBox;
 
 import org.junit.Before;
@@ -119,4 +121,71 @@ public class ViewLoaderIntegrationTest {
 		assertThat(viewTuple.getView()).isNotNull();
 		assertThat(viewTuple.getCodeBehind()).isNotNull();
 	}
+
+	/**
+	 * It is possible to use an existing instance of the codeBehind/controller. 
+	 */
+	@Test
+	public void testUseExistingCodeBehind(){
+
+		TestFxmlViewWithMissingController codeBehind = new TestFxmlViewWithMissingController();
+
+		viewLoader.setCodeBehind(codeBehind);
+
+		ViewTuple<TestFxmlViewWithMissingController, TestViewModel> viewTuple = viewLoader
+				.loadViewTuple(TestFxmlViewWithMissingController.class);
+
+		assertThat(viewTuple).isNotNull();
+
+		assertThat(viewTuple.getCodeBehind()).isEqualTo(codeBehind);
+		assertThat(viewTuple.getCodeBehind().viewModel).isNotNull();
+	}
+
+	/**
+	 * When there is already a Controller defined in the fxml file (fx:controller) then
+	 * it is not possible to use an existing controller instance with the viewLoader. 
+	 */
+	@Test
+	public void testUseExistingCodeBehindFailWhenControllerIsDefinedInFXML() {
+		
+		try {
+			TestFxmlView codeBehind = new TestFxmlView(); // the fxml file for this class has a fx:controller defined.
+			
+			viewLoader.setCodeBehind(codeBehind);
+
+			ViewTuple<TestFxmlView, TestViewModel> viewTuple = viewLoader
+					.loadViewTuple(TestFxmlView.class);
+			
+			fail("Expected a LoadException to be thrown");
+		}catch(Exception e) {
+			assertThat(e).hasCauseInstanceOf(LoadException.class).hasMessageContaining(
+					"Controller value already specified");
+		}
+	}
+
+
+	/**
+	 * The user can define a codeBehind instance that should be used by the viewLoader.
+	 * When this codeBehind instance has already has a ViewModel it should not be overwritten when the view is loaded.
+	 */
+	@Test
+	public void testAlreadyExistingViewModelShouldNotBeOverwritten(){
+
+		TestFxmlViewWithMissingController codeBehind = new TestFxmlViewWithMissingController();
+		
+		TestViewModel existingViewModel = new TestViewModel();
+		
+		codeBehind.viewModel = existingViewModel;
+		
+		viewLoader.setCodeBehind(codeBehind);
+
+		ViewTuple<TestFxmlViewWithMissingController, TestViewModel> viewTuple = viewLoader
+				.loadViewTuple(TestFxmlViewWithMissingController.class);
+
+		assertThat(viewTuple.getCodeBehind()).isNotNull();
+		assertThat(viewTuple.getCodeBehind().viewModel).isEqualTo(existingViewModel);
+
+	}
+
 }
+
