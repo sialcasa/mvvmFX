@@ -27,22 +27,6 @@
 
 	<name>mvvmFX core</name>
 	<description>This module is the core implementation of the framework</description>
-
-    <profiles>
-        <profile>
-            <id>java7</id>
-            <activation>
-                <jdk>1.7</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>javafx</groupId>
-                    <artifactId>javafx</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
-    
     
   <build>
     <plugins>

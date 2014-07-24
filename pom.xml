@@ -191,32 +191,9 @@
 		</plugins>
 	</build>
 	<profiles>
-		<profile>
-			<id>release-and-sign-mvvmfx</id>
-			<activation>
-				<property>
-					<name>performRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
+        
+        <!-- This profile is used for deployment of releases to sonatype OSS repository.
+         For snapshot deployments this profile is NOT needed -->
 		<profile>
 			<id>clean-deploy</id>
 			<build>
