@@ -15,13 +15,15 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.guice;
 
+import javafx.util.Callback;
+
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-import javafx.util.Callback;
 
 /**
- * This class is used as custom dependency injector for {@link de.saxsys.jfx.mvvm.api.MvvmFX#setCustomDependencyInjector(javafx.util.Callback)}.
+ * This class is used as custom dependency injector for
+ * {@link de.saxsys.jfx.mvvm.api.MvvmFX#setCustomDependencyInjector(javafx.util.Callback)}.
  * <p/>
  * This way the mvvmFX framework can use Guice for it's dependency injection mechanism.
  *
@@ -29,12 +31,12 @@ import javafx.util.Callback;
  */
 @Singleton
 class GuiceInjector implements Callback<Class<?>, Object> {
-
-    @Inject
-    private Injector injector;
-
-    @Override
-    public Object call(Class<?> type) {
-        return injector.getInstance(type);
-    }
+	
+	@Inject
+	private Injector injector;
+	
+	@Override
+	public Object call(Class<?> type) {
+		return injector.getInstance(type);
+	}
 }

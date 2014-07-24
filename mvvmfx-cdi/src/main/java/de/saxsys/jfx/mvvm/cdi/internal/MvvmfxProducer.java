@@ -15,11 +15,11 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.cdi.internal;
 
+import javax.enterprise.inject.Produces;
+
 import de.saxsys.jfx.mvvm.api.MvvmFX;
 import de.saxsys.jfx.mvvm.notifications.NotificationCenter;
 import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
-
-import javax.enterprise.inject.Produces;
 
 
 /**
@@ -31,16 +31,16 @@ import javax.enterprise.inject.Produces;
  * @author manuel.mauky
  */
 class MvvmfxProducer {
-
-    @Produces
-    public NotificationCenter produceNotificationCenter() {
-        return MvvmFX.getNotificationCenter();
-    }
-
-    @Produces
-    public ViewLoader produceViewLoader() {
-        return new ViewLoader();
-    }
-
-
+	
+	@Produces
+	public NotificationCenter produceNotificationCenter() {
+		return MvvmFX.getNotificationCenter();
+	}
+	
+	@Produces
+	public ViewLoader produceViewLoader() {
+		return new ViewLoader();
+	}
+	
+	
 }

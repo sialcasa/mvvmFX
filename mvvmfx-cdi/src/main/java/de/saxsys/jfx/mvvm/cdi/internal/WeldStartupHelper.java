@@ -15,49 +15,51 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.cdi.internal;
 
-import de.saxsys.jfx.mvvm.api.MvvmFX;
 import javafx.application.Application;
 import javafx.stage.Stage;
+
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
+
+import de.saxsys.jfx.mvvm.api.MvvmFX;
 
 /**
  * The class is instantiated by the javafx framework. The purpose of this class is to startup the weld container and
  * setup the {@link de.saxsys.jfx.mvvm.cdi.internal.CdiInjector} for the mvvmFX framework.
  * <p/>
- * Additionally it fires the stage that was provided by javafx as an cdi event. This event is observed by {@link
- * de.saxsys.jfx.mvvm.cdi.MvvmfxCdiApplication} to startup the users application.
+ * Additionally it fires the stage that was provided by javafx as an cdi event. This event is observed by
+ * {@link de.saxsys.jfx.mvvm.cdi.MvvmfxCdiApplication} to startup the users application.
  *
  * @author manuel.mauky
  */
 public class WeldStartupHelper extends Application {
-
-    public class StartupEvent {
-        private Parameters parameters;
-
-        private Stage stage;
-
-        public StartupEvent(Stage stage, Parameters parameters) {
-            this.stage = stage;
-            this.parameters = parameters;
-        }
-
-        public Stage getStage() {
-            return stage;
-        }
-
-        public Parameters getParameters() {
-            return parameters;
-        }
-    }
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        WeldContainer weldContainer = new Weld().initialize();
-        CdiInjector cdiInjector = weldContainer.instance().select(CdiInjector.class).get();
-
-        MvvmFX.setCustomDependencyInjector(cdiInjector);
-
-        weldContainer.event().fire(new StartupEvent(stage, this.getParameters()));
-    }
+	
+	public class StartupEvent {
+		private Parameters parameters;
+		
+		private Stage stage;
+		
+		public StartupEvent(Stage stage, Parameters parameters) {
+			this.stage = stage;
+			this.parameters = parameters;
+		}
+		
+		public Stage getStage() {
+			return stage;
+		}
+		
+		public Parameters getParameters() {
+			return parameters;
+		}
+	}
+	
+	@Override
+	public void start(Stage stage) throws Exception {
+		WeldContainer weldContainer = new Weld().initialize();
+		CdiInjector cdiInjector = weldContainer.instance().select(CdiInjector.class).get();
+		
+		MvvmFX.setCustomDependencyInjector(cdiInjector);
+		
+		weldContainer.event().fire(new StartupEvent(stage, this.getParameters()));
+	}
 }
