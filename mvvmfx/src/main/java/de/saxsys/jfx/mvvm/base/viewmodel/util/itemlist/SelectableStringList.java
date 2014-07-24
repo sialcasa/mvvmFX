@@ -25,31 +25,31 @@ import javafx.beans.property.ReadOnlyListProperty;
  * 
  */
 public interface SelectableStringList {
-
+	
 	/**
 	 * String list which can be used by the UI to present the data.
 	 * 
 	 * @return string list
 	 */
 	public ReadOnlyListProperty<String> stringListProperty();
-
+	
 	/**
 	 * Represents an {@link Integer} which is the current selection index.
 	 * 
 	 * @return the index property
 	 */
 	public ReadOnlyIntegerProperty selectedIndexProperty();
-
+	
 	/**
 	 * @see #selectedIndexProperty()
 	 */
 	public int getSelectedIndex();
-
+	
 	/**
 	 * @see #selectedIndexProperty();
 	 */
 	public void select(int personId);
-
+	
 	/**
 	 * Removes the selection.
 	 */

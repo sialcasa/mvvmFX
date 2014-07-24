@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Alexander Casall
+ * Copyright 2013 Alexander Casall, Manuel Mauky
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,14 @@ import de.saxsys.jfx.mvvm.api.ViewModel;
 
 /**
  *
- * This Interface is used as base interface for specific view types for mvvmfx.
- * The generic type defines the View Model that is used.
-
+ * This Interface is used as base interface for specific view types for mvvmfx. The generic type defines the View Model
+ * that is used.
+ * 
  * @author alexander.casall, manuel.mauky
  * 
  * @param <ViewModelType>
  *            type
  */
 public interface View<ViewModelType extends ViewModel> {
-
+	
 }

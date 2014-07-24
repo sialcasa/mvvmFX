@@ -14,9 +14,8 @@ import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.SelectableItemList;
 import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.SelectableStringList;
 
 /**
- * ViewModel for a login view for the persons. It provides the data which should
- * be visualized in the frontend e.g. the list of persons in string
- * representations. The tests for it can be written first. Have a look on
+ * ViewModel for a login view for the persons. It provides the data which should be visualized in the frontend e.g. the
+ * list of persons in string representations. The tests for it can be written first. Have a look on
  * PersonLoginViewModelTest.
  * 
  * @author alexander.casall
@@ -24,12 +23,12 @@ import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.SelectableStringList;
  */
 
 public class PersonLoginViewModel implements ViewModel {
-
+	
 	// Properties which are used by the view.
 	private final SelectableItemList<Person> selectablePersons;
-
+	
 	private final IntegerProperty loggedInPersonId = new SimpleIntegerProperty();
-
+	
 	@Inject
 	public PersonLoginViewModel(Repository repository) {
 		ModelToStringFunction<Person> personMapper = new ModelToStringFunction<Person>() {
@@ -42,7 +41,7 @@ public class PersonLoginViewModel implements ViewModel {
 				FXCollections.observableArrayList(repository.getPersons()),
 				personMapper);
 	}
-
+	
 	/**
 	 * Persons in string representation.
 	 * 
@@ -51,7 +50,7 @@ public class PersonLoginViewModel implements ViewModel {
 	public SelectableStringList selectablePersonsProperty() {
 		return selectablePersons;
 	}
-
+	
 	/**
 	 * Person which is logged in.
 	 * 
@@ -60,7 +59,7 @@ public class PersonLoginViewModel implements ViewModel {
 	public IntegerProperty loggedInPersonIdProperty() {
 		return loggedInPersonId;
 	}
-
+	
 	/**
 	 * Action when the login button was clicked.
 	 */

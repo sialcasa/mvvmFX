@@ -1,15 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>mvvmfx-helloworld-without-fxml</artifactId>
 	<name>HelloWorld Example without FXML</name>
-  
-  <parent>
+
+	<parent>
 		<groupId>de.saxsys</groupId>
-    <artifactId>mvvmFX-examples</artifactId>
+		<artifactId>mvvmFX-examples</artifactId>
 		<version>0.3.0-SNAPSHOT</version>
 	</parent>
-  
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -17,12 +17,12 @@
 	</properties>
 
 
-    <dependencies>
-        <dependency>
-            <groupId>de.saxsys</groupId>
-            <artifactId>mvvmFX</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-    </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>de.saxsys</groupId>
+			<artifactId>mvvmFX</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+	</dependencies>
 
 </project>

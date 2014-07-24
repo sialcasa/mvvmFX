@@ -26,13 +26,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SingleSelectionModel;
 
 /**
- * Element that you can use in a View Model to transform any list to a string
- * representation which can be bound to UI Elements like {@link ChoiceBox} or
- * {@link ListView}. <b>You should only expose the {@link #stringListProperty()}
- * and/or the {@link #selectedIndexProperty()} to the view, otherwise you create
- * a visibility of the view to the model. If you want to expose it more
- * convenient, use the {@link SelectableStringList} interface to hide all
- * dependencies to the model. Create something like this in your View Model:
+ * Element that you can use in a View Model to transform any list to a string representation which can be bound to UI
+ * Elements like {@link ChoiceBox} or {@link ListView}. <b>You should only expose the {@link #stringListProperty()}
+ * and/or the {@link #selectedIndexProperty()} to the view, otherwise you create a visibility of the view to the model.
+ * If you want to expose it more convenient, use the {@link SelectableStringList} interface to hide all dependencies to
+ * the model. Create something like this in your View Model:
  * 
  * <code>
  * public SelectableStringList stringListProperty(){
@@ -40,39 +38,35 @@ import javafx.scene.control.SingleSelectionModel;
  * }
  * </code>
  * 
- * </b> You have to provide a {@link ModelToStringFunction} to define how to map
- * from your model representation to a string. In addition you have properties
- * which represents the actual selection state of a list. You can set either the
- * {@link #selectedIndexProperty()} or the {@link #selectedItemProperty()} and
- * the other will change automatically.
+ * </b> You have to provide a {@link ModelToStringFunction} to define how to map from your model representation to a
+ * string. In addition you have properties which represents the actual selection state of a list. You can set either the
+ * {@link #selectedIndexProperty()} or the {@link #selectedItemProperty()} and the other will change automatically.
  * 
  * @author sialcasa
  * 
  * @param <ListType>
- *            type of the list elements which should be transformed to a string
- *            list
+ *            type of the list elements which should be transformed to a string list
  */
 public class SelectableItemList<ListType> extends ItemList<ListType> implements
 		SelectableStringList {
-
+	
 	// Indeces
 	private SingleSelectionModel<ListType> selectionModel = new SingleSelectionModel<ListType>() {
 		@Override
 		protected int getItemCount() {
 			return modelListProperty().size();
 		}
-
+		
 		@Override
 		protected ListType getModelItem(int index) {
 			return index == -1 ? null : modelListProperty().get(index);
 		}
 	};
-
+	
 	private ObjectProperty<ListType> selectedItem = new SimpleObjectProperty<>();
-
+	
 	/**
-	 * Creates a {@link SelectableItemList} by a given list of items and a
-	 * {@link ModelToStringFunction}.
+	 * Creates a {@link SelectableItemList} by a given list of items and a {@link ModelToStringFunction}.
 	 * 
 	 * @param itemList
 	 *            which should be transformed for the UI
@@ -83,11 +77,11 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 			final ModelToStringFunction<ListType> modelToStringMapper) {
 		super(itemList, modelToStringMapper);
 		// Order of processing is important!
-
+		
 		selectedItem.set(null);
 		createIndexEvents();
 	}
-
+	
 	// When the index property changed we have to change the selected item too
 	// When the selected item changed we want to set the index property too
 	private void createIndexEvents() {
@@ -102,17 +96,17 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 						selectedItem.set(item);
 					}
 				});
-
+		
 		selectedItem.addListener(new ChangeListener<ListType>() {
 			@Override
 			public void changed(ObservableValue<? extends ListType> arg0,
 					ListType oldVal, ListType newVal) {
-
+				
 				// Item null
 				if (newVal == null) {
 					selectionModel.select(-1);
 					selectedItem.set(null);
-
+					
 				} else {
 					int index = modelListProperty().get().indexOf(newVal);
 					// Item not found
@@ -123,16 +117,15 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 						selectedItem.set(oldVal);
 					}
 				}
-
+				
 			}
 		});
 	}
-
+	
 	/**
-	 * Represents an {@link Integer} which is the current selection index. If
-	 * you set another value to the property {@link #selectedItemProperty()}
-	 * will change automatically. If the value was an invalid index, the change
-	 * will be rollbacked.
+	 * Represents an {@link Integer} which is the current selection index. If you set another value to the property
+	 * {@link #selectedItemProperty()} will change automatically. If the value was an invalid index, the change will be
+	 * rollbacked.
 	 * 
 	 * @return the index property
 	 */
@@ -140,46 +133,45 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	public ReadOnlyIntegerProperty selectedIndexProperty() {
 		return this.selectionModel.selectedIndexProperty();
 	}
-
+	
 	@Override
 	public int getSelectedIndex() {
 		return selectedIndexProperty().get();
 	}
-
+	
 	/**
-	 * Represents the current selected item. If you set another value to the
-	 * property {@link #selectedIndexProperty()} will change automatically. If
-	 * the value was an invalid item which is not in the itemlist, the change
-	 * will be rollbacked.
+	 * Represents the current selected item. If you set another value to the property {@link #selectedIndexProperty()}
+	 * will change automatically. If the value was an invalid item which is not in the itemlist, the change will be
+	 * rollbacked.
 	 * 
 	 * @return the item property
 	 */
 	public ObjectProperty<ListType> selectedItemProperty() {
 		return this.selectedItem;
 	}
-
+	
 	/**
 	 * @see #selectedItemProperty()
 	 */
 	public void select(ListType item) {
 		this.selectedItem.set(item);
 	}
-
+	
 	/**
 	 * @see #selectedItemProperty()
 	 */
 	public ListType getSelectedItem() {
 		return this.selectedItem.get();
 	}
-
+	
 	@Override
 	public void clearSelection() {
 		this.selectionModel.clearSelection();
 	}
-
+	
 	@Override
 	public void select(int index) {
 		this.selectionModel.select(index);
 	}
-
+	
 }

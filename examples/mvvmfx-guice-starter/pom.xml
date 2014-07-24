@@ -1,17 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>mvvmfx-guice-example</artifactId>
 	<name>Guice Start Example</name>
-    
-    <description>
-	  	This example shows the usage of the mvvmFX framework with Guice Dependency Injection.
+
+	<description>
+		This example shows the usage of the mvvmFX framework with Guice Dependency Injection.
 	</description>
-  
-  
-  <parent>
+
+
+	<parent>
 		<groupId>de.saxsys</groupId>
-    <artifactId>mvvmFX-examples</artifactId>
+		<artifactId>mvvmFX-examples</artifactId>
 		<version>0.3.0-SNAPSHOT</version>
 	</parent>
 	<properties>
@@ -49,9 +49,9 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-            <groupId>de.saxsys</groupId>
-            <artifactId>mvvmFX-guice</artifactId>
-            <version>${project.parent.version}</version>
+			<groupId>de.saxsys</groupId>
+			<artifactId>mvvmFX-guice</artifactId>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.saxsys</groupId>
@@ -68,11 +68,11 @@
 			<artifactId>guava</artifactId>
 			<version>12.0</version>
 		</dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-        </dependency>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>

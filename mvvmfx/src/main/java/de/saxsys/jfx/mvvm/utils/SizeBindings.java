@@ -24,23 +24,22 @@ import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 
 /**
- * This class is an helper for binding two components to the same size. It can
- * handle {@link Pane},{@link Node}, {@link ScrollPane}, {@link Rectangle},
- * {@link Control}
+ * This class is an helper for binding two components to the same size. It can handle {@link Pane},{@link Node},
+ * {@link ScrollPane}, {@link Rectangle}, {@link Control}
  * 
  * @author alexander.casall
  *
- * @deprecated Use {@link de.saxsys.jfx.mvvm.utils.sizebinding.SizeBindingsBuilder} instead.
- * This class is deprecated because the usage of overloaded methods for different types of components isn't flexible enough.
+ * @deprecated Use {@link de.saxsys.jfx.mvvm.utils.sizebinding.SizeBindingsBuilder} instead. This class is deprecated
+ *             because the usage of overloaded methods for different types of components isn't flexible enough.
  * 
  */
 
 @Deprecated
 public final class SizeBindings {
-
+	
 	private SizeBindings() {
 	}
-
+	
 	/**
 	 * Binds the size of a {@link Pane} to a {@link Pane}.
 	 * 
@@ -55,7 +54,7 @@ public final class SizeBindings {
 		toPane.minHeightProperty().bind(fromPane.heightProperty());
 		toPane.maxHeightProperty().bind(fromPane.heightProperty());
 	}
-
+	
 	/**
 	 * Unbind the size of a {@link Region}.
 	 * 
@@ -68,7 +67,7 @@ public final class SizeBindings {
 		toPane.minHeightProperty().unbind();
 		toPane.maxHeightProperty().unbind();
 	}
-
+	
 	/**
 	 * Unbind the size of a {@link Control}.
 	 * 
@@ -81,7 +80,7 @@ public final class SizeBindings {
 		toControl.minHeightProperty().unbind();
 		toControl.maxHeightProperty().unbind();
 	}
-
+	
 	/**
 	 * Binds the size of a {@link ScrollPane} to a {@link Pane}.
 	 * 
@@ -96,7 +95,7 @@ public final class SizeBindings {
 		toPane.minHeightProperty().bind(from.heightProperty());
 		toPane.maxHeightProperty().bind(from.heightProperty());
 	}
-
+	
 	/**
 	 * Binds the size of a {@link Pane} to a {@link ScrollPane}.
 	 * 
@@ -111,7 +110,7 @@ public final class SizeBindings {
 		toPane.minHeightProperty().bind(from.heightProperty());
 		toPane.maxHeightProperty().bind(from.heightProperty());
 	}
-
+	
 	/**
 	 * Binds the size of a {@link Node} to a {@link Pane}.
 	 * 
@@ -144,7 +143,7 @@ public final class SizeBindings {
 					.bind(((Rectangle) from).heightProperty());
 			return;
 		}
-
+		
 		if (from instanceof ImageView) {
 			toPane.minWidthProperty().bind(
 					((ImageView) from).fitWidthProperty());
@@ -156,12 +155,12 @@ public final class SizeBindings {
 					((ImageView) from).fitHeightProperty());
 			return;
 		}
-
+		
 		throw new IllegalArgumentException(
 				"Type of parameter is not mapped yet, please add mapping for type: "
 						+ from.getClass());
 	}
-
+	
 	/**
 	 * Binds the size of a {@link Pane} to a {@link Node}.
 	 * 
@@ -192,12 +191,12 @@ public final class SizeBindings {
 			((Rectangle) toNode).heightProperty().bind(from.heightProperty());
 			return;
 		}
-
+		
 		throw new IllegalArgumentException(
 				"Type of parameter is not mapped yet, please add mapping for type: "
 						+ toNode.getClass());
 	}
-
+	
 	/**
 	 * Binds the with of a {@link Node} to a {@link Pane}.
 	 * 
@@ -223,7 +222,7 @@ public final class SizeBindings {
 			return;
 		}
 	}
-
+	
 	/**
 	 * Binds the with of a {@link Node} to a {@link Control}.
 	 * 
@@ -251,5 +250,5 @@ public final class SizeBindings {
 			return;
 		}
 	}
-
+	
 }

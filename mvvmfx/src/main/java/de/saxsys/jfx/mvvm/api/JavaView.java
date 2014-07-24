@@ -21,7 +21,8 @@ import de.saxsys.jfx.mvvm.base.view.View;
  * A view that is implemented with with pure Java. The implementing class will typically extend from one of JavaFX`s
  * controls or containers etc.
  *
- * @param <ViewModelType> the type of the viewModel.
+ * @param <ViewModelType>
+ *            the type of the viewModel.
  *
  * @author manuel.mauky
  */

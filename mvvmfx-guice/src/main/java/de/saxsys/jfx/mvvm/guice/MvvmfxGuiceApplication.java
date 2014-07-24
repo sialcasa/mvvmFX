@@ -15,13 +15,13 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.guice;
 
+import java.util.List;
+import javafx.stage.Stage;
+
 import com.cathive.fx.guice.GuiceApplication;
 import com.google.inject.Inject;
 import com.google.inject.Module;
 import de.saxsys.jfx.mvvm.api.MvvmFX;
-import javafx.stage.Stage;
-
-import java.util.List;
 
 /**
  * This class has to be extended by the user to build a javafx application powered by Guice.
@@ -29,41 +29,43 @@ import java.util.List;
  * @author manuel.mauky
  */
 public abstract class MvvmfxGuiceApplication extends GuiceApplication {
-
-
-    @Inject
-    private GuiceInjector guiceInjector;
-
-    @Override
-    public final void init(List<Module> modules) throws Exception {
-        modules.add(new MvvmfxModule());
-
-        this.initGuiceModules(modules);
-    }
-
-    /**
-     * This method is overridden to initialize the mvvmFX framework. Override the {@link
-     * #startMvvmfx(javafx.stage.Stage)} method for your application entry point and startup code instead of this
-     * method.
-     */
-    public final void start(Stage stage) throws Exception {
-        MvvmFX.setCustomDependencyInjector(guiceInjector);
-
-        this.startMvvmfx(stage);
-    }
-
-    /**
-     * Override this method with your application startup logic.
-     * <p/>
-     * This method is a wrapper method for javafx's {@link javafx.application.Application#start(javafx.stage.Stage)}.
-     */
-    public abstract void startMvvmfx(Stage stage) throws Exception;
-
-    /**
-     * Configure the guice modules.
-     *
-     * @param modules module list
-     * @throws Exception exc
-     */
-    public abstract void initGuiceModules(List<Module> modules) throws Exception;
+	
+	
+	@Inject
+	private GuiceInjector guiceInjector;
+	
+	@Override
+	public final void init(List<Module> modules) throws Exception {
+		modules.add(new MvvmfxModule());
+		
+		this.initGuiceModules(modules);
+	}
+	
+	/**
+	 * This method is overridden to initialize the mvvmFX framework. Override the
+	 * {@link #startMvvmfx(javafx.stage.Stage)} method for your application entry point and startup code instead of this
+	 * method.
+	 */
+	public final void start(Stage stage) throws Exception {
+		MvvmFX.setCustomDependencyInjector(guiceInjector);
+		
+		this.startMvvmfx(stage);
+	}
+	
+	/**
+	 * Override this method with your application startup logic.
+	 * <p/>
+	 * This method is a wrapper method for javafx's {@link javafx.application.Application#start(javafx.stage.Stage)}.
+	 */
+	public abstract void startMvvmfx(Stage stage) throws Exception;
+	
+	/**
+	 * Configure the guice modules.
+	 *
+	 * @param modules
+	 *            module list
+	 * @throws Exception
+	 *             exc
+	 */
+	public abstract void initGuiceModules(List<Module> modules) throws Exception;
 }

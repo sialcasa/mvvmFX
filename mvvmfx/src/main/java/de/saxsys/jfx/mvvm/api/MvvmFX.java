@@ -15,33 +15,36 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.api;
 
-import de.saxsys.jfx.mvvm.viewloader.DependencyInjector;
+import javafx.util.Callback;
+
 import de.saxsys.jfx.mvvm.notifications.NotificationCenter;
 import de.saxsys.jfx.mvvm.notifications.NotificationCenterFactory;
-import javafx.util.Callback;
+import de.saxsys.jfx.mvvm.viewloader.DependencyInjector;
 
 /**
  * This class is a facade that is used by the user to access classes and services from the framework.
  */
 public class MvvmFX {
-
-    /**
-     * @return an instance of the {@link NotificationCenter}.
-     */
-    public static NotificationCenter getNotificationCenter() {
-        return NotificationCenterFactory.getNotificationCenter();
-    }
-
-    /**
-     * This method is used to integrate the mvvmFX framework into your dependency injection environment. This way you
-     * can tell the framework how it can get instances of classes f.e. services or business facades.
-     * <p/>
-     * The callback has to return an instance for a given class type. This is the same way as it is done with the {@link
-     * javafx.fxml.FXMLLoader#setControllerFactory(javafx.util.Callback)} that is normally used with JavaFX's fxml.
-     *
-     * @param injector a callback that returns instances for given class types.
-     */
-    public static void setCustomDependencyInjector(final Callback<Class<?>, Object> injector) {
-        DependencyInjector.getInstance().setCustomInjector(injector);
-    }
+	
+	/**
+	 * @return an instance of the {@link NotificationCenter}.
+	 */
+	public static NotificationCenter getNotificationCenter() {
+		return NotificationCenterFactory.getNotificationCenter();
+	}
+	
+	/**
+	 * This method is used to integrate the mvvmFX framework into your dependency injection environment. This way you
+	 * can tell the framework how it can get instances of classes f.e. services or business facades.
+	 * <p/>
+	 * The callback has to return an instance for a given class type. This is the same way as it is done with the
+	 * {@link javafx.fxml.FXMLLoader#setControllerFactory(javafx.util.Callback)} that is normally used with JavaFX's
+	 * fxml.
+	 *
+	 * @param injector
+	 *            a callback that returns instances for given class types.
+	 */
+	public static void setCustomDependencyInjector(final Callback<Class<?>, Object> injector) {
+		DependencyInjector.getInstance().setCustomInjector(injector);
+	}
 }

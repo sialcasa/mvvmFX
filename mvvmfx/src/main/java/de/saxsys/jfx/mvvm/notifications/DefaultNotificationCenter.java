@@ -29,12 +29,12 @@ import java.util.Map;
  * 
  */
 class DefaultNotificationCenter implements NotificationCenter {
-
+	
 	DefaultNotificationCenter() {
 	}
-
+	
 	private final Map<String, List<NotificationObserver>> observersForName = new HashMap<String, List<NotificationObserver>>();
-
+	
 	@Override
 	public void addObserverForName(String name, NotificationObserver observer) {
 		List<NotificationObserver> observers = this.observersForName.get(name);
@@ -44,7 +44,7 @@ class DefaultNotificationCenter implements NotificationCenter {
 		observers = this.observersForName.get(name);
 		observers.add(observer);
 	}
-
+	
 	@Override
 	public void removeObserverForName(String name, NotificationObserver observer) {
 		List<NotificationObserver> observers = this.observersForName.get(name);
@@ -53,7 +53,7 @@ class DefaultNotificationCenter implements NotificationCenter {
 			this.observersForName.remove(name);
 		}
 	}
-
+	
 	@Override
 	public void removeObserver(NotificationObserver observer) {
 		Iterator<String> iterator = this.observersForName.keySet().iterator();
@@ -69,7 +69,7 @@ class DefaultNotificationCenter implements NotificationCenter {
 			}
 		}
 	}
-
+	
 	@Override
 	public void postNotification(String name, Object... objects) {
 		Collection<NotificationObserver> notificationReceivers = observersForName.get(name);
@@ -79,5 +79,5 @@ class DefaultNotificationCenter implements NotificationCenter {
 			}
 		}
 	}
-
+	
 }

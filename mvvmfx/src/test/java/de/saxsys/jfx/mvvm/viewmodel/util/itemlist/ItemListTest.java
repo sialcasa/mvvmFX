@@ -15,7 +15,6 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.viewmodel.util.itemlist;
 
-import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ModelToStringFunction;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -24,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ItemList;
+import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ModelToStringFunction;
 
 /**
  * Tests for {@link ItemList}.
@@ -32,7 +32,7 @@ import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ItemList;
  * 
  */
 public class ItemListTest {
-
+	
 	private static final String PERSON3_NAME = "Person3";
 	private static final String PREFIX = "SOME WORDS ";
 	// List which comes from the model and should be displayed in a view.
@@ -44,19 +44,19 @@ public class ItemListTest {
 	private Person person1 = new Person("Person1");
 	private Person person2 = new Person("Person2");
 	private Person person3 = new Person(PERSON3_NAME);
-
+	
 	/**
 	 * Prepares the test.
 	 */
 	@Before
 	public void init() {
-
+		
 		// Create the items in the model
 		listWithModelObjects = FXCollections.observableArrayList();
 		listWithModelObjects.add(person1);
 		listWithModelObjects.add(person2);
 		listWithModelObjects.add(person3);
-
+		
 		// Create the mapper
 		stringMapper = new ModelToStringFunction<Person>() {
 			@Override
@@ -64,23 +64,21 @@ public class ItemListTest {
 				return PREFIX + object.name;
 			}
 		};
-
+		
 		itemList = new ItemList<>(listWithModelObjects, stringMapper);
 	}
-
+	
 	/**
-	 * Checks whether the mapping from the model to the string representation
-	 * works.
+	 * Checks whether the mapping from the model to the string representation works.
 	 */
 	@Test
 	public void mapFromModelToString() {
 		Assert.assertEquals(PREFIX + PERSON3_NAME, itemList
 				.stringListProperty().get(2));
 	}
-
+	
 	/**
-	 * Check whether the string list changes when the item list changes (add
-	 * item).
+	 * Check whether the string list changes when the item list changes (add item).
 	 */
 	@Test
 	public void addItemToItemList() {
@@ -90,10 +88,9 @@ public class ItemListTest {
 		Assert.assertEquals(4, itemList.stringListProperty().size());
 		Assert.assertEquals(4, listWithModelObjects.size());
 	}
-
+	
 	/**
-	 * Check whether the string list changes when the item list changes (remove
-	 * item).
+	 * Check whether the string list changes when the item list changes (remove item).
 	 */
 	@Test
 	public void removeItemFromItemList() {
@@ -103,7 +100,7 @@ public class ItemListTest {
 		Assert.assertEquals(2, itemList.stringListProperty().size());
 		Assert.assertEquals(2, listWithModelObjects.size());
 	}
-
+	
 	@Test
 	public void removeMultipleItemsFromItemList() {
 		listWithModelObjects.removeAll(person1, person2);
@@ -113,14 +110,14 @@ public class ItemListTest {
 		Assert.assertEquals(PREFIX + PERSON3_NAME, itemList
 				.stringListProperty().get(0));
 	}
-
+	
 	@Test
 	public void removeAllItemsFromItemList() {
 		listWithModelObjects.clear();
 		Assert.assertEquals(0, listWithModelObjects.size());
 		Assert.assertEquals(0, itemList.stringListProperty().size());
 	}
-
+	
 	@Test
 	public void addItemToItemListAtIndex() {
 		listWithModelObjects.add(1, new Person("addedPerson"));
@@ -129,7 +126,7 @@ public class ItemListTest {
 		Assert.assertEquals(PREFIX + "addedPerson", itemList
 				.stringListProperty().get(1));
 	}
-
+	
 	@Test
 	public void addMultipleItemsToItemList() {
 		listWithModelObjects.addAll(new Person("added1"), new Person("added2"));
@@ -140,7 +137,7 @@ public class ItemListTest {
 		Assert.assertEquals(PREFIX + "added2", itemList.stringListProperty()
 				.get(4));
 	}
-
+	
 	@Test
 	public void replaceItemInItemListAtIndex() {
 		listWithModelObjects.set(1, new Person("replacedPerson"));
@@ -149,5 +146,5 @@ public class ItemListTest {
 		Assert.assertEquals(PREFIX + "replacedPerson", itemList
 				.stringListProperty().get(1));
 	}
-
+	
 }

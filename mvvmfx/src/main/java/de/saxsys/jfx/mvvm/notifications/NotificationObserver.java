@@ -23,8 +23,7 @@ package de.saxsys.jfx.mvvm.notifications;
  */
 public interface NotificationObserver {
 	/**
-	 * Handle the Notification which is passed by the @MVVMNotificationCenter.
-	 * An @Object[] could be shipped.
+	 * Handle the Notification which is passed by the @MVVMNotificationCenter. An @Object[] could be shipped.
 	 * 
 	 * @param key
 	 *            notification name
