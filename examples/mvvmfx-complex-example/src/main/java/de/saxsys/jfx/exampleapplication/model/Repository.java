@@ -12,9 +12,9 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class Repository {
-
+	
 	List<Person> persons = new ArrayList<Person>();
-
+	
 	/**
 	 * Creates the Repo.
 	 */
@@ -23,14 +23,14 @@ public class Repository {
 		persons.add(new Person("Bernd", "Grams", true));
 		persons.add(new Person("Anna", "Schulze", false));
 	}
-
+	
 	/**
 	 * @return available {@link Person}s
 	 */
 	public List<Person> getPersons() {
 		return persons;
 	}
-
+	
 	/**
 	 * Gets a Person.s
 	 * 
@@ -44,5 +44,5 @@ public class Repository {
 				return person;
 		return null;
 	}
-
+	
 }

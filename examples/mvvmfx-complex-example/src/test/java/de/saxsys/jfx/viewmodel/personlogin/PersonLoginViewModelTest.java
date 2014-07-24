@@ -8,7 +8,7 @@ import de.saxsys.jfx.exampleapplication.model.Repository;
 import de.saxsys.jfx.exampleapplication.viewmodel.personlogin.PersonLoginViewModel;
 
 public class PersonLoginViewModelTest {
-
+	
 	@Test
 	public void testShowAllPersons() throws Exception {
 		final PersonLoginViewModel personLoginViewModel = new PersonLoginViewModel(

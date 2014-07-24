@@ -10,10 +10,10 @@ import de.saxsys.jfx.exampleapplication.model.Repository;
 import de.saxsys.jfx.exampleapplication.viewmodel.personwelcome.PersonWelcomeViewModel;
 
 public class PersonWelcomeViewModelTest {
-
+	
 	private Repository repository;
 	private PersonWelcomeViewModel personWelcomeViewModel;
-
+	
 	@Before
 	public void setup() {
 		// TODO: this should be mocked
@@ -29,7 +29,7 @@ public class PersonWelcomeViewModelTest {
 		assertEquals(
 				"Willkommen Herr Casall, oder wollen Sie Alexander genannt werden?",
 				personWelcomeViewModel.welcomeStringProperty().get());
-
+		
 		assertEquals(repository.getPersons().get(0).getId(),
 				personWelcomeViewModel.getPersonId());
 	}
@@ -41,7 +41,7 @@ public class PersonWelcomeViewModelTest {
 		assertEquals(
 				"Willkommen Frau Schulze, oder wollen Sie Anna genannt werden?",
 				personWelcomeViewModel.welcomeStringProperty().get());
-
+		
 		assertEquals(repository.getPersons().get(2).getId(),
 				personWelcomeViewModel.getPersonId());
 	}
