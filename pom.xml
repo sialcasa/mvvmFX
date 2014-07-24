@@ -13,7 +13,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -39,10 +40,10 @@
 		<developer>
 			<email>manuel.mauky@saxsys.de</email>
 			<name>Manuel Mauky</name>
-		</developer>    
+		</developer>
 	</developers>
-    
-  	<organization>
+
+	<organization>
 		<name>Saxonia Systems AG</name>
 		<url>www.saxsys.de</url>
 	</organization>
@@ -77,86 +78,86 @@
 		<module>mvvmfx</module>
 		<module>mvvmfx-cdi</module>
 		<module>mvvmfx-guice</module>
-        <module>examples</module>
+		<module>examples</module>
 	</modules>
 
 	<dependencyManagement>
-	<dependencies>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.6</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.6</version>
-		</dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.6</version>
-        </dependency>
-        <dependency>
-            <groupId>net.jodah</groupId>
-            <artifactId>typetools</artifactId>
-            <version>0.3.1</version>
-        </dependency>
+		<dependencies>
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>2.6</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.6</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>1.7.6</version>
+			</dependency>
+			<dependency>
+				<groupId>net.jodah</groupId>
+				<artifactId>typetools</artifactId>
+				<version>0.3.1</version>
+			</dependency>
 
-		<!-- Testing Frameworks -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.9.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-module-junit4</artifactId>
-			<version>1.5.1</version>
-		</dependency>
+			<!-- Testing Frameworks -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.11</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>1.9.5</version>
+			</dependency>
+			<dependency>
+				<groupId>org.powermock</groupId>
+				<artifactId>powermock-module-junit4</artifactId>
+				<version>1.5.1</version>
+			</dependency>
 
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-api-mockito</artifactId>
-			<version>1.5.1</version>
-		</dependency>
+			<dependency>
+				<groupId>org.powermock</groupId>
+				<artifactId>powermock-api-mockito</artifactId>
+				<version>1.5.1</version>
+			</dependency>
 
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>1.6.0</version>
-        </dependency>
-	</dependencies>
-</dependencyManagement>
+			<dependency>
+				<groupId>org.assertj</groupId>
+				<artifactId>assertj-core</artifactId>
+				<version>1.6.0</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-deploy</id>
-                        <phase>none</phase>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-deploy</id>
+						<phase>none</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.9.1</version>
 				<configuration>
 					<javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
 					<quiet>true</quiet>
-                    <additionalparam>-Xdoclint:none</additionalparam>
+					<additionalparam>-Xdoclint:none</additionalparam>
 				</configuration>
 				<executions>
-				<execution>
+					<execution>
 						<id>attach-javadocs</id>
 						<goals>
 							<goal>jar</goal>
@@ -191,9 +192,9 @@
 		</plugins>
 	</build>
 	<profiles>
-        
-        <!-- This profile is used for deployment of releases to sonatype OSS repository.
-         For snapshot deployments this profile is NOT needed -->
+
+		<!-- This profile is used for deployment of releases to sonatype OSS repository.
+		 For snapshot deployments this profile is NOT needed -->
 		<profile>
 			<id>clean-deploy</id>
 			<build>
@@ -214,6 +215,6 @@
 				</plugins>
 			</build>
 		</profile>
-   	</profiles>
+	</profiles>
 
 </project>

@@ -1,17 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>mvvmfx-cdi-example</artifactId>
 
 	<name>mvvmFX CDI Example</name>
 
 	<description>
-	  	This example shows the usage of the mvvmFX framework with CDI Dependency Injection.
+		This example shows the usage of the mvvmFX framework with CDI Dependency Injection.
 	</description>
-  
-  <parent>
+
+	<parent>
 		<groupId>de.saxsys</groupId>
-    <artifactId>mvvmFX-examples</artifactId>
+		<artifactId>mvvmFX-examples</artifactId>
 		<version>0.3.0-SNAPSHOT</version>
 	</parent>
 
@@ -23,48 +23,48 @@
 
 
 	<dependencies>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <version>1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.6</version>
-        </dependency>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.6</version>
+		</dependency>
 
 		<dependency>
 			<groupId>de.saxsys</groupId>
 			<artifactId>mvvmFX</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-        <dependency>
-            <groupId>de.saxsys</groupId>
-            <artifactId>mvvmFX-cdi</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.weld.se</groupId>
-            <artifactId>weld-se</artifactId>
-            <version>2.1.0.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>de.saxsys</groupId>
-            <artifactId>mvvmfx-complex</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>de.saxsys</groupId>
+			<artifactId>mvvmFX-cdi</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.weld.se</groupId>
+			<artifactId>weld-se</artifactId>
+			<version>2.1.0.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>de.saxsys</groupId>
+			<artifactId>mvvmfx-complex</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
-    </dependencies>
+	</dependencies>
 
 </project>
