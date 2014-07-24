@@ -17,8 +17,8 @@ package de.saxsys.jfx.mvvm.notifications;
 
 
 /**
- * Central component to provide a notification mechanism. You can add observers
- * by using keys to get notifications for it. If you want you can pass an
+ * Central component to provide a notification mechanism. You can add observers by using keys to get notifications for
+ * it. If you want you can pass an
  * 
  * @Object[] with a notification.
  * 
@@ -26,10 +26,9 @@ package de.saxsys.jfx.mvvm.notifications;
  * 
  */
 public interface NotificationCenter {
-
+	
 	/**
-	 * Add an observer to the @MVVMNotificationCenter which gets notifications
-	 * for the given @String.
+	 * Add an observer to the @MVVMNotificationCenter which gets notifications for the given @String.
 	 * 
 	 * @param name
 	 *            key of the notification to listen
@@ -38,7 +37,7 @@ public interface NotificationCenter {
 	 */
 	public abstract void addObserverForName(String name,
 			NotificationObserver observer);
-
+	
 	/**
 	 * Removes an observer from the @MVVMNotificationCenter.
 	 * 
@@ -49,7 +48,7 @@ public interface NotificationCenter {
 	 */
 	public abstract void removeObserverForName(String name,
 			NotificationObserver observer);
-
+	
 	/**
 	 * Remove all registrations of an @MVVMNotificationObserver.
 	 * 
@@ -57,10 +56,11 @@ public interface NotificationCenter {
 	 *            for remove all notifications
 	 */
 	public abstract void removeObserver(NotificationObserver observer);
-
+	
 	/**
-	 * Post a notification to all @MVVMNotificationObserver which are registered
-	 * with the given @String. You can pass @Object[].
+	 * Post a notification to all @MVVMNotificationObserver which are registered with the given @String. You can pass
+	 * 
+	 * @Object[].
 	 * 
 	 * @param name
 	 *            of the notification which sould be send
@@ -68,5 +68,5 @@ public interface NotificationCenter {
 	 *            which should be passed
 	 */
 	public abstract void postNotification(String name, Object... objects);
-
+	
 }

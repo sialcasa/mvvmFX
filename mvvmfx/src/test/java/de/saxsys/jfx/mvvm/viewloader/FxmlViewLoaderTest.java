@@ -15,14 +15,12 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.viewloader;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
-
 import javafx.fxml.LoadException;
 import javafx.scene.layout.VBox;
 
@@ -46,115 +44,114 @@ import de.saxsys.jfx.mvvm.viewloader.example.TestViewModel;
  */
 @RunWith(JfxRunner.class)
 public class FxmlViewLoaderTest {
-
-    private FxmlViewLoader fxmlViewLoader;
-
-    @Before
-    public void setup() {
-        fxmlViewLoader = new FxmlViewLoader();
-    }
-
-    @Test
-    public void testLoadFxmlViewTuple() throws IOException {
-        final ResourceBundle resourceBundle = new PropertyResourceBundle(new StringReader(""));
-
-        final ViewTuple<TestFxmlView, TestViewModel> viewTuple = fxmlViewLoader.loadFxmlViewTuple(TestFxmlView.class,
-                resourceBundle, null, null);
-
-        assertThat(viewTuple).isNotNull();
-
-        assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
-        assertThat(viewTuple.getCodeBehind()).isNotNull();
-
-        final TestFxmlView codeBehind = viewTuple.getCodeBehind();
-        assertThat(codeBehind.viewModel).isNotNull();
-        assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
-
-        assertThat(codeBehind.viewModelWasNull).isFalse();
-    }
-
-    @Test
-    public void testLoadFxmlViewTupleWithoutViewModel() {
-
-        final ViewTuple viewTuple = fxmlViewLoader.loadFxmlViewTuple(TestFxmlViewWithoutViewModel.class, null, null,
-                null);
-
-        assertThat(viewTuple).isNotNull();
-
-        assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
-        assertThat(viewTuple.getCodeBehind()).isNotNull().isInstanceOf(TestFxmlViewWithoutViewModel.class);
-
-        final TestFxmlViewWithoutViewModel codeBehind = (TestFxmlViewWithoutViewModel) viewTuple.getCodeBehind();
-
-        assertThat(codeBehind.wasInitialized).isTrue();
-        assertThat(codeBehind.viewModel).isNull();
-    }
-
-    @Test
-    public void testLoadFxmlViewWithFxRoot() {
-        TestFxmlViewFxRoot root = new TestFxmlViewFxRoot();
-
-        ViewTuple<TestFxmlViewFxRoot, TestViewModel> viewTuple = fxmlViewLoader.loadFxmlViewTuple(
-                TestFxmlViewFxRoot.class, null, root, root);
-
-        assertThat(viewTuple).isNotNull();
-
-        assertThat(viewTuple.getView()).isNotNull().isEqualTo(root);
-        assertThat(viewTuple.getCodeBehind()).isNotNull().isEqualTo(root);
-
-        assertThat(viewTuple.getCodeBehind().viewModel).isNotNull();
-        assertThat(viewTuple.getCodeBehind().viewModelWasNull).isFalse();
-    }
-
-    /**
-     * When in the fxml file an action method is used that doesn't exists in the
-     * specified controller, we like to get the javafx exception that is thrown
-     * from the pure fxmlLoader.
-     */
-    @Test
-    public void testControllerHasNoActionMethodThatIsDeclaredInFxml() {
-        try {
-            ViewTuple<TestFxmlViewWithActionMethod, TestViewModel> viewTuple = fxmlViewLoader.loadFxmlViewTuple(
-                    TestFxmlViewWithActionMethod.class, null, null, null);
-            fail("An LoadException from FXMLLoader is expected");
-        } catch (Exception e) {
-            assertThat(e).hasCauseInstanceOf(LoadException.class).hasMessageContaining("onAction");
-        }
-    }
-
-    @Test
-    public void testLoadFxmlFailedWithWrongController() throws IOException {
-        final ResourceBundle resourceBundle = new PropertyResourceBundle(new StringReader(""));
-        try {
-            final ViewTuple viewTuple = fxmlViewLoader.loadFxmlViewTuple(TestFxmlViewWithWrongController.class, null,
-                    null, null);
-            fail("An LoadException from FXMLLoader is expected");
-        } catch (Exception e) {
-            assertThat(e).hasCauseInstanceOf(LoadException.class).hasRootCauseInstanceOf(ClassNotFoundException.class);
-            boolean found = false;
-
-            Throwable cause = e.getCause();
-            while (cause != null) {
-                if (cause.getCause() == null) {
-                    break;
-                }
-                cause = cause.getCause();
-            }
-            assertThat(cause).hasMessageContaining("WrongControllerNameTROLOLO");
-        }
-    }
-
-    @Test
-    public void testLoadFxmlFailedWithMissingController() throws IOException {
-        final ResourceBundle resourceBundle = new PropertyResourceBundle(new StringReader(""));
-        try {
-            final ViewTuple viewTuple = fxmlViewLoader.loadFxmlViewTuple(TestFxmlViewWithMissingController.class, null,
-                    null, null);
-            fail("An LoadException from FXMLLoader is expected");
-        } catch (Exception e) {
-            assertThat(e).hasCauseInstanceOf(IOException.class).hasMessageContaining(
-                    "Could not load the controller for the View");
-        }
-    }
-
+	
+	private FxmlViewLoader fxmlViewLoader;
+	
+	@Before
+	public void setup() {
+		fxmlViewLoader = new FxmlViewLoader();
+	}
+	
+	@Test
+	public void testLoadFxmlViewTuple() throws IOException {
+		final ResourceBundle resourceBundle = new PropertyResourceBundle(new StringReader(""));
+		
+		final ViewTuple<TestFxmlView, TestViewModel> viewTuple = fxmlViewLoader.loadFxmlViewTuple(TestFxmlView.class,
+				resourceBundle, null, null);
+		
+		assertThat(viewTuple).isNotNull();
+		
+		assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
+		assertThat(viewTuple.getCodeBehind()).isNotNull();
+		
+		final TestFxmlView codeBehind = viewTuple.getCodeBehind();
+		assertThat(codeBehind.viewModel).isNotNull();
+		assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
+		
+		assertThat(codeBehind.viewModelWasNull).isFalse();
+	}
+	
+	@Test
+	public void testLoadFxmlViewTupleWithoutViewModel() {
+		
+		final ViewTuple viewTuple = fxmlViewLoader.loadFxmlViewTuple(TestFxmlViewWithoutViewModel.class, null, null,
+				null);
+		
+		assertThat(viewTuple).isNotNull();
+		
+		assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
+		assertThat(viewTuple.getCodeBehind()).isNotNull().isInstanceOf(TestFxmlViewWithoutViewModel.class);
+		
+		final TestFxmlViewWithoutViewModel codeBehind = (TestFxmlViewWithoutViewModel) viewTuple.getCodeBehind();
+		
+		assertThat(codeBehind.wasInitialized).isTrue();
+		assertThat(codeBehind.viewModel).isNull();
+	}
+	
+	@Test
+	public void testLoadFxmlViewWithFxRoot() {
+		TestFxmlViewFxRoot root = new TestFxmlViewFxRoot();
+		
+		ViewTuple<TestFxmlViewFxRoot, TestViewModel> viewTuple = fxmlViewLoader.loadFxmlViewTuple(
+				TestFxmlViewFxRoot.class, null, root, root);
+		
+		assertThat(viewTuple).isNotNull();
+		
+		assertThat(viewTuple.getView()).isNotNull().isEqualTo(root);
+		assertThat(viewTuple.getCodeBehind()).isNotNull().isEqualTo(root);
+		
+		assertThat(viewTuple.getCodeBehind().viewModel).isNotNull();
+		assertThat(viewTuple.getCodeBehind().viewModelWasNull).isFalse();
+	}
+	
+	/**
+	 * When in the fxml file an action method is used that doesn't exists in the specified controller, we like to get
+	 * the javafx exception that is thrown from the pure fxmlLoader.
+	 */
+	@Test
+	public void testControllerHasNoActionMethodThatIsDeclaredInFxml() {
+		try {
+			ViewTuple<TestFxmlViewWithActionMethod, TestViewModel> viewTuple = fxmlViewLoader.loadFxmlViewTuple(
+					TestFxmlViewWithActionMethod.class, null, null, null);
+			fail("An LoadException from FXMLLoader is expected");
+		} catch (Exception e) {
+			assertThat(e).hasCauseInstanceOf(LoadException.class).hasMessageContaining("onAction");
+		}
+	}
+	
+	@Test
+	public void testLoadFxmlFailedWithWrongController() throws IOException {
+		final ResourceBundle resourceBundle = new PropertyResourceBundle(new StringReader(""));
+		try {
+			final ViewTuple viewTuple = fxmlViewLoader.loadFxmlViewTuple(TestFxmlViewWithWrongController.class, null,
+					null, null);
+			fail("An LoadException from FXMLLoader is expected");
+		} catch (Exception e) {
+			assertThat(e).hasCauseInstanceOf(LoadException.class).hasRootCauseInstanceOf(ClassNotFoundException.class);
+			boolean found = false;
+			
+			Throwable cause = e.getCause();
+			while (cause != null) {
+				if (cause.getCause() == null) {
+					break;
+				}
+				cause = cause.getCause();
+			}
+			assertThat(cause).hasMessageContaining("WrongControllerNameTROLOLO");
+		}
+	}
+	
+	@Test
+	public void testLoadFxmlFailedWithMissingController() throws IOException {
+		final ResourceBundle resourceBundle = new PropertyResourceBundle(new StringReader(""));
+		try {
+			final ViewTuple viewTuple = fxmlViewLoader.loadFxmlViewTuple(TestFxmlViewWithMissingController.class, null,
+					null, null);
+			fail("An LoadException from FXMLLoader is expected");
+		} catch (Exception e) {
+			assertThat(e).hasCauseInstanceOf(IOException.class).hasMessageContaining(
+					"Could not load the controller for the View");
+		}
+	}
+	
 }

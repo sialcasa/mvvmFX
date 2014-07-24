@@ -16,5 +16,5 @@
 package de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist;
 
 public interface ModelToStringFunction<ModelType> extends Function<ModelType, String> {
-
+	
 }

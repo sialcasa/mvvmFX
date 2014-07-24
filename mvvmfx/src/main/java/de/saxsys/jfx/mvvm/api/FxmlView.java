@@ -18,12 +18,13 @@ package de.saxsys.jfx.mvvm.api;
 import de.saxsys.jfx.mvvm.base.view.View;
 
 /**
- * A view that is implemented with FXML. There has to be an fxml file with the same name (case-insensitive) in the same package 
- * that contains the view declaration.
+ * A view that is implemented with FXML. There has to be an fxml file with the same name (case-insensitive) in the same
+ * package that contains the view declaration.
  * 
- * @param <ViewModelType> the type of the viewModel.
- *     
- * @author manuel.mauky 
+ * @param <ViewModelType>
+ *            the type of the viewModel.
+ * 
+ * @author manuel.mauky
  */
 public interface FxmlView<ViewModelType extends ViewModel> extends View<ViewModelType> {
 }

@@ -28,7 +28,7 @@ import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
  *            from
  */
 public interface ViewTupleMapper<T> {
-
+	
 	/**
 	 * Map a <T> to a {@link ViewTuple}.
 	 * 
@@ -37,5 +37,5 @@ public interface ViewTupleMapper<T> {
 	 * @return created {@link ViewTuple}
 	 */
 	public abstract ViewTuple<? extends View, ? extends ViewModel> map(T element);
-
+	
 }

@@ -20,11 +20,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 
 /**
- * Element that you can use in a View Model to transform any list to a string
- * representation which can be bound to UI Elements like {@link ListView}.
- * <b>You should only expose the {@link #stringListProperty()} to the view,
- * otherwise you create a visibility of the view to the model. Create something
- * like this in your View Model:
+ * Element that you can use in a View Model to transform any list to a string representation which can be bound to UI
+ * Elements like {@link ListView}. <b>You should only expose the {@link #stringListProperty()} to the view, otherwise
+ * you create a visibility of the view to the model. Create something like this in your View Model:
  * 
  * <code>
  * public ObservableList<String> stringListProperty(){
@@ -32,20 +30,17 @@ import javafx.scene.control.ListView;
  * }
  * </code>
  * 
- * </b> You have to provide a {@link ModelToStringFunction} to define how to map
- * between the model type and a string and back. In addition you have properties
- * which represents the actual selection state of a list.
+ * </b> You have to provide a {@link ModelToStringFunction} to define how to map between the model type and a string and
+ * back. In addition you have properties which represents the actual selection state of a list.
  * 
  * @author sialcasa
  * 
  * @param <ListType>
- *            type of the list elements which should be transformed to a string
- *            list
+ *            type of the list elements which should be transformed to a string list
  */
 public class ItemList<ListType> extends ListTransformation<ListType, String> {
 	/**
-	 * Creates a {@link ItemList} by a given list of items and a string
-	 * converter.
+	 * Creates a {@link ItemList} by a given list of items and a string converter.
 	 * 
 	 * @param modelList
 	 *            which should be transformed for the UI
@@ -56,12 +51,12 @@ public class ItemList<ListType> extends ListTransformation<ListType, String> {
 			final ModelToStringFunction<ListType> modelToStringMapper) {
 		super(modelList, modelToStringMapper);
 	}
-
+	
 	/**
 	 * @return String representation of {@link #modelListProperty()}.
 	 */
 	public ReadOnlyListProperty<String> stringListProperty() {
 		return targetListProperty();
 	}
-
+	
 }

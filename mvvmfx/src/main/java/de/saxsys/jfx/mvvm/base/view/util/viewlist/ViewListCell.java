@@ -18,13 +18,13 @@ package de.saxsys.jfx.mvvm.base.view.util.viewlist;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ListCell;
-import de.saxsys.jfx.mvvm.base.view.View;
+
 import de.saxsys.jfx.mvvm.api.ViewModel;
+import de.saxsys.jfx.mvvm.base.view.View;
 import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
 
 /**
- * Cell which displays the {@link View} from a {@link ViewTuple}. You have to
- * provide the mapping.
+ * Cell which displays the {@link View} from a {@link ViewTuple}. You have to provide the mapping.
  * 
  * @author sialcasa
  * 
@@ -33,10 +33,10 @@ import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
  */
 abstract class ViewListCell<T> extends ListCell<T> implements
 		ViewTupleMapper<T> {
-
+	
 	@Override
 	public abstract ViewTuple<? extends View, ? extends ViewModel> map(T element);
-
+	
 	@Override
 	protected void updateItem(T item, boolean empty) {
 		super.updateItem(item, empty);
@@ -53,5 +53,5 @@ abstract class ViewListCell<T> extends ListCell<T> implements
 			}
 		}
 	}
-
+	
 }

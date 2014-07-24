@@ -19,11 +19,11 @@ package de.saxsys.jfx.mvvm.notifications;
  * This class is used to get instances of the {@link NotificationCenter} interface.
  */
 public class NotificationCenterFactory {
-
-    private static NotificationCenter singleton = new DefaultNotificationCenter();
-
-    public static NotificationCenter getNotificationCenter() {
-        return singleton;
-    }
-
+	
+	private static NotificationCenter singleton = new DefaultNotificationCenter();
+	
+	public static NotificationCenter getNotificationCenter() {
+		return singleton;
+	}
+	
 }

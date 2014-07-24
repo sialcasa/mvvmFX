@@ -11,27 +11,27 @@ import javafx.scene.shape.Rectangle;
  * @author manuel.mauky
  */
 class UnbindWidthBuilderStepImpl implements SizeBindingsBuilder.UnbindStep {
-
-    @Override
-    public void of(Region source) {
-        source.maxWidthProperty().unbind();
-        source.minWidthProperty().unbind();
-    }
-
-    @Override
-    public void of(Control source) {
-        source.maxWidthProperty().unbind();
-        source.minWidthProperty().unbind();
-
-    }
-
-    @Override
-    public void of(Rectangle source) {
-        source.widthProperty().unbind();
-    }
-
-    @Override
-    public void of(ImageView source) {
-        source.fitWidthProperty().unbind();
-    }
+	
+	@Override
+	public void of(Region source) {
+		source.maxWidthProperty().unbind();
+		source.minWidthProperty().unbind();
+	}
+	
+	@Override
+	public void of(Control source) {
+		source.maxWidthProperty().unbind();
+		source.minWidthProperty().unbind();
+		
+	}
+	
+	@Override
+	public void of(Rectangle source) {
+		source.widthProperty().unbind();
+	}
+	
+	@Override
+	public void of(ImageView source) {
+		source.fitWidthProperty().unbind();
+	}
 }

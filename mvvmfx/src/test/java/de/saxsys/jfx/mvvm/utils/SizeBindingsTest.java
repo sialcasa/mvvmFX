@@ -16,6 +16,7 @@
 package de.saxsys.jfx.mvvm.utils;
 
 import static org.junit.Assert.assertEquals;
+
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
@@ -40,7 +41,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ Pane.class, ScrollPane.class, Rectangle.class })
 public class SizeBindingsTest {
-
+	
 	private static final double SIZEVAL = 100d;
 	private Pane fromPaneMock;
 	private Pane toPane;
@@ -48,7 +49,7 @@ public class SizeBindingsTest {
 	private ScrollPane toScrollPane;
 	private Rectangle fromRectangleMock;
 	private Rectangle toRectangle;
-
+	
 	/**
 	 * Create elements which will bind to each other.
 	 */
@@ -57,7 +58,7 @@ public class SizeBindingsTest {
 		fromPaneMock = PowerMockito.mock(Pane.class);
 		fromScrollPaneMock = PowerMockito.mock(ScrollPane.class);
 		fromRectangleMock = PowerMockito.mock(Rectangle.class);
-
+		
 		PowerMockito.when(fromPaneMock.getWidth()).thenReturn(SIZEVAL);
 		PowerMockito.when(fromRectangleMock.getWidth()).thenReturn(SIZEVAL);
 		PowerMockito.when(fromScrollPaneMock.getWidth()).thenReturn(SIZEVAL);
@@ -73,12 +74,12 @@ public class SizeBindingsTest {
 				new SimpleDoubleProperty(SIZEVAL));
 		PowerMockito.when(fromScrollPaneMock.heightProperty()).thenReturn(
 				new SimpleDoubleProperty(SIZEVAL));
-
+		
 		toPane = new Pane();
 		toScrollPane = new ScrollPane();
 		toRectangle = new Rectangle();
 	}
-
+	
 	/**
 	 * Bind a Pane to a Pane.
 	 */
@@ -90,7 +91,7 @@ public class SizeBindingsTest {
 		assertEquals(SIZEVAL, toPane.getMinHeight(), 0);
 		assertEquals(SIZEVAL, toPane.getMaxHeight(), 0);
 	}
-
+	
 	/**
 	 * Bind a Pane to a ScrollPane.
 	 */
@@ -102,7 +103,7 @@ public class SizeBindingsTest {
 		assertEquals(SIZEVAL, toScrollPane.getMinHeight(), 0);
 		assertEquals(SIZEVAL, toScrollPane.getMaxHeight(), 0);
 	}
-
+	
 	/**
 	 * Bind a Scrollpane to a Pane.
 	 */
@@ -114,7 +115,7 @@ public class SizeBindingsTest {
 		assertEquals(SIZEVAL, toPane.getMinHeight(), 0);
 		assertEquals(SIZEVAL, toPane.getMaxHeight(), 0);
 	}
-
+	
 	/**
 	 * Bind a Pane to a Rectangle.
 	 */
@@ -124,7 +125,7 @@ public class SizeBindingsTest {
 		assertEquals(SIZEVAL, toRectangle.getWidth(), 0);
 		assertEquals(SIZEVAL, toRectangle.getHeight(), 0);
 	}
-
+	
 	/**
 	 * Bind a Rectangle to a Pane.
 	 */

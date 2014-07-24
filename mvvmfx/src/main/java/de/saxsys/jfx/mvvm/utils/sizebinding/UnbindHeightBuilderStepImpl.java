@@ -11,25 +11,25 @@ import javafx.scene.shape.Rectangle;
  * @author manuel.mauky
  */
 class UnbindHeightBuilderStepImpl implements SizeBindingsBuilder.UnbindStep {
-    @Override
-    public void of(Region source) {
-        source.maxHeightProperty().unbind();
-        source.minHeightProperty().unbind();
-    }
-
-    @Override
-    public void of(Control source) {
-        source.maxHeightProperty().unbind();
-        source.minHeightProperty().unbind();
-    }
-
-    @Override
-    public void of(Rectangle source) {
-        source.heightProperty().unbind();
-    }
-
-    @Override
-    public void of(ImageView source) {
-        source.fitHeightProperty().unbind();
-    }
+	@Override
+	public void of(Region source) {
+		source.maxHeightProperty().unbind();
+		source.minHeightProperty().unbind();
+	}
+	
+	@Override
+	public void of(Control source) {
+		source.maxHeightProperty().unbind();
+		source.minHeightProperty().unbind();
+	}
+	
+	@Override
+	public void of(Rectangle source) {
+		source.heightProperty().unbind();
+	}
+	
+	@Override
+	public void of(ImageView source) {
+		source.fitHeightProperty().unbind();
+	}
 }

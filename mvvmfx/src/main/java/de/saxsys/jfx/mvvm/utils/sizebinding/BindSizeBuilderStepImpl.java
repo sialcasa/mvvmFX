@@ -10,59 +10,60 @@ import javafx.scene.shape.Rectangle;
  *
  * @author manuel.mauky
  */
-class BindSizeBuilderStepImpl implements SizeBindingsBuilder.BindSizeBuilderStep, SizeBindingsBuilder.FromBindSizeBuilderStep {
-    private SizeBindingsBuilder.FromBindWidthBuilderStep widthStep;
-    private SizeBindingsBuilder.FromBindHeightBuilderStep heightStep;
-
-    @Override
-    public void to(Region target){
-        widthStep.to(target);
-        heightStep.to(target);
-    }
-
-    @Override
-    public void to(Control target) {
-        widthStep.to(target);
-        heightStep.to(target);
-    }
-
-    @Override
-    public void to(Rectangle target) {
-        widthStep.to(target);
-        heightStep.to(target);
-    }
-
-    @Override
-    public void to(ImageView target){
-        widthStep.to(target);
-        heightStep.to(target);
-    }
-
-    @Override
-    public SizeBindingsBuilder.FromBindSizeBuilderStep from(Region source) {
-        widthStep = new BindWidthBuilderStepImpl().from(source);
-        heightStep = new BindHeightBuilderStepImpl().from(source);
-        return this;
-    }
-
-    @Override
-    public SizeBindingsBuilder.FromBindSizeBuilderStep from(Control source) {
-        widthStep = new BindWidthBuilderStepImpl().from(source);
-        heightStep = new BindHeightBuilderStepImpl().from(source);
-        return this;
-    }
-
-    @Override
-    public SizeBindingsBuilder.FromBindSizeBuilderStep from(Rectangle source) {
-        widthStep = new BindWidthBuilderStepImpl().from(source);
-        heightStep = new BindHeightBuilderStepImpl().from(source);
-        return this;
-    }
-
-    @Override
-    public SizeBindingsBuilder.FromBindSizeBuilderStep from(ImageView source){
-        widthStep = new BindWidthBuilderStepImpl().from(source);
-        heightStep = new BindHeightBuilderStepImpl().from(source);
-        return this;
-    }
+class BindSizeBuilderStepImpl implements SizeBindingsBuilder.BindSizeBuilderStep,
+		SizeBindingsBuilder.FromBindSizeBuilderStep {
+	private SizeBindingsBuilder.FromBindWidthBuilderStep widthStep;
+	private SizeBindingsBuilder.FromBindHeightBuilderStep heightStep;
+	
+	@Override
+	public void to(Region target) {
+		widthStep.to(target);
+		heightStep.to(target);
+	}
+	
+	@Override
+	public void to(Control target) {
+		widthStep.to(target);
+		heightStep.to(target);
+	}
+	
+	@Override
+	public void to(Rectangle target) {
+		widthStep.to(target);
+		heightStep.to(target);
+	}
+	
+	@Override
+	public void to(ImageView target) {
+		widthStep.to(target);
+		heightStep.to(target);
+	}
+	
+	@Override
+	public SizeBindingsBuilder.FromBindSizeBuilderStep from(Region source) {
+		widthStep = new BindWidthBuilderStepImpl().from(source);
+		heightStep = new BindHeightBuilderStepImpl().from(source);
+		return this;
+	}
+	
+	@Override
+	public SizeBindingsBuilder.FromBindSizeBuilderStep from(Control source) {
+		widthStep = new BindWidthBuilderStepImpl().from(source);
+		heightStep = new BindHeightBuilderStepImpl().from(source);
+		return this;
+	}
+	
+	@Override
+	public SizeBindingsBuilder.FromBindSizeBuilderStep from(Rectangle source) {
+		widthStep = new BindWidthBuilderStepImpl().from(source);
+		heightStep = new BindHeightBuilderStepImpl().from(source);
+		return this;
+	}
+	
+	@Override
+	public SizeBindingsBuilder.FromBindSizeBuilderStep from(ImageView source) {
+		widthStep = new BindWidthBuilderStepImpl().from(source);
+		heightStep = new BindHeightBuilderStepImpl().from(source);
+		return this;
+	}
 }
