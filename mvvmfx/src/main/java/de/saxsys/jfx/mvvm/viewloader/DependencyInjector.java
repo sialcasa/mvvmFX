@@ -94,7 +94,7 @@ public class DependencyInjector {
 		final Field field = getViewModelField(view.getClass(), viewModelType);
 		
 		if(field != null){
-			accessFieldAction(field, () -> {
+			accessField(field, () -> {
 				Object existingViewModel = field.get(view);
 
 				if (existingViewModel == null) {
@@ -120,56 +120,41 @@ public class DependencyInjector {
 	 * @param <ViewModelType> the generic type of the ViewModel
 	 * @return the ViewModel instance or null if no viewModel could be found.
 	 */
+	@SuppressWarnings("unchecked")
 	<ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewModelType getViewModel(ViewType view){
 
 		final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
 		final Field field = getViewModelField(view.getClass(), viewModelType);
-
-		ViewModelType viewModel = null;
-
-		CompletableFuture<ViewModelType> future = new CompletableFuture<>();
 		
 		if(field != null){
-			accessFieldAction(field, ()->{
-				future.complete((ViewModelType) field.get(view));
-				return null;
-			}, "Can't get the viewModel of type <" + viewModelType + ">");
-		}else{
+			return accessField(field, ()-> (ViewModelType)field.get(view), "Can't get the viewModel of type <" + viewModelType + ">");
+		} else {
 			return null;
 		}
 		
-		try{
-			viewModel = future.get();
-		} catch (InterruptedException | ExecutionException e) {
-			throw new IllegalStateException(e);
-		}
-
-		return viewModel;
 	}
 
 	/**
 	 * Helper method to execute a callback on a given field. This method encapsulates the error handling logic and the 
 	 * handling of accessibility of the field.
 	 */
-	private void accessFieldAction(final Field field, final Callable<Void> callable, String errorMessage){
-		AccessController.doPrivileged((PrivilegedAction<Object>) ()->{
+	private <T> T accessField(final Field field, final Callable<T> callable, String errorMessage){
+		return AccessController.doPrivileged((PrivilegedAction<T>) ()->{
 			boolean wasAccessible = field.isAccessible();
-
-			try {
-				if (callable != null) {
-					callable.call();
+			
+			try{
+				if(callable != null){
+					return callable.call();
 				}
-			} catch (Exception exception){
-				throw new IllegalStateException(errorMessage);
-			} finally {
+			}catch(Exception exception){
+				throw new IllegalStateException(errorMessage, exception);
+			}finally{
 				field.setAccessible(wasAccessible);
 			}
-
 			return null;
 		});
 	}
-
-
+	
 	private Field getViewModelField(Class<?> viewType, Class<?> viewModelType) {
 		
 		for (Field field : viewType.getDeclaredFields()) {
