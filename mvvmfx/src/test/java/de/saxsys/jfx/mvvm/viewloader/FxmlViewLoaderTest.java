@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
+
+import de.saxsys.jfx.mvvm.TestUtils;
 import javafx.fxml.LoadException;
 import javafx.scene.layout.VBox;
 
@@ -113,7 +115,7 @@ public class FxmlViewLoaderTest {
 		try {
 			ViewTuple<TestFxmlViewWithActionMethod, TestViewModel> viewTuple = fxmlViewLoader.loadFxmlViewTuple(
 					TestFxmlViewWithActionMethod.class, null, null, null);
-			fail("An LoadException from FXMLLoader is expected");
+			fail("A LoadException from FXMLLoader is expected");
 		} catch (Exception e) {
 			assertThat(e).hasCauseInstanceOf(LoadException.class).hasMessageContaining("onAction");
 		}
@@ -121,37 +123,27 @@ public class FxmlViewLoaderTest {
 	
 	@Test
 	public void testLoadFxmlFailedWithWrongController() throws IOException {
-		final ResourceBundle resourceBundle = new PropertyResourceBundle(new StringReader(""));
 		try {
 			final ViewTuple viewTuple = fxmlViewLoader.loadFxmlViewTuple(TestFxmlViewWithWrongController.class, null,
 					null, null);
-			fail("An LoadException from FXMLLoader is expected");
+			fail("A LoadException from FXMLLoader is expected");
 		} catch (Exception e) {
 			assertThat(e).hasCauseInstanceOf(LoadException.class).hasRootCauseInstanceOf(ClassNotFoundException.class);
-			boolean found = false;
-			
-			Throwable cause = e.getCause();
-			while (cause != null) {
-				if (cause.getCause() == null) {
-					break;
-				}
-				cause = cause.getCause();
-			}
+
+			Throwable cause = TestUtils.getRootCause(e);
 			assertThat(cause).hasMessageContaining("WrongControllerNameTROLOLO");
 		}
 	}
 	
 	@Test
 	public void testLoadFxmlFailedWithMissingController() throws IOException {
-		final ResourceBundle resourceBundle = new PropertyResourceBundle(new StringReader(""));
 		try {
 			final ViewTuple viewTuple = fxmlViewLoader.loadFxmlViewTuple(TestFxmlViewWithMissingController.class, null,
 					null, null);
-			fail("An LoadException from FXMLLoader is expected");
+			fail("A LoadException from FXMLLoader is expected");
 		} catch (Exception e) {
 			assertThat(e).hasCauseInstanceOf(IOException.class).hasMessageContaining(
 					"Could not load the controller for the View");
 		}
 	}
-	
 }

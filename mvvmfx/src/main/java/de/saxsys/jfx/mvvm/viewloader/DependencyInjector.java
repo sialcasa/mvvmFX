@@ -18,11 +18,15 @@ package de.saxsys.jfx.mvvm.viewloader;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 import de.saxsys.jfx.mvvm.api.ViewModel;
 import javafx.util.Callback;
@@ -91,9 +95,12 @@ public class DependencyInjector {
 	
 	void injectViewModel(final View view) {
 		final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
-		final Field field = getViewModelField(view.getClass(), viewModelType);
 		
-		if(field != null){
+		final Optional<Field> fieldOptional = getViewModelField(view.getClass(), viewModelType);
+		
+		if(fieldOptional.isPresent()){
+			Field field = fieldOptional.get();
+			
 			accessField(field, () -> {
 				Object existingViewModel = field.get(view);
 
@@ -107,7 +114,6 @@ public class DependencyInjector {
 			}, "Can't inject ViewModel of type <" + viewModelType
 					+ "> into the view <" + view + ">");
 		}
-		
 	}
 
 
@@ -124,14 +130,15 @@ public class DependencyInjector {
 	<ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewModelType getViewModel(ViewType view){
 
 		final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
-		final Field field = getViewModelField(view.getClass(), viewModelType);
+		Optional<Field> fieldOptional = getViewModelField(view.getClass(), viewModelType);
 		
-		if(field != null){
+		if(fieldOptional.isPresent()){
+			Field field = fieldOptional.get();
+			
 			return accessField(field, ()-> (ViewModelType)field.get(view), "Can't get the viewModel of type <" + viewModelType + ">");
-		} else {
+		}else{
 			return null;
 		}
-		
 	}
 
 	/**
@@ -155,17 +162,25 @@ public class DependencyInjector {
 		});
 	}
 	
-	private Field getViewModelField(Class<?> viewType, Class<?> viewModelType) {
+	private Optional<Field> getViewModelField(Class<?> viewType, Class<?> viewModelType) {
 		
-		for (Field field : viewType.getDeclaredFields()) {
-			if (field.isAnnotationPresent(InjectViewModel.class)) {
-				if (viewModelType != TypeResolver.Unknown.class && field.getType().isAssignableFrom(viewModelType)) {
-					return field;
-				}
-			}
+		if(viewModelType == TypeResolver.Unknown.class){
+			return Optional.empty();
+		}
+
+		List<Field> viewModelFields = Arrays.stream(viewType.getDeclaredFields())
+				.filter(field -> field.isAnnotationPresent(InjectViewModel.class))
+				.filter(field -> field.getType().isAssignableFrom(viewModelType)).collect(Collectors.toList());
+		
+		if(viewModelFields.isEmpty()){
+			return Optional.empty();
 		}
 		
-		return null;
+		if(viewModelFields.size() > 1){
+			throw new RuntimeException("The View <" + viewType + "> may only define one viewModel but there were <" + viewModelFields.size() + "> viewModel fields!");
+		}
+
+		return Optional.of(viewModelFields.get(0));
 	}
 	
 	
