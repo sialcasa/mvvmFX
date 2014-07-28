@@ -17,11 +17,16 @@ package de.saxsys.jfx.mvvm.viewloader;
 
 import static org.assertj.core.api.Assertions.*;
 
+import de.saxsys.jfx.mvvm.TestUtils;
+import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewMultipleViewModels;
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithMissingController;
+import de.saxsys.jfx.mvvm.viewloader.example.TestJavaViewMultipleViewModels;
+import de.saxsys.jfx.mvvm.viewloader.example.TestJavaViewWithImplicitInit;
 import javafx.fxml.LoadException;
 import javafx.scene.layout.VBox;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import de.saxsys.jfx.mvvm.api.ViewModel;
@@ -32,6 +37,7 @@ import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithoutViewModel;
 import de.saxsys.jfx.mvvm.viewloader.example.TestJavaView;
 import de.saxsys.jfx.mvvm.viewloader.example.TestJavaViewWithoutViewModel;
 import de.saxsys.jfx.mvvm.viewloader.example.TestViewModel;
+import org.junit.rules.ExpectedException;
 
 /**
  * This test verifies the behaviour of the {@link de.saxsys.jfx.mvvm.viewloader.ViewLoader} class.
@@ -209,6 +215,27 @@ public class ViewLoaderIntegrationTest {
 		
 		assertThat(viewModel).isNotNull();
 		assertThat(viewModel).isEqualTo(viewTuple.getCodeBehind().viewModel);
+	}
+	
+	@Test
+	public void testThrowExceptionWhenMoreThenOneViewModelIsDefinedInFxmlView(){
+		try{
+			viewLoader.loadViewTuple(TestFxmlViewMultipleViewModels.class);
+			fail("Expecting an Exception because in the view class there are 2 viewmodels defined.");
+		}catch(Exception e){
+			assertThat(TestUtils.getRootCause(e)).isInstanceOf(RuntimeException.class).hasMessageContaining(
+					"<2> viewModel fields");
+		}
+	}
+	
+	@Test
+	public void testThrowExceptionWhenMoreThenOneViewModelIsDefinedInJavaView(){
+		try{
+			viewLoader.loadViewTuple(TestJavaViewMultipleViewModels.class);
+			fail("Expecting an Exception because in the view class there are 2 viewmodels defined.");
+		}catch(Exception e){
+			assertThat(e).isInstanceOf(RuntimeException.class).hasMessageContaining("<2> viewModel fields");
+		}
 	}
 }
 
