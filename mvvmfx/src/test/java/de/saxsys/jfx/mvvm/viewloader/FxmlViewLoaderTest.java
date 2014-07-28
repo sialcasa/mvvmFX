@@ -67,7 +67,7 @@ public class FxmlViewLoaderTest {
 		assertThat(viewTuple.getCodeBehind()).isNotNull();
 		
 		final TestFxmlView codeBehind = viewTuple.getCodeBehind();
-		assertThat(codeBehind.viewModel).isNotNull();
+		assertThat(codeBehind.getViewModel()).isNotNull();
 		assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
 		
 		assertThat(codeBehind.viewModelWasNull).isFalse();

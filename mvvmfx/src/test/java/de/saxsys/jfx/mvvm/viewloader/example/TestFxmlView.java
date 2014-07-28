@@ -18,7 +18,7 @@ public class TestFxmlView implements FxmlView<TestViewModel>, Initializable {
 	public ResourceBundle resourceBundle;
 	
 	@InjectViewModel
-	public TestViewModel viewModel;
+	private TestViewModel viewModel;
 	
 	public boolean viewModelWasNull = true;
 	
@@ -28,6 +28,10 @@ public class TestFxmlView implements FxmlView<TestViewModel>, Initializable {
 		this.resourceBundle = resourceBundle;
 		
 		viewModelWasNull = viewModel == null;
+	}
+	
+	public TestViewModel getViewModel(){
+		return viewModel;
 	}
 	
 }

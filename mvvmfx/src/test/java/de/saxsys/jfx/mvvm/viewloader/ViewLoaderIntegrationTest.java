@@ -202,7 +202,7 @@ public class ViewLoaderIntegrationTest {
 		TestViewModel viewModel = viewTuple.getViewModel();
 		
 		assertThat(viewModel).isNotNull();
-		assertThat(viewModel).isEqualTo(viewTuple.getCodeBehind().viewModel);
+		assertThat(viewModel).isEqualTo(viewTuple.getCodeBehind().getViewModel());
 	}
 	
 	@Test

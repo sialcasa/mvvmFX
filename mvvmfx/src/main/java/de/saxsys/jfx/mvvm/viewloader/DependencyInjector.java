@@ -150,6 +150,7 @@ public class DependencyInjector {
 			boolean wasAccessible = field.isAccessible();
 			
 			try{
+				field.setAccessible(true);
 				if(callable != null){
 					return callable.call();
 				}
