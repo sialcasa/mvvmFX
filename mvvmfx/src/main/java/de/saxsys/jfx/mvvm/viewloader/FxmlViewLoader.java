@@ -57,7 +57,7 @@ class FxmlViewLoader {
 			
 			loader.load();
 			
-			final View loadedController = loader.getController();
+			final ViewType loadedController = loader.getController();
 			final Parent loadedRoot = loader.getRoot();
 			
 			if (loadedController == null) {
@@ -65,7 +65,9 @@ class FxmlViewLoader {
 						+ " maybe your missed the fx:controller in your fxml?");
 			}
 			
-			return new ViewTuple(loadedController, loadedRoot);
+			final ViewModelType viewModel = DependencyInjector.getInstance().getViewModel(loadedController);
+			
+			return new ViewTuple(loadedController, loadedRoot, viewModel);
 			
 		} catch (final IOException ex) {
 			throw new RuntimeException(ex);
