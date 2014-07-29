@@ -16,12 +16,15 @@
 package de.saxsys.jfx.mvvm.cdi.internal;
 
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.stage.Stage;
 
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
 
 import de.saxsys.jfx.mvvm.api.MvvmFX;
+
+import javax.enterprise.inject.Produces;
 
 /**
  * The class is instantiated by the javafx framework. The purpose of this class is to startup the weld container and
@@ -61,5 +64,10 @@ public class WeldStartupHelper extends Application {
 		MvvmFX.setCustomDependencyInjector(cdiInjector);
 		
 		weldContainer.event().fire(new StartupEvent(stage, this.getParameters()));
+	}
+	
+	@Produces
+	HostServices produceHostServices(){
+		return getHostServices();
 	}
 }
