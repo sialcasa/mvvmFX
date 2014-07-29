@@ -1,6 +1,7 @@
 package de.saxsys.jfx.mvvmfx.helloworld;
 
 
+import de.saxsys.jfx.mvvm.viewloader.FluentViewLoader;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,10 +22,7 @@ public class Starter extends Application {
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Hello World Application");
 		
-		ViewLoader viewLoader = new ViewLoader();
-		
-		ViewTuple<HelloWorldView, HelloWorldViewModel> viewTuple = viewLoader
-				.loadViewTuple(HelloWorldView.class);
+		ViewTuple<HelloWorldView, HelloWorldViewModel> viewTuple = FluentViewLoader.javaView(HelloWorldView.class).load();
 		
 		Parent root = viewTuple.getView();
 		stage.setScene(new Scene(root));

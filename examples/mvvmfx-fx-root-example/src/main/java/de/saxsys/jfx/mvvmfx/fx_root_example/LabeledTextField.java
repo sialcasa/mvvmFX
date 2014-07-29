@@ -1,5 +1,6 @@
 package de.saxsys.jfx.mvvmfx.fx_root_example;
 
+import de.saxsys.jfx.mvvm.viewloader.FluentViewLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,9 +26,7 @@ public class LabeledTextField extends HBox implements FxmlView<LabeledTextFieldV
 	private LabeledTextFieldViewModel viewModel;
 	
 	public LabeledTextField() {
-		ViewLoader viewLoader = new ViewLoader();
-		
-		viewLoader.loadViewTuple(this.getClass(), null, this, this);
+		FluentViewLoader.fxmlView(this.getClass()).root(this).codeBehind(this).load();
 	}
 	
 	public void initialize() {
