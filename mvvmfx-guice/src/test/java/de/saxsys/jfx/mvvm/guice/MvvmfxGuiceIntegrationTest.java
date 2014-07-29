@@ -18,13 +18,19 @@ package de.saxsys.jfx.mvvm.guice;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
+
+import de.saxsys.jfx.mvvm.notifications.NotificationCenter;
+import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import org.junit.Test;
 
 import com.google.inject.Module;
+
+import javax.inject.Inject;
 
 public class MvvmfxGuiceIntegrationTest {
 	
@@ -41,6 +47,13 @@ public class MvvmfxGuiceIntegrationTest {
 		public static Stage stage;
 		
 		public static Application.Parameters parameters;
+
+
+		@Inject
+		private GuiceInjector guiceInjector;
+
+		//This is needed to be able to access the initialized guice injector from the outside
+		public static GuiceInjector staticInjector;
 		
 		public static void main(String... args) {
 			launch(args);
@@ -48,6 +61,8 @@ public class MvvmfxGuiceIntegrationTest {
 		
 		@Override
 		public void startMvvmfx(Stage stage) throws Exception {
+			MyApplication.staticInjector = guiceInjector;
+			
 			MyApplication.stage = stage;
 			
 			MyApplication.parameters = getParameters();
@@ -60,18 +75,46 @@ public class MvvmfxGuiceIntegrationTest {
 		public void initGuiceModules(List<Module> modules) throws Exception {
 		}
 	}
-	
+
+	/**
+	 * This class is used to test the injection of some classes.
+	 */
+	static class Example {
+		@Inject
+		NotificationCenter notificationCenter;
+
+		@Inject
+		ViewLoader viewLoader;
+
+		@Inject
+		HostServices hostServices;
+	}
 	
 	/**
 	 * Verify that after running the application there is a valid stage.
 	 */
 	@Test
-	public void testApplicationWasStartedWithAStage() {
+	public void testApplicationStartAndInjection() {
 		MyApplication.main("test");
 		
 		assertThat(MyApplication.stage).isNotNull();
 		assertThat(MyApplication.parameters).isNotNull();
 		assertThat(MyApplication.parameters.getUnnamed()).contains("test");
+
+
+
+
+		GuiceInjector injector = MyApplication.staticInjector;
+		assertThat(injector).isNotNull();
+
+		Object exampleObject = injector.call(Example.class);
+		assertThat(exampleObject).isNotNull().isInstanceOf(Example.class);
+
+		Example example = (Example) exampleObject;
+
+		assertThat(example.notificationCenter).isNotNull();
+		assertThat(example.viewLoader).isNotNull();
+		assertThat(example.hostServices).isNotNull();
 	}
-	
+
 }

@@ -16,6 +16,11 @@
 package de.saxsys.jfx.mvvm.guice;
 
 import java.util.List;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Binder;
+import com.google.inject.Provider;
+import javafx.application.HostServices;
 import javafx.stage.Stage;
 
 import com.cathive.fx.guice.GuiceApplication;
@@ -37,6 +42,17 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication {
 	@Override
 	public final void init(List<Module> modules) throws Exception {
 		modules.add(new MvvmfxModule());
+		
+		modules.add(new AbstractModule() {
+			@Override 
+			protected void configure() {
+				bind(HostServices.class).toProvider(new Provider<HostServices>() {
+					@Override public HostServices get() {
+						return getHostServices();
+					}
+				});
+			}
+		});
 		
 		this.initGuiceModules(modules);
 	}

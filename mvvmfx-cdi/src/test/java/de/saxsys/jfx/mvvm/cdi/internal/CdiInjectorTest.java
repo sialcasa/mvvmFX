@@ -17,6 +17,7 @@ package de.saxsys.jfx.mvvm.cdi.internal;
 
 import javax.inject.Inject;
 
+import javafx.application.HostServices;
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
 import org.junit.Assert;
@@ -24,6 +25,8 @@ import org.junit.Test;
 
 import de.saxsys.jfx.mvvm.notifications.NotificationCenter;
 import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * This test verifies that a simple application can be started with the CDI/Weld extension. When there is a problem with
@@ -38,6 +41,9 @@ public class CdiInjectorTest {
 		
 		@Inject
 		ViewLoader viewLoader;
+		
+		@Inject
+		HostServices hostServices;
 	}
 	
 	/**
@@ -52,14 +58,12 @@ public class CdiInjectorTest {
 		CdiInjector cdiInjector = weldContainer.instance().select(CdiInjector.class).get();
 		
 		Object exampleObject = cdiInjector.call(Example.class);
-		Assert.assertNotNull(exampleObject);
-		
-		Assert.assertTrue(exampleObject instanceof Example);
+		assertThat(exampleObject).isNotNull().isInstanceOf(Example.class);
 		
 		Example example = (Example) exampleObject;
-		
-		Assert.assertNotNull(example.notificationCenter);
-		Assert.assertNotNull(example.viewLoader);
-		
+
+		assertThat(example.notificationCenter).isNotNull();
+		assertThat(example.viewLoader).isNotNull();
+		assertThat(example.hostServices).isNotNull();
 	}
 }
