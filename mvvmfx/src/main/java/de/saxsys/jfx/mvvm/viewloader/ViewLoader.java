@@ -29,12 +29,12 @@ import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.base.view.View;
 
 /**
- * Loader class for loading FXML and code behind from Fs. There are following options for loading the FXML:
+ * This class can be used to load MvvmFX views. It provides overloaded loading methods that return {@link de.saxsys.jfx.mvvm.viewloader.ViewTuple}
+ * instances that contain the loaded view. 
  * 
- * <ul>
- * <li>Providing the code behind class (controller) by calling {@link #loadViewTuple(Class)}</li>
- * <li>Providing a path to the FXML file by calling {@link #loadViewTuple(String)}</li>
- * </ul>
+ * Instead of using this class you can also use the {@link de.saxsys.jfx.mvvm.viewloader.FluentViewLoader}
+ * to load views. It provides a fluent api to specify your params instead of using overloaded methods of this class.
+ * The usage of the {@link de.saxsys.jfx.mvvm.viewloader.FluentViewLoader} is the recommended way of using MvvmFX.
  *
  * @author alexander.casall, manuel.mauky
  */
@@ -87,18 +87,18 @@ public final class ViewLoader {
 	
 	/**
 	 * Load a ViewTuple for the given parameters.
-	 * 
+	 * <br/>
 	 * This method is useful if you need to define one of the additional not so common params like 'codeBehind' or
 	 * 'root'.
-	 * 
+	 * <br/>
 	 * With the "codeBehind" param you can use an existing codeBehind instance for this view. This can be useful when
 	 * you need to create the codeBehind class outside of the normal dependency injection mechanism or you like to reuse
 	 * an existing instance for a second view.
-	 * 
+	 * <br/>
 	 * With the "root" param you can use an existing JavaFX node as the root for the loaded View.
-	 * 
+	 * <br/>
 	 * The most common use-case for both "codeBehind" and "root" params is when you like to create a custom component
-	 * with MvvmFX. In this case you will subclass from a JavaFX component and use the viewLoader in the constructor of
+	 * with MvvmFX with the <a href="http://docs.oracle.com/javafx/2/fxml_get_started/custom_control.htm">fx:root element</a>. In this case you will subclass from a JavaFX component and use the viewLoader in the constructor of
 	 * your custom component. See the following example:
 	 * 
 	 * <pre>
