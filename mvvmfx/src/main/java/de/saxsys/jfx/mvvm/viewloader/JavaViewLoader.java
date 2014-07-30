@@ -103,11 +103,22 @@ class JavaViewLoader {
 			
 			initializeMethod.invoke(view);
 		} catch (NoSuchMethodException e) {
+			// This exception means that there is no initialize method declared.
+			// While it's possible that the user has no such method by design, 
+			// normally and in most cases you need an initialize method in your view (either with Initialize interface or implicit).
+			// So it's likely that the user has misspelled the method name or uses a wrong naming convention. 
+			// For this reason we give the user the log message.
 			LOG.debug("There is no '{}' method declared at the view {}", NAMING_CONVENTION_INITIALIZE_IDENTIFIER, view);
 		} catch (InvocationTargetException e) {
 			LOG.warn("The '{}' method of the view {} has thrown an exception!",
 					NAMING_CONVENTION_INITIALIZE_IDENTIFIER, view);
-			LOG.warn("Exception was:", e);
+
+			Throwable cause = e.getCause();
+			if(cause instanceof RuntimeException){
+				throw (RuntimeException) cause;
+			}else{
+				throw new RuntimeException(cause);
+			}
 		} catch (IllegalAccessException e) {
 			LOG.warn("Can't invoke the '{}' method of the view {} because it is not accessible",
 					NAMING_CONVENTION_INITIALIZE_IDENTIFIER, view);
@@ -137,8 +148,9 @@ class JavaViewLoader {
 				resourcesField.set(view, resourceBundle);
 			}
 		} catch (NoSuchFieldException e) {
-			LOG.debug("No field '{}' available in view type {}", NAMING_CONVENTION_RESOURCES_IDENTIFIER,
-					view.getClass());
+			// This exception means that there is no field for the ResourceBundle. 
+			// This is no exceptional case but is normal when you don't need a resourceBundle in a specific view. 
+			// Therefore it's save to silently catch the exception.
 		} catch (IllegalAccessException e) {
 			LOG.warn("Can't inject the ResourceBundle into the view {} because the field isn't accessible", view);
 		}

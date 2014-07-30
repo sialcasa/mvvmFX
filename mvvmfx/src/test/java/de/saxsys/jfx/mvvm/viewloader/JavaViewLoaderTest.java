@@ -136,10 +136,10 @@ public class JavaViewLoaderTest {
 		
 		ResourceBundle noResourceBundle = null;
 		
-		final ViewTuple<TestView, TestViewModel> viewTuple = javaViewLoader.loadJavaViewTuple(TestView.class,
+		final ViewTuple<TestViewInitialize, TestViewModel> viewTuple = javaViewLoader.loadJavaViewTuple(TestViewInitialize.class,
 				noResourceBundle);
 		
-		TestView view = viewTuple.getCodeBehind();
+		TestViewInitialize view = viewTuple.getCodeBehind();
 		
 		assertThat(view.explicitInitWasCalled).isTrue();
 		assertThat(view.implicitInitWasCalled).isFalse();
@@ -149,7 +149,7 @@ public class JavaViewLoaderTest {
 	 * This test class is used by
 	 * {@link #implicitInitializationShouldNotBeExecutedWhenInitializableInterfaceIsImplemented()}.
 	 */
-	public static class TestView extends VBox implements JavaView<TestViewModel>, Initializable {
+	public static class TestViewInitialize extends VBox implements JavaView<TestViewModel>, Initializable {
 		
 		public boolean explicitInitWasCalled = false;
 		public boolean implicitInitWasCalled = false;
@@ -222,5 +222,54 @@ public class JavaViewLoaderTest {
 		
 		assertThat(view.implicitInitWasCalled).isFalse();
 	}
+
+
+	/**
+	 * When an exception happens in the implicit initialize method it has to reach the user.
+	 */
+	@Test
+	public void testExceptionInImplicitInitializeMethod(){
+		
+		
+		try{
+			ViewTuple<TestViewImplicitInitializeWithException, TestViewModel> viewTuple = javaViewLoader
+					.loadJavaViewTuple(TestViewImplicitInitializeWithException.class, null);
+			fail("Expected an Exception");
+		}catch(Exception e){
+			assertThat(e).isInstanceOf(IllegalStateException.class).hasMessage("TEST");
+		}
+	}
+
+	/**
+	 * This class is used in {@link #testExceptionInImplicitInitializeMethod()}
+	 */
+	public static class TestViewImplicitInitializeWithException extends VBox implements JavaView<TestViewModel> {
+		public void initialize(){
+			throw new IllegalStateException("TEST");
+		}
+	} 
 	
+	/**
+	 * For explicit initialize methods (those defined by the {@link javafx.fxml.Initializable} interface) 
+	 * apply the same rules as for implicit ones: The user needs to be able to handle the exception.
+	 */
+	@Test
+	public void testExceptionInExplicitInitializeMethod(){
+		try{
+			ViewTuple<TestViewExplicitInitializeWithException, TestViewModel> viewTuple = javaViewLoader
+					.loadJavaViewTuple(TestViewExplicitInitializeWithException.class, null);
+			fail("Expected an Exception");
+		}catch(Exception e){
+			assertThat(e).isInstanceOf(IllegalStateException.class).hasMessage("TEST");
+		}
+	}
+
+	/**
+	 * This class is used in {@link #testExceptionInExplicitInitializeMethod()}.
+	 */
+	public static class TestViewExplicitInitializeWithException extends VBox implements JavaView<TestViewModel> , Initializable{
+		@Override public void initialize(URL location, ResourceBundle resources) {
+			throw new IllegalStateException("TEST");
+		}
+	}
 }
