@@ -67,7 +67,7 @@ class FxmlViewLoader {
 			
 			final ViewModelType viewModel = DependencyInjector.getInstance().getViewModel(loadedController);
 			
-			return new ViewTuple(loadedController, loadedRoot, viewModel);
+			return new ViewTuple<>(loadedController, loadedRoot, viewModel);
 			
 		} catch (final IOException ex) {
 			throw new RuntimeException(ex);
