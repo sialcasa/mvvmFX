@@ -17,16 +17,14 @@ package de.saxsys.jfx.mvvm.viewloader;
 
 import static org.assertj.core.api.Assertions.*;
 
-import de.saxsys.jfx.mvvm.TestUtils;
+import de.saxsys.jfx.mvvm.testingutils.TestUtils;
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewMultipleViewModels;
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithMissingController;
 import de.saxsys.jfx.mvvm.viewloader.example.TestJavaViewMultipleViewModels;
-import de.saxsys.jfx.mvvm.viewloader.example.TestJavaViewWithImplicitInit;
 import javafx.fxml.LoadException;
 import javafx.scene.layout.VBox;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
 import de.saxsys.jfx.mvvm.api.ViewModel;
@@ -37,7 +35,6 @@ import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithoutViewModel;
 import de.saxsys.jfx.mvvm.viewloader.example.TestJavaView;
 import de.saxsys.jfx.mvvm.viewloader.example.TestJavaViewWithoutViewModel;
 import de.saxsys.jfx.mvvm.viewloader.example.TestViewModel;
-import org.junit.rules.ExpectedException;
 
 /**
  * This test verifies the behaviour of the {@link de.saxsys.jfx.mvvm.viewloader.ViewLoader} class.

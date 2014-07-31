@@ -22,7 +22,7 @@ import java.io.StringReader;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import de.saxsys.jfx.mvvm.TestUtils;
+import de.saxsys.jfx.mvvm.testingutils.TestUtils;
 import javafx.fxml.LoadException;
 import javafx.scene.layout.VBox;
 

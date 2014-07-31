@@ -16,9 +16,14 @@
 package de.saxsys.jfx.mvvm.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.function.BiConsumer;
+
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
@@ -41,11 +46,11 @@ import javafx.collections.ObservableList;
 public class ListenerManager implements ICleanable {
 	
 	@SuppressWarnings("rawtypes")
-	private final Map<ObservableValue<?>, List<ChangeListener>> simpleChangeListeners = new HashMap<ObservableValue<?>, List<ChangeListener>>();
+	private final Map<ObservableValue<?>, Set<ChangeListener>> simpleChangeListeners = new WeakHashMap<>();
 	@SuppressWarnings("rawtypes")
-	private final Map<ObservableList<?>, List<ListChangeListener>> listChangeListeners = new HashMap<ObservableList<?>, List<ListChangeListener>>();
+	private final Map<ObservableList<?>, Set<ListChangeListener>> listChangeListeners = new WeakHashMap<>();
 	
-	private final Map<Observable, List<InvalidationListener>> invalidationListeners = new HashMap<Observable, List<InvalidationListener>>();
+	private final Map<Observable, Set<InvalidationListener>> invalidationListeners = new WeakHashMap<>();
 	
 	/**
 	 * Register the given {@link ChangeListener} to the {@link ObservableValue}. The listener is added to the observable
@@ -55,11 +60,11 @@ public class ListenerManager implements ICleanable {
 	 * @param listener
 	 */
 	public <T> void register(ObservableValue<T> observable, ChangeListener<? super T> listener) {
-		List<ChangeListener> observers = this.simpleChangeListeners.get(observable);
-		if (observers == null) {
-			this.simpleChangeListeners.put(observable, new ArrayList<ChangeListener>());
+		if(!simpleChangeListeners.containsKey(observable)){
+			this.simpleChangeListeners.put(observable, Collections.newSetFromMap(new WeakHashMap<>()));
 		}
-		observers = this.simpleChangeListeners.get(observable);
+		
+		Set<ChangeListener> observers = this.simpleChangeListeners.get(observable);
 		observers.add(listener);
 		observable.addListener(listener);
 	}
@@ -72,11 +77,11 @@ public class ListenerManager implements ICleanable {
 	 * @param listener
 	 */
 	public <T> void register(ObservableList<T> observable, ListChangeListener<? super T> listener) {
-		List<ListChangeListener> observers = this.listChangeListeners.get(observable);
-		if (observers == null) {
-			this.listChangeListeners.put(observable, new ArrayList<ListChangeListener>());
+		if(!listChangeListeners.containsKey(observable)){
+			this.listChangeListeners.put(observable, Collections.newSetFromMap(new WeakHashMap<>()));
 		}
-		observers = this.listChangeListeners.get(observable);
+
+		Set<ListChangeListener> observers = this.listChangeListeners.get(observable);
 		observers.add(listener);
 		observable.addListener(listener);
 	}
@@ -89,37 +94,20 @@ public class ListenerManager implements ICleanable {
 	 * @param listener
 	 */
 	public void register(Observable observable, InvalidationListener listener) {
-		List<InvalidationListener> observers = this.invalidationListeners.get(observable);
-		if (observers == null) {
-			this.invalidationListeners.put(observable, new ArrayList<InvalidationListener>());
+		if(!invalidationListeners.containsKey(observable)){
+			this.invalidationListeners.put(observable, Collections.newSetFromMap(new WeakHashMap<>()));
 		}
-		observers = this.invalidationListeners.get(observable);
+
+		Set<InvalidationListener> observers = this.invalidationListeners.get(observable);
 		observers.add(listener);
 		observable.addListener(listener);
 	}
 	
 	@Override
 	public void clean() {
-		clearMap(simpleChangeListeners, new BiConsumer<ObservableValue<?>, ChangeListener>() {
-			@Override
-			public void accept(ObservableValue<?> observable, ChangeListener listener) {
-				observable.removeListener(listener);
-			}
-		});
-		clearMap(listChangeListeners, new BiConsumer<ObservableList<?>, ListChangeListener>() {
-			@Override
-			public void accept(ObservableList<?> observable, ListChangeListener listener) {
-				observable.removeListener(listener);
-			}
-		});
-		
-		clearMap(invalidationListeners, new BiConsumer<Observable, InvalidationListener>() {
-			@Override
-			public void accept(Observable observable, InvalidationListener listener) {
-				observable.removeListener(listener);
-			}
-		});
-		
+		clearMap(simpleChangeListeners, (observable, listener) -> observable.removeListener(listener));
+		clearMap(listChangeListeners, (observable, listener) -> observable.removeListener(listener));
+		clearMap(invalidationListeners, (observable, listener) -> observable.removeListener(listener));
 	}
 	
 	/**
@@ -135,7 +123,7 @@ public class ListenerManager implements ICleanable {
 	 * @param consumer
 	 *            a function that calls the specific remove method for the given types.
 	 */
-	private <T, U> void clearMap(Map<T, List<U>> map, BiConsumer<T, U> consumer) {
+	private <T, U> void clearMap(Map<T, Set<U>> map, BiConsumer<T, U> consumer) {
 		for (T observable : map.keySet()) {
 			for (U listener : map.get(observable)) {
 				consumer.accept(observable, listener);
@@ -143,20 +131,4 @@ public class ListenerManager implements ICleanable {
 		}
 		map.clear();
 	}
-	
-	/**
-	 * This is a function interface to implement the cleanup for different types of listeners and observables.
-	 * 
-	 * The naming of this interface is based on the function interfaces of java version 8. This is done to support an
-	 * easier migration in the future.
-	 * 
-	 * @author manuel.mauky
-	 * 
-	 * @param <T>
-	 * @param <U>
-	 */
-	private static interface BiConsumer<T, U> {
-		void accept(T t, U u);
-	}
-	
 }
