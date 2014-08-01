@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 
 import org.slf4j.Logger;
@@ -58,7 +59,7 @@ class FxmlViewLoader {
 			loader.load();
 			
 			final ViewType loadedController = loader.getController();
-			final Parent loadedRoot = loader.getRoot();
+			final Node loadedRoot = loader.getRoot();
 			
 			if (loadedController == null) {
 				throw new IOException("Could not load the controller for the View " + resource

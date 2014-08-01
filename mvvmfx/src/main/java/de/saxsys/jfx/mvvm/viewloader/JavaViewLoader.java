@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 
 import org.slf4j.Logger;
@@ -71,6 +72,11 @@ class JavaViewLoader {
 		
 		final ViewType view = injectionFacade.getInstanceOf(viewType);
 		
+		if(!(view instanceof Node)){
+			throw new IllegalArgumentException("The view class has to be a subclass of 'javafx.scene.Node'");
+		}
+		
+		
 		if (view instanceof Initializable) {
 			Initializable initializable = (Initializable) view;
 			initializable.initialize(null, resourceBundle);
@@ -80,8 +86,8 @@ class JavaViewLoader {
 		}
 
 		final ViewModelType viewModel = DependencyInjector.getInstance().getViewModel(view);
-
-		return new ViewTuple<>(view, (Parent) view, viewModel);
+		
+		return new ViewTuple<>(view, (Node) view, viewModel);
 	}
 	
 	/**

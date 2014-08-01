@@ -15,6 +15,7 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.viewloader;
 
+import javafx.scene.Node;
 import javafx.scene.Parent;
 
 import de.saxsys.jfx.mvvm.api.ViewModel;
@@ -27,7 +28,7 @@ import de.saxsys.jfx.mvvm.base.view.View;
 public class ViewTuple<ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> {
 	
 	private final ViewType codeBehind;
-	private final Parent view;
+	private final Node view;
 	private final ViewModelType viewModel;
 	
 	/**
@@ -36,7 +37,7 @@ public class ViewTuple<ViewType extends View<? extends ViewModelType>, ViewModel
 	 * @param view
 	 *            to set
 	 */
-	public ViewTuple(final ViewType codeBehind, final Parent view, final ViewModelType viewModel) {
+	public ViewTuple(final ViewType codeBehind, final Node view, final ViewModelType viewModel) {
 		this.codeBehind = codeBehind;
 		this.view = view;
 		this.viewModel = viewModel;
@@ -52,7 +53,7 @@ public class ViewTuple<ViewType extends View<? extends ViewModelType>, ViewModel
 	/**
 	 * @return the view
 	 */
-	public Parent getView() {
+	public Node getView() {
 		return view;
 	}
 
