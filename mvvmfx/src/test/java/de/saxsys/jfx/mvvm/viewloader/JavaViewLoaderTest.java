@@ -22,6 +22,9 @@ import java.io.StringReader;
 import java.net.URL;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
+
+import de.saxsys.jfx.mvvm.viewloader.example.TestJavaViewExtendsNode;
+import de.saxsys.jfx.mvvm.viewloader.example.TestJavaViewNoNode;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.VBox;
 
@@ -272,4 +275,35 @@ public class JavaViewLoaderTest {
 			throw new IllegalStateException("TEST");
 		}
 	}
+
+	/**
+	 * A JavaView that doesn't extend from {@link javafx.scene.Node} can't be used as view. In this case 
+	 * an Exception has to be thrown.
+	 */
+	@Test
+	public void testLoadViewThatDoesntExtendNodeShouldThrowException(){
+		try{
+			
+			ViewTuple<TestJavaViewNoNode, TestViewModel> viewTuple = javaViewLoader
+				.loadJavaViewTuple(TestJavaViewNoNode.class, null);
+			fail("Expected an expection because the view type doesn't extend Node");
+		}catch(Exception e){
+			assertThat(e).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("javafx.scene.Node");
+		}
+	}
+
+
+	/**
+	 * It has to be possible to load JavaViews that aren't extending from {@link javafx.scene.Parent} but
+	 * directly from {@link javafx.scene.Node}.
+	 */
+	@Test
+	public void testLoadViewThatExtendsNodeDirectly(){
+		ViewTuple<TestJavaViewExtendsNode, TestViewModel> viewTuple = javaViewLoader
+				.loadJavaViewTuple(TestJavaViewExtendsNode.class, null);
+		
+		assertThat(viewTuple).isNotNull();
+	}
+	
 }
+ 
