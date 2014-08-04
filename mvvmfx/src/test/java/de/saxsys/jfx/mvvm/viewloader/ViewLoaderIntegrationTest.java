@@ -136,10 +136,8 @@ public class ViewLoaderIntegrationTest {
 
 		TestFxmlViewWithMissingController codeBehind = new TestFxmlViewWithMissingController();
 
-		viewLoader.setCodeBehind(codeBehind);
-
 		ViewTuple<TestFxmlViewWithMissingController, TestViewModel> viewTuple = viewLoader
-				.loadViewTuple(TestFxmlViewWithMissingController.class);
+				.loadViewTuple(TestFxmlViewWithMissingController.class, null, codeBehind, null);
 
 		assertThat(viewTuple).isNotNull();
 
@@ -156,11 +154,8 @@ public class ViewLoaderIntegrationTest {
 		
 		try {
 			TestFxmlView codeBehind = new TestFxmlView(); // the fxml file for this class has a fx:controller defined.
-			
-			viewLoader.setCodeBehind(codeBehind);
-
 			ViewTuple<TestFxmlView, TestViewModel> viewTuple = viewLoader
-					.loadViewTuple(TestFxmlView.class);
+					.loadViewTuple(TestFxmlView.class, null, codeBehind, null);
 			
 			fail("Expected a LoadException to be thrown");
 		}catch(Exception e) {
@@ -183,10 +178,8 @@ public class ViewLoaderIntegrationTest {
 		
 		codeBehind.viewModel = existingViewModel;
 		
-		viewLoader.setCodeBehind(codeBehind);
-
 		ViewTuple<TestFxmlViewWithMissingController, TestViewModel> viewTuple = viewLoader
-				.loadViewTuple(TestFxmlViewWithMissingController.class);
+				.loadViewTuple(TestFxmlViewWithMissingController.class, null, codeBehind, null);
 
 		assertThat(viewTuple.getCodeBehind()).isNotNull();
 		assertThat(viewTuple.getCodeBehind().viewModel).isEqualTo(existingViewModel);

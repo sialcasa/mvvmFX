@@ -29,19 +29,16 @@ import de.saxsys.jfx.mvvm.api.ViewModel;
 import de.saxsys.jfx.mvvm.base.view.View;
 
 /**
- * Loader class for loading FXML and code behind from Fs. There are following options for loading the FXML:
- * <p/>
- * <ul>
- * <li>Providing the code behind class (controller) by calling {@link #loadViewTuple(Class)}</li>
- * <li>Providing a path to the FXML file by calling {@link #loadViewTuple(String)}</li>
- * </ul>
+ * This class can be used to load MvvmFX views. It provides overloaded loading methods that return {@link de.saxsys.jfx.mvvm.viewloader.ViewTuple}
+ * instances that contain the loaded view. 
+ * 
+ * Instead of using this class you can also use the {@link de.saxsys.jfx.mvvm.viewloader.FluentViewLoader}
+ * to load views. It provides a fluent api to specify your params instead of using overloaded methods of this class.
+ * The usage of the {@link de.saxsys.jfx.mvvm.viewloader.FluentViewLoader} is the recommended way of using MvvmFX.
  *
  * @author alexander.casall, manuel.mauky
  */
 public final class ViewLoader {
-	
-	private Object codeBehind;
-	private Object root;
 	
 	private static final Logger LOG = LoggerFactory.getLogger(ViewLoader.class);
 	
@@ -82,6 +79,60 @@ public final class ViewLoader {
 	 */
 	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadViewTuple(
 			Class<? extends ViewType> viewType, ResourceBundle resourceBundle) {
+		
+		return loadViewTuple(viewType, resourceBundle, null, null);
+		
+	}
+	
+	
+	/**
+	 * Load a ViewTuple for the given parameters.
+	 * <br/>
+	 * This method is useful if you need to define one of the additional not so common params like 'codeBehind' or
+	 * 'root'.
+	 * <br/>
+	 * With the "codeBehind" param you can use an existing codeBehind instance for this view. This can be useful when
+	 * you need to create the codeBehind class outside of the normal dependency injection mechanism or you like to reuse
+	 * an existing instance for a second view.
+	 * <br/>
+	 * With the "root" param you can use an existing JavaFX node as the root for the loaded View.
+	 * <br/>
+	 * The most common use-case for both "codeBehind" and "root" params is when you like to create a custom component
+	 * with MvvmFX with the <a href="http://docs.oracle.com/javafx/2/fxml_get_started/custom_control.htm">fx:root element</a>. In this case you will subclass from a JavaFX component and use the viewLoader in the constructor of
+	 * your custom component. See the following example:
+	 * 
+	 * <pre>
+	 * 
+	 *     public class MyComponent extends VBox implements FxmlView {@code<MyViewModel>} {
+	 *         
+	 *         public MyComponent(){
+	 *             ViewLoader viewLoader = new ViewLoader();
+	 *             viewLoader.loadViewTuple(this.getClass(), null, this, this);
+	 *         }
+	 *     }
+	 * 
+	 * </pre>
+	 * 
+	 * 
+	 * 
+	 * @param viewType
+	 *            the class type of the view to be loaded.
+	 * @param resourceBundle
+	 *            the resourceBundle that is loaded with the view. This param is optional and can be <code>null</code>.
+	 * @param codeBehind
+	 *            the codeBehind instance that will be used. This param is optional and can be <code>null</code>. When
+	 *            this param is <code>null</code> a new instance will be created / obtained by the dependency injection
+	 *            mechanism.
+	 * @param root
+	 *            the javafx node that is used as the root element. This param is optional and can be <code>null</code>.
+	 * @param <ViewType>
+	 *            the generic type of the View
+	 * @param <ViewModelType>
+	 *            the generic type of the ViewModel
+	 * @return a ViewTuple instance that contains the loaded view.
+	 */
+	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadViewTuple(
+			Class<? extends ViewType> viewType, ResourceBundle resourceBundle, ViewType codeBehind, Object root) {
 		Type type = TypeResolver.resolveGenericType(FxmlView.class, viewType);
 		
 		if (type != null) {
@@ -104,24 +155,25 @@ public final class ViewLoader {
 		throw new IllegalArgumentException(errorMessage);
 	}
 	
+	
 	/**
 	 * Load the view (Code behind + Node from FXML) by a given resource path.
 	 *
-	 * @param resource
+	 * @param fxmlPath
 	 *            path to the FXML which should be loaded
 	 * 
 	 *
 	 * @return the ViewTuple that contains the view and the viewModel.
 	 */
 	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadViewTuple(
-			final String resource) {
-		return loadViewTuple(resource, null);
+			final String fxmlPath) {
+		return loadViewTuple(fxmlPath, null);
 	}
 	
 	/**
 	 * Load the view (Code behind + Node from FXML) by a given resource path.
 	 *
-	 * @param resource
+	 * @param fxmlPath
 	 *            path to the FXML which should be loaded
 	 * @param resourceBundle
 	 *            which is passed to the viewloader
@@ -129,49 +181,7 @@ public final class ViewLoader {
 	 * @return the ViewTuple that contains the view and the viewModel.
 	 */
 	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadViewTuple(
-			final String resource, ResourceBundle resourceBundle) {
-		return fxmlViewLoader.loadFxmlViewTuple(resource, resourceBundle, codeBehind, root);
+			final String fxmlPath, ResourceBundle resourceBundle) {
+		return fxmlViewLoader.loadFxmlViewTuple(fxmlPath, resourceBundle, null, null);
 	}
-	
-	/**
-	 * Returns the codeBehind instance.
-	 *
-	 * @return codeBehind
-	 */
-	@SuppressWarnings("unchecked")
-	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewType getCodeBehind() {
-		// The codeBehind-field is of type Object but the only way to set this field is by the setter, which has a
-		// parameter of type `ViewType`.
-		// Therefore we know that the codeBehind can only be of the type `ViewType` and therefore this cast is safe.
-		return (ViewType) codeBehind;
-	}
-	
-	/**
-	 * @see #getCodeBehind()
-	 *
-	 * @param codeBehind
-	 *
-	 */
-	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> void setCodeBehind(
-			ViewType codeBehind) {
-		this.codeBehind = codeBehind;
-	}
-	
-	/**
-	 * Returns the root of the loaded view.
-	 *
-	 * @return root
-	 */
-	public Object getRoot() {
-		return root;
-	}
-	
-	/**
-	 * @see #getRoot()
-	 * @param root
-	 */
-	public void setRoot(Object root) {
-		this.root = root;
-	}
-	
 }
