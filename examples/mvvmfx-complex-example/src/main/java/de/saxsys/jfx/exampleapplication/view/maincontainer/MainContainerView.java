@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+
+import de.saxsys.jfx.mvvm.viewloader.FluentViewLoader;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -45,10 +47,6 @@ public class MainContainerView implements FxmlView<MainContainerViewModel>, Init
 	@FXML
 	// Inject the Code behind instance of the ListView
 	private ListView<Integer> personWelcomeListView;
-	
-	@Inject
-	// ViewLoder
-	private ViewLoader viewLoader;
 	
 	@Inject
 	// Notification Center
@@ -93,8 +91,7 @@ public class MainContainerView implements FxmlView<MainContainerViewModel>, Init
 			public ViewTuple<? extends View, ? extends ViewModel> map(Integer element) {
 				if (!viewMap.containsKey(element)) {
 					ViewTuple<PersonWelcomeView, PersonWelcomeViewModel> loadedViewTuple
-					= viewLoader
-							.loadViewTuple(PersonWelcomeView.class);
+					= FluentViewLoader.fxmlView(PersonWelcomeView.class).load();
 					
 					PersonWelcomeView codeBehind = loadedViewTuple.getCodeBehind();
 					
