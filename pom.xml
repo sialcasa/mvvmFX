@@ -215,6 +215,53 @@
 				</plugins>
 			</build>
 		</profile>
+
+		<profile>
+			<!--
+				This profile can be used to get per-test coverage information in sonarqube:
+				
+				First run:
+				
+					mvn org.jacoco:jacoco-maven-plugin:prepare-agent clean install -Pcoverage-per-test
+					
+				This instruments the code by jacoco. After that run:
+				
+					mvn sonar:sonar
+					
+				to start the sonar reporting.		
+			
+				See: https://github.com/SonarSource/sonar-examples/tree/master/projects/languages/java/code-coverage/ut/ut-maven-jacoco
+				
+			-->
+			<id>coverage-per-test</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<!-- Minimal supported version is 2.4 -->
+						<version>2.16</version>
+						<configuration>
+							<properties>
+								<property>
+									<name>listener</name>
+									<value>org.sonar.java.jacoco.JUnitListener</value>
+								</property>
+							</properties>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+
+			<dependencies>
+				<dependency>
+					<groupId>org.codehaus.sonar-plugins.java</groupId>
+					<artifactId>sonar-jacoco-listeners</artifactId>
+					<version>1.2</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
 	</profiles>
 
 </project>

@@ -66,7 +66,18 @@ public class MvvmfxCdiIntegrationTest {
 		assertThat(MyApplication.parameters).isNotNull();
 		assertThat(MyApplication.parameters.getUnnamed()).contains("test");
 	}
-	
-	
+
+
+	/**
+	 * When the application was not started correctly f.e. when the user directly instantiates an instance
+	 * of the class, he can't use the parameters of the application. In this case an IllegalStateException is expected.
+	 */
+	@Test (expected = IllegalStateException.class)
+	public void testCannotAccessParametersWhenApplicationWasNotStarted(){
+		
+		MyApplication myApplication = new MyApplication();
+		
+		myApplication.getParameters();
+	}
 	
 }
