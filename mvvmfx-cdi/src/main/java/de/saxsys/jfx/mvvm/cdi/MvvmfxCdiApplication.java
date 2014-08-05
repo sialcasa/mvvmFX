@@ -57,7 +57,7 @@ public abstract class MvvmfxCdiApplication {
 	 * {@link de.saxsys.jfx.mvvm.cdi.internal.WeldStartupHelper}. This way we can get the stage from javafx into our CDI
 	 * environment.
 	 */
-	private void listenToStartup(@Observes WeldStartupHelper.StartupEvent startupEvent) throws Exception {
+	void listenToStartup(@Observes WeldStartupHelper.StartupEvent startupEvent) throws Exception {
 		this.startupEvent = startupEvent;
 		this.start(startupEvent.getStage());
 	}
@@ -73,10 +73,11 @@ public abstract class MvvmfxCdiApplication {
 	 * Returns the application parameters. See {@link javafx.application.Application#getParameters()}.
 	 */
 	public Application.Parameters getParameters() {
-		if (startupEvent != null) {
-			return startupEvent.getParameters();
+		if(startupEvent == null){
+			throw new IllegalStateException("The application wasn't started correctly!");
 		}
-		return null;
+		
+		return startupEvent.getParameters();
 	}
 	
 }
