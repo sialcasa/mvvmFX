@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewFxRoot;
 import javafx.scene.layout.VBox;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlView;
@@ -22,6 +23,14 @@ import de.saxsys.jfx.mvvm.viewloader.example.TestViewModel;
  * loading Views is not part of this test as it is already tested in other tests for the ViewLoader itself.
  */
 public class FluentViewLoaderTest {
+	
+	
+	private ResourceBundle resourceBundle;
+	
+	@Before
+	public void setup() throws IOException {
+		resourceBundle = new PropertyResourceBundle(new StringReader(""));
+	}
 	
 	
 	/// FXML VIEW ///
@@ -37,8 +46,6 @@ public class FluentViewLoaderTest {
 	
 	@Test
 	public void testLoadFxmlViewWithResourceBundle() throws IOException{
-		final ResourceBundle resourceBundle = new PropertyResourceBundle(new StringReader(""));
-
 		ViewTuple<TestFxmlView, TestViewModel> viewTuple  = FluentViewLoader.fxmlView(TestFxmlView.class).resourceBundle(resourceBundle).load();
 		assertThat(viewTuple).isNotNull();
 	}
@@ -58,8 +65,6 @@ public class FluentViewLoaderTest {
 	@Test
 	public void testLoadFxmlViewWithAllParams() throws IOException{
 		TestFxmlViewFxRoot customControl = new TestFxmlViewFxRoot();
-		final ResourceBundle resourceBundle = new PropertyResourceBundle(new StringReader(""));
-
 		ViewTuple<TestFxmlViewFxRoot, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlViewFxRoot.class)
 				.codeBehind(customControl)
 				.resourceBundle(resourceBundle)
@@ -86,8 +91,6 @@ public class FluentViewLoaderTest {
 	
 	@Test
 	public void testLoadJavaViewWithResourceBundle() throws IOException {
-		final ResourceBundle resourceBundle = new PropertyResourceBundle(new StringReader(""));
-		
 		ViewTuple<TestJavaView, TestViewModel> viewTuple = FluentViewLoader.javaView(TestJavaView.class)
 				.resourceBundle(resourceBundle).load();
 		assertThat(viewTuple).isNotNull();
