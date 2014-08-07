@@ -71,6 +71,11 @@ class JavaViewLoader {
 		
 		final ViewType view = injectionFacade.getInstanceOf(viewType);
 		
+		if(!(view instanceof Parent)){
+			throw new IllegalArgumentException("Can not load java view! The view class has to extend from " 
+					+ Parent.class.getName() + " or one of it's subclasses");
+		}
+		
 		if (view instanceof Initializable) {
 			Initializable initializable = (Initializable) view;
 			initializable.initialize(null, resourceBundle);
