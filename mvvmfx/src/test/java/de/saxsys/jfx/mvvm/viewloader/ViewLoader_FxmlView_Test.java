@@ -25,6 +25,9 @@ import java.util.ResourceBundle;
 import de.saxsys.jfx.mvvm.testingutils.TestUtils;
 import de.saxsys.jfx.mvvm.viewloader.example.InvalidFxmlTestView;
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewMultipleViewModels;
+import de.saxsys.jfx.mvvm.viewloader.example.TestViewA;
+import de.saxsys.jfx.mvvm.viewloader.example.TestViewB;
+import de.saxsys.jfx.mvvm.viewloader.example.TestViewModelA;
 import javafx.fxml.LoadException;
 import javafx.scene.layout.VBox;
 
@@ -227,6 +230,30 @@ public class ViewLoader_FxmlView_Test {
 			assertThat(TestUtils.getRootCause(e)).isInstanceOf(RuntimeException.class).hasMessageContaining(
 					"<2> viewModel fields");
 		}
+	}
+
+
+	/**
+	 * When a mvvmFX view A is part of another mvvmFX view B (i.e. referenced in the fxml file of B) 
+	 * we have to verify that both A and B are correctly initialized and that the viewModels are injected.
+	 */
+	@Test
+	public void testSubViewIsCorrectlyInitialized(){
+
+		ViewTuple<TestViewA, TestViewModelA> viewTuple = FluentViewLoader.fxmlView(TestViewA.class).load();
+
+		TestViewA codeBehindA = viewTuple.getCodeBehind();
+		assertThat(codeBehindA).isNotNull();
+		assertThat(codeBehindA.initializeWasCalled).isTrue();
+		assertThat(codeBehindA.testViewB).isNotNull();
+		assertThat(codeBehindA.viewModel).isNotNull();
+		
+		TestViewB codeBehindB = codeBehindA.testViewBController;
+		
+		assertThat(codeBehindB).isNotNull();
+		assertThat(codeBehindB.initializeWasCalled).isTrue();
+		assertThat(codeBehindB.viewModel).isNotNull();
+
 	}
 
 }
