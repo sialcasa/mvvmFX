@@ -64,9 +64,10 @@ class JavaViewLoader {
 	 *
 	 * @return a fully loaded and initialized instance of the view.
 	 */
+	@SuppressWarnings("unchecked")
 	<ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadJavaViewTuple(
 			Class<? extends ViewType>
-			viewType, ResourceBundle resourceBundle) {
+			viewType, ResourceBundle resourceBundle, ViewModelType viewModel) {
 		DependencyInjector injectionFacade = DependencyInjector.getInstance();
 		
 		final ViewType view = injectionFacade.getInstanceOf(viewType);
@@ -76,8 +77,9 @@ class JavaViewLoader {
 					+ Parent.class.getName() + " or one of it's subclasses");
 		}
 
-		
-		ViewModelType viewModel = (ViewModelType)ReflectionUtils.createViewModel(view.getClass());
+		if(viewModel == null){
+			viewModel = (ViewModelType)ReflectionUtils.createViewModel(viewType);
+		}
 
 		ReflectionUtils.injectViewModel(view, viewModel);
 		

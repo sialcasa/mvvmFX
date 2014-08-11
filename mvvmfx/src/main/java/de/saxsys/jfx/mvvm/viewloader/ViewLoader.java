@@ -146,7 +146,7 @@ public final class ViewLoader {
 		if (type != null) {
 			LOG.debug("Loading view '{}' of type {}.", type, JavaView.class.getSimpleName());
 			
-			return javaViewLoader.loadJavaViewTuple(viewType, resourceBundle);
+			return javaViewLoader.loadJavaViewTuple(viewType, resourceBundle, null);
 		}
 		
 		final String errorMessage = String.format(

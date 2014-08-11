@@ -19,8 +19,7 @@ import java.util.stream.Collectors;
  * the view loading.
  */
 public class ReflectionUtils {
-
-
+	
 	/**
 	 * Returns the {@link java.lang.reflect.Field} of the viewModel for a given view type and viewModel type.
 	 * If there is no annotated field for the viewModel in the view the returned Optional will be empty.
@@ -94,21 +93,6 @@ public class ReflectionUtils {
 
 
 	/**
-	 * This method creates and injects a viewModel into the given view instance if there is a matching field for the
-	 * viewModel in the view. Otherwise nothing will happen.
-	 * 
-	 * @param view the view instance that will get the viewModel injected.
-	 */
-	static void injectViewModel(final View view) {
-		Object viewModel = createViewModel(view.getClass());
-
-		if(viewModel != null){
-			injectViewModel(view, viewModel);
-		}
-	}
-
-
-	/**
 	 * Injects the given viewModel instance into the given view. The injection will only happen when
 	 * the class of the given view has a viewModel field that fulfills all requirements for the viewModel injection 
 	 * (matching types, no viewModel already existing ...).
@@ -116,7 +100,7 @@ public class ReflectionUtils {
 	 * @param view
 	 * @param viewModel
 	 */
-	static void injectViewModel(final View view, Object viewModel){
+	static void injectViewModel(final View view, ViewModel viewModel){
 		if(viewModel == null){
 			return;
 		}
@@ -149,13 +133,18 @@ public class ReflectionUtils {
 	 * @param viewType the type of the view.
 	 * @return the viewModel instance or <code>null</code> if the viewModel type can't be found or the viewModel can't be created.
 	 */
-	static Object createViewModel(final Class<? extends View> viewType){
+	static ViewModel createViewModel(final Class<? extends View> viewType){
 		final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, viewType);
-
+	
+		// This means that the view type has no ViewModel type defined and only the interface type "ViewModel" can be found as type.
 		if(viewModelType == ViewModel.class){
 			return null;
 		}
 
-		return DependencyInjector.getInstance().getInstanceOf(viewModelType);
+		if(TypeResolver.Unknown.class == viewModelType){
+			return null;
+		}
+		
+		return (ViewModel)DependencyInjector.getInstance().getInstanceOf(viewModelType);
 	}
 }

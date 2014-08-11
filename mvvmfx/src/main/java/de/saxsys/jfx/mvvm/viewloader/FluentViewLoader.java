@@ -25,6 +25,8 @@ public class FluentViewLoader {
 		private Class<? extends ViewType> viewType;
 		private ResourceBundle resourceBundle;
 		
+		private ViewModelType viewModel;
+		
 		JavaViewStep(Class<? extends ViewType> viewType) {
 			this.viewType = viewType;
 		}
@@ -38,6 +40,20 @@ public class FluentViewLoader {
 			this.resourceBundle = resourceBundle;
 			return this;
 		}
+
+		/**
+		 * This param is used to define an existing viewModel instance to be used when loading the view.
+		 *
+		 * A typical use case is when you like to have two or more views that are sharing the same viewModel.
+		 *
+		 * @param viewModel the viewModel instance that is used to load the java view.
+		 * @return this instance of the builder step.
+		 */
+		public JavaViewStep<ViewType, ViewModelType> viewModel(ViewModelType viewModel){
+			this.viewModel = viewModel;
+			return this;
+		}
+		
 		
 		/**
 		 * The final step of the Fluent API. This method loads the view based on the given params.
@@ -47,7 +63,7 @@ public class FluentViewLoader {
 		public ViewTuple<ViewType, ViewModelType> load() {
 			JavaViewLoader javaViewLoader = new JavaViewLoader();
 			
-			return javaViewLoader.loadJavaViewTuple(viewType, resourceBundle);
+			return javaViewLoader.loadJavaViewTuple(viewType, resourceBundle, viewModel);
 		}
 	}
 	

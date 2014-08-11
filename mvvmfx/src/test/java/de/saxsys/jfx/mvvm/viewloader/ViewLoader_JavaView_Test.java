@@ -200,6 +200,23 @@ public class ViewLoader_JavaView_Test {
 	}
 	
 	
+	
+	@Test
+	public void testUseExistingViewModel(){
+		class TestView extends VBox implements JavaView<TestViewModel>{
+			@InjectViewModel
+			public TestViewModel viewModel;
+		}
+		
+		TestViewModel viewModel = new TestViewModel();
+
+		ViewTuple<TestView, TestViewModel> viewTuple = FluentViewLoader.javaView(TestView.class).viewModel(viewModel).load();
+		
+		assertThat(viewTuple.getCodeBehind().viewModel).isEqualTo(viewModel);
+		assertThat(viewTuple.getViewModel()).isEqualTo(viewModel);
+	}
+	
+	
 	/**
 	 * When the initialize method throws a checked exception, this exception is captured and wrapped in a runtime
 	 * exception while loading.
