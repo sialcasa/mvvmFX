@@ -125,18 +125,22 @@ public class ReflectionUtils {
 
 	}
 
+
 	/**
-	 * Creates a viewModel instance for the given View type. The type of the viewModel is resolved from
-	 * the generic type of the view. 
-	 * 
+	 * Creates a viewModel instance for a View type. The type of the view is determined by the given view instance. 
+	 *
 	 * For the creation of the viewModel the {@link de.saxsys.jfx.mvvm.viewloader.DependencyInjector} is used.
-	 * @param viewType the type of the view.
+
+	 * @param view the view instance that is used to find out the type of the ViewModel 
+	 * @param <ViewType> the generic view type
+	 * @param <ViewModelType> the generic viewModel type
 	 * @return the viewModel instance or <code>null</code> if the viewModel type can't be found or the viewModel can't be created.
 	 */
-	static ViewModel createViewModel(final Class<? extends View> viewType){
-		final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, viewType);
-	
-		// This means that the view type has no ViewModel type defined and only the interface type "ViewModel" can be found as type.
+	@SuppressWarnings("unchecked")
+	static <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewModelType createViewModel(
+			ViewType view){
+		final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
+
 		if(viewModelType == ViewModel.class){
 			return null;
 		}
@@ -145,6 +149,6 @@ public class ReflectionUtils {
 			return null;
 		}
 		
-		return (ViewModel)DependencyInjector.getInstance().getInstanceOf(viewModelType);
+		return (ViewModelType)DependencyInjector.getInstance().getInstanceOf(viewModelType);
 	}
 }

@@ -18,7 +18,6 @@ package de.saxsys.jfx.mvvm.viewloader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -53,7 +52,6 @@ class FxmlViewLoader {
 	/**
 	 * Load the viewTuple by the path of the fxml file.
 	 */
-	@SuppressWarnings("unchecked")
 	<ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
 			final String resource, ResourceBundle resourceBundle, final Object controller, final Object root, ViewModelType viewModel) {
 		try {
@@ -69,9 +67,15 @@ class FxmlViewLoader {
 				throw new IOException("Could not load the controller for the View " + resource
 						+ " maybe your missed the fx:controller in your fxml?");
 			}
+
+
+			ViewModelType loadedViewModel = ReflectionUtils.getViewModel(loadedController);
 			
-			
-			return new ViewTuple<>(loadedController, loadedRoot, ReflectionUtils.getViewModel(loadedController));
+			if(loadedViewModel == null){
+				loadedViewModel = ReflectionUtils.createViewModel(loadedController);
+			}
+
+			return new ViewTuple<>(loadedController, loadedRoot, loadedViewModel);
 			
 		} catch (final IOException ex) {
 			throw new RuntimeException(ex);
@@ -108,7 +112,7 @@ class FxmlViewLoader {
 			if (controller instanceof View) {
 				View view = (View) controller;
 				if(viewModel == null){
-					ReflectionUtils.injectViewModel(view, ReflectionUtils.createViewModel(view.getClass()));
+					ReflectionUtils.injectViewModel(view, ReflectionUtils.createViewModel(view));
 				}else{
 					ReflectionUtils.injectViewModel(view, viewModel);
 				}
@@ -131,7 +135,7 @@ class FxmlViewLoader {
 			if(controller instanceof View){
 				View view = (View) controller;
 
-				ReflectionUtils.injectViewModel(view, ReflectionUtils.createViewModel(view.getClass()));
+				ReflectionUtils.injectViewModel(view, ReflectionUtils.createViewModel(view));
 			}
 
 			return controller;
@@ -176,7 +180,7 @@ class FxmlViewLoader {
 					return view;
 				}
 				
-				ReflectionUtils.injectViewModel(view, ReflectionUtils.createViewModel(view.getClass()));
+				ReflectionUtils.injectViewModel(view, ReflectionUtils.createViewModel(view));
 			}
 
 			return controller;

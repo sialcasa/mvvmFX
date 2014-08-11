@@ -21,13 +21,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
-
-import de.saxsys.jfx.mvvm.testingutils.TestUtils;
-import de.saxsys.jfx.mvvm.viewloader.example.InvalidFxmlTestView;
-import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewMultipleViewModels;
-import de.saxsys.jfx.mvvm.viewloader.example.TestViewA;
-import de.saxsys.jfx.mvvm.viewloader.example.TestViewB;
-import de.saxsys.jfx.mvvm.viewloader.example.TestViewModelA;
 import javafx.fxml.LoadException;
 import javafx.scene.layout.VBox;
 
@@ -36,13 +29,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import de.saxsys.javafx.test.JfxRunner;
+import de.saxsys.jfx.mvvm.testingutils.TestUtils;
+import de.saxsys.jfx.mvvm.viewloader.example.InvalidFxmlTestView;
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlView;
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewFxRoot;
+import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewMultipleViewModels;
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithActionMethod;
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithMissingController;
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithWrongController;
-import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithoutViewModel;
+import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithoutViewModelField;
+import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithoutViewModelType;
+import de.saxsys.jfx.mvvm.viewloader.example.TestViewA;
+import de.saxsys.jfx.mvvm.viewloader.example.TestViewB;
 import de.saxsys.jfx.mvvm.viewloader.example.TestViewModel;
+import de.saxsys.jfx.mvvm.viewloader.example.TestViewModelA;
 
 /**
  * Test the loading of FxmlViews.
@@ -78,16 +78,16 @@ public class ViewLoader_FxmlView_Test {
 	}
 	
 	@Test
-	public void testViewWithoutViewModel() {
+	public void testViewWithoutViewModelType() {
 		
-		final ViewTuple viewTuple = FluentViewLoader.fxmlView(TestFxmlViewWithoutViewModel.class).load();
+		final ViewTuple viewTuple = FluentViewLoader.fxmlView(TestFxmlViewWithoutViewModelType.class).load();
 		
 		assertThat(viewTuple).isNotNull();
 		
 		assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
-		assertThat(viewTuple.getCodeBehind()).isNotNull().isInstanceOf(TestFxmlViewWithoutViewModel.class);
+		assertThat(viewTuple.getCodeBehind()).isNotNull().isInstanceOf(TestFxmlViewWithoutViewModelType.class);
 		
-		final TestFxmlViewWithoutViewModel codeBehind = (TestFxmlViewWithoutViewModel) viewTuple.getCodeBehind();
+		final TestFxmlViewWithoutViewModelType codeBehind = (TestFxmlViewWithoutViewModelType) viewTuple.getCodeBehind();
 		
 		assertThat(codeBehind.wasInitialized).isTrue();
 		assertThat(codeBehind.viewModel).isNull();
@@ -202,8 +202,7 @@ public class ViewLoader_FxmlView_Test {
 
 		codeBehind.viewModel = existingViewModel;
 
-		ViewTuple<TestFxmlViewWithMissingController, TestViewModel> viewTuple = FluentViewLoader.fxmlView(
-				TestFxmlViewWithMissingController.class).codeBehind(codeBehind).load();
+		ViewTuple<TestFxmlViewWithMissingController, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlViewWithMissingController.class).codeBehind(codeBehind).load();
 
 		assertThat(viewTuple.getCodeBehind()).isNotNull();
 		assertThat(viewTuple.getCodeBehind().viewModel).isEqualTo(existingViewModel);
@@ -289,4 +288,18 @@ public class ViewLoader_FxmlView_Test {
 		assertThat(viewTupleTwo.getCodeBehind()).isNotEqualTo(viewTupleOne.getCodeBehind());
 	}
 
+	/**
+	 * When the ViewModel isn't injected in the view it should still be available in the ViewTuple.
+	 */
+	@Test
+	public void testViewModelIsAvailableInViewTupleEvenIfItIsntInjectedInTheView(){
+
+		ViewTuple<TestFxmlViewWithoutViewModelField, TestViewModel> viewTuple = FluentViewLoader
+				.fxmlView(TestFxmlViewWithoutViewModelField.class).load();
+		
+		assertThat(viewTuple.getCodeBehind().wasInitialized).isTrue();
+		
+		assertThat(viewTuple.getViewModel()).isNotNull();
+
+	}
 }

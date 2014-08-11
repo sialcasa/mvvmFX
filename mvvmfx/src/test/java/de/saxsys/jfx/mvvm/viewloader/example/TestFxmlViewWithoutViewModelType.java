@@ -7,7 +7,7 @@ import javafx.fxml.Initializable;
 import de.saxsys.jfx.mvvm.api.FxmlView;
 import de.saxsys.jfx.mvvm.api.InjectViewModel;
 
-public class TestFxmlViewWithoutViewModel implements FxmlView, Initializable {
+public class TestFxmlViewWithoutViewModelType implements FxmlView, Initializable {
 	
 	// this injection point will be ignored as this view class doesn't define a ViewModelType
 	@InjectViewModel
