@@ -138,7 +138,7 @@ public final class ViewLoader {
 		if (type != null) {
 			LOG.debug("Loading view '{}' of type {}.", type, FxmlView.class.getSimpleName());
 			
-			return fxmlViewLoader.loadFxmlViewTuple(viewType, resourceBundle, codeBehind, root);
+			return fxmlViewLoader.loadFxmlViewTuple(viewType, resourceBundle, codeBehind, root, null);
 		}
 		
 		type = TypeResolver.resolveGenericType(JavaView.class, viewType);
@@ -146,7 +146,7 @@ public final class ViewLoader {
 		if (type != null) {
 			LOG.debug("Loading view '{}' of type {}.", type, JavaView.class.getSimpleName());
 			
-			return javaViewLoader.loadJavaViewTuple(viewType, resourceBundle);
+			return javaViewLoader.loadJavaViewTuple(viewType, resourceBundle, null);
 		}
 		
 		final String errorMessage = String.format(
@@ -182,6 +182,6 @@ public final class ViewLoader {
 	 */
 	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadViewTuple(
 			final String fxmlPath, ResourceBundle resourceBundle) {
-		return fxmlViewLoader.loadFxmlViewTuple(fxmlPath, resourceBundle, null, null);
+		return fxmlViewLoader.loadFxmlViewTuple(fxmlPath, resourceBundle, null, null, null);
 	}
 }

@@ -25,6 +25,9 @@ import java.util.ResourceBundle;
 import de.saxsys.jfx.mvvm.testingutils.TestUtils;
 import de.saxsys.jfx.mvvm.viewloader.example.InvalidFxmlTestView;
 import de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewMultipleViewModels;
+import de.saxsys.jfx.mvvm.viewloader.example.TestViewA;
+import de.saxsys.jfx.mvvm.viewloader.example.TestViewB;
+import de.saxsys.jfx.mvvm.viewloader.example.TestViewModelA;
 import javafx.fxml.LoadException;
 import javafx.scene.layout.VBox;
 
@@ -199,7 +202,8 @@ public class ViewLoader_FxmlView_Test {
 
 		codeBehind.viewModel = existingViewModel;
 
-		ViewTuple<TestFxmlViewWithMissingController, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlViewWithMissingController.class).codeBehind(codeBehind).load();
+		ViewTuple<TestFxmlViewWithMissingController, TestViewModel> viewTuple = FluentViewLoader.fxmlView(
+				TestFxmlViewWithMissingController.class).codeBehind(codeBehind).load();
 
 		assertThat(viewTuple.getCodeBehind()).isNotNull();
 		assertThat(viewTuple.getCodeBehind().viewModel).isEqualTo(existingViewModel);
@@ -227,6 +231,62 @@ public class ViewLoader_FxmlView_Test {
 			assertThat(TestUtils.getRootCause(e)).isInstanceOf(RuntimeException.class).hasMessageContaining(
 					"<2> viewModel fields");
 		}
+	}
+
+
+	/**
+	 * When a mvvmFX view A is part of another mvvmFX view B (i.e. referenced in the fxml file of B) 
+	 * we have to verify that both A and B are correctly initialized and that the viewModels are injected.
+	 */
+	@Test
+	public void testSubViewIsCorrectlyInitialized(){
+
+		ViewTuple<TestViewA, TestViewModelA> viewTuple = FluentViewLoader.fxmlView(TestViewA.class).load();
+
+		TestViewA codeBehindA = viewTuple.getCodeBehind();
+		assertThat(codeBehindA).isNotNull();
+		assertThat(codeBehindA.initializeWasCalled).isTrue();
+		assertThat(codeBehindA.testViewB).isNotNull();
+		assertThat(codeBehindA.viewModel).isNotNull();
+		
+		TestViewB codeBehindB = codeBehindA.testViewBController;
+		
+		assertThat(codeBehindB).isNotNull();
+		assertThat(codeBehindB.initializeWasCalled).isTrue();
+		assertThat(codeBehindB.viewModel).isNotNull();
+
+	}
+
+
+	/**
+	 * It is possible to (re-)use an existing ViewModel when loading a view. A possible use case is when 
+	 * you like to have 2 views that share the same viewModel instance.
+	 */
+	@Test
+	public void testUseExistingViewModel(){
+		
+		TestViewModel viewModel = new TestViewModel();
+
+		ViewTuple<TestFxmlView, TestViewModel> viewTupleOne = FluentViewLoader.fxmlView(TestFxmlView.class).viewModel
+				(viewModel)
+				.load();
+		
+		assertThat(viewTupleOne).isNotNull();
+		
+		assertThat(viewTupleOne.getCodeBehind().getViewModel()).isEqualTo(viewModel);
+		assertThat(viewTupleOne.getViewModel()).isEqualTo(viewModel);
+
+
+		ViewTuple<TestFxmlView, TestViewModel> viewTupleTwo = FluentViewLoader.fxmlView(TestFxmlView.class).viewModel
+				(viewModel)
+				.load();
+		
+		assertThat(viewTupleTwo).isNotNull();
+		
+		assertThat(viewTupleTwo.getViewModel()).isEqualTo(viewModel);
+		assertThat(viewTupleTwo.getCodeBehind().getViewModel()).isEqualTo(viewModel);
+		
+		assertThat(viewTupleTwo.getCodeBehind()).isNotEqualTo(viewTupleOne.getCodeBehind());
 	}
 
 }
