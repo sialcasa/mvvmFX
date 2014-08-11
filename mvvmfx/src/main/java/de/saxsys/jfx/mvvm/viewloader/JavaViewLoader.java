@@ -75,6 +75,11 @@ class JavaViewLoader {
 			throw new IllegalArgumentException("Can not load java view! The view class has to extend from " 
 					+ Parent.class.getName() + " or one of it's subclasses");
 		}
+
+		
+		ViewModelType viewModel = (ViewModelType)ReflectionUtils.createViewModel(view.getClass());
+
+		ReflectionUtils.injectViewModel(view, viewModel);
 		
 		if (view instanceof Initializable) {
 			Initializable initializable = (Initializable) view;
@@ -83,8 +88,6 @@ class JavaViewLoader {
 			injectResourceBundle(view, resourceBundle);
 			callInitialize(view);
 		}
-
-		final ViewModelType viewModel = DependencyInjector.getInstance().getViewModel(view);
 
 		return new ViewTuple<>(view, (Parent) view, viewModel);
 	}

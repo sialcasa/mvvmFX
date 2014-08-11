@@ -63,7 +63,8 @@ public class FluentViewLoader {
 		private ResourceBundle resourceBundle;
 		private Object root;
 		private ViewType codeBehind;
-		
+		private ViewModelType viewModel;
+
 		FxmlViewStep(Class<? extends ViewType> viewType) {
 			this.viewType = viewType;
 		}
@@ -106,6 +107,19 @@ public class FluentViewLoader {
 			this.codeBehind = codeBehind;
 			return this;
 		}
+
+		/**
+		 * This param is used to define an existing viewModel instance to be used when loading the view.
+		 * 
+		 * A typical use case is when you like to have two or more views that are sharing the same viewModel.
+		 * 
+		 * @param viewModel the viewModel instance that is used to load the fxml file.
+		 * @return this instance of the builder step.
+		 */
+		public FxmlViewStep<ViewType, ViewModelType> viewModel(ViewModelType viewModel){
+			this.viewModel = viewModel;
+			return this;
+		}
 		
 		/**
 		 * The final step of the Fluent API. This method loads the view based on the given params.
@@ -115,7 +129,7 @@ public class FluentViewLoader {
 		public ViewTuple<ViewType, ViewModelType> load() {
 			FxmlViewLoader fxmlViewLoader = new FxmlViewLoader();
 			
-			return fxmlViewLoader.loadFxmlViewTuple(viewType, resourceBundle, codeBehind, root);
+			return fxmlViewLoader.loadFxmlViewTuple(viewType, resourceBundle, codeBehind, root, viewModel);
 		}
 	}
 	

@@ -15,25 +15,7 @@
  ******************************************************************************/
 package de.saxsys.jfx.mvvm.viewloader;
 
-import java.lang.reflect.Field;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
-
-import de.saxsys.jfx.mvvm.api.ViewModel;
 import javafx.util.Callback;
-
-import net.jodah.typetools.TypeResolver;
-import de.saxsys.jfx.mvvm.api.InjectViewModel;
-import de.saxsys.jfx.mvvm.base.view.View;
 
 /**
  * This class handles the dependency injection for the mvvmFX framework.
@@ -82,110 +64,8 @@ public class DependencyInjector {
 	 * @param <T>
 	 * @return
 	 */
-	<T> T getInstanceOf(Class<? extends T> type) {
-		T instance = getUninitializedInstanceOf(type);
-		
-		if (instance instanceof View) {
-			injectViewModel((View) instance);
-		}
-		
-		return instance;
-	}
-
-	
-	void injectViewModel(final View view) {
-		final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
-		
-		final Optional<Field> fieldOptional = getViewModelField(view.getClass(), viewModelType);
-		
-		if(fieldOptional.isPresent()){
-			Field field = fieldOptional.get();
-			
-			accessField(field, () -> {
-				Object existingViewModel = field.get(view);
-
-				if (existingViewModel == null) {
-					Object viewModel = DependencyInjector.getInstance().getInstanceOf(viewModelType);
-					field.setAccessible(true);
-					field.set(view, viewModel);
-				}
-
-				return null;
-			}, "Can't inject ViewModel of type <" + viewModelType
-					+ "> into the view <" + view + ">");
-		}
-	}
-
-
-
-	/**
-	 * This method is used to get the ViewModel instance of a given view/codeBehind.
-	 *
-	 * @param view the view instance where the viewModel will be looked for.
-	 * @param <ViewType> the generic type of the View
-	 * @param <ViewModelType> the generic type of the ViewModel
-	 * @return the ViewModel instance or null if no viewModel could be found.
-	 */
 	@SuppressWarnings("unchecked")
-	<ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewModelType getViewModel(ViewType view){
-
-		final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
-		Optional<Field> fieldOptional = getViewModelField(view.getClass(), viewModelType);
-		
-		if(fieldOptional.isPresent()){
-			Field field = fieldOptional.get();
-			
-			return accessField(field, ()-> (ViewModelType)field.get(view), "Can't get the viewModel of type <" + viewModelType + ">");
-		}else{
-			return null;
-		}
-	}
-
-	/**
-	 * Helper method to execute a callback on a given field. This method encapsulates the error handling logic and the 
-	 * handling of accessibility of the field.
-	 */
-	private <T> T accessField(final Field field, final Callable<T> callable, String errorMessage){
-		return AccessController.doPrivileged((PrivilegedAction<T>) ()->{
-			boolean wasAccessible = field.isAccessible();
-			
-			try{
-				field.setAccessible(true);
-				if(callable != null){
-					return callable.call();
-				}
-			}catch(Exception exception){
-				throw new IllegalStateException(errorMessage, exception);
-			}finally{
-				field.setAccessible(wasAccessible);
-			}
-			return null;
-		});
-	}
-	
-	private Optional<Field> getViewModelField(Class<?> viewType, Class<?> viewModelType) {
-		
-		if(viewModelType == TypeResolver.Unknown.class){
-			return Optional.empty();
-		}
-
-		List<Field> viewModelFields = Arrays.stream(viewType.getDeclaredFields())
-				.filter(field -> field.isAnnotationPresent(InjectViewModel.class))
-				.filter(field -> field.getType().isAssignableFrom(viewModelType)).collect(Collectors.toList());
-		
-		if(viewModelFields.isEmpty()){
-			return Optional.empty();
-		}
-		
-		if(viewModelFields.size() > 1){
-			throw new RuntimeException("The View <" + viewType + "> may only define one viewModel but there were <" + viewModelFields.size() + "> viewModel fields!");
-		}
-
-		return Optional.of(viewModelFields.get(0));
-	}
-	
-	
-	private <T> T getUninitializedInstanceOf(Class<? extends T> type) {
+	<T> T getInstanceOf(Class<? extends T> type) {
 		if (isCustomInjectorDefined()) {
 			return (T) customInjector.call(type);
 		} else {
