@@ -198,7 +198,23 @@ public class ViewLoader_JavaView_Test {
 			assertThat(e).isInstanceOf(RuntimeException.class).hasMessageContaining("<2> viewModel fields");
 		}
 	}
-	
+
+
+
+	/**
+	 * When the ViewModel isn't injected in the view it should still be available in the ViewTuple.
+	 */
+	@Test
+	public void testViewModelIsAvailableInViewTupleEvenIfItIsntInjectedInTheView(){
+		
+		class TestView extends VBox implements JavaView<TestViewModel>{
+		}
+
+		ViewTuple<TestView, TestViewModel> viewTuple = FluentViewLoader
+				.javaView(TestView.class).load();
+
+		assertThat(viewTuple.getViewModel()).isNotNull();
+	}
 	
 	
 	@Test

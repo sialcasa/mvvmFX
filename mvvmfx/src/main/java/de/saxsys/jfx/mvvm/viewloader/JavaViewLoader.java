@@ -64,7 +64,6 @@ class JavaViewLoader {
 	 *
 	 * @return a fully loaded and initialized instance of the view.
 	 */
-	@SuppressWarnings("unchecked")
 	<ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadJavaViewTuple(
 			Class<? extends ViewType>
 			viewType, ResourceBundle resourceBundle, ViewModelType viewModel) {
@@ -78,7 +77,7 @@ class JavaViewLoader {
 		}
 
 		if(viewModel == null){
-			viewModel = (ViewModelType)ReflectionUtils.createViewModel(viewType);
+			viewModel = ReflectionUtils.createViewModel(view);
 		}
 
 		ReflectionUtils.injectViewModel(view, viewModel);

@@ -2,6 +2,6 @@
 
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns:fx="http://javafx.com/fxml"
-	  fx:controller="de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithoutViewModel">
+	  fx:controller="de.saxsys.jfx.mvvm.viewloader.example.TestFxmlViewWithoutViewModelField">
 
 </VBox>

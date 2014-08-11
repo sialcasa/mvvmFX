@@ -16,7 +16,7 @@ public class ReflectionUtilsTest {
 		class TestView implements View<TestViewModel> {
 		}
 
-		ViewModel viewModel = ReflectionUtils.createViewModel(TestView.class);
+		ViewModel viewModel = ReflectionUtils.createViewModel(new TestView());
 		
 		assertThat(viewModel).isNotNull().isInstanceOf(TestViewModel.class);
 	}
@@ -26,7 +26,7 @@ public class ReflectionUtilsTest {
 		class TestView implements View{
 		}
 
-		ViewModel viewModel = ReflectionUtils.createViewModel(TestView.class);
+		ViewModel viewModel = ReflectionUtils.createViewModel(new TestView());
 		
 		assertThat(viewModel).isNull();
 	}
@@ -36,7 +36,7 @@ public class ReflectionUtilsTest {
 		class TestView implements View<ViewModel>{
 		}
 		
-		ViewModel viewModel = ReflectionUtils.createViewModel(TestView.class);
+		ViewModel viewModel = ReflectionUtils.createViewModel(new TestView());
 		
 		assertThat(viewModel).isNull();
 	}
