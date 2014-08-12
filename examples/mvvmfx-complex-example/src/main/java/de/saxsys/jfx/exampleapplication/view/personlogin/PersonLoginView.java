@@ -10,8 +10,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 
 import de.saxsys.jfx.exampleapplication.viewmodel.personlogin.PersonLoginViewModel;
-import de.saxsys.jfx.mvvm.api.FxmlView;
-import de.saxsys.jfx.mvvm.api.InjectViewModel;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 
 /**
  * Code behind the fxml for visualization of the {@link PersonLoginView}. The view binds to the properties of the

@@ -8,10 +8,10 @@ import javax.inject.Inject;
 
 import de.saxsys.jfx.exampleapplication.model.Person;
 import de.saxsys.jfx.exampleapplication.model.Repository;
-import de.saxsys.jfx.mvvm.api.ViewModel;
-import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.ModelToStringFunction;
-import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.SelectableItemList;
-import de.saxsys.jfx.mvvm.base.viewmodel.util.itemlist.SelectableStringList;
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.utils.itemlist.ModelToStringFunction;
+import de.saxsys.mvvmfx.utils.itemlist.SelectableItemList;
+import de.saxsys.mvvmfx.utils.itemlist.SelectableStringList;
 
 /**
  * ViewModel for a login view for the persons. It provides the data which should be visualized in the frontend e.g. the

@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import de.saxsys.jfx.exampleapplication.model.Person;
 import de.saxsys.jfx.exampleapplication.model.Repository;
-import de.saxsys.jfx.mvvm.api.ViewModel;
+import de.saxsys.mvvmfx.ViewModel;
 
 /**
  * ViewModel for a welcome view for a person. It provides the data which should be visualized in the frontend. The tests

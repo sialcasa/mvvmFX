@@ -1,13 +1,12 @@
 package de.saxsys.jfx.mvvmfx.helloworld;
 
-import de.saxsys.jfx.mvvm.viewloader.FluentViewLoader;
+import de.saxsys.mvvmfx.FluentViewLoader;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
-import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
+import de.saxsys.mvvmfx.ViewTuple;
 
 
 public class Starter extends Application {

@@ -3,7 +3,7 @@ package de.saxsys.jfx.mvvmfx.helloworld;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import de.saxsys.jfx.mvvm.api.ViewModel;
+import de.saxsys.mvvmfx.ViewModel;
 
 public class HelloWorldViewModel implements ViewModel {
 	

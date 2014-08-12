@@ -4,14 +4,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import javax.inject.Inject;
-
 import de.saxsys.jfx.exampleapplication.view.maincontainer.MainContainerView;
 import de.saxsys.jfx.exampleapplication.viewmodel.maincontainer.MainContainerViewModel;
-import de.saxsys.jfx.mvvm.cdi.MvvmfxCdiApplication;
-import de.saxsys.jfx.mvvm.viewloader.FluentViewLoader;
-import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
-import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
+import de.saxsys.mvvmfx.cdi.MvvmfxCdiApplication;
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewTuple;
 
 /**
  * The application entry point.
