@@ -27,6 +27,7 @@ import de.saxsys.mvvmfx.ViewTuple;
  * @param <T>
  *            from
  */
+@FunctionalInterface
 public interface ViewTupleMapper<T> {
 	
 	/**

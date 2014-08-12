@@ -15,6 +15,8 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.itemlist;
 
+import java.util.function.Function;
+
 @FunctionalInterface
 public interface ModelToStringFunction<ModelType> extends Function<ModelType, String> {
 	

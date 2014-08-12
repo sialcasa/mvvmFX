@@ -17,6 +17,7 @@ package de.saxsys.mvvmfx.utils.itemlist;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyListProperty;
