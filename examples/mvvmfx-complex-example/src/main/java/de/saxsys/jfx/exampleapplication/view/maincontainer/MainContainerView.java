@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import de.saxsys.jfx.mvvm.viewloader.FluentViewLoader;
+import de.saxsys.mvvmfx.FluentViewLoader;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -19,15 +19,14 @@ import de.saxsys.jfx.exampleapplication.view.personlogin.PersonLoginView;
 import de.saxsys.jfx.exampleapplication.view.personwelcome.PersonWelcomeView;
 import de.saxsys.jfx.exampleapplication.viewmodel.maincontainer.MainContainerViewModel;
 import de.saxsys.jfx.exampleapplication.viewmodel.personwelcome.PersonWelcomeViewModel;
-import de.saxsys.jfx.mvvm.api.FxmlView;
-import de.saxsys.jfx.mvvm.api.InjectViewModel;
-import de.saxsys.jfx.mvvm.api.ViewModel;
-import de.saxsys.jfx.mvvm.base.view.View;
-import de.saxsys.jfx.mvvm.base.view.util.viewlist.ViewListCellFactory;
-import de.saxsys.jfx.mvvm.notifications.NotificationCenter;
-import de.saxsys.jfx.mvvm.notifications.NotificationObserver;
-import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
-import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.internal.viewloader.View;
+import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
+import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
+import de.saxsys.mvvmfx.utils.notifications.NotificationObserver;
+import de.saxsys.mvvmfx.ViewTuple;
 
 /**
  * Main View which creates the necessary subviews, and manages them. Does not need a concrete Viewmodel, so it is typed

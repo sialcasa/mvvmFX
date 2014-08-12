@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import de.saxsys.jfx.mvvm.api.ViewModel;
+import de.saxsys.mvvmfx.ViewModel;
 
 public class LabeledTextFieldViewModel implements ViewModel {
 	private StringProperty labelText = new SimpleStringProperty("default");

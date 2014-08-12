@@ -3,7 +3,7 @@ package de.saxsys.jfx.exampleapplication.viewmodel.maincontainer;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import de.saxsys.jfx.mvvm.api.ViewModel;
+import de.saxsys.mvvmfx.ViewModel;
 
 public class MainContainerViewModel implements ViewModel {
 	

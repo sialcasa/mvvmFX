@@ -1,15 +1,14 @@
 package de.saxsys.jfx.mvvmfx.fx_root_example;
 
-import de.saxsys.jfx.mvvm.viewloader.FluentViewLoader;
+import de.saxsys.mvvmfx.FluentViewLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
-import de.saxsys.jfx.mvvm.api.FxmlView;
-import de.saxsys.jfx.mvvm.api.InjectViewModel;
-import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 
 public class LabeledTextField extends HBox implements FxmlView<LabeledTextFieldViewModel> {
 	

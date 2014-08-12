@@ -7,8 +7,8 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-import de.saxsys.jfx.mvvm.api.InjectViewModel;
-import de.saxsys.jfx.mvvm.api.JavaView;
+import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.JavaView;
 
 public class HelloWorldView extends VBox implements JavaView<HelloWorldViewModel>, Initializable {
 	

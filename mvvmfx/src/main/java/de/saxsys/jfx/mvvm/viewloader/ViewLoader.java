@@ -18,26 +18,32 @@ package de.saxsys.jfx.mvvm.viewloader;
 import java.lang.reflect.Type;
 import java.util.ResourceBundle;
 
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.JavaView;
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.internal.viewloader.FxmlViewLoader;
+import de.saxsys.mvvmfx.internal.viewloader.JavaViewLoader;
+import de.saxsys.mvvmfx.internal.viewloader.View;
 import net.jodah.typetools.TypeResolver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.saxsys.jfx.mvvm.api.FxmlView;
-import de.saxsys.jfx.mvvm.api.JavaView;
-import de.saxsys.jfx.mvvm.api.ViewModel;
-import de.saxsys.jfx.mvvm.base.view.View;
-
 /**
- * This class can be used to load MvvmFX views. It provides overloaded loading methods that return {@link de.saxsys.jfx.mvvm.viewloader.ViewTuple}
+ * This class can be used to load MvvmFX views. It provides overloaded loading methods that return {@link de.saxsys.mvvmfx.ViewTuple}
  * instances that contain the loaded view. 
  * 
- * Instead of using this class you can also use the {@link de.saxsys.jfx.mvvm.viewloader.FluentViewLoader}
+ * Instead of using this class you can also use the {@link de.saxsys.mvvmfx.FluentViewLoader}
  * to load views. It provides a fluent api to specify your params instead of using overloaded methods of this class.
- * The usage of the {@link de.saxsys.jfx.mvvm.viewloader.FluentViewLoader} is the recommended way of using MvvmFX.
+ * The usage of the {@link de.saxsys.mvvmfx.FluentViewLoader} is the recommended way of using MvvmFX.
  *
  * @author alexander.casall, manuel.mauky
+ * 
+ * @deprecated This class will be removed with version 0.4.0 of mvvmfx. Please use the {@link de.saxsys.mvvmfx.FluentViewLoader}
+ * instead, which provides a fluent API to load your views. 
  */
+@Deprecated
 public final class ViewLoader {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(ViewLoader.class);
@@ -48,7 +54,7 @@ public final class ViewLoader {
 	
 	/**
 	 * Load a ViewTuple for the given View type. The view type has to implement either the
-	 * {@link de.saxsys.jfx.mvvm.api.FxmlView} or {@link de.saxsys.jfx.mvvm.api.JavaView} interface.
+	 * {@link de.saxsys.mvvmfx.FxmlView} or {@link de.saxsys.mvvmfx.JavaView} interface.
 	 *
 	 * @param viewType
 	 *            the class type of the view to be loaded.
@@ -64,7 +70,7 @@ public final class ViewLoader {
 	
 	/**
 	 * Load a ViewTuple for the given View type. The view type has to implement either the
-	 * {@link de.saxsys.jfx.mvvm.api.FxmlView} or {@link de.saxsys.jfx.mvvm.api.JavaView} interface.
+	 * {@link de.saxsys.mvvmfx.FxmlView} or {@link de.saxsys.mvvmfx.JavaView} interface.
 	 * <p/>
 	 * This method can be used when you need to load a {@link java.util.ResourceBundle} with the view.
 	 *

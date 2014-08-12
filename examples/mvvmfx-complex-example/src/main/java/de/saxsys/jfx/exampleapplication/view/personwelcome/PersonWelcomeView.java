@@ -11,9 +11,9 @@ import javafx.scene.control.Label;
 import javax.inject.Inject;
 
 import de.saxsys.jfx.exampleapplication.viewmodel.personwelcome.PersonWelcomeViewModel;
-import de.saxsys.jfx.mvvm.api.FxmlView;
-import de.saxsys.jfx.mvvm.api.InjectViewModel;
-import de.saxsys.jfx.mvvm.notifications.NotificationCenter;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 
 /**
  * Code behind the fxml for visualization of the PersonWelcomeViewModel. The view binds to the property of the

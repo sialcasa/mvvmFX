@@ -5,15 +5,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import com.google.inject.Inject;
 import com.google.inject.Module;
 
 import de.saxsys.jfx.exampleapplication.view.maincontainer.MainContainerView;
 import de.saxsys.jfx.exampleapplication.viewmodel.maincontainer.MainContainerViewModel;
-import de.saxsys.jfx.mvvm.guice.MvvmfxGuiceApplication;
-import de.saxsys.jfx.mvvm.viewloader.FluentViewLoader;
-import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
-import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
+import de.saxsys.mvvmfx.guice.MvvmfxGuiceApplication;
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewTuple;
 
 /**
  * Entry point of the application.
