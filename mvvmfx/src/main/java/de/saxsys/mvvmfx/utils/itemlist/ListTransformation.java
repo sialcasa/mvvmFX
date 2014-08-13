@@ -191,12 +191,28 @@ public class ListTransformation<SourceType, TargetType> {
 	public void setModelList(ObservableList<SourceType> modelList) {
 		this.modelList.set(modelList);
 	}
+
+
+	/**
+	 * @return the model list that should be synchronized with the target list.
+	 */
+	public ObservableList<SourceType> getModelList(){
+		return modelList.get();
+	}
 	
 	/**
 	 * @return {@link TargetType} representation of {@link #modelListProperty()}.
 	 */
 	public ReadOnlyListProperty<TargetType> targetListProperty() {
 		return viewModelList.getReadOnlyProperty();
+	}
+
+
+	/**
+	 * @return {@link TargetType} representation of {@link #modelListProperty()}.
+	 */
+	public ObservableList<TargetType> getTargetList(){
+		return viewModelList.getReadOnlyProperty().get();
 	}
 	
 }
