@@ -19,6 +19,7 @@
 		<module>mvvmfx-fx-root-example</module>
 		<module>mvvmfx-helloworld</module>
 		<module>mvvmfx-helloworld-without-fxml</module>
+		<module>mvvmfx-synchronizefx</module>
 
 	</modules>
 
