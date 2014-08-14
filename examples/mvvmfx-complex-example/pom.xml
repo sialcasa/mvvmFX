@@ -1,15 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.saxsys</groupId>
 	<artifactId>mvvmfx-complex</artifactId>
-	<version>${mvvmfx.version}</version>
 	<name>Complex Example</name>
+
+	<parent>
+		<groupId>de.saxsys</groupId>
+		<artifactId>mvvmFX-examples</artifactId>
+		<version>0.3.0</version>
+	</parent>
 	<properties>
-		<mvvmfx.version>0.2.0</mvvmfx.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
 	<repositories>
@@ -24,11 +27,11 @@
 	</repositories>
 
 	<dependencies>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-        </dependency>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -43,7 +46,7 @@
 		<dependency>
 			<groupId>de.saxsys</groupId>
 			<artifactId>mvvmFX</artifactId>
-			<version>${mvvmfx.version}</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -69,7 +72,9 @@
 					</descriptorRefs>
 				</configuration>
 			</plugin>
+
 		</plugins>
+
 	</build>
 
 </project>

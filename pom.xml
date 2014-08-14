@@ -1,0 +1,267 @@
+<!--
+  Copyright 2013 Alexander Casall, Manuel Mauky
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+    http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
+	<groupId>de.saxsys</groupId>
+	<artifactId>mvvmFX-parent</artifactId>
+	<packaging>pom</packaging>
+	<version>0.3.0</version>
+	<name>mvvmFX parent</name>
+	<description>Application Framework for MVVM with JavaFX.</description>
+	<url>http://www.saxsys.de</url>
+	<developers>
+		<developer>
+			<email>alexander.casall@saxsys.de</email>
+			<name>Alexander Casall</name>
+			<url>http://www.alexander-casall.de</url>
+			<id>sialcasa</id>
+		</developer>
+		<developer>
+			<email>manuel.mauky@saxsys.de</email>
+			<name>Manuel Mauky</name>
+		</developer>
+	</developers>
+
+	<organization>
+		<name>Saxonia Systems AG</name>
+		<url>www.saxsys.de</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<issueManagement>
+		<url>https://github.com/sialcasa/jfx-mvvm/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+
+
+	<scm>
+		<url>https://github.com/sialcasa/mvvmFX</url>
+		<connection>scm:git:git://github.com/sialcasa/mvvmFX.git</connection>
+		<developerConnection>scm:git:git@github.com:sialcasa/mvvmFX.git</developerConnection>
+	</scm>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<sonar.java.source>1.8</sonar.java.source>
+	</properties>
+
+	<modules>
+		<module>mvvmfx</module>
+		<module>mvvmfx-cdi</module>
+		<module>mvvmfx-guice</module>
+		<module>examples</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>2.6</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.6</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>1.7.6</version>
+			</dependency>
+			<dependency>
+				<groupId>net.jodah</groupId>
+				<artifactId>typetools</artifactId>
+				<version>0.3.1</version>
+			</dependency>
+
+			<!-- Testing Frameworks -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.11</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>1.9.5</version>
+			</dependency>
+			<dependency>
+				<groupId>org.powermock</groupId>
+				<artifactId>powermock-module-junit4</artifactId>
+				<version>1.5.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.powermock</groupId>
+				<artifactId>powermock-api-mockito</artifactId>
+				<version>1.5.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.assertj</groupId>
+				<artifactId>assertj-core</artifactId>
+				<version>1.6.0</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-deploy</id>
+						<phase>deploy</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<configuration>
+					<javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
+					<quiet>true</quiet>
+					<additionalparam>-Xdoclint:none</additionalparam>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>attach-doc</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
+				<executions>
+					<execution>
+						<id>attach-doc</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.1</version>
+			</plugin>
+		</plugins>
+	</build>
+	<profiles>
+
+		<!-- This profile is used for deployment of releases to sonatype OSS repository.
+		 For snapshot deployments this profile is NOT needed -->
+		<profile>
+			<id>clean-deploy</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<!--
+				This profile can be used to get per-test coverage information in sonarqube:
+				
+				First run:
+				
+					mvn org.jacoco:jacoco-maven-plugin:prepare-agent clean install -Pcoverage-per-test
+					
+				This instruments the code by jacoco. After that run:
+				
+					mvn sonar:sonar
+					
+				to start the sonar reporting.		
+			
+				See: https://github.com/SonarSource/sonar-examples/tree/master/projects/languages/java/code-coverage/ut/ut-maven-jacoco
+				
+			-->
+			<id>coverage-per-test</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<!-- Minimal supported version is 2.4 -->
+						<version>2.16</version>
+						<configuration>
+							<properties>
+								<property>
+									<name>listener</name>
+									<value>org.sonar.java.jacoco.JUnitListener</value>
+								</property>
+							</properties>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+
+			<dependencies>
+				<dependency>
+					<groupId>org.codehaus.sonar-plugins.java</groupId>
+					<artifactId>sonar-jacoco-listeners</artifactId>
+					<version>1.2</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
+
+</project>

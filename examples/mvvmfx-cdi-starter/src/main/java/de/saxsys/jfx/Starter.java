@@ -1,15 +1,14 @@
 package de.saxsys.jfx;
 
-import de.saxsys.jfx.exampleapplication.view.maincontainer.MainContainerView;
-import de.saxsys.jfx.exampleapplication.viewmodel.maincontainer.MainContainerViewModel;
-import de.saxsys.jfx.mvvm.cdi.MvvmfxCdiApplication;
-import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
-import de.saxsys.jfx.mvvm.viewloader.ViewTuple;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import javax.inject.Inject;
+import de.saxsys.jfx.exampleapplication.view.maincontainer.MainContainerView;
+import de.saxsys.jfx.exampleapplication.viewmodel.maincontainer.MainContainerViewModel;
+import de.saxsys.mvvmfx.cdi.MvvmfxCdiApplication;
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewTuple;
 
 /**
  * The application entry point.
@@ -17,24 +16,20 @@ import javax.inject.Inject;
  * @author manuel.mauky
  */
 public class Starter extends MvvmfxCdiApplication {
-
-    public static void main(String... args) {
-        launch(args);
-    }
-
-    @Inject
-    private ViewLoader viewLoader;
-
-    @Override
-    public void start(Stage stage) {
-        ViewTuple<MainContainerView, MainContainerViewModel> tuple =
-                viewLoader
-                        .loadViewTuple(MainContainerView.class);
-
-        Parent view = tuple.getView();
-
-        final Scene scene = new Scene(view);
-        stage.setScene(scene);
-        stage.show();
-    }
+	
+	public static void main(String... args) {
+		launch(args);
+	}
+	
+	@Override
+	public void start(Stage stage) {
+		ViewTuple<MainContainerView, MainContainerViewModel> tuple =
+				FluentViewLoader.fxmlView(MainContainerView.class).load();
+		
+		Parent view = tuple.getView();
+		
+		final Scene scene = new Scene(view);
+		stage.setScene(scene);
+		stage.show();
+	}
 }

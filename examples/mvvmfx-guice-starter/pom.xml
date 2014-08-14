@@ -1,19 +1,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.saxsys</groupId>
 	<artifactId>mvvmfx-guice-example</artifactId>
-	<version>${mvvmfx.version}</version>
 	<name>Guice Start Example</name>
-    
-    <description>
-	  	This example shows the usage of the mvvmFX framework with Guice Dependency Injection.
+
+	<description>
+		This example shows the usage of the mvvmFX framework with Guice Dependency Injection.
 	</description>
+
+
+	<parent>
+		<groupId>de.saxsys</groupId>
+		<artifactId>mvvmFX-examples</artifactId>
+		<version>0.3.0</version>
+	</parent>
 	<properties>
-		<mvvmfx.version>0.2.0</mvvmfx.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
 	<repositories>
@@ -42,17 +46,17 @@
 		<dependency>
 			<groupId>de.saxsys</groupId>
 			<artifactId>mvvmFX</artifactId>
-			<version>${mvvmfx.version}</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-            <groupId>de.saxsys</groupId>
-            <artifactId>mvvmFX-guice</artifactId>
-            <version>${mvvmfx.version}</version>
+			<groupId>de.saxsys</groupId>
+			<artifactId>mvvmFX-guice</artifactId>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.saxsys</groupId>
 			<artifactId>mvvmfx-complex</artifactId>
-			<version>${mvvmfx.version}</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -64,11 +68,11 @@
 			<artifactId>guava</artifactId>
 			<version>12.0</version>
 		</dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-        </dependency>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>

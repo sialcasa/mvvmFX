@@ -16,3 +16,12 @@ __MVVM__ is the enhanced version of the [Presentation Model](http://martinfowler
 </dependency>
 ```
 
+### Links
+
+[javadoc mvvmfx core](http://sialcasa.github.io/mvvmFX/javadoc/0.2.0/mvvmfx/)
+
+[javadoc mvvmfx-cdi](http://sialcasa.github.io/mvvmFX/javadoc/0.2.0/mvvmfx-cdi/)
+
+[javadoc mvvmfx-guice](http://sialcasa.github.io/mvvmFX/javadoc/0.2.0/mvvmfx-guice/)
+
+[![Build Status](https://travis-ci.org/sialcasa/mvvmFX.svg?branch=develop)](https://travis-ci.org/sialcasa/mvvmFX)
