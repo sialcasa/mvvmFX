@@ -79,6 +79,7 @@
 		<module>mvvmfx-cdi</module>
 		<module>mvvmfx-guice</module>
 		<module>examples</module>
+		<module>mvvmfx-archetype</module>
 	</modules>
 
 	<dependencyManagement>
