@@ -16,10 +16,13 @@
 package de.saxsys.mvvmfx.cdi.internal;
 
 import javax.enterprise.inject.Produces;
+import javax.inject.Singleton;
 
 import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
+import javafx.application.Application;
+import javafx.application.HostServices;
 
 
 /**
@@ -30,8 +33,13 @@ import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
  *
  * @author manuel.mauky
  */
-class MvvmfxProducer {
-	
+@Singleton
+public class MvvmfxProducer {
+
+
+
+	private HostServices hostServices;
+
 	@Produces
 	public NotificationCenter produceNotificationCenter() {
 		return MvvmFX.getNotificationCenter();
@@ -41,6 +49,20 @@ class MvvmfxProducer {
 	public ViewLoader produceViewLoader() {
 		return new ViewLoader();
 	}
+
+	/**
+	 * The {@link javafx.application.HostServices} instance is only available
+	 * in the application class. Therefore it needs to be set from there to be 
+	 * available for injection.
+	 * 
+	 * @param hostServices the instance of hostServices from the Application.
+	 */
+	public void setHostServices(HostServices hostServices){
+		this.hostServices = hostServices;
+	}
 	
-	
+	@Produces
+	public HostServices produceHostServices(){
+		return hostServices;
+	}
 }

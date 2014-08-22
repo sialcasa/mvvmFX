@@ -17,12 +17,19 @@ package de.saxsys.mvvmfx.cdi;
 
 import static org.assertj.core.api.Assertions.*;
 
+import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
 import de.saxsys.mvvmfx.cdi.MvvmfxCdiApplication;
+import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import org.junit.Test;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 
 public class MvvmfxCdiIntegrationTest {
 	
@@ -31,54 +38,93 @@ public class MvvmfxCdiIntegrationTest {
 	 */
 	public static class MyApplication extends MvvmfxCdiApplication {
 		
-		/**
-		 * To be able to verify that there was a valid stage available we need to persist the stage so we can verify it
-		 * after the application has stopped. This needs to be static because we can't create an instance of this
-		 * Application class on our own. This is done by the framework.
-		 */
-		public static Stage stage;
-		
-		public static Application.Parameters parameters;
-		
+		public static boolean startMethodWasExecuted = false;
+		public static boolean wasPostConstructCalled = false;
+		public static boolean wasPreDestroyCalled = false;
+
+
 		public static void main(String... args) {
 			launch(args);
 		}
 		
+		@Inject
+		private InjectionExample injectionExample;
+		
 		@Override
 		public void start(Stage stage) throws Exception {
-			MyApplication.stage = stage;
 			
-			MyApplication.parameters = getParameters();
+			MyApplication.startMethodWasExecuted = true;
+			
+			
+			assertThat(stage).isNotNull();
+			assertThat(getParameters()).isNotNull();
+			assertThat(getParameters().getUnnamed()).contains("test");
+			
+			assertThat(injectionExample).isNotNull();
+			assertThat(injectionExample.notificationCenter).isNotNull();
+			assertThat(injectionExample.viewLoader).isNotNull();
+			assertThat(injectionExample.hostServices).isNotNull();
+			
+			assertThat(MyApplication.wasPostConstructCalled).isTrue();
+			
+			// At this point preDestroy should not be called yet.
+			assertThat(MyApplication.wasPreDestroyCalled).isFalse();
+			
 			
 			// we can't shutdown the application in the test case so we need to do it here.
 			Platform.exit();
 		}
+
+
+		@PostConstruct
+		public void postConstruct(){
+			wasPostConstructCalled = true;
+		}
+
+		@PreDestroy
+		public void preDestroy(){
+			wasPreDestroyCalled = true;
+		}
 	}
 	
+	
+	public static class InjectionExample {
+
+		@Inject
+		NotificationCenter notificationCenter;
+
+		@Inject
+		ViewLoader viewLoader;
+
+		@Inject
+		HostServices hostServices;
+
+
+		public static boolean wasPreDestroyCalled = false;
+
+		@PreDestroy
+		public void preDestroy(){
+			wasPreDestroyCalled = true;
+		}
+	}
 	
 	/**
 	 * Verify that after running the application there is a valid stage.
 	 */
 	@Test
 	public void testApplicationWasStartedWithAStage() {
+		MyApplication.wasPreDestroyCalled = false;
+		MyApplication.wasPostConstructCalled = false;
+		MyApplication.startMethodWasExecuted = false;
+		
+		InjectionExample.wasPreDestroyCalled = false;
+		
 		MyApplication.main("test");
 		
-		assertThat(MyApplication.stage).isNotNull();
-		assertThat(MyApplication.parameters).isNotNull();
-		assertThat(MyApplication.parameters.getUnnamed()).contains("test");
-	}
-
-
-	/**
-	 * When the application was not started correctly f.e. when the user directly instantiates an instance
-	 * of the class, he can't use the parameters of the application. In this case an IllegalStateException is expected.
-	 */
-	@Test (expected = IllegalStateException.class)
-	public void testCannotAccessParametersWhenApplicationWasNotStarted(){
+		assertThat(MyApplication.startMethodWasExecuted).isTrue();
 		
-		MyApplication myApplication = new MyApplication();
+		assertThat(MyApplication.wasPreDestroyCalled).isTrue();
 		
-		myApplication.getParameters();
+		assertThat(InjectionExample.wasPreDestroyCalled).isTrue();
 	}
-	
 }

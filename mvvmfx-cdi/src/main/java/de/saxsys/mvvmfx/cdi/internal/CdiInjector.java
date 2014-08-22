@@ -28,7 +28,7 @@ import javax.inject.Inject;
  *
  * @author manuel.mauky
  */
-class CdiInjector implements Callback<Class<?>, Object> {
+public class CdiInjector implements Callback<Class<?>, Object> {
 	
 	@Inject
 	private Instance<Object> instances;
