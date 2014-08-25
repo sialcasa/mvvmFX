@@ -23,6 +23,6 @@ public class SliderView implements FxmlView<SliderViewModel> {
 	public void initialize(){
 		mySlider.valueProperty().bindBidirectional(viewModel.sliderValueProperty());
 		
-		myLabel.textProperty().bind(Bindings.format("Current Value: %1$.1f", viewModel.sliderValueProperty()));
+		myLabel.textProperty().bind(viewModel.labelTextProperty());
 	}
 }
