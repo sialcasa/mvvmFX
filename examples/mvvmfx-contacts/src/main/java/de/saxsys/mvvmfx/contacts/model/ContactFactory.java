@@ -1,5 +1,6 @@
 package de.saxsys.mvvmfx.contacts.model;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -11,11 +12,24 @@ public class ContactFactory {
 
 		contact.setFirstname(new Random().nextBoolean() ? getFemaleFirstname() : getMaleFirstname());
 		contact.setLastname(getLastname());
+		
+		contact.setBirthday(getBirthday());
+		
 		contact.setEmailAddress(getEmailAddress(contact.getFirstname()));
 		contact.setPhoneNumber(getPhoneNumber());
 		contact.setMobileNumber(getPhoneNumber());
 		
 		return contact;
+	}
+	
+	private static LocalDate getBirthday(){
+		int year = (2014 - 50) + new Random().nextInt(50);
+		
+		int month = new Random().nextInt(12) + 1;
+		
+		int day = new Random().nextInt(27) + 1;
+
+		return LocalDate.of(year,month,day);
 	}
 
 	private static String getPhoneNumber() {

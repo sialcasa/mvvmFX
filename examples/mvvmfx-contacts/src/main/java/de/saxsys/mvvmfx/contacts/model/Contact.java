@@ -1,10 +1,15 @@
 package de.saxsys.mvvmfx.contacts.model;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class Contact extends Identity{
 	
 	private String firstname;
 	private String lastname;
 	private String title;
+	
+	private LocalDate birthday;
 	
 	private String role;
 	private String department;
@@ -41,6 +46,14 @@ public class Contact extends Identity{
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public LocalDate getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(LocalDate birthday) {
+		this.birthday = birthday;
 	}
 
 	public String getRole() {
@@ -82,4 +95,6 @@ public class Contact extends Identity{
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
+
+	
 }
