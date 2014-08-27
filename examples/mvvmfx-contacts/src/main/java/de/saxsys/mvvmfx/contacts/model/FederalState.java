@@ -1,0 +1,59 @@
+package de.saxsys.mvvmfx.contacts.model;
+
+public class FederalState {
+	
+	private final String name;
+	private final String abbr;
+	
+	private final Country country;
+	
+	FederalState(String name, String abbr, Country country){
+		this.name = name;
+		this.abbr = abbr;
+		this.country = country;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getAbbr() {
+		return abbr;
+	}
+
+	public Country getCountry() {
+		return country;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		FederalState that = (FederalState) o;
+
+		if (!abbr.equals(that.abbr)) {
+			return false;
+		}
+		if (!country.equals(that.country)) {
+			return false;
+		}
+		if (!name.equals(that.name)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = name.hashCode();
+		result = 31 * result + abbr.hashCode();
+		result = 31 * result + country.hashCode();
+		return result;
+	}
+}
