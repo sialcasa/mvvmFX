@@ -37,9 +37,6 @@ public class Country {
 
 		Country country = (Country) o;
 
-		if (!federalStates.equals(country.federalStates)) {
-			return false;
-		}
 		if (!name.equals(country.name)) {
 			return false;
 		}
@@ -50,7 +47,6 @@ public class Country {
 	@Override
 	public int hashCode() {
 		int result = name.hashCode();
-		result = 31 * result + federalStates.hashCode();
 		return result;
 	}
 }
