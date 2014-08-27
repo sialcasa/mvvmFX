@@ -38,16 +38,16 @@
         </Menu>
       </menus>
     </MenuBar>
-      <SplitPane dividerPositions="0.29797979797979796" VBox.vgrow="ALWAYS">
+      <SplitPane dividerPositions="0.7" VBox.vgrow="ALWAYS">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+            <AnchorPane>
                <children>
-                  <fx:include source="../master/MasterView.fxml" />
+                  <fx:include source="../master/MasterView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"  />
                </children>
             </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+            <AnchorPane>
                <children>
-                  <fx:include source="../detail/DetailView.fxml" />
+                  <fx:include source="../detail/DetailView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                </children>
             </AnchorPane>
         </items>

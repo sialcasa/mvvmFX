@@ -4,12 +4,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.contacts.ui.master.MasterView">
+<AnchorPane minHeight="50.0" minWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.contacts.ui.master.MasterView">
 <children>
 	<TableView AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
   <columns>
-    <TableColumn prefWidth="75.0" text="C1" />
-    <TableColumn prefWidth="75.0" text="C2" />
+    <TableColumn prefWidth="75.0" text="First Name" />
+    <TableColumn prefWidth="75.0" text="Last Name" />
+            <TableColumn prefWidth="75.0" text="E-Mail" />
+            <TableColumn prefWidth="75.0" text="Phone Number" />
+            <TableColumn prefWidth="75.0" text="Mobile Number" />
   </columns>
 </TableView>
 </children></AnchorPane>
