@@ -1,17 +1,19 @@
 package de.saxsys.mvvmfx.contacts;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.cdi.MvvmfxCdiApplication;
+import de.saxsys.mvvmfx.contacts.events.TriggerShutdownEvent;
 import de.saxsys.mvvmfx.contacts.model.ContactFactory;
 import de.saxsys.mvvmfx.contacts.model.CountryFactory;
 import de.saxsys.mvvmfx.contacts.model.Repository;
 import de.saxsys.mvvmfx.contacts.ui.main.MainView;
 import de.saxsys.mvvmfx.contacts.ui.main.MainViewModel;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 public class App extends MvvmfxCdiApplication{
@@ -46,5 +48,10 @@ public class App extends MvvmfxCdiApplication{
 		
 		stage.setScene(new Scene(main.getView()));
 		stage.show();
+	}
+	
+	
+	public void triggerShutdown(@Observes TriggerShutdownEvent event){
+		Platform.exit();	
 	}
 }
