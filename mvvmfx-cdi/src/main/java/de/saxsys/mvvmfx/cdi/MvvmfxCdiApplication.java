@@ -15,22 +15,19 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.cdi;
 
-import de.saxsys.mvvmfx.MvvmFX;
-import de.saxsys.mvvmfx.cdi.internal.CdiInjector;
-import de.saxsys.mvvmfx.cdi.internal.MvvmfxProducer;
 import javafx.application.Application;
-import javafx.application.HostServices;
 import javafx.stage.Stage;
 
 import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
+import javax.inject.Inject;
 
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
+
+import de.saxsys.mvvmfx.MvvmFX;
+import de.saxsys.mvvmfx.cdi.internal.MvvmfxProducer;
 
 
 /**
@@ -45,6 +42,9 @@ public abstract class MvvmfxCdiApplication extends Application {
 	private CreationalContext<MvvmfxCdiApplication> ctx;
 	private InjectionTarget<MvvmfxCdiApplication> injectionTarget;
 	private final Weld weld;
+	
+	@Inject
+	private MvvmfxProducer producer;
 
 	public MvvmfxCdiApplication(){
 		weld = new Weld();
@@ -57,6 +57,10 @@ public abstract class MvvmfxCdiApplication extends Application {
 
 		beanManager = weldContainer.getBeanManager();
 		
+	}
+	
+	protected void makePrimaryStageInjectable(Stage primaryStage){
+		producer.setPrimaryStage(primaryStage);
 	}
 
 	/**
