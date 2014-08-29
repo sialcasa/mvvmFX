@@ -45,6 +45,8 @@ public class App extends MvvmfxCdiApplication{
 	public void start(Stage stage) throws Exception {
 		makePrimaryStageInjectable(stage);
 		
+		stage.setTitle("mvvmFX Contacts demo");
+		
 		ViewTuple<MainView, MainViewModel> main = FluentViewLoader.fxmlView(MainView.class).load();
 		
 		stage.setScene(new Scene(main.getView()));
