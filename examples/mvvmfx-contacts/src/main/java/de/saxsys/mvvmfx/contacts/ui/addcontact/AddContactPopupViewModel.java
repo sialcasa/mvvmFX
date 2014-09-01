@@ -1,15 +1,14 @@
 package de.saxsys.mvvmfx.contacts.ui.addcontact;
 
-import de.saxsys.mvvmfx.ViewModel;
+import java.time.LocalDate;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.fxml.FXML;
 
-import java.time.LocalDate;
+import de.saxsys.mvvmfx.ViewModel;
 
 public class AddContactPopupViewModel implements ViewModel {
 	

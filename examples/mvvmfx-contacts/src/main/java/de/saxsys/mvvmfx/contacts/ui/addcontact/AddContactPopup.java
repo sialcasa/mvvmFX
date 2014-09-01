@@ -1,6 +1,8 @@
 package de.saxsys.mvvmfx.contacts.ui.addcontact;
 
+import de.saxsys.mvvmfx.ViewTuple;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
@@ -19,7 +21,7 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.contacts.events.OpenAddContactPopupEvent;
 
 @Singleton
-public class AddContactPopup extends VBox implements FxmlView<AddContactPopupViewModel> {
+public class AddContactPopup  implements FxmlView<AddContactPopupViewModel> {
 	
 	@FXML
 	public TextField firstnameInput;
@@ -50,8 +52,14 @@ public class AddContactPopup extends VBox implements FxmlView<AddContactPopupVie
 	@InjectViewModel
 	private AddContactPopupViewModel viewModel;
 	
-	public AddContactPopup() {
-		FluentViewLoader.fxmlView(this.getClass()).root(this).codeBehind(this).load();
+	
+	private Parent root;
+	
+	AddContactPopup() {
+		ViewTuple<AddContactPopup, AddContactPopupViewModel> viewTuple = FluentViewLoader.fxmlView(this.getClass())
+				.codeBehind(this).load();
+		
+		root = viewTuple.getView();
 	}
 	
 	public void initialize(){
@@ -74,7 +82,8 @@ public class AddContactPopup extends VBox implements FxmlView<AddContactPopupVie
 			// The handling of the popup stage is view specific so it has to be done here and can't be done in the VM
 			if (newValue) {
 				if (popupStage.getScene() == null) { // When the popup is shown the first time
-					popupStage.setScene(new Scene(this));
+					
+					popupStage.setScene(new Scene(root));
 				} else {
 					popupStage.toFront();
 				}
