@@ -81,7 +81,7 @@
       <Separator prefWidth="200.0" />
 		<HBox alignment="CENTER_RIGHT">
 		   <children>
-			  <Button mnemonicParsing="false" prefWidth="80.0" text="Add">
+			  <Button mnemonicParsing="false" onAction="#addContact" prefWidth="80.0" text="Add">
 				 <HBox.margin>
 					<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
 				 </HBox.margin>

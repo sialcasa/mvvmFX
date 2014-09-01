@@ -1,10 +1,13 @@
 package de.saxsys.mvvmfx.contacts.ui.addcontact;
 
 import de.saxsys.mvvmfx.ViewModel;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.fxml.FXML;
 
 import java.time.LocalDate;
 
@@ -23,6 +26,7 @@ public class AddContactPopupViewModel implements ViewModel {
 	private StringProperty mobileNumber = new SimpleStringProperty();
 	private StringProperty phoneNumber = new SimpleStringProperty();
 	
+	private BooleanProperty popupOpen = new SimpleBooleanProperty();
 	
 	public void resetForm() {
 		firstname.set("");
@@ -36,7 +40,24 @@ public class AddContactPopupViewModel implements ViewModel {
 		
 		birthday.set(null);
 	}
+	
+	public void addContactAction(){
+		// Add logic to persist the new contact.
+		
+		popupOpen.set(false);
+	}
+	
+	public void openDialog(){
+		this.resetForm();
+		this.popupOpenProperty().set(true);
+	}
 
+	
+	public BooleanProperty popupOpenProperty(){
+		return popupOpen;
+	}
+	
+	
 	public StringProperty firstnameProperty() {
 		return firstname;
 	}
