@@ -1,6 +1,11 @@
 package de.saxsys.mvvmfx.contacts.ui.addcontact;
 
 import java.time.LocalDate;
+
+import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.contacts.events.ContactsUpdatedEvent;
+import de.saxsys.mvvmfx.contacts.model.Contact;
+import de.saxsys.mvvmfx.contacts.model.Repository;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -9,6 +14,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import de.saxsys.mvvmfx.ViewModel;
+
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
 
 public class AddContactPopupViewModel implements ViewModel {
 	
@@ -27,6 +35,9 @@ public class AddContactPopupViewModel implements ViewModel {
 	
 	private BooleanProperty popupOpen = new SimpleBooleanProperty();
 	
+	@Inject
+	private Repository repository;
+	
 	public void resetForm() {
 		firstname.set("");
 		lastname.set("");
@@ -42,6 +53,21 @@ public class AddContactPopupViewModel implements ViewModel {
 	
 	public void addContactAction(){
 		// Add logic to persist the new contact.
+
+		Contact contact = new Contact();
+		contact.setFirstname(firstname.get());
+		contact.setLastname(lastname.get());
+		contact.setTitle(title.get());
+		
+		contact.setRole(role.get());
+		contact.setDepartment(department.get());
+		
+		contact.setBirthday(birthday.get());
+		contact.setEmailAddress(email.get());
+		contact.setMobileNumber(mobileNumber.get());
+		contact.setPhoneNumber(phoneNumber.get());
+		
+		repository.save(contact);
 		
 		popupOpen.set(false);
 	}

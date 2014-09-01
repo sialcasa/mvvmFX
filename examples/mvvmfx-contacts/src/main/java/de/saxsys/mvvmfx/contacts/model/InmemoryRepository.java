@@ -1,5 +1,9 @@
 package de.saxsys.mvvmfx.contacts.model;
 
+import de.saxsys.mvvmfx.contacts.events.ContactsUpdatedEvent;
+
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.HashSet;
@@ -11,6 +15,10 @@ public class InmemoryRepository implements Repository {
 	
 	private Set<Contact> contacts = new HashSet<>();
 	private Set<Country> countries = new HashSet<>();
+
+	@Inject
+	private Event<ContactsUpdatedEvent> contactsUpdatedEvent;
+	
 
 	@Override 
 	public Set<Contact> findAll() {
@@ -25,11 +33,13 @@ public class InmemoryRepository implements Repository {
 	@Override 
 	public void save(Contact contact) {
 		contacts.add(contact);
+		contactsUpdatedEvent.fire(new ContactsUpdatedEvent());
 	}
 
 	@Override 
 	public void delete(Contact contact) {
 		contacts.remove(contact);
+		contactsUpdatedEvent.fire(new ContactsUpdatedEvent());
 	}
 
 	@Override 

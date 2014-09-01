@@ -16,9 +16,13 @@ import de.saxsys.mvvmfx.contacts.model.CountryFactory;
 import de.saxsys.mvvmfx.contacts.model.Repository;
 import de.saxsys.mvvmfx.contacts.ui.main.MainView;
 import de.saxsys.mvvmfx.contacts.ui.main.MainViewModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class App extends MvvmfxCdiApplication{
+	
+	private static final Logger LOG = LoggerFactory.getLogger(App.class);
 
 	public static void main(String...args){
 		launch(args);
@@ -43,6 +47,8 @@ public class App extends MvvmfxCdiApplication{
 
 	@Override 
 	public void start(Stage stage) throws Exception {
+		LOG.info("Starting the Application");
+		
 		makePrimaryStageInjectable(stage);
 		
 		stage.setTitle("mvvmFX Contacts demo");
@@ -55,6 +61,7 @@ public class App extends MvvmfxCdiApplication{
 	
 	
 	public void triggerShutdown(@Observes TriggerShutdownEvent event){
+		LOG.info("Application will now shut down");
 		Platform.exit();	
 	}
 }
