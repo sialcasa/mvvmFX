@@ -9,7 +9,7 @@
    <children>
       <VBox>
          <children>
-      	   <Text fill="dimgray" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 24;" text="Detail" />
+            <Label fx:id="nameLabel" style="-fx-text-fill: dimgrey; -fx-font-size: 20;" text="" />
          </children>
       </VBox>
    </children>
