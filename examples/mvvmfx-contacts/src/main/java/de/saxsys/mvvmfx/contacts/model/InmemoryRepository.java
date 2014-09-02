@@ -33,13 +33,13 @@ public class InmemoryRepository implements Repository {
 	@Override 
 	public void save(Contact contact) {
 		contacts.add(contact);
-		contactsUpdatedEvent.fire(new ContactsUpdatedEvent());
+		fireUpdateEvent();
 	}
 
 	@Override 
 	public void delete(Contact contact) {
 		contacts.remove(contact);
-		contactsUpdatedEvent.fire(new ContactsUpdatedEvent());
+		fireUpdateEvent();
 	}
 
 	@Override 
@@ -55,5 +55,12 @@ public class InmemoryRepository implements Repository {
 	@Override 
 	public void delete(Country country) {
 		countries.remove(country);
+	}
+	
+	
+	private void fireUpdateEvent(){
+		if(contactsUpdatedEvent != null){
+			contactsUpdatedEvent.fire(new ContactsUpdatedEvent());
+		}
 	}
 }

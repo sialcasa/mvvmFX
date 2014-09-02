@@ -3,6 +3,8 @@ package de.saxsys.mvvmfx.contacts.ui.master;
 import de.saxsys.mvvmfx.contacts.model.Contact;
 import de.saxsys.mvvmfx.contacts.util.CentralClock;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -11,7 +13,8 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 public class MasterTableViewModel {
-	
+
+	private ReadOnlyStringWrapper id = new ReadOnlyStringWrapper();
 	private StringProperty firstname = new SimpleStringProperty();
 	private StringProperty lastname = new SimpleStringProperty();
 	private StringProperty title = new SimpleStringProperty();
@@ -20,6 +23,7 @@ public class MasterTableViewModel {
 	private IntegerProperty age = new SimpleIntegerProperty();
 	
 	public MasterTableViewModel(Contact contact){
+		id.set(contact.getId());
 		setFirstname(contact.getFirstname());
 		setLastname(contact.getLastname());
 		setTitle(contact.getTitle());
@@ -30,6 +34,14 @@ public class MasterTableViewModel {
 		}
 	}
 	
+	public String getId(){
+		return id.get();
+	}
+	
+	public ReadOnlyStringProperty idProperty(){
+		return id.getReadOnlyProperty();
+	}
+
 	public String getFirstname() {
 		return firstname.get();
 	}
