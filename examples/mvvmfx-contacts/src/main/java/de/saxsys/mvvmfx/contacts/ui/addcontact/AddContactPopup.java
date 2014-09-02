@@ -1,12 +1,11 @@
 package de.saxsys.mvvmfx.contacts.ui.addcontact;
 
-import de.saxsys.mvvmfx.ViewTuple;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -18,6 +17,7 @@ import javax.inject.Singleton;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.contacts.events.OpenAddContactPopupEvent;
 
 @Singleton
@@ -42,6 +42,8 @@ public class AddContactPopup  implements FxmlView<AddContactPopupViewModel> {
 	@FXML
 	public DatePicker birthdayInput;
 	
+	@FXML
+	public Button addContactButton;
 	
 	@Inject
 	private Stage primaryStage;
@@ -96,6 +98,18 @@ public class AddContactPopup  implements FxmlView<AddContactPopupViewModel> {
 		
 		// when the popup is closed by the close-button of the window we change the state in the VM
 		popupStage.setOnCloseRequest(event-> viewModel.popupOpenProperty().set(false));
+		
+		
+		// init the validation. The logic for the actual validation is hidden in the viewModel.
+		viewModel.initValidationForFirstname(firstnameInput);
+		viewModel.initValidationForLastname(lastnameInput);
+		viewModel.initValidationForBirthday(birthdayInput);
+
+		viewModel.initValidationForEmail(emailInput);
+		viewModel.initValidationForPhoneNumber(phoneNumberInput);
+		viewModel.initValidationForMobileNumber(mobileNumberInput);
+		
+		addContactButton.disableProperty().bind(viewModel.addButtonDisabledProperty());
 	}
 	
 	@FXML

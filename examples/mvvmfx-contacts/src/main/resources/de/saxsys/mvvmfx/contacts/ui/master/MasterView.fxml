@@ -23,17 +23,20 @@
 						<PropertyValueFactory property="lastname" />
 					</cellValueFactory>
 				</TableColumn>
-				<TableColumn prefWidth="75.0" text="E-Mail">
+				<TableColumn text="E-Mail">
 					<cellValueFactory>
 						<PropertyValueFactory property="emailAddress" />
 					</cellValueFactory>
 				</TableColumn>
-            	<TableColumn prefWidth="75.0" text="Age">
+            	<TableColumn text="Age">
 					<cellValueFactory>
 						<PropertyValueFactory property="age" />
 					</cellValueFactory>
             	</TableColumn>
 			</columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
 		</TableView>
 	</children>
 </AnchorPane>

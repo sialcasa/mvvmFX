@@ -25,7 +25,9 @@ public class MasterTableViewModel {
 		setTitle(contact.getTitle());
 		setEmailAddress(contact.getEmailAddress());
 
-		setAge((int) ChronoUnit.YEARS.between(contact.getBirthday(), LocalDate.now(CentralClock.getClock())));
+		if(contact.getBirthday() != null){
+			setAge((int) ChronoUnit.YEARS.between(contact.getBirthday(), LocalDate.now(CentralClock.getClock())));
+		}
 	}
 	
 	public String getFirstname() {
