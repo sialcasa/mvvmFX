@@ -2,11 +2,9 @@ package de.saxsys.mvvmfx.contacts.ui.master;
 
 import java.util.Set;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,7 +28,7 @@ public class MasterViewModel implements ViewModel {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(MasterViewModel.class);
 	
-	private ListProperty<MasterTableViewModel> contacts = new SimpleListProperty<>(FXCollections.observableArrayList());
+	private ObservableList<MasterTableViewModel> contacts = FXCollections.observableArrayList();
 	
 	private ReadOnlyObjectWrapper<Contact> selectedContact = new ReadOnlyObjectWrapper<>();
 	

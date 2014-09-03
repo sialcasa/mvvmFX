@@ -38,7 +38,7 @@ public class DetailViewModel implements ViewModel {
 	HostServices hostServices;
 
 	@PostConstruct
-	public void init(){
+	void init(){
 		ReadOnlyObjectProperty<Contact> contactProperty = masterViewModel.selectedContactProperty();
 
 		name.bind(extractValue(contactProperty, contact->{
