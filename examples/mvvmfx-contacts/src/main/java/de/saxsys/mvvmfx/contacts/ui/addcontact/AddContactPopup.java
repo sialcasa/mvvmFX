@@ -1,5 +1,7 @@
 package de.saxsys.mvvmfx.contacts.ui.addcontact;
 
+import de.jensd.fx.fontawesome.AwesomeDude;
+import de.jensd.fx.fontawesome.AwesomeIcon;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -110,6 +112,9 @@ public class AddContactPopup  implements FxmlView<AddContactPopupViewModel> {
 		viewModel.initValidationForMobileNumber(mobileNumberInput);
 		
 		addContactButton.disableProperty().bind(viewModel.addButtonDisabledProperty());
+
+
+		AwesomeDude.setIcon(addContactButton, AwesomeIcon.CHECK);
 	}
 	
 	@FXML

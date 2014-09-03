@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -8,7 +9,7 @@
 			xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 			fx:controller="de.saxsys.mvvmfx.contacts.ui.detail.DetailView">
 	<children>
-		<VBox>
+		<VBox spacing="3.0">
 			<children>
 				<Label fx:id="nameLabel" style="-fx-text-fill: dimgrey; -fx-font-size: 20;" text="name"/>
 				<Label fx:id="birthdayLabel" text="birthday"/>
@@ -17,6 +18,9 @@
 				<Label fx:id="phoneLabel" text="phone number"/>
 				<Label fx:id="mobileLabel" text="mobile number"/>
 			</children>
+			<padding>
+				<Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+			</padding>
 		</VBox>
 	</children>
 </AnchorPane>
