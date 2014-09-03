@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="50.0" minWidth="100.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.contacts.ui.detail.DetailView">
-   <children>
-      <VBox>
-         <children>
-            <Label fx:id="nameLabel" style="-fx-text-fill: dimgrey; -fx-font-size: 20;" text="" />
-         </children>
-      </VBox>
-   </children>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="50.0" minWidth="100.0"
+			xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+			fx:controller="de.saxsys.mvvmfx.contacts.ui.detail.DetailView">
+	<children>
+		<VBox>
+			<children>
+				<Label fx:id="nameLabel" style="-fx-text-fill: dimgrey; -fx-font-size: 20;" text="name"/>
+				<Label fx:id="birthdayLabel" text="birthday"/>
+				<Label fx:id="roleDepartmentLabel" text="role/department"/>
+				<Hyperlink fx:id="emailHyperlink" text="email address"/>
+				<Label fx:id="phoneLabel" text="phone number"/>
+				<Label fx:id="mobileLabel" text="mobile number"/>
+			</children>
+		</VBox>
+	</children>
 </AnchorPane>
