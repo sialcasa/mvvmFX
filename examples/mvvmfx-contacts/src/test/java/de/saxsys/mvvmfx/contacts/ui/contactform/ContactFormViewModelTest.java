@@ -1,4 +1,4 @@
-package de.saxsys.mvvmfx.contacts.ui.addcontact;
+package de.saxsys.mvvmfx.contacts.ui.contactform;
 
 import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.*;
@@ -21,14 +21,14 @@ import de.saxsys.mvvmfx.contacts.util.CentralClock;
 
 
 @RunWith(JfxRunner.class)
-public class AddContactPopupViewModelTest {
+public class ContactFormViewModelTest {
 	
 	
-	private AddContactPopupViewModel viewModel;
+	private ContactFormViewModel viewModel;
 	
 	@Before
 	public void setup(){
-		viewModel = new AddContactPopupViewModel();
+		viewModel = new ContactFormViewModel();
 		
 		ZonedDateTime now = ZonedDateTime
 				.of(LocalDate.of(2014, Month.JANUARY, 1), LocalTime.of(0, 0), ZoneId.systemDefault());
