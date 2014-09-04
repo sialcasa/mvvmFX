@@ -4,6 +4,7 @@ import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 
@@ -23,12 +24,19 @@ public class DetailView implements FxmlView<DetailViewModel> {
 	public Label phoneLabel;
 	@FXML
 	public Label mobileLabel;
+
+	@FXML
+	public Button editButton;
+	@FXML
+	public Button removeButton;
 	
 	
 	@InjectViewModel
 	private DetailViewModel viewModel;
 	
 	public void initialize() {
+		removeButton.disableProperty().bind(viewModel.removeButtonEnabledProperty().not());
+
 		nameLabel.textProperty().bind(viewModel.nameLabelTextProperty());
 		nameLabel.managedProperty().bind(viewModel.nameLabelTextProperty().isNotEmpty());
 		nameLabel.visibleProperty().bind(nameLabel.managedProperty());
@@ -67,6 +75,18 @@ public class DetailView implements FxmlView<DetailViewModel> {
 		AwesomeDude.setIcon(emailHyperlink, AwesomeIcon.AT);
 		AwesomeDude.setIcon(mobileLabel, AwesomeIcon.MOBILE_PHONE);
 		AwesomeDude.setIcon(phoneLabel, AwesomeIcon.PHONE);
+
+		AwesomeDude.setIcon(editButton, AwesomeIcon.EDIT);
+		AwesomeDude.setIcon(removeButton, AwesomeIcon.TRASH_ALT);
 	}
-	
+
+	@FXML
+	public void edit(){
+		viewModel.editAction();
+	}
+
+	@FXML
+	public void remove() {
+		viewModel.removeAction();
+	}
 }

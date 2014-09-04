@@ -2,9 +2,12 @@ package de.saxsys.mvvmfx.contacts.ui.detail;
 
 import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+
+import de.saxsys.mvvmfx.contacts.model.Repository;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
@@ -23,6 +26,8 @@ public class DetailViewModelTest {
 	private ObjectProperty<Contact> selectedContact = new SimpleObjectProperty<>();
 	private Contact luke;
 	private Contact obi;
+
+	private Repository repository;
 	
 	@Before
 	public void setup() {
@@ -32,13 +37,32 @@ public class DetailViewModelTest {
 		
 		viewModel = new DetailViewModel();
 		viewModel.masterViewModel = masterViewModelMock;
+
+		repository = mock(Repository.class);
+		viewModel.repository = repository;
 		
 		viewModel.init();
 		
 		luke = new Contact();
 		obi = new Contact();
 	}
-	
+
+
+	@Test
+	public void testRemoveAction(){
+		selectedContact.set(null);
+		assertThat(viewModel.removeButtonEnabledProperty()).isFalse();
+
+
+		selectedContact.set(luke);
+		assertThat(viewModel.removeButtonEnabledProperty()).isTrue();
+
+
+
+		viewModel.removeAction();
+
+		verify(repository).delete(luke);
+	}
 	
 	@Test
 	public void testNameLabelText() {

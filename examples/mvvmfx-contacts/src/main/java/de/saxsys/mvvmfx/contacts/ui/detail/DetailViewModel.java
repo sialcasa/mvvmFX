@@ -3,9 +3,13 @@ package de.saxsys.mvvmfx.contacts.ui.detail;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
+
+import de.saxsys.mvvmfx.contacts.model.Repository;
 import javafx.application.HostServices;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -29,13 +33,18 @@ public class DetailViewModel implements ViewModel {
 	private ReadOnlyStringWrapper email = new ReadOnlyStringWrapper();
 	private ReadOnlyStringWrapper phone = new ReadOnlyStringWrapper();
 	private ReadOnlyStringWrapper mobile = new ReadOnlyStringWrapper();
-	
+
+	private ReadOnlyBooleanWrapper removeButtonEnabled = new ReadOnlyBooleanWrapper();
+
 
 	@Inject
 	MasterViewModel masterViewModel;
 	
 	@Inject
 	HostServices hostServices;
+
+	@Inject
+	Repository repository;
 
 	@PostConstruct
 	void init(){
@@ -87,6 +96,9 @@ public class DetailViewModel implements ViewModel {
 		phone.bind(extractValue(contactProperty, Contact::getPhoneNumber));
 		
 		mobile.bind(extractValue(contactProperty, Contact::getMobileNumber));
+
+
+		removeButtonEnabled.bind(masterViewModel.selectedContactProperty().isNotNull());
 	}
 	
 	
@@ -111,6 +123,16 @@ public class DetailViewModel implements ViewModel {
 		}
 	}
 
+	public void editAction() {
+
+	}
+
+	public void removeAction() {
+		repository.delete(masterViewModel.selectedContactProperty().get());
+	}
+
+
+
 	public ReadOnlyStringProperty nameLabelTextProperty() {
 		return name.getReadOnlyProperty();
 	}
@@ -134,4 +156,9 @@ public class DetailViewModel implements ViewModel {
 	public ReadOnlyStringProperty mobileLabelTextProperty(){
 		return mobile.getReadOnlyProperty();
 	}
+
+	public ReadOnlyBooleanProperty removeButtonEnabledProperty(){
+		return removeButtonEnabled.getReadOnlyProperty();
+	}
+
 }
