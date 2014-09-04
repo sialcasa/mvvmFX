@@ -1,5 +1,6 @@
 package de.saxsys.mvvmfx.contacts.ui.addcontact;
 
+import de.saxsys.mvvmfx.contacts.util.DialogHelper;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -30,8 +31,6 @@ public class AddContactPopup implements FxmlView<AddContactPopupViewModel> {
 	@Inject
 	private Stage primaryStage;
 	
-	private Stage popupStage = new Stage(StageStyle.UTILITY);
-	
 	@FXML
 	private ContactFormView contactFormViewController;
 	
@@ -52,29 +51,8 @@ public class AddContactPopup implements FxmlView<AddContactPopupViewModel> {
 	
 	public void initialize() {
 		viewModel.initContactFormViewModel(contactFormViewController.getViewModel());
-		
-		popupStage.initOwner(primaryStage);
-		popupStage.initModality(Modality.APPLICATION_MODAL);
-		
-		viewModel.popupOpenProperty().addListener((obs, oldValue, newValue) -> {
-			// The handling of the popup stage is view specific so it has to be done here and can't be done in the VM
-				if (newValue) {
-					if (popupStage.getScene() == null) { // When the popup is shown the first time
-					
-						popupStage.setScene(new Scene(root));
-						popupStage.sizeToScene();
-					} else {
-						popupStage.toFront();
-					}
-					
-					popupStage.show();
-				} else {
-					popupStage.close();
-				}
-			});
-		
-		// when the popup is closed by the close-button of the window we change the state in the VM
-		popupStage.setOnCloseRequest(event -> viewModel.popupOpenProperty().set(false));
+
+		DialogHelper.initDialog(viewModel.popupOpenProperty(), primaryStage, ()-> root);
 		
 		addContactButton.disableProperty().bind(viewModel.addButtonDisabledProperty());
 		
