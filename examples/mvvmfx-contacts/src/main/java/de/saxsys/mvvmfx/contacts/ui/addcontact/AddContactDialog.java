@@ -1,13 +1,11 @@
 package de.saxsys.mvvmfx.contacts.ui.addcontact;
 
+import de.saxsys.mvvmfx.contacts.events.OpenAddContactDialogEvent;
 import de.saxsys.mvvmfx.contacts.util.DialogHelper;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
@@ -19,11 +17,10 @@ import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
-import de.saxsys.mvvmfx.contacts.events.OpenAddContactPopupEvent;
 import de.saxsys.mvvmfx.contacts.ui.contactform.ContactFormView;
 
 @Singleton
-public class AddContactPopup implements FxmlView<AddContactPopupViewModel> {
+public class AddContactDialog implements FxmlView<AddContactDialogViewModel> {
 	
 	@FXML
 	public Button addContactButton;
@@ -36,13 +33,13 @@ public class AddContactPopup implements FxmlView<AddContactPopupViewModel> {
 	
 	
 	@InjectViewModel
-	private AddContactPopupViewModel viewModel;
+	private AddContactDialogViewModel viewModel;
 	
 	
 	private Parent root;
 	
-	AddContactPopup() {
-		ViewTuple<AddContactPopup, AddContactPopupViewModel> viewTuple = FluentViewLoader.fxmlView(this.getClass())
+	AddContactDialog() {
+		ViewTuple<AddContactDialog, AddContactDialogViewModel> viewTuple = FluentViewLoader.fxmlView(this.getClass())
 				.codeBehind(this).load();
 		
 		root = viewTuple.getView();
@@ -52,7 +49,7 @@ public class AddContactPopup implements FxmlView<AddContactPopupViewModel> {
 	public void initialize() {
 		viewModel.initContactFormViewModel(contactFormViewController.getViewModel());
 
-		DialogHelper.initDialog(viewModel.popupOpenProperty(), primaryStage, ()-> root);
+		DialogHelper.initDialog(viewModel.dialogOpenProperty(), primaryStage, ()-> root);
 		
 		addContactButton.disableProperty().bind(viewModel.addButtonDisabledProperty());
 		
@@ -64,7 +61,7 @@ public class AddContactPopup implements FxmlView<AddContactPopupViewModel> {
 		viewModel.addContactAction();
 	}
 	
-	public void open(@Observes OpenAddContactPopupEvent event) {
+	public void open(@Observes OpenAddContactDialogEvent event) {
 		viewModel.openDialog();
 	}
 }

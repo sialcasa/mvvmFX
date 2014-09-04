@@ -1,8 +1,7 @@
 package de.saxsys.mvvmfx.contacts.ui.toolbar;
 
-import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.contacts.events.OpenAddContactPopupEvent;
+import de.saxsys.mvvmfx.contacts.events.OpenAddContactDialogEvent;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -10,9 +9,9 @@ import javax.inject.Inject;
 public class ToolbarViewModel implements ViewModel {
 	
 	@Inject
-	private Event<OpenAddContactPopupEvent> openPopupEvent;
+	private Event<OpenAddContactDialogEvent> openPopupEvent;
 	
 	public void addNewContactAction(){
-		openPopupEvent.fire(new OpenAddContactPopupEvent());
+		openPopupEvent.fire(new OpenAddContactDialogEvent());
 	}
 }

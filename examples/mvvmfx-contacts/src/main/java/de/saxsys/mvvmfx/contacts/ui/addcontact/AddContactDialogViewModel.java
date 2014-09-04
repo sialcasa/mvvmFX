@@ -12,7 +12,7 @@ import de.saxsys.mvvmfx.contacts.model.Contact;
 import de.saxsys.mvvmfx.contacts.model.Repository;
 import de.saxsys.mvvmfx.contacts.ui.contactform.ContactFormViewModel;
 
-public class AddContactPopupViewModel implements ViewModel {
+public class AddContactDialogViewModel implements ViewModel {
 	private BooleanProperty popupOpen = new SimpleBooleanProperty();
 	
 	private ReadOnlyBooleanWrapper addButtonDisabled = new ReadOnlyBooleanWrapper();
@@ -42,11 +42,11 @@ public class AddContactPopupViewModel implements ViewModel {
 	
 	public void openDialog() {
 		contactFormViewModel.resetForm();
-		this.popupOpenProperty().set(true);
+		this.dialogOpenProperty().set(true);
 	}
 	
 	
-	public BooleanProperty popupOpenProperty() {
+	public BooleanProperty dialogOpenProperty() {
 		return popupOpen;
 	}
 	
