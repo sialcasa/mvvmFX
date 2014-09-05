@@ -35,8 +35,10 @@ public class DetailView implements FxmlView<DetailViewModel> {
 	private DetailViewModel viewModel;
 	
 	public void initialize() {
-		removeButton.disableProperty().bind(viewModel.removeButtonEnabledProperty().not());
-
+		removeButton.disableProperty().bind(viewModel.removeButtonDisabledProperty());
+		editButton.disableProperty().bind(viewModel.editButtonDisabledProperty());
+		
+		
 		nameLabel.textProperty().bind(viewModel.nameLabelTextProperty());
 		nameLabel.managedProperty().bind(viewModel.nameLabelTextProperty().isNotEmpty());
 		nameLabel.visibleProperty().bind(nameLabel.managedProperty());

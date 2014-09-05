@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
 
+import de.saxsys.mvvmfx.contacts.events.OpenEditContactDialogEvent;
 import de.saxsys.mvvmfx.contacts.model.Repository;
 import javafx.application.HostServices;
 import javafx.beans.binding.Bindings;
@@ -16,11 +17,13 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableObjectValue;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.contacts.model.Contact;
 import de.saxsys.mvvmfx.contacts.ui.master.MasterViewModel;
+import javafx.beans.value.ObservableValue;
 
 public class DetailViewModel implements ViewModel {
 	
@@ -34,8 +37,12 @@ public class DetailViewModel implements ViewModel {
 	private ReadOnlyStringWrapper phone = new ReadOnlyStringWrapper();
 	private ReadOnlyStringWrapper mobile = new ReadOnlyStringWrapper();
 
-	private ReadOnlyBooleanWrapper removeButtonEnabled = new ReadOnlyBooleanWrapper();
+	private ReadOnlyBooleanWrapper removeButtonDisabled = new ReadOnlyBooleanWrapper();
+	private ReadOnlyBooleanWrapper editButtonDisabled = new ReadOnlyBooleanWrapper();
 
+	
+	@Inject
+	private Event<OpenEditContactDialogEvent> openEditEvent;
 
 	@Inject
 	MasterViewModel masterViewModel;
@@ -98,7 +105,8 @@ public class DetailViewModel implements ViewModel {
 		mobile.bind(extractValue(contactProperty, Contact::getMobileNumber));
 
 
-		removeButtonEnabled.bind(masterViewModel.selectedContactProperty().isNotNull());
+		removeButtonDisabled.bind(masterViewModel.selectedContactProperty().isNull());
+		editButtonDisabled.bind(masterViewModel.selectedContactProperty().isNull());
 	}
 	
 	
@@ -124,7 +132,10 @@ public class DetailViewModel implements ViewModel {
 	}
 
 	public void editAction() {
-
+		Contact selectedContact = masterViewModel.selectedContactProperty().get();
+		if(selectedContact != null){
+			openEditEvent.fire(new OpenEditContactDialogEvent(selectedContact.getId()));
+		}
 	}
 
 	public void removeAction() {
@@ -157,8 +168,11 @@ public class DetailViewModel implements ViewModel {
 		return mobile.getReadOnlyProperty();
 	}
 
-	public ReadOnlyBooleanProperty removeButtonEnabledProperty(){
-		return removeButtonEnabled.getReadOnlyProperty();
+	public ReadOnlyBooleanProperty removeButtonDisabledProperty(){
+		return removeButtonDisabled.getReadOnlyProperty();
 	}
 
+	public ReadOnlyBooleanProperty editButtonDisabledProperty() {
+		return editButtonDisabled.getReadOnlyProperty();
+	}
 }

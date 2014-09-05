@@ -51,11 +51,11 @@ public class DetailViewModelTest {
 	@Test
 	public void testRemoveAction(){
 		selectedContact.set(null);
-		assertThat(viewModel.removeButtonEnabledProperty()).isFalse();
+		assertThat(viewModel.removeButtonDisabledProperty()).isTrue();
 
 
 		selectedContact.set(luke);
-		assertThat(viewModel.removeButtonEnabledProperty()).isTrue();
+		assertThat(viewModel.removeButtonDisabledProperty()).isFalse();
 
 
 
