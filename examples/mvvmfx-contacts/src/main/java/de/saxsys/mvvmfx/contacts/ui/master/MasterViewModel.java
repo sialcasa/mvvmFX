@@ -1,6 +1,9 @@
 package de.saxsys.mvvmfx.contacts.ui.master;
 
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -34,6 +37,8 @@ public class MasterViewModel implements ViewModel {
 	
 	private ObjectProperty<MasterTableViewModel> selectedTableRow = new SimpleObjectProperty<>();
 	
+	private Optional<Consumer<MasterTableViewModel>> onSelect = Optional.empty();
+	
 	@Inject
 	Repository repository;
 	
@@ -56,17 +61,37 @@ public class MasterViewModel implements ViewModel {
 	
 	private void updateContactList() {
 		LOG.debug("update contact list");
+
+
+		// when there is a selected row, persist the id of this row, otherwise use null
+		final String selectedContactId = (selectedTableRow.get() == null)? null : selectedTableRow.get().getId();
+		
 		
 		Set<Contact> allContacts = repository.findAll();
 		
 		contacts.clear();
 		allContacts.forEach(contact -> contacts.add(new MasterTableViewModel(contact)));
+		
+		if(selectedContactId != null){
+			Optional<MasterTableViewModel> selectedRow = contacts.stream()
+					.filter(row -> row.getId().equals(selectedContactId)).findFirst();
+			
+			if(selectedRow.isPresent()){
+				onSelect.ifPresent(consumer -> consumer.accept(selectedRow.get()));
+			}else{
+				onSelect.ifPresent(consumer -> consumer.accept(null));
+			}
+		}
 	}
 	
 	public ObservableList<MasterTableViewModel> contactList() {
 		return contacts;
 	}
 	
+	
+	public void setOnSelect(Consumer<MasterTableViewModel> consumer){
+		onSelect = Optional.of(consumer);
+	}
 	
 	public ObjectProperty<MasterTableViewModel> selectedTableRowProperty() {
 		return selectedTableRow;

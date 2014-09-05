@@ -18,6 +18,9 @@ public class MasterView implements FxmlView<MasterViewModel> {
 		contactTable.setItems(viewModel.contactList());
 		
 		viewModel.selectedTableRowProperty().bind(contactTable.getSelectionModel().selectedItemProperty());
+		
+		// When the selectedTableRowProperty changes in the viewModel we need to update the table
+		viewModel.setOnSelect(contactTable.getSelectionModel()::select);
 	}
 	
 }

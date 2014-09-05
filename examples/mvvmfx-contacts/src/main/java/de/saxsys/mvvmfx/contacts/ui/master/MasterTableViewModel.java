@@ -33,7 +33,28 @@ public class MasterTableViewModel {
 			setAge((int) ChronoUnit.YEARS.between(contact.getBirthday(), LocalDate.now(CentralClock.getClock())));
 		}
 	}
-	
+
+
+	@Override
+	public boolean equals(Object obj) {
+		
+		if(obj == null){
+			return false;
+		}
+		
+		if(obj == this){
+			return true;
+		}
+		
+		if(!(obj instanceof MasterTableViewModel)){
+			return false;
+		}
+		
+		MasterTableViewModel other = (MasterTableViewModel) obj;
+		
+		return other.getId().equals(this.getId());
+	}
+
 	public String getId(){
 		return id.get();
 	}
