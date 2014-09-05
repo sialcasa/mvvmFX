@@ -139,7 +139,10 @@ public class DetailViewModel implements ViewModel {
 	}
 
 	public void removeAction() {
-		repository.delete(masterViewModel.selectedContactProperty().get());
+		Contact selectedContact = masterViewModel.selectedContactProperty().get();
+		if(selectedContact != null) {
+			repository.delete(masterViewModel.selectedContactProperty().get());
+		}
 	}
 
 
