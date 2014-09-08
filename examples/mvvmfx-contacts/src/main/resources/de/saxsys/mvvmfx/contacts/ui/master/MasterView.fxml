@@ -13,22 +13,22 @@
 	<children>
 		<TableView fx:id="contactTable" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<columns>
-				<TableColumn prefWidth="75.0" text="First Name">
+				<TableColumn prefWidth="75.0" text="%master.table.firstname">
 					<cellValueFactory>
 						<PropertyValueFactory property="firstname" />
 					</cellValueFactory>
 				</TableColumn>
-				<TableColumn prefWidth="75.0" text="Last Name">
+				<TableColumn prefWidth="75.0" text="%master.table.lastname">
 					<cellValueFactory>
 						<PropertyValueFactory property="lastname" />
 					</cellValueFactory>
 				</TableColumn>
-				<TableColumn text="E-Mail">
+				<TableColumn text="%master.table.email">
 					<cellValueFactory>
 						<PropertyValueFactory property="emailAddress" />
 					</cellValueFactory>
 				</TableColumn>
-            	<TableColumn text="Age">
+            	<TableColumn text="%master.table.age">
 					<cellValueFactory>
 						<PropertyValueFactory property="age" />
 					</cellValueFactory>

@@ -11,7 +11,7 @@
 				 AnchorPane.topAnchor="0.0">
 			<items>
 				<Button fx:id="addNewContactButton" mnemonicParsing="false" onAction="#addNewContact"
-						text="Add Contact"/>
+						text="%toolbar.addcontactbutton"/>
 			</items>
 		</ToolBar>
 	</children>

@@ -24,6 +24,7 @@ import javafx.stage.StageStyle;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ResourceBundle;
 import java.util.function.Supplier;
 
 @Singleton
@@ -44,9 +45,10 @@ public class EditContactDialog implements FxmlView<EditContactDialogViewModel> {
 	@InjectViewModel
 	private EditContactDialogViewModel viewModel;
 	
-	EditContactDialog() {
+	@Inject
+	EditContactDialog(ResourceBundle defaultResourceBundle) {
 		ViewTuple<EditContactDialog, EditContactDialogViewModel> viewTuple = FluentViewLoader.fxmlView(this.getClass())
-				.codeBehind(this).load();
+				.codeBehind(this).resourceBundle(defaultResourceBundle).load();
 		
 		root = viewTuple.getView();
 	}
