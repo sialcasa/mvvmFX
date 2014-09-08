@@ -15,7 +15,7 @@
       	 <children>
             <HBox>
                <children>
-            		<Text fill="dimgray" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit Contact">
+            		<Text fill="dimgray" strokeType="OUTSIDE" strokeWidth="0.0" text="dialog.addcontact.title">
             		   <font>
             			  <Font size="24.0" />
             		   </font>
@@ -34,7 +34,7 @@
             <Separator />
       		<HBox alignment="CENTER_RIGHT">
       		   <children>
-      			  <Button fx:id="applyButton" defaultButton="true" mnemonicParsing="false" onAction="#apply" prefWidth="80.0" text="Apply">
+      			  <Button fx:id="applyButton" defaultButton="true" mnemonicParsing="false" onAction="#apply" prefWidth="80.0" text="%common.apply">
       				 <HBox.margin>
       					<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
       				 </HBox.margin>

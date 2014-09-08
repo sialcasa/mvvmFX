@@ -19,6 +19,8 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.contacts.ui.contactform.ContactFormView;
 
+import java.util.ResourceBundle;
+
 @Singleton
 public class AddContactDialog implements FxmlView<AddContactDialogViewModel> {
 	
@@ -31,16 +33,16 @@ public class AddContactDialog implements FxmlView<AddContactDialogViewModel> {
 	@FXML
 	private ContactFormView contactFormViewController;
 	
-	
 	@InjectViewModel
 	private AddContactDialogViewModel viewModel;
 	
 	
 	private Parent root;
 	
-	AddContactDialog() {
+	@Inject
+	AddContactDialog(ResourceBundle defaultResourceBundle) {
 		ViewTuple<AddContactDialog, AddContactDialogViewModel> viewTuple = FluentViewLoader.fxmlView(this.getClass())
-				.codeBehind(this).load();
+				.codeBehind(this).resourceBundle(defaultResourceBundle).load();
 		
 		root = viewTuple.getView();
 		

@@ -8,19 +8,19 @@
    <children>
       <MenuBar AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu mnemonicParsing="false" text="%menu.file">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
+              <MenuItem mnemonicParsing="false" onAction="#close" text="%menu.file.close" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
+          <Menu mnemonicParsing="false" text="%menu.edit">
             <items>
-              <MenuItem fx:id="removeMenuItem" mnemonicParsing="false" onAction="#remove" text="Remove" />
+              <MenuItem fx:id="removeMenuItem" mnemonicParsing="false" onAction="#remove" text="%menu.edit.removecontact" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
+          <Menu mnemonicParsing="false" text="%menu.help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem mnemonicParsing="false" text="%menu.help.about" />
             </items>
           </Menu>
         </menus>

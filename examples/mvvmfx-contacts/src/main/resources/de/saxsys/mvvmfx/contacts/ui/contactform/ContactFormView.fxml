@@ -29,25 +29,25 @@
 				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 			</rowConstraints>
 			<children>
-				<Label text="Firstname:" GridPane.halignment="RIGHT" />
-				<Label text="Lastname:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-				<Label text="Title:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
-				<Label text="Role:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-				<Label text="Department:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-				<Label text="E-Mail:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-				<Label text="Phone Number:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
-				<Label text="Mobile Number:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+				<Label text="%contactform.firstname.label" GridPane.halignment="RIGHT" />
+				<Label text="%contactform.lastname.label" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+				<Label text="%contactform.title.label" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
+				<Label text="%contactform.role.label" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+				<Label text="%contactform.department.label" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+				<Label text="%contactform.email.label" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+				<Label text="%contactform.phonenumber.label" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+				<Label text="%contactform.mobilenumber.label" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
 				<Separator GridPane.columnSpan="4" GridPane.rowIndex="4" />
-				<Label text="Birthday:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-				<TextField fx:id="firstnameInput" promptText="Your firstname" GridPane.columnIndex="1" />
-				<TextField fx:id="titleInput" promptText="Title" GridPane.columnIndex="3" />
-				<TextField fx:id="lastnameInput" promptText="Your lastname" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-				<TextField fx:id="roleInput" promptText="Your role" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-				<TextField fx:id="departmentInput" promptText="Your Department" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-				<TextField fx:id="emailInput" promptText="E-Mail address" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-				<TextField fx:id="mobileNumberInput" promptText="Mobile Number" GridPane.columnIndex="3" GridPane.rowIndex="5" />
-				<TextField fx:id="phoneNumberInput" promptText="Phone Number" GridPane.columnIndex="3" GridPane.rowIndex="6" />
-				<DatePicker fx:id="birthdayInput" promptText="Birthday" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+				<Label text="%contactform.birthday.label" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+				<TextField fx:id="firstnameInput" promptText="%contactform.firstname.prompt" GridPane.columnIndex="1" />
+				<TextField fx:id="titleInput" promptText="%contactform.title.prompt" GridPane.columnIndex="3" />
+				<TextField fx:id="lastnameInput" promptText="%contactform.lastname.prompt" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+				<TextField fx:id="roleInput" promptText="%contactform.role.prompt" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+				<TextField fx:id="departmentInput" promptText="%contactform.department.prompt" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+				<TextField fx:id="emailInput" promptText="%contactform.email.prompt" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+				<TextField fx:id="mobileNumberInput" promptText="%contactform.mobilenumber.prompt" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+				<TextField fx:id="phoneNumberInput" promptText="%contactform.phonenumber.prompt" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+				<DatePicker fx:id="birthdayInput" promptText="%contactform.birthday.prompt" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 			</children>
 			<padding>
 				<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
