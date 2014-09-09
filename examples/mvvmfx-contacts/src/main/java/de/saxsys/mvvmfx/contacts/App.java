@@ -1,13 +1,11 @@
 package de.saxsys.mvvmfx.contacts;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -24,6 +22,7 @@ import de.saxsys.mvvmfx.contacts.ui.main.MainView;
 import de.saxsys.mvvmfx.contacts.ui.main.MainViewModel;
 
 
+
 public class App extends MvvmfxCdiApplication{
 	
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
@@ -31,13 +30,10 @@ public class App extends MvvmfxCdiApplication{
 	public static void main(String...args){
 		launch(args);
 	}
+	
 
-
-	/*
-	 * Due to the @Produces annotation this resource bundle can be injected in all views.
-	 */
-	@Produces
-	private ResourceBundle resourceBundle = ResourceBundle.getBundle("default",Locale.ENGLISH);
+	@Inject
+	private ResourceBundle resourceBundle;
 
 	@Inject
 	private Repository repository;
