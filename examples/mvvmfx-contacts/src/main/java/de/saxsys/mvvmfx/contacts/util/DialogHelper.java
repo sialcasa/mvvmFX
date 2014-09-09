@@ -21,7 +21,9 @@ public class DialogHelper {
 		openProperty.addListener((obs, oldValue, newValue) -> {
 			if (newValue) {
 				if(dialogStage.getScene() == null){
-					dialogStage.setScene(new Scene(rootSupplier.get()));
+					Scene dialogScene = new Scene(rootSupplier.get());
+					dialogScene.getStylesheets().add("/contacts.css");
+					dialogStage.setScene(dialogScene);
 				}else{
 					dialogStage.toFront();
 				}

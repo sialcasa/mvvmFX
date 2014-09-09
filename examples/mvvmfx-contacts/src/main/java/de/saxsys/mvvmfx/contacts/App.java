@@ -55,14 +55,18 @@ public class App extends MvvmfxCdiApplication{
 	@Override 
 	public void start(Stage stage) throws Exception {
 		LOG.info("Starting the Application");
-		
 		makePrimaryStageInjectable(stage);
 		
 		stage.setTitle(resourceBundle.getString("window.title"));
 		
 		ViewTuple<MainView, MainViewModel> main = FluentViewLoader.fxmlView(MainView.class).resourceBundle(resourceBundle).load();
 		
-		stage.setScene(new Scene(main.getView()));
+
+		Scene rootScene = new Scene(main.getView());
+		
+		rootScene.getStylesheets().add("/contacts.css");
+		
+		stage.setScene(rootScene);
 		stage.show();
 	}
 	

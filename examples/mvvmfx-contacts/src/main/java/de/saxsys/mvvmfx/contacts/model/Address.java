@@ -6,7 +6,7 @@ public class Address extends Identity{
 
 	private String street;
 
-	private String zipcode;
+	private String postalcode;
 	
 	private String city;
 	
@@ -35,12 +35,12 @@ public class Address extends Identity{
 		this.street = street;
 	}
 
-	public String getZipcode() {
-		return zipcode;
+	public String getPostalcode() {
+		return postalcode;
 	}
 
-	public void setZipcode(String zipcode) {
-		this.zipcode = zipcode;
+	public void setPostalcode(String postalcode) {
+		this.postalcode = postalcode;
 	}
 
 	public String getCity() {
