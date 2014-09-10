@@ -39,13 +39,13 @@
             <Label text="%addressform.street.label" />
             <Label text="%addressform.postalcode.label" GridPane.rowIndex="1" />
             <Label text="%addressform.city.label" GridPane.rowIndex="2" />
-            <TextField fx:id="streetInput" GridPane.columnIndex="1" promptText="%addressform.street.prompt"/>
-            <TextField fx:id="postalcodeInput" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="%addressform.postalcode.prompt"/>
-            <TextField fx:id="cityInput" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="%addressform.city.prompt"/>
+            <TextField fx:id="streetInput" promptText="%addressform.street.prompt" GridPane.columnIndex="1" />
+            <TextField fx:id="postalcodeInput" promptText="%addressform.postalcode.prompt" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="cityInput" promptText="%addressform.city.prompt" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label text="%addressform.country.label" GridPane.rowIndex="3" />
             <Label text="%addressform.federalstate.label" GridPane.rowIndex="4" />
-            <ChoiceBox fx:id="countryInput" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
             <ComboBox fx:id="federalStateInput" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <ComboBox fx:id="countryInput" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
 		</GridPane>
 	</children>
