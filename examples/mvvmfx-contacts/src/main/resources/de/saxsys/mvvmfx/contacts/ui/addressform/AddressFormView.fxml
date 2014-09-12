@@ -43,7 +43,7 @@
             <TextField fx:id="postalcodeInput" promptText="%addressform.postalcode.prompt" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="cityInput" promptText="%addressform.city.prompt" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label text="%addressform.country.label" GridPane.rowIndex="3" />
-            <Label text="%addressform.federalstate.label" GridPane.rowIndex="4" />
+            <Label fx:id="subdivisionLabel" text="%addressform.subdivision.label" GridPane.rowIndex="4" />
             <ComboBox fx:id="federalStateInput" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <ComboBox fx:id="countryInput" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>

@@ -1,13 +1,13 @@
 package de.saxsys.mvvmfx.contacts.model;
 
-public class FederalState {
+public class Subdivision {
 	
 	private final String name;
 	private final String abbr;
 	
 	private final Country country;
 	
-	FederalState(String name, String abbr, Country country){
+	Subdivision(String name, String abbr, Country country){
 		this.name = name;
 		this.abbr = abbr;
 		this.country = country;
@@ -34,7 +34,7 @@ public class FederalState {
 			return false;
 		}
 
-		FederalState that = (FederalState) o;
+		Subdivision that = (Subdivision) o;
 
 		if (!abbr.equals(that.abbr)) {
 			return false;

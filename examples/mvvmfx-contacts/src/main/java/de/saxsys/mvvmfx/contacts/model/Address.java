@@ -2,7 +2,7 @@ package de.saxsys.mvvmfx.contacts.model;
 
 public class Address extends Identity{
 	
-	private FederalState federalState;
+	private Subdivision subdivision;
 
 	private String street;
 
@@ -15,16 +15,16 @@ public class Address extends Identity{
 	}
 	
 	
-	public FederalState getFederalState() {
-		return federalState;
+	public Subdivision getSubdivision() {
+		return subdivision;
 	}
 
-	public void setFederalState(FederalState federalState) {
-		this.federalState = federalState;
+	public void setSubdivision(Subdivision subdivision) {
+		this.subdivision = subdivision;
 	}
 
 	public Country getCountry(){
-		return federalState == null ? null : federalState.getCountry();
+		return subdivision == null ? null : subdivision.getCountry();
 	}
 	
 	public String getStreet() {

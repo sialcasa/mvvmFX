@@ -7,25 +7,25 @@ import java.util.List;
 public class Country {
 	
 	private final String name;
+
+
+	private final String countryCode;
 	
-	private final List<FederalState> federalStates = new ArrayList<>();
-	
-	public Country(String name){
+	public Country(String name, String countryCode){
 		this.name = name;
+		this.countryCode = countryCode;
 	}
 
-	public void addFederalState(String name, String abbr){
-		this.federalStates.add(new FederalState(name, abbr, this));
-	}
-	
-	public List<FederalState> getFederalStates(){
-		return Collections.unmodifiableList(federalStates);
-	}
-	
 	public String getName() {
 		return name;
 	}
 
+
+	public String getCountryCode() {
+		return countryCode;
+	}
+	
+	
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -40,6 +40,10 @@ public class Country {
 		if (!name.equals(country.name)) {
 			return false;
 		}
+		
+		if(!countryCode.equals(country.countryCode)){
+			return false;
+		}
 
 		return true;
 	}
@@ -47,6 +51,7 @@ public class Country {
 	@Override
 	public int hashCode() {
 		int result = name.hashCode();
+		result += countryCode.hashCode();
 		return result;
 	}
 }

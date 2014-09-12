@@ -2,6 +2,7 @@ package de.saxsys.mvvmfx.contacts.ui.addressform;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import de.saxsys.mvvmfx.FxmlView;
@@ -18,6 +19,8 @@ public class AddressFormView implements FxmlView<AddressFormViewModel> {
 	public ComboBox<String> countryInput;
 	@FXML
 	public ComboBox<String> federalStateInput;
+	@FXML
+	public Label subdivisionLabel;
 	
 	
 	@InjectViewModel
@@ -25,6 +28,8 @@ public class AddressFormView implements FxmlView<AddressFormViewModel> {
 	
 	
 	public void initialize(){
+		subdivisionLabel.textProperty().bind(viewModel.subdivisionLabel());
+		
 		streetInput.textProperty().bindBidirectional(viewModel.streetProperty());
 		postalcodeInput.textProperty().bindBidirectional(viewModel.postalCodeProperty());
 		cityInput.textProperty().bindBidirectional(viewModel.cityProperty());
@@ -32,7 +37,7 @@ public class AddressFormView implements FxmlView<AddressFormViewModel> {
 		countryInput.setItems(viewModel.countriesList());
 		countryInput.valueProperty().bindBidirectional(viewModel.selectedCountryProperty());
 		
-		federalStateInput.setItems(viewModel.federalStatesList());
-		federalStateInput.valueProperty().bindBidirectional(viewModel.selectedFederalStateProperty());
+		federalStateInput.setItems(viewModel.subdivisionsList());
+		federalStateInput.valueProperty().bindBidirectional(viewModel.selectedSubdivisionProperty());
 	}
 }

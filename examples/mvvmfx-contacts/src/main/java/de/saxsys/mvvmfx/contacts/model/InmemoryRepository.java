@@ -14,7 +14,6 @@ import java.util.Set;
 public class InmemoryRepository implements Repository {
 	
 	private Set<Contact> contacts = new HashSet<>();
-	private Set<Country> countries = new HashSet<>();
 
 	@Inject
 	private Event<ContactsUpdatedEvent> contactsUpdatedEvent;
@@ -41,22 +40,6 @@ public class InmemoryRepository implements Repository {
 		contacts.remove(contact);
 		fireUpdateEvent();
 	}
-
-	@Override 
-	public Set<Country> findAllCountries() {
-		return Collections.unmodifiableSet(countries);
-	}
-
-	@Override 
-	public void save(Country country) {
-		countries.add(country);
-	}
-
-	@Override 
-	public void delete(Country country) {
-		countries.remove(country);
-	}
-	
 	
 	private void fireUpdateEvent(){
 		if(contactsUpdatedEvent != null){

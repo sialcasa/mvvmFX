@@ -13,10 +13,4 @@ public interface Repository {
 	void save(Contact contact);
 	
 	void delete(Contact contact);
-	
-	Set<Country> findAllCountries();
-	
-	void save(Country country);
-	
-	void delete(Country country);
 }
