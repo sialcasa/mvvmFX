@@ -1,15 +1,24 @@
 package de.saxsys.mvvmfx.contacts.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "iso_3166_entry")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Country {
 	
-	private final String name;
+	@XmlAttribute(name = "name")
+	private String name;
 
-
-	private final String countryCode;
+	@XmlAttribute(name = "alpha_2_code")
+	private String countryCode;
+	
+	Country(){
+		
+	}
 	
 	public Country(String name, String countryCode){
 		this.name = name;
@@ -19,13 +28,23 @@ public class Country {
 	public String getName() {
 		return name;
 	}
-
+	
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public String getCountryCode() {
 		return countryCode;
 	}
+
 	
-	
+
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
+	}
+
+
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -35,6 +54,11 @@ public class Country {
 			return false;
 		}
 
+		
+		if(name == null || countryCode == null){
+			return  false;
+		}
+		
 		Country country = (Country) o;
 
 		if (!name.equals(country.name)) {
@@ -50,8 +74,14 @@ public class Country {
 
 	@Override
 	public int hashCode() {
-		int result = name.hashCode();
-		result += countryCode.hashCode();
+		int result = name == null ? 13 : name.hashCode();
+		result += countryCode == null ? 13 : countryCode.hashCode();
 		return result;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Country:" + name + ", code:" + countryCode;
 	}
 }

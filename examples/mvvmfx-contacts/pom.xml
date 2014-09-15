@@ -46,11 +46,17 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.fxmisc.easybind</groupId>
-			<artifactId>easybind</artifactId>
-			<version>1.0.3</version>
+			<groupId>org.javafxdata</groupId>
+			<artifactId>datafx-core</artifactId>
+			<version>8.0b5</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.javafxdata</groupId>
+			<artifactId>datafx-datareader</artifactId>
+			<version>8.0b5</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

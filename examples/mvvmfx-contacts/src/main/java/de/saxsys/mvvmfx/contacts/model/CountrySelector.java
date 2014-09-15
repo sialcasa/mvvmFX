@@ -1,63 +1,68 @@
 package de.saxsys.mvvmfx.contacts.model;
 
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Worker;
+import org.datafx.provider.ListDataProvider;
+import org.datafx.reader.FileSource;
+import org.datafx.reader.converter.XmlConverter;
 
+import javax.inject.Singleton;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 public class CountrySelector {
 
+	public static final String ISO_3166_LOCATION = "/countries/iso_3166.xml";
 	private ObservableList<Country> countries = FXCollections.observableArrayList();
 	private ObservableList<Subdivision> subdivisions = FXCollections.observableArrayList();
 	
-	private Map<Country, List<Subdivision>> map = new HashMap<>();
 	
 	private ReadOnlyStringWrapper subdivisionLabel = new ReadOnlyStringWrapper();
 	
-	public CountrySelector(){
-		Country germany = new Country("Deutschland", "DE");
-		map.put(germany, new ArrayList<>());
-		Country austria = new Country("Österreich", "AT");
-		map.put(austria, new ArrayList<>());
-		
-		countries.addAll(map.keySet());
+	private ReadOnlyBooleanWrapper inProgress = new ReadOnlyBooleanWrapper(false);
 
-		map.get(austria).add(new Subdivision("Burgenland", "Bgld.", austria));
-		map.get(austria).add(new Subdivision("Kärnten", "Ktn.", austria));
-		map.get(austria).add(new Subdivision("Niederösterreich", "NÖ", austria));
-		map.get(austria).add(new Subdivision("Oberösterreich", "OÖ", austria));
-		map.get(austria).add(new Subdivision("Salzburg", "Sbg.", austria));
+	
+	public void loadCountries(){
+		inProgress.set(true);
+		URL iso3166Resource = this.getClass().getResource(ISO_3166_LOCATION);
+		if(iso3166Resource == null){
+			throw new IllegalStateException("Can't find the list of countries! Expected location was:" + ISO_3166_LOCATION);
+		}
 
-		map.get(austria).add(new Subdivision("Steiermark", "Stmk.", austria));
-		map.get(austria).add(new Subdivision("Tirol", "T", austria));
-		map.get(austria).add(new Subdivision("Vorarlberg", "Vbg.", austria));
-		map.get(austria).add(new Subdivision("Wien", "W", austria));
+		XmlConverter<Country> countryConverter = new XmlConverter<>("iso_3166_entry",Country.class);
 
+		try {
+			FileSource<Country> dataSource = new FileSource<>(new File(iso3166Resource.getFile()),countryConverter);
+			ListDataProvider<Country> listDataProvider = new ListDataProvider<>(dataSource);
 
-		map.get(germany).add(new Subdivision("Baden-Württemberg", "BW", germany));
-		map.get(germany).add(new Subdivision("Bayern", "BY", germany));
-		map.get(germany).add(new Subdivision("Berlin", "BE", germany));
-		map.get(germany).add(new Subdivision("Brandenburg", "BB", germany));
-		map.get(germany).add(new Subdivision("Bremen", "HB", germany));
+			listDataProvider.setResultObservableList(countries);
 
-		map.get(germany).add(new Subdivision("Hamburg", "HH", germany));
-		map.get(germany).add(new Subdivision("Hessen", "HE", germany));
-		map.get(germany).add(new Subdivision("Mecklemburg-Vorpommern", "MV", germany));
-		map.get(germany).add(new Subdivision("Niedersachsen", "NI", germany));
-		map.get(germany).add(new Subdivision("Nordrhein-Westfalen", "NW", germany));
-
-		map.get(germany).add(new Subdivision("Rheinland-Pfalz", "RP", germany));
-		map.get(germany).add(new Subdivision("Saarland", "SL", germany));
-		map.get(germany).add(new Subdivision("Sachsen", "SN", germany));
-		map.get(germany).add(new Subdivision("Sachsen-Anhalt", "ST", germany));
-		map.get(germany).add(new Subdivision("Schleswig-Holstein", "SH", germany));
-
-		map.get(germany).add(new Subdivision("Thüringen", "TH", germany));
+			Worker<ObservableList<Country>> worker = listDataProvider.retrieve();
+			worker.stateProperty().addListener(obs -> {
+				if (worker.getState() == Worker.State.SUCCEEDED) {
+					inProgress.set(false);
+				}
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public ObservableList<Country> availableCountries(){
@@ -65,18 +70,8 @@ public class CountrySelector {
 	}
 	
 	public void setCountry(Country country){
-		subdivisions.clear();
 		
-		if(country != null){
-			subdivisions.addAll(map.get(country));
-			if(country.getCountryCode().equals("DE")){
-				subdivisionLabel.set("Bundesland");
-			}else if(country.getCountryCode().equals("AT")){
-				subdivisionLabel.set("Bundesland");
-			}
-		}else{
-			subdivisionLabel.set(null);
-		}
+		
 	}
 	
 	public ReadOnlyStringProperty subdivisionLabel(){
@@ -84,7 +79,10 @@ public class CountrySelector {
 	}
 	
 	public ObservableList<Subdivision> subdivisions(){
-		return subdivisions;
+		return FXCollections.unmodifiableObservableList(subdivisions);
 	}
-	
+
+	public ReadOnlyBooleanProperty inProgressProperty(){
+		return inProgress.getReadOnlyProperty();
+	}
 }

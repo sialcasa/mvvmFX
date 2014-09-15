@@ -7,16 +7,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ListResourceBundle;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
+import de.saxsys.javafx.test.JfxRunner;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.saxsys.mvvmfx.contacts.model.Country;
 import de.saxsys.mvvmfx.contacts.model.CountrySelector;
+import org.junit.runner.RunWith;
 
+@RunWith(JfxRunner.class)
 public class AddressFormViewModelTest {
 	private AddressFormViewModel viewModel;
 	
@@ -45,11 +52,22 @@ public class AddressFormViewModelTest {
 	}
 
 	@Test
-	public void testCountryAndFederalStateLists(){
+	@Ignore
+	public void testCountryAndFederalStateLists() throws Exception{
+
+		CompletableFuture<Boolean> blocker = new CompletableFuture<>();
+
+		countrySelector.inProgressProperty().addListener((obs, oldV, newV)->{
+			if(!newV){
+				blocker.complete(true);
+			}
+		});
 		
-		viewModel.init();
+		Platform.runLater(viewModel::init);
 		
-		assertThat(viewModel.countriesList()).hasSize(3).contains(NOTHING_SELECTED_MARKER,"Österreich", "Deutschland");
+		blocker.get(1, TimeUnit.SECONDS);
+		
+		assertThat(viewModel.countriesList()).hasSize(4).contains(NOTHING_SELECTED_MARKER,"Austria", "Germany", "Switzerland");
 		assertThat(viewModel.countriesList().get(0)).isEqualTo(NOTHING_SELECTED_MARKER);
 		assertThat(viewModel.subdivisionsList()).hasSize(1).contains(NOTHING_SELECTED_MARKER);
 		
@@ -59,23 +77,23 @@ public class AddressFormViewModelTest {
 		assertThat(viewModel.subdivisionLabel()).hasValue("default_subdivision_label");
 		
 		
-		viewModel.selectedCountryProperty().set("Deutschland");
+		viewModel.selectedCountryProperty().set("Germany");
 		
 		assertThat(viewModel.subdivisionsList()).hasSize(17).contains(NOTHING_SELECTED_MARKER, "Sachsen", "Berlin",
 				"Bayern"); // test sample
 		assertThat(viewModel.subdivisionsList().get(0)).isEqualTo(NOTHING_SELECTED_MARKER);
 		assertThat(viewModel.selectedSubdivisionProperty()).hasValue(NOTHING_SELECTED_MARKER);
-		assertThat(viewModel.subdivisionLabel()).hasValue("Bundesland");
+		assertThat(viewModel.subdivisionLabel()).hasValue("State");
 		
 		viewModel.selectedSubdivisionProperty().set("Sachsen");
 		
 		
-		viewModel.selectedCountryProperty().set("Österreich");
+		viewModel.selectedCountryProperty().set("Austria");
 		
 		assertThat(viewModel.selectedSubdivisionProperty()).hasValue(NOTHING_SELECTED_MARKER);
 		assertThat(viewModel.subdivisionsList()).hasSize(10).contains(NOTHING_SELECTED_MARKER, "Wien", "Tirol", "Salzburg");
 		assertThat(viewModel.subdivisionsList().get(0)).isEqualTo(NOTHING_SELECTED_MARKER);
-		assertThat(viewModel.subdivisionLabel()).hasValue("Bundesland");
+		assertThat(viewModel.subdivisionLabel()).hasValue("State");
 		
 		viewModel.selectedSubdivisionProperty().set("Wien");
 		
