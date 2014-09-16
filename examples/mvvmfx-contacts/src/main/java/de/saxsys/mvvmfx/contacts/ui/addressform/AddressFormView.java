@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 
 import de.saxsys.mvvmfx.FxmlView;
@@ -24,6 +25,12 @@ public class AddressFormView implements FxmlView<AddressFormViewModel> {
 	@FXML
 	public Label subdivisionLabel;
 	
+	@FXML
+	public Label countryLabel;
+	
+	@FXML
+	public ProgressIndicator loadingIndicator;
+	
 	
 	@InjectViewModel
 	private AddressFormViewModel viewModel;
@@ -31,6 +38,9 @@ public class AddressFormView implements FxmlView<AddressFormViewModel> {
 	
 	public void initialize(){
 		subdivisionLabel.textProperty().bind(viewModel.subdivisionLabel());
+		subdivisionLabel.disableProperty(). bind(viewModel.subdivisionInputDisabledProperty());
+		
+		countryLabel.disableProperty().bind(viewModel.countryInputDisabledProperty());
 		
 		streetInput.textProperty().bindBidirectional(viewModel.streetProperty());
 		postalcodeInput.textProperty().bindBidirectional(viewModel.postalCodeProperty());
@@ -38,8 +48,13 @@ public class AddressFormView implements FxmlView<AddressFormViewModel> {
 
 		countryInput.setItems(viewModel.countriesList());
 		countryInput.valueProperty().bindBidirectional(viewModel.selectedCountryProperty());
+		countryInput.disableProperty().bind(viewModel.countryInputDisabledProperty());
 		
 		federalStateInput.setItems(viewModel.subdivisionsList());
 		federalStateInput.valueProperty().bindBidirectional(viewModel.selectedSubdivisionProperty());
+		federalStateInput.disableProperty().bind(viewModel.subdivisionInputDisabledProperty());
+		
+		loadingIndicator.visibleProperty().bind(viewModel.loadingInProgressProperty());
+		
 	}
 }

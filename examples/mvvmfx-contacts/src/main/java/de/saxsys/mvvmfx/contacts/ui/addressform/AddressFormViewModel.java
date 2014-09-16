@@ -38,6 +38,8 @@ public class AddressFormViewModel implements ViewModel {
 	private StringProperty selectedSubdivision = new SimpleStringProperty(NOTHING_SELECTED_MARKER);
 	
 	private ReadOnlyBooleanWrapper loadingInProgress = new ReadOnlyBooleanWrapper();
+	private ReadOnlyBooleanWrapper countryInputDisabled = new ReadOnlyBooleanWrapper();
+	private ReadOnlyBooleanWrapper subdivisionInputDisabled = new ReadOnlyBooleanWrapper();
 	
 	@Inject
 	CountrySelector countrySelector;
@@ -54,6 +56,7 @@ public class AddressFormViewModel implements ViewModel {
 	
 	@PostConstruct
 	public void init() {
+		
 		loadingInProgress.bind(countrySelector.inProgressProperty());
 		countrySelector.init();
 		
@@ -91,6 +94,13 @@ public class AddressFormViewModel implements ViewModel {
 			}
 			selectedSubdivision.set(NOTHING_SELECTED_MARKER);
 		});
+
+
+
+		countryInputDisabled.bind(loadingInProgress);
+
+		subdivisionInputDisabled.bind(loadingInProgress.or(Bindings.size(subdivisionsList()).lessThanOrEqualTo(1)));
+
 	}
 	
 	
@@ -151,5 +161,13 @@ public class AddressFormViewModel implements ViewModel {
 	
 	public ReadOnlyBooleanProperty loadingInProgressProperty(){
 		return loadingInProgress.getReadOnlyProperty();
+	}
+	
+	public ReadOnlyBooleanProperty countryInputDisabledProperty(){
+		return countryInputDisabled.getReadOnlyProperty();
+	}
+	
+	public ReadOnlyBooleanProperty subdivisionInputDisabledProperty(){
+		return subdivisionInputDisabled.getReadOnlyProperty();
 	}
 }

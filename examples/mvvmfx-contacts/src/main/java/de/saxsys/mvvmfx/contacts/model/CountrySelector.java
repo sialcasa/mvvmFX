@@ -41,7 +41,6 @@ public class CountrySelector {
 	private ReadOnlyStringWrapper subdivisionLabel = new ReadOnlyStringWrapper();
 	
 	private ReadOnlyBooleanWrapper inProgress = new ReadOnlyBooleanWrapper(false);
-	private Country selectedCountry;
 	
 	private Map<Country, List<Subdivision>> countryCodeSubdivisionMap = new HashMap<>();
 	private Map<Country, String> countryCodeSubdivisionNameMap = new HashMap<>();
