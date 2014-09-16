@@ -1,12 +1,7 @@
 package de.saxsys.mvvmfx.contacts.ui.addcontact;
 
-import de.saxsys.mvvmfx.contacts.events.OpenAddContactDialogEvent;
-import de.saxsys.mvvmfx.contacts.ui.addressform.AddressFormView;
-import de.saxsys.mvvmfx.contacts.ui.addressform.AddressFormViewModel;
-import de.saxsys.mvvmfx.contacts.ui.contactform.ContactFormViewModel;
-import de.saxsys.mvvmfx.contacts.util.DialogHelper;
+import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
@@ -23,10 +18,12 @@ import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.contacts.events.OpenAddContactDialogEvent;
+import de.saxsys.mvvmfx.contacts.ui.addressform.AddressFormView;
+import de.saxsys.mvvmfx.contacts.ui.addressform.AddressFormViewModel;
 import de.saxsys.mvvmfx.contacts.ui.contactform.ContactFormView;
-
-import java.net.URL;
-import java.util.ResourceBundle;
+import de.saxsys.mvvmfx.contacts.ui.contactform.ContactFormViewModel;
+import de.saxsys.mvvmfx.contacts.util.DialogHelper;
 
 @Singleton
 public class AddContactDialog implements FxmlView<AddContactDialogViewModel> {

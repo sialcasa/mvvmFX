@@ -37,6 +37,8 @@ public class AddressFormViewModel implements ViewModel {
 	private StringProperty selectedCountry = new SimpleStringProperty(NOTHING_SELECTED_MARKER);
 	private StringProperty selectedSubdivision = new SimpleStringProperty(NOTHING_SELECTED_MARKER);
 	
+	private ReadOnlyBooleanWrapper loadingInProgress = new ReadOnlyBooleanWrapper();
+	
 	@Inject
 	CountrySelector countrySelector;
 	
@@ -52,7 +54,9 @@ public class AddressFormViewModel implements ViewModel {
 	
 	@PostConstruct
 	public void init() {
-		countrySelector.loadCountries();
+		loadingInProgress.bind(countrySelector.inProgressProperty());
+		countrySelector.init();
+		
 		
 		subdivisionLabel.bind(
 				Bindings.when(
@@ -71,6 +75,7 @@ public class AddressFormViewModel implements ViewModel {
 		
 		subdivisionItemList = new ItemList<>(countrySelector.subdivisions(), Subdivision::getName);
 		subdivisions = createListWithNothingSelectedMarker(subdivisionItemList.getTargetList());
+		subdivisions.addListener((ListChangeListener<String>) c -> selectedSubdivision.set(NOTHING_SELECTED_MARKER));
 		
 		selectedCountry.addListener((obs, oldV, newV) -> {
 			if (newV != null && !newV.equals(NOTHING_SELECTED_MARKER)) {
@@ -142,5 +147,9 @@ public class AddressFormViewModel implements ViewModel {
 	
 	public ReadOnlyStringProperty subdivisionLabel() {
 		return subdivisionLabel.getReadOnlyProperty();
+	}
+	
+	public ReadOnlyBooleanProperty loadingInProgressProperty(){
+		return loadingInProgress.getReadOnlyProperty();
 	}
 }
