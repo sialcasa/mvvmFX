@@ -15,7 +15,7 @@
       	 <children>
             <HBox>
                <children>
-            		<Text fill="dimgray" strokeType="OUTSIDE" strokeWidth="0.0" text="dialog.addcontact.title">
+            		<Text fill="dimgray" strokeType="OUTSIDE" strokeWidth="0.0" text="%dialog.editcontact.title">
             		   <font>
             			  <Font size="24.0" />
             		   </font>

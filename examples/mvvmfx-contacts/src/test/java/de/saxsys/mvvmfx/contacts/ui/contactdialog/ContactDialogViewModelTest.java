@@ -1,6 +1,7 @@
-package de.saxsys.mvvmfx.contacts.ui.addcontact;
+package de.saxsys.mvvmfx.contacts.ui.contactdialog;
 
 import de.saxsys.mvvmfx.contacts.ui.addressform.AddressFormViewModel;
+import de.saxsys.mvvmfx.contacts.ui.contactdialog.ContactDialogViewModel;
 import de.saxsys.mvvmfx.contacts.ui.contactform.ContactFormViewModel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -11,9 +12,9 @@ import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class AddContactDialogViewModelTest {
+public class ContactDialogViewModelTest {
 	
-	private AddContactDialogViewModel viewModel;
+	private ContactDialogViewModel viewModel;
 	
 	private ContactFormViewModel contactFormViewModel;
 	private AddressFormViewModel addressFormViewModel;
@@ -30,34 +31,48 @@ public class AddContactDialogViewModelTest {
 		addressFormViewModel = mock(AddressFormViewModel.class);
 		when(addressFormViewModel.validProperty()).thenReturn(addressFormValid);
 		
-		viewModel = new AddContactDialogViewModel();
-		viewModel.initContactFormViewModel(contactFormViewModel);
-		viewModel.initAddressFormViewModel(addressFormViewModel);
+		viewModel = new ContactDialogViewModel();
+		viewModel.setContactFormViewModel(contactFormViewModel);
+		viewModel.setAddressFormViewModel(addressFormViewModel);
 	}
 	
 	@Test
-	public void testDialogPageIsResetWhenDialogIsClosed(){
-		viewModel.dialogOpenProperty().set(true);
+	public void testValid(){
+		viewModel = new ContactDialogViewModel();
+		addressFormValid.set(true);
+		contactFormValid.set(true);
 		
-		viewModel.dialogPageProperty().set(1);
+		assertThat(viewModel.validProperty()).isFalse();
 		
-		viewModel.dialogOpenProperty().set(false);
+		viewModel.setContactFormViewModel(contactFormViewModel);
+		assertThat(viewModel.validProperty()).isFalse();
 		
-		assertThat(viewModel.dialogPageProperty()).hasValue(0);
+		viewModel.setAddressFormViewModel(addressFormViewModel);
+		assertThat(viewModel.validProperty()).isTrue();
+		
+		addressFormValid.set(false);
+		assertThat(viewModel.validProperty()).isFalse();
+		
+		addressFormValid.set(true);
+		assertThat(viewModel.validProperty()).isTrue();
+		
+		contactFormValid.set(false);
+		assertThat(viewModel.validProperty()).isFalse();
+		
+		contactFormValid.set(true);
+		assertThat(viewModel.validProperty()).isTrue();
 	}
 	
 	@Test
 	public void testWorkflow(){
-		viewModel.dialogOpenProperty().set(true);
-		
 		assertThat(viewModel.dialogPageProperty()).hasValue(0);
 		
 		contactFormValid.set(false);
 		addressFormValid.set(false);
 		
 		// add button is invisible and disabled
-		assertThat(viewModel.addButtonVisibleProperty()).isFalse();
-		assertThat(viewModel.addButtonDisabledProperty()).isTrue();
+		assertThat(viewModel.okButtonVisibleProperty()).isFalse();
+		assertThat(viewModel.okButtonDisabledProperty()).isTrue();
 		
 		// next button is visible but disabled
 		assertThat(viewModel.nextButtonVisibleProperty()).isTrue();
@@ -73,8 +88,8 @@ public class AddContactDialogViewModelTest {
 		contactFormValid.set(true);
 		
 		// add button is still invisible and disabled
-		assertThat(viewModel.addButtonVisibleProperty()).isFalse();
-		assertThat(viewModel.addButtonDisabledProperty()).isTrue();
+		assertThat(viewModel.okButtonVisibleProperty()).isFalse();
+		assertThat(viewModel.okButtonDisabledProperty()).isTrue();
 		
 		// next button is visible and now also enabled
 		assertThat(viewModel.nextButtonVisibleProperty()).isTrue();
@@ -92,8 +107,8 @@ public class AddContactDialogViewModelTest {
 		assertThat(viewModel.dialogPageProperty()).hasValue(1);
 		
 		// add button is now visible but still disabled
-		assertThat(viewModel.addButtonVisibleProperty()).isTrue();
-		assertThat(viewModel.addButtonDisabledProperty()).isTrue();
+		assertThat(viewModel.okButtonVisibleProperty()).isTrue();
+		assertThat(viewModel.okButtonDisabledProperty()).isTrue();
 
 		// next button is invisible and enabled
 		assertThat(viewModel.nextButtonVisibleProperty()).isFalse();
@@ -108,8 +123,8 @@ public class AddContactDialogViewModelTest {
 		addressFormValid.set(true);
 
 		// add button is still visible and now also enabled
-		assertThat(viewModel.addButtonVisibleProperty()).isTrue();
-		assertThat(viewModel.addButtonDisabledProperty()).isFalse();
+		assertThat(viewModel.okButtonVisibleProperty()).isTrue();
+		assertThat(viewModel.okButtonDisabledProperty()).isFalse();
 
 		// next button is invisible and enabled
 		assertThat(viewModel.nextButtonVisibleProperty()).isFalse();
@@ -125,8 +140,8 @@ public class AddContactDialogViewModelTest {
 		assertThat(viewModel.dialogPageProperty()).hasValue(0);
 
 		// add button is invisible again and but still enabled
-		assertThat(viewModel.addButtonVisibleProperty()).isFalse();
-		assertThat(viewModel.addButtonDisabledProperty()).isFalse();
+		assertThat(viewModel.okButtonVisibleProperty()).isFalse();
+		assertThat(viewModel.okButtonDisabledProperty()).isFalse();
 
 		// next button is visible again and still enabled
 		assertThat(viewModel.nextButtonVisibleProperty()).isTrue();

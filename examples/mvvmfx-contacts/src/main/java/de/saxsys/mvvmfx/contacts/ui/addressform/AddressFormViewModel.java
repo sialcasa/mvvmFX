@@ -100,7 +100,6 @@ public class AddressFormViewModel implements ViewModel {
 		countryInputDisabled.bind(loadingInProgress);
 
 		subdivisionInputDisabled.bind(loadingInProgress.or(Bindings.size(subdivisionsList()).lessThanOrEqualTo(1)));
-
 	}
 	
 	
@@ -169,5 +168,9 @@ public class AddressFormViewModel implements ViewModel {
 	
 	public ReadOnlyBooleanProperty subdivisionInputDisabledProperty(){
 		return subdivisionInputDisabled.getReadOnlyProperty();
+	}
+
+	public void resetForm() {
+		
 	}
 }
