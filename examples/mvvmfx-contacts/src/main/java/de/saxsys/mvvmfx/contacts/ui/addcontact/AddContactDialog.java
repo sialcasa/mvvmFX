@@ -31,19 +31,14 @@ public class AddContactDialog implements FxmlView<AddContactDialogViewModel> {
 	@InjectViewModel
 	private AddContactDialogViewModel viewModel;
 	
-	private ResourceBundle defaultResourceBundle;
-	
 	private Parent root;
 	
 	@Inject
 	AddContactDialog(ResourceBundle defaultResourceBundle) {
-		this.defaultResourceBundle = defaultResourceBundle;
 		ViewTuple<AddContactDialog, AddContactDialogViewModel> viewTuple = FluentViewLoader.fxmlView(this.getClass())
 				.codeBehind(this).resourceBundle(defaultResourceBundle).load();
 		
 		root = viewTuple.getView();
-		
-		
 	}
 	
 	public void initialize() {

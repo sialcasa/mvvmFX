@@ -5,6 +5,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.contacts.events.OpenEditContactDialogEvent;
+import de.saxsys.mvvmfx.contacts.ui.contactdialog.ContactDialogView;
 import de.saxsys.mvvmfx.contacts.ui.contactform.ContactFormView;
 import de.saxsys.mvvmfx.contacts.util.DialogHelper;
 import javafx.beans.property.BooleanProperty;
@@ -30,21 +31,18 @@ import java.util.function.Supplier;
 @Singleton
 public class EditContactDialog implements FxmlView<EditContactDialogViewModel> {
 	
+	@FXML
+	private ContactDialogView contactDialogViewController;
+	
 	
 	private Parent root;
-	
-	@FXML
-	public Button applyButton;
 	
 	@Inject
 	private Stage primaryStage;
 
-	@FXML
-	private ContactFormView contactFormViewController;
-	
 	@InjectViewModel
 	private EditContactDialogViewModel viewModel;
-	
+
 	@Inject
 	EditContactDialog(ResourceBundle defaultResourceBundle) {
 		ViewTuple<EditContactDialog, EditContactDialogViewModel> viewTuple = FluentViewLoader.fxmlView(this.getClass())
@@ -54,17 +52,9 @@ public class EditContactDialog implements FxmlView<EditContactDialogViewModel> {
 	}
 	
 	public void initialize(){
-		viewModel.initContactFormViewModel(contactFormViewController.getViewModel());
-		
+		viewModel.setContactDialogViewModel(contactDialogViewController.getViewModel());
 		
 		DialogHelper.initDialog(viewModel.dialogOpenProperty(), primaryStage, () -> root);
-		
-		applyButton.disableProperty().bind(viewModel.applyButtonDisabledProperty());
-	}
-	
-	@FXML
-	public void apply(){
-		viewModel.applyAction();
 	}
 	
 	public void open(@Observes OpenEditContactDialogEvent event){

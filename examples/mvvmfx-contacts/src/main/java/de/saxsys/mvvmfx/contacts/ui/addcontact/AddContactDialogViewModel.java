@@ -12,6 +12,8 @@ import de.saxsys.mvvmfx.contacts.model.Repository;
 import de.saxsys.mvvmfx.contacts.ui.contactdialog.ContactDialogViewModel;
 
 public class AddContactDialogViewModel implements ViewModel {
+	static final String TITLE_LABEL_KEY = "dialog.addcontact.title";
+	
 	private BooleanProperty dialogOpen = new SimpleBooleanProperty();
 	
 	@Inject
@@ -35,7 +37,7 @@ public class AddContactDialogViewModel implements ViewModel {
 		this.contactDialogViewModel = contactDialogViewModel;
 		
 		contactDialogViewModel.setOkAction(this::addContactAction);
-		contactDialogViewModel.titleTextProperty().set(defaultResourceBundle.getString("dialog.addcontact.title"));
+		contactDialogViewModel.titleTextProperty().set(defaultResourceBundle.getString(TITLE_LABEL_KEY));
 	}
 		
 	
@@ -43,6 +45,7 @@ public class AddContactDialogViewModel implements ViewModel {
 		if (contactDialogViewModel.validProperty().get()) {
 			// Add logic to persist the new contact.
 			
+			contactDialogViewModel.getAddressFormViewModel().commitChanges();
 			Contact contact = contactDialogViewModel.getContactFormViewModel().getContact();
 			
 			repository.save(contact);
@@ -52,7 +55,11 @@ public class AddContactDialogViewModel implements ViewModel {
 	}
 	
 	public void openDialog() {
-		contactDialogViewModel.getContactFormViewModel().resetForm();
+		contactDialogViewModel.resetForms();
+
+		Contact contact = new Contact();
+		contactDialogViewModel.getContactFormViewModel().initWithContact(contact);
+		contactDialogViewModel.getAddressFormViewModel().initWithAddress(contact.getAddress());
 		
 		this.dialogOpenProperty().set(true);
 	}

@@ -2,6 +2,8 @@ package de.saxsys.mvvmfx.contacts.model;
 
 public class Address extends Identity{
 	
+	private Country country;
+	
 	private Subdivision subdivision;
 
 	private String street;
@@ -24,7 +26,11 @@ public class Address extends Identity{
 	}
 
 	public Country getCountry(){
-		return subdivision == null ? null : subdivision.getCountry();
+		return country;
+	}
+	
+	public void setCountry(Country country){
+		this.country = country;
 	}
 	
 	public String getStreet() {

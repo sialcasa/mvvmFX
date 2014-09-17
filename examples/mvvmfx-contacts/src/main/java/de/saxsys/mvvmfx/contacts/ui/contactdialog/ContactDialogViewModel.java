@@ -1,10 +1,12 @@
 package de.saxsys.mvvmfx.contacts.ui.contactdialog;
 
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -28,9 +30,12 @@ public class ContactDialogViewModel implements ViewModel {
 	
 	private Runnable okAction;
 	
+	// we need this field to prevent the binding from beeing garbage collected
+	private BooleanBinding viewModelsInitialized;
+
 	public ContactDialogViewModel(){
-		BooleanBinding viewModelsInitialized = contactFormViewModel.isNotNull().and(addressFormViewModel.isNotNull());
-		
+		viewModelsInitialized = contactFormViewModel.isNotNull().and(addressFormViewModel.isNotNull());
+
 		// as soon as both viewModels are set we add a binding that is true only when both viewModels are valid.
 		viewModelsInitialized.addListener((obs, oldV, newV) -> {
 			if (newV) {

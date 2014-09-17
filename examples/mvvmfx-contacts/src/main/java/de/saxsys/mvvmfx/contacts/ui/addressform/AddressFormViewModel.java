@@ -2,11 +2,15 @@ package de.saxsys.mvvmfx.contacts.ui.addressform;
 
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import de.saxsys.mvvmfx.contacts.model.Address;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -34,6 +38,9 @@ public class AddressFormViewModel implements ViewModel {
 	private StringProperty street = new SimpleStringProperty();
 	private StringProperty postalCode = new SimpleStringProperty();
 	private StringProperty city = new SimpleStringProperty();
+	private ObjectProperty<Subdivision> subdivision = new SimpleObjectProperty<>();
+	private ObjectProperty<Country> country = new SimpleObjectProperty<>();
+	
 	private StringProperty selectedCountry = new SimpleStringProperty(NOTHING_SELECTED_MARKER);
 	private StringProperty selectedSubdivision = new SimpleStringProperty(NOTHING_SELECTED_MARKER);
 	
@@ -53,7 +60,8 @@ public class AddressFormViewModel implements ViewModel {
 	private ItemList<Country> countryItemList;
 	// Don't inline this field. It's needed to prevent the list mapping from being garbage collected.
 	private ItemList<Subdivision> subdivisionItemList;
-	
+	private Address address;
+
 	@PostConstruct
 	public void init() {
 		
@@ -88,20 +96,60 @@ public class AddressFormViewModel implements ViewModel {
 				
 				if (matchingCountry.isPresent()) {
 					countrySelector.setCountry(matchingCountry.get());
+					country.set(matchingCountry.get());
 				}
 			} else if (NOTHING_SELECTED_MARKER.equals(newV)) {
 				countrySelector.setCountry(null);
+				country.set(null);
 			}
 			selectedSubdivision.set(NOTHING_SELECTED_MARKER);
 		});
-
-
+		
+		selectedSubdivision.addListener((obs, oldV, newV)->{
+			if(newV != null && !newV.equals(NOTHING_SELECTED_MARKER)){
+				Optional<Subdivision> subdivisionOptional = countrySelector.subdivisions().stream()
+						.filter(subdivision -> subdivision.getName().equals(newV)).findFirst();
+				
+				if(subdivisionOptional.isPresent()){
+					subdivision.set(subdivisionOptional.get());
+				}else{
+					subdivision.set(null);
+				}
+			}else{
+				subdivision.set(null);
+			}
+		});		
 
 		countryInputDisabled.bind(loadingInProgress);
 
 		subdivisionInputDisabled.bind(loadingInProgress.or(Bindings.size(subdivisionsList()).lessThanOrEqualTo(1)));
 	}
 	
+	
+	
+	public void commitChanges(){
+		address.setStreet(street.get());
+		address.setCity(city.get());
+		address.setPostalcode(postalCode.get());
+		
+		address.setCountry(country.get());
+		address.setSubdivision(subdivision.get());
+	}
+	
+	public void initWithAddress(Address address){
+		this.address = address;
+		
+		street.set(address.getStreet());
+		city.set(address.getCity());
+		postalCode.set(address.getPostalcode());
+
+		if(address.getCountry() != null){
+			selectedCountry.set(address.getCountry().getName());
+		}
+		if(address.getSubdivision() != null){
+			selectedSubdivision.set(address.getSubdivision().getName());
+		}
+	}
 	
 	/**
 	 * Creates an observable list that always has {@link #NOTHING_SELECTED_MARKER} as first element and the values of
@@ -171,6 +219,12 @@ public class AddressFormViewModel implements ViewModel {
 	}
 
 	public void resetForm() {
-		
+		street.set("");
+		city.set("");
+		postalCode.set("");
+		selectedCountry.set(NOTHING_SELECTED_MARKER);
+		selectedSubdivision.set(NOTHING_SELECTED_MARKER);
+		subdivision.set(null);
+		country.set(null);
 	}
 }

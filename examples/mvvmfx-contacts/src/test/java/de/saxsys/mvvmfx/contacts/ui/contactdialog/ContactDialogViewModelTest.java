@@ -1,16 +1,17 @@
 package de.saxsys.mvvmfx.contacts.ui.contactdialog;
 
-import de.saxsys.mvvmfx.contacts.ui.addressform.AddressFormViewModel;
-import de.saxsys.mvvmfx.contacts.ui.contactdialog.ContactDialogViewModel;
-import de.saxsys.mvvmfx.contacts.ui.contactform.ContactFormViewModel;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import org.junit.Before;
-import org.junit.Test;
-
 import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import de.saxsys.mvvmfx.contacts.ui.addressform.AddressFormViewModel;
+import de.saxsys.mvvmfx.contacts.ui.contactform.ContactFormViewModel;
 
 public class ContactDialogViewModelTest {
 	
@@ -39,6 +40,7 @@ public class ContactDialogViewModelTest {
 	@Test
 	public void testValid(){
 		viewModel = new ContactDialogViewModel();
+
 		addressFormValid.set(true);
 		contactFormValid.set(true);
 		

@@ -2,13 +2,19 @@ package de.saxsys.mvvmfx.contacts.ui.editcontact;
 
 import de.saxsys.mvvmfx.contacts.model.Contact;
 import de.saxsys.mvvmfx.contacts.model.Repository;
+import de.saxsys.mvvmfx.contacts.ui.addressform.AddressFormViewModel;
+import de.saxsys.mvvmfx.contacts.ui.contactdialog.ContactDialogViewModel;
 import de.saxsys.mvvmfx.contacts.ui.contactform.ContactFormViewModel;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ListResourceBundle;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
+import static de.saxsys.mvvmfx.contacts.ui.editcontact.EditContactDialogViewModel.TITLE_LABEL_KEY;
 import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -22,19 +28,42 @@ public class EditContactDialogViewModelTest {
 	
 	private Repository repository;
 	
+	private ContactDialogViewModel contactDialogViewModel;
 	private ContactFormViewModel contactFormViewModel;
+	private AddressFormViewModel addressFormViewModel;
+	
+	private ResourceBundle resourceBundle;
 	
 	@Before
 	public void setup(){
+		// sadly the ResourceBundle.getString method is final so we can't use mockito
+		ResourceBundle resourceBundle = new ListResourceBundle() {
+			@Override
+			protected Object[][] getContents() {
+				return new Object[][] {
+						{TITLE_LABEL_KEY, "default_subdivision_label"}
+				};
+			}
+		};
+		
 		viewModel = new EditContactDialogViewModel();
+		viewModel.defaultResourceBundle = resourceBundle;
 		
 		repository = mock(Repository.class);
 		viewModel.repository = repository;
 		
 		
 		contactFormViewModel = mock(ContactFormViewModel.class);
-		when(contactFormViewModel.validProperty()).thenReturn(new SimpleBooleanProperty(true));
-		viewModel.initContactFormViewModel(contactFormViewModel);
+		addressFormViewModel = mock(AddressFormViewModel.class);
+		
+		contactDialogViewModel = mock(ContactDialogViewModel.class);
+		when(contactDialogViewModel.validProperty()).thenReturn(new SimpleBooleanProperty(true));
+		
+		when(contactDialogViewModel.getContactFormViewModel()).thenReturn(contactFormViewModel);
+		when(contactDialogViewModel.getAddressFormViewModel()).thenReturn(addressFormViewModel);
+		when(contactDialogViewModel.titleTextProperty()).thenReturn(new SimpleStringProperty());
+		
+		viewModel.setContactDialogViewModel(contactDialogViewModel);
 	}
 
 
