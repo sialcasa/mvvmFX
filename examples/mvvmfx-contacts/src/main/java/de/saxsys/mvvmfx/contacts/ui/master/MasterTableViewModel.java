@@ -22,12 +22,19 @@ public class MasterTableViewModel {
 	private StringProperty emailAddress = new SimpleStringProperty();
 	private IntegerProperty age = new SimpleIntegerProperty();
 	
+	private StringProperty city = new SimpleStringProperty();
+	private StringProperty street = new SimpleStringProperty();
+	private StringProperty postalCode = new SimpleStringProperty();
+	
 	public MasterTableViewModel(Contact contact){
 		id.set(contact.getId());
 		setFirstname(contact.getFirstname());
 		setLastname(contact.getLastname());
 		setTitle(contact.getTitle());
 		setEmailAddress(contact.getEmailAddress());
+		setCity(contact.getAddress().getCity());
+		setStreet(contact.getAddress().getStreet());
+		setPostalCode(contact.getAddress().getPostalcode());
 
 		if(contact.getBirthday() != null){
 			setAge((int) ChronoUnit.YEARS.between(contact.getBirthday(), LocalDate.now(CentralClock.getClock())));
@@ -53,6 +60,11 @@ public class MasterTableViewModel {
 		MasterTableViewModel other = (MasterTableViewModel) obj;
 		
 		return other.getId().equals(this.getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return this.getId().hashCode();
 	}
 
 	public String getId(){
@@ -123,5 +135,39 @@ public class MasterTableViewModel {
 		this.age.set(age);
 	}
 
-	
+	public String getCity() {
+		return city.get();
+	}
+
+	public StringProperty cityProperty() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city.set(city);
+	}
+
+	public String getStreet() {
+		return street.get();
+	}
+
+	public StringProperty streetProperty() {
+		return street;
+	}
+
+	public void setStreet(String street) {
+		this.street.set(street);
+	}
+
+	public String getPostalCode() {
+		return postalCode.get();
+	}
+
+	public StringProperty postalCodeProperty() {
+		return postalCode;
+	}
+
+	public void setPostalCode(String postalCode) {
+		this.postalCode.set(postalCode);
+	}
 }

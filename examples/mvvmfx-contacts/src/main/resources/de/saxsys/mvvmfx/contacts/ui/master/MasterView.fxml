@@ -33,6 +33,21 @@
 						<PropertyValueFactory property="age" />
 					</cellValueFactory>
             	</TableColumn>
+            <TableColumn prefWidth="75.0" text="%master.table.city">
+				<cellValueFactory>
+					<PropertyValueFactory property="city" />
+				</cellValueFactory>
+            </TableColumn>
+            <TableColumn prefWidth="75.0" text="%master.table.postalcode">
+				<cellValueFactory>
+					<PropertyValueFactory property="postalCode" />
+				</cellValueFactory>
+			</TableColumn>
+            <TableColumn prefWidth="75.0" text="%master.table.street">
+				<cellValueFactory>
+					<PropertyValueFactory property="street" />
+				</cellValueFactory>
+			</TableColumn>
 			</columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
