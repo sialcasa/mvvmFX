@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.scene.control.Labeled;
 
 public class DetailView implements FxmlView<DetailViewModel> {
 	@FXML
@@ -24,6 +25,14 @@ public class DetailView implements FxmlView<DetailViewModel> {
 	public Label phoneLabel;
 	@FXML
 	public Label mobileLabel;
+	
+	@FXML
+	public Label cityPostalCodeLabel;
+	@FXML
+	public Label streetLabel;
+	@FXML
+	public Label countrySubdivisionLabel;
+	
 
 	@FXML
 	public Button editButton;
@@ -40,35 +49,44 @@ public class DetailView implements FxmlView<DetailViewModel> {
 		
 		
 		nameLabel.textProperty().bind(viewModel.nameLabelTextProperty());
-		nameLabel.managedProperty().bind(viewModel.nameLabelTextProperty().isNotEmpty());
-		nameLabel.visibleProperty().bind(nameLabel.managedProperty());
+		initVisibilityBindings(nameLabel);
 		
 		birthdayLabel.textProperty().bind(viewModel.birthdayLabelTextProperty());
-		birthdayLabel.managedProperty().bind(viewModel.birthdayLabelTextProperty().isNotEmpty());
-		birthdayLabel.visibleProperty().bind(birthdayLabel.managedProperty());
+		initVisibilityBindings(birthdayLabel);
 		
 		roleDepartmentLabel.textProperty().bind(viewModel.roleDepartmentLabelTextProperty());
-		roleDepartmentLabel.managedProperty().bind(viewModel.roleDepartmentLabelTextProperty().isNotEmpty());
-		roleDepartmentLabel.visibleProperty().bind(roleDepartmentLabel.managedProperty());
+		initVisibilityBindings(roleDepartmentLabel);
 		
 		emailHyperlink.textProperty().bind(viewModel.emailLabelTextProperty());
 		emailHyperlink.setOnAction(event -> viewModel.onEmailLinkClicked());
-		emailHyperlink.managedProperty().bind(viewModel.emailLabelTextProperty().isNotEmpty());
-		emailHyperlink.visibleProperty().bind(emailHyperlink.managedProperty());
+		initVisibilityBindings(emailHyperlink);
 		
 		phoneLabel.textProperty().bind(viewModel.phoneLabelTextProperty());
-		phoneLabel.managedProperty().bind(viewModel.phoneLabelTextProperty().isNotEmpty());
-		phoneLabel.visibleProperty().bind(phoneLabel.managedProperty());
+		initVisibilityBindings(phoneLabel);
 		
 		mobileLabel.textProperty().bind(viewModel.mobileLabelTextProperty());
-		mobileLabel.managedProperty().bind(viewModel.mobileLabelTextProperty().isNotEmpty());
-		mobileLabel.visibleProperty().bind(mobileLabel.managedProperty());
+		initVisibilityBindings(mobileLabel);
 		
 		
 		// the email hyperlink should always look "unvisited".
 		emailHyperlink.visitedProperty().bind(new SimpleBooleanProperty(false));
 		
+		
+		cityPostalCodeLabel.textProperty().bind(viewModel.cityPostalcodeLabelTextProperty());
+		initVisibilityBindings(cityPostalCodeLabel);
+		
+		streetLabel.textProperty().bind(viewModel.streetLabelTextProperty());
+		initVisibilityBindings(streetLabel);
+		
+		countrySubdivisionLabel.textProperty().bind(viewModel.countrySubdivisionLabelTextProperty());
+		initVisibilityBindings(countrySubdivisionLabel);
+		
 		initIcons();
+	}
+	
+	private void initVisibilityBindings(Labeled label){
+		label.visibleProperty().bind(label.textProperty().isNotEmpty());
+		label.managedProperty().bind(label.visibleProperty());
 	}
 	
 	private void initIcons(){
