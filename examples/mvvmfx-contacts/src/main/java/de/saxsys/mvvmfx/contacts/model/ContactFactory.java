@@ -52,7 +52,7 @@ public class ContactFactory {
 		emailAddress.append(getRandomNumber());
 		emailAddress.append("@");
 
-		List<String> domains = Arrays.asList("gmail.com", "hotmail.com", "yahoo.com", "freenet.de");
+		List<String> domains = Arrays.asList("example.com", "example.org", "mail.example.com");
 		emailAddress.append(domains.get(new Random().nextInt(domains.size())));
 		
 		return emailAddress.toString();
