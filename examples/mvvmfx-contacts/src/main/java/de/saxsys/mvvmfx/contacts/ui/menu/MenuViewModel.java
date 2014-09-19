@@ -1,5 +1,6 @@
 package de.saxsys.mvvmfx.contacts.ui.menu;
 
+import de.saxsys.mvvmfx.contacts.events.OpenAboutDialogEvent;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 
@@ -17,6 +18,9 @@ public class MenuViewModel implements ViewModel {
 	
 	@Inject
 	private Event<TriggerShutdownEvent> shouldCloseEvent;
+	
+	@Inject
+	private Event<OpenAboutDialogEvent> aboutDialogEvent;
 
 	@Inject
 	private MasterViewModel masterViewModel;
@@ -45,5 +49,9 @@ public class MenuViewModel implements ViewModel {
 	
 	public ReadOnlyBooleanProperty removeItemDisabledProperty(){
 		return removeItemDisabled.getReadOnlyProperty();
+	}
+
+	public void aboutAction() {
+		aboutDialogEvent.fire(new OpenAboutDialogEvent());
 	}
 }

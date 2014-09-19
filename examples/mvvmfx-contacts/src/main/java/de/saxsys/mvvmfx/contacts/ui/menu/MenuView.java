@@ -1,16 +1,15 @@
 package de.saxsys.mvvmfx.contacts.ui.menu;
 
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
+
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 
 public class MenuView implements FxmlView<MenuViewModel> {
 
 	@FXML
 	private MenuItem removeMenuItem;
-
 
 	@InjectViewModel
 	private MenuViewModel viewModel;
@@ -30,4 +29,9 @@ public class MenuView implements FxmlView<MenuViewModel> {
 	public void remove() {
 		viewModel.removeAction();
 	}
+	
+	@FXML
+	public void about(){
+		viewModel.aboutAction();
+	}	
 }
