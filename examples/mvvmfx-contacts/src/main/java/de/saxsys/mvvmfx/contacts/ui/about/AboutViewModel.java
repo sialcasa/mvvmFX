@@ -1,6 +1,9 @@
 package de.saxsys.mvvmfx.contacts.ui.about;
 
 import java.util.function.Consumer;
+
+import de.saxsys.mvvmfx.contacts.events.OpenAboutDialogEvent;
+import de.saxsys.mvvmfx.contacts.events.OpenAuthorPageEvent;
 import javafx.application.HostServices;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
@@ -11,6 +14,7 @@ import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import de.saxsys.mvvmfx.ViewModel;
@@ -22,6 +26,9 @@ public class AboutViewModel implements ViewModel {
 	private ReadOnlyStringWrapper librariesLabelText = new ReadOnlyStringWrapper("");
 
 	ObservableMap<String, String> libraryLinkMap = FXCollections.observableHashMap();
+	
+	@Inject
+	private Event<OpenAuthorPageEvent> openAuthorPageEvent;
 	
 	@Inject
 	private HostServices hostServices;
@@ -75,5 +82,9 @@ public class AboutViewModel implements ViewModel {
 	
 	public ReadOnlyStringProperty librariesLabelTextProperty(){
 		return librariesLabelText.getReadOnlyProperty();
+	}
+
+	public void openAuthorPage() {
+		openAuthorPageEvent.fire(new OpenAuthorPageEvent());
 	}
 }

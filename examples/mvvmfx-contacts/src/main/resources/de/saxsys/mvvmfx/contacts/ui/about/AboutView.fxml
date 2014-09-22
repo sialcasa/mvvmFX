@@ -38,6 +38,7 @@
                   <Insets />
                </VBox.margin>
             </VBox>
+            <Hyperlink onAction="#openAuthorPage" text="About the Author" />
          </children>
       </VBox>
    </children>

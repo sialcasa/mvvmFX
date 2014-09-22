@@ -3,6 +3,7 @@ package de.saxsys.mvvmfx.contacts.ui.about;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Hyperlink;
 import javafx.stage.Stage;
 
@@ -51,8 +52,12 @@ public class AboutView implements FxmlView<AboutViewModel> {
 		});
 	}
 	
+	@FXML
+	public void openAuthorPage(){
+		viewModel.openAuthorPage();
+	}
+	
 	public void open(@Observes OpenAboutDialogEvent event){
 		viewModel.openDialog();
 	}
-	
 }
