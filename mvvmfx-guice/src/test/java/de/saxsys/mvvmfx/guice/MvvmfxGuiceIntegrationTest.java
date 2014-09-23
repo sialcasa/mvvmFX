@@ -21,7 +21,6 @@ import java.util.List;
 
 import de.saxsys.mvvmfx.guice.internal.GuiceInjector;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
-import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
@@ -85,9 +84,6 @@ public class MvvmfxGuiceIntegrationTest {
 		NotificationCenter notificationCenter;
 
 		@Inject
-		ViewLoader viewLoader;
-
-		@Inject
 		HostServices hostServices;
 	}
 	
@@ -114,7 +110,6 @@ public class MvvmfxGuiceIntegrationTest {
 		Example example = (Example) exampleObject;
 
 		assertThat(example.notificationCenter).isNotNull();
-		assertThat(example.viewLoader).isNotNull();
 		assertThat(example.hostServices).isNotNull();
 	}
 

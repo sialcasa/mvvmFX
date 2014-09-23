@@ -24,7 +24,7 @@ import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModel;
  * This test verifies the API of the {@link de.saxsys.mvvmfx.FluentViewLoader}. The functionality of
  * loading Views is not part of this test as it is already tested in other tests for the ViewLoader itself.
  */
-public class FluentViewLoaderTest {
+public class FluentViewLoader_API_Test {
 	
 	
 	private ResourceBundle resourceBundle;

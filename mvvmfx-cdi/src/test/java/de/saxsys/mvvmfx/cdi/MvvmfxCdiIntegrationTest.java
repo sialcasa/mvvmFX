@@ -17,19 +17,17 @@ package de.saxsys.mvvmfx.cdi;
 
 import static org.assertj.core.api.Assertions.*;
 
-import de.saxsys.jfx.mvvm.viewloader.ViewLoader;
-import de.saxsys.mvvmfx.cdi.MvvmfxCdiApplication;
-import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
-import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
-import org.junit.Test;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
+
+import org.junit.Test;
+
+import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 
 public class MvvmfxCdiIntegrationTest {
 	
@@ -62,7 +60,6 @@ public class MvvmfxCdiIntegrationTest {
 			
 			assertThat(injectionExample).isNotNull();
 			assertThat(injectionExample.notificationCenter).isNotNull();
-			assertThat(injectionExample.viewLoader).isNotNull();
 			assertThat(injectionExample.hostServices).isNotNull();
 			
 			assertThat(MyApplication.wasPostConstructCalled).isTrue();
@@ -92,9 +89,6 @@ public class MvvmfxCdiIntegrationTest {
 
 		@Inject
 		NotificationCenter notificationCenter;
-
-		@Inject
-		ViewLoader viewLoader;
 
 		@Inject
 		HostServices hostServices;
