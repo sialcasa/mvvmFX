@@ -53,7 +53,7 @@ import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelA;
  * @author manuel.mauky
  */
 @RunWith(JfxRunner.class)
-public class ViewLoader_FxmlView_Test {
+public class FluentViewLoader_FxmlView_Test {
 	
 	private ResourceBundle resourceBundle;
 	
