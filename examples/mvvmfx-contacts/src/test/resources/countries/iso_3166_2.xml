@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+
+<!DOCTYPE iso_3166_2_entries [
+		<!ELEMENT iso_3166_2_entries (iso_3166_country+)>
+		<!ELEMENT iso_3166_country (iso_3166_subset*)>
+		<!ATTLIST iso_3166_country
+				code			CDATA	#REQUIRED
+				>
+		<!ELEMENT iso_3166_subset (iso_3166_2_entry+)>
+		<!ATTLIST iso_3166_subset
+				type			CDATA	#REQUIRED
+				>
+		<!ELEMENT iso_3166_2_entry EMPTY>
+		<!ATTLIST iso_3166_2_entry
+				code			CDATA	#REQUIRED
+				name			CDATA	#REQUIRED
+				parent			CDATA	#IMPLIED
+				>
+		]>
+
+<iso_3166_2_entries>
+	<!-- Germany -->
+	<iso_3166_country code="DE">
+		<iso_3166_subset type="State">
+			<!-- Germany uses the Bundeslander codes for ISO 3166-2 codes (any others?) -->
+			<iso_3166_2_entry
+					code="DE-BW"	name="Baden-Württemberg" />
+			<iso_3166_2_entry
+					code="DE-BY"	name="Bayern" />
+			<iso_3166_2_entry
+					code="DE-HB"	name="Bremen" />
+			<iso_3166_2_entry
+					code="DE-HH"	name="Hamburg" />
+			<iso_3166_2_entry
+					code="DE-HE"	name="Hessen" />
+			<iso_3166_2_entry
+					code="DE-NI"	name="Niedersachsen" />
+			<iso_3166_2_entry
+					code="DE-NW"	name="Nordrhein-Westfalen" />
+			<iso_3166_2_entry
+					code="DE-RP"	name="Rheinland-Pfalz" />
+			<iso_3166_2_entry
+					code="DE-SL"	name="Saarland" />
+			<iso_3166_2_entry
+					code="DE-SH"	name="Schleswig-Holstein" />
+			<iso_3166_2_entry
+					code="DE-BE"	name="Berlin" />
+			<iso_3166_2_entry
+					code="DE-BB"	name="Brandenburg" />
+			<iso_3166_2_entry
+					code="DE-MV"	name="Mecklenburg-Vorpommern" />
+			<iso_3166_2_entry
+					code="DE-SN"	name="Sachsen" />
+			<iso_3166_2_entry
+					code="DE-ST"	name="Sachsen-Anhalt" />
+			<iso_3166_2_entry
+					code="DE-TH"	name="Thüringen" />
+		</iso_3166_subset>
+	</iso_3166_country>
+	<!-- Austria -->
+	<iso_3166_country code="AT">
+		<iso_3166_subset type="State">
+			<iso_3166_2_entry
+					code="AT-1"	name="Burgenland" />
+			<iso_3166_2_entry
+					code="AT-2"	name="Kärnten" />
+			<iso_3166_2_entry
+					code="AT-3"	name="Niederösterreich" />
+			<iso_3166_2_entry
+					code="AT-4"	name="Oberösterreich" />
+			<iso_3166_2_entry
+					code="AT-5"	name="Salzburg" />
+			<iso_3166_2_entry
+					code="AT-6"	name="Steiermark" />
+			<iso_3166_2_entry
+					code="AT-7"	name="Tirol" />
+			<iso_3166_2_entry
+					code="AT-8"	name="Vorarlberg" />
+			<iso_3166_2_entry
+					code="AT-9"	name="Wien" />
+		</iso_3166_subset>
+	</iso_3166_country>
+	<!-- Switzerland -->
+	<iso_3166_country code="CH">
+		<iso_3166_subset type="Canton">
+			<iso_3166_2_entry
+					code="CH-AG"	name="Aargau" />
+			<iso_3166_2_entry
+					code="CH-AI"	name="Appenzell Innerrhoden" />
+			<iso_3166_2_entry
+					code="CH-AR"	name="Appenzell Ausserrhoden" />
+			<iso_3166_2_entry
+					code="CH-BE"	name="Bern" />
+			<iso_3166_2_entry
+					code="CH-BL"	name="Basel-Landschaft" />
+			<iso_3166_2_entry
+					code="CH-BS"	name="Basel-Stadt" />
+			<iso_3166_2_entry
+					code="CH-FR"	name="Fribourg" />
+			<iso_3166_2_entry
+					code="CH-GE"	name="Genève" />
+			<iso_3166_2_entry
+					code="CH-GL"	name="Glarus" />
+			<iso_3166_2_entry
+					code="CH-GR"	name="Graubünden" />
+			<iso_3166_2_entry
+					code="CH-JU"	name="Jura" />
+			<iso_3166_2_entry
+					code="CH-LU"	name="Luzern" />
+			<iso_3166_2_entry
+					code="CH-NE"	name="Neuchâtel" />
+			<iso_3166_2_entry
+					code="CH-NW"	name="Nidwalden" />
+			<iso_3166_2_entry
+					code="CH-OW"	name="Obwalden" />
+			<iso_3166_2_entry
+					code="CH-SG"	name="Sankt Gallen" />
+			<iso_3166_2_entry
+					code="CH-SH"	name="Schaffhausen" />
+			<iso_3166_2_entry
+					code="CH-SO"	name="Solothurn" />
+			<iso_3166_2_entry
+					code="CH-SZ"	name="Schwyz" />
+			<iso_3166_2_entry
+					code="CH-TG"	name="Thurgau" />
+			<iso_3166_2_entry
+					code="CH-TI"	name="Ticino" />
+			<iso_3166_2_entry
+					code="CH-UR"	name="Uri" />
+			<iso_3166_2_entry
+					code="CH-VD"	name="Vaud" />
+			<iso_3166_2_entry
+					code="CH-VS"	name="Valais" />
+			<iso_3166_2_entry
+					code="CH-ZG"	name="Zug" />
+			<iso_3166_2_entry
+					code="CH-ZH"	name="Zürich" />
+		</iso_3166_subset>
+	</iso_3166_country>	
+</iso_3166_2_entries>

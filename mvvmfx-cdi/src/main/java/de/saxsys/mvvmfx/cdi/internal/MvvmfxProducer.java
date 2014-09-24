@@ -22,6 +22,9 @@ import javax.inject.Singleton;
 
 import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
+import javafx.application.Application;
+import javafx.application.HostServices;
+import javafx.stage.Stage;
 
 
 /**
@@ -38,6 +41,8 @@ public class MvvmfxProducer {
 
 
 	private HostServices hostServices;
+	
+	private Stage primaryStage;
 
 	@Produces
 	public NotificationCenter produceNotificationCenter() {
@@ -58,5 +63,18 @@ public class MvvmfxProducer {
 	@Produces
 	public HostServices produceHostServices(){
 		return hostServices;
+	}
+	
+	public void setPrimaryStage(Stage primaryStage){
+		this.primaryStage = primaryStage;
+	}
+	
+	@Produces
+	public Stage producePrimaryStage(){
+		if(primaryStage == null){
+			throw new IllegalStateException("The primary Stage is not available for injection. " +
+					"In your application class please call 'makePrimaryStageInjectable' method from within the 'start' method");
+		}
+		return primaryStage;
 	}
 }
