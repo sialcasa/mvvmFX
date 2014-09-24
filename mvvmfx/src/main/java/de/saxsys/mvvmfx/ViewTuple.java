@@ -22,6 +22,9 @@ import de.saxsys.mvvmfx.internal.viewloader.View;
 /**
  * Tuple for carrying view / code-behind pair. The code-behind part is the class which is known as the controller class
  * behind a FXML file.
+ * 
+ * @param <ViewType> the generic type of the view that was loaded.
+ * @param <ViewModelType> the generic type of the viewModel that was loaded.
  */
 public class ViewTuple<ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> {
 	
@@ -31,9 +34,10 @@ public class ViewTuple<ViewType extends View<? extends ViewModelType>, ViewModel
 	
 	/**
 	 * @param codeBehind
-	 *            to set
+	 *            the codeBehind for this viewTuple
 	 * @param view
-	 *            to set
+	 *            the view for this viewTuple
+	 * @param viewModel the viewModel for this viewTuple
 	 */
 	public ViewTuple(final ViewType codeBehind, final Parent view, final ViewModelType viewModel) {
 		this.codeBehind = codeBehind;

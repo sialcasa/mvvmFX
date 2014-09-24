@@ -19,8 +19,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ResourceBundle;
-
-import de.saxsys.mvvmfx.ViewTuple;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 
@@ -28,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.ViewTuple;
 
 /**
  * This viewLoader is used to load views that are implementing {@link de.saxsys.mvvmfx.JavaView}.
@@ -42,16 +41,13 @@ public class JavaViewLoader {
 	private static final String NAMING_CONVENTION_INITIALIZE_IDENTIFIER = "initialize";
 	
 	/**
-	 * Loads the java written view of the given type and injects the ViewModel for this view.
-	 * <p/>
+	 * Loads the java written view of the given type and injects the ViewModel for this view. <br>
 	 * If the given view type implements the {@link javafx.fxml.Initializable} interface the "initialize" method of this
 	 * interface will be invoked. When this is not the case an implicit initialization will be done that is working
-	 * similar to the way the {@link javafx.fxml.FXMLLoader} is working.
-	 * <p/>
+	 * similar to the way the {@link javafx.fxml.FXMLLoader} is working. <br>
 	 * When there is a <strong>public</strong> no-args method named "initialize" is available this method will be
 	 * called. When there is a <strong>public</strong> field of type {@link java.util.ResourceBundle} named "resources"
-	 * is available this field will get the provided ResourceBundle injected.
-	 * <p/>
+	 * is available this field will get the provided ResourceBundle injected. <br>
 	 * The "initialize" method (whether from the {@link javafx.fxml.Initializable} interface or implicit) will be
 	 * invoked <strong>after</strong> the viewModel was injected. This way the user can create bindings to the viewModel
 	 * in the initialize method.
@@ -60,27 +56,31 @@ public class JavaViewLoader {
 	 *            class of the view.
 	 * @param resourceBundle
 	 *            optional ResourceBundle that will be injected into the view.
+	 * @param viewModel
+	 *            the viewModel instance that is used to load the view.
 	 * @param <ViewType>
 	 *            the generic type of the view.
+	 * @param <ViewModelType>
+	 *            the generic type of the viewModel.
 	 *
 	 * @return a fully loaded and initialized instance of the view.
 	 */
 	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadJavaViewTuple(
 			Class<? extends ViewType>
-					viewType, ResourceBundle resourceBundle, ViewModelType viewModel) {
+			viewType, ResourceBundle resourceBundle, ViewModelType viewModel) {
 		DependencyInjector injectionFacade = DependencyInjector.getInstance();
 		
 		final ViewType view = injectionFacade.getInstanceOf(viewType);
 		
-		if(!(view instanceof Parent)){
-			throw new IllegalArgumentException("Can not load java view! The view class has to extend from " 
+		if (!(view instanceof Parent)) {
+			throw new IllegalArgumentException("Can not load java view! The view class has to extend from "
 					+ Parent.class.getName() + " or one of it's subclasses");
 		}
-
-		if(viewModel == null){
+		
+		if (viewModel == null) {
 			viewModel = ReflectionUtils.createViewModel(view);
 		}
-
+		
 		ReflectionUtils.injectViewModel(view, viewModel);
 		
 		if (view instanceof Initializable) {
@@ -90,7 +90,7 @@ public class JavaViewLoader {
 			injectResourceBundle(view, resourceBundle);
 			callInitialize(view);
 		}
-
+		
 		return new ViewTuple<>(view, (Parent) view, viewModel);
 	}
 	
@@ -98,8 +98,7 @@ public class JavaViewLoader {
 	 * This method is trying to invoke the initialize method of the given view by reflection. This is done to meet the
 	 * conventions of the {@link javafx.fxml.FXMLLoader}. The conventions say that when there is a
 	 * <strong>public</strong> no-args method called "initialize" and the class does not implement the
-	 * {@link javafx.fxml.Initializable} interface, the initialize method will be invoked.
-	 * <p/>
+	 * {@link javafx.fxml.Initializable} interface, the initialize method will be invoked. <br>
 	 * This method is package scoped for better testability.
 	 *
 	 * @param view
@@ -114,19 +113,20 @@ public class JavaViewLoader {
 			initializeMethod.invoke(view);
 		} catch (NoSuchMethodException e) {
 			// This exception means that there is no initialize method declared.
-			// While it's possible that the user has no such method by design, 
-			// normally and in most cases you need an initialize method in your view (either with Initialize interface or implicit).
-			// So it's likely that the user has misspelled the method name or uses a wrong naming convention. 
+			// While it's possible that the user has no such method by design,
+			// normally and in most cases you need an initialize method in your view (either with Initialize interface
+			// or implicit).
+			// So it's likely that the user has misspelled the method name or uses a wrong naming convention.
 			// For this reason we give the user the log message.
 			LOG.debug("There is no '{}' method declared at the view {}", NAMING_CONVENTION_INITIALIZE_IDENTIFIER, view);
 		} catch (InvocationTargetException e) {
 			LOG.warn("The '{}' method of the view {} has thrown an exception!",
 					NAMING_CONVENTION_INITIALIZE_IDENTIFIER, view);
-
+			
 			Throwable cause = e.getCause();
-			if(cause instanceof RuntimeException){
+			if (cause instanceof RuntimeException) {
 				throw (RuntimeException) cause;
-			}else{
+			} else {
 				throw new RuntimeException(cause);
 			}
 		} catch (IllegalAccessException e) {
@@ -138,8 +138,7 @@ public class JavaViewLoader {
 	/**
 	 * Injects the given ResourceBundle into the given view using reflection. This is done to meet the conventions of
 	 * the {@link javafx.fxml.FXMLLoader}. The resourceBundle is only injected when there is a <strong>public</strong>
-	 * field of the type {@link java.util.ResourceBundle} named "resources".
-	 * <p/>
+	 * field of the type {@link java.util.ResourceBundle} named "resources". <br>
 	 * This method is package scoped for better testability.
 	 *
 	 * @param view
@@ -158,8 +157,8 @@ public class JavaViewLoader {
 				resourcesField.set(view, resourceBundle);
 			}
 		} catch (NoSuchFieldException e) {
-			// This exception means that there is no field for the ResourceBundle. 
-			// This is no exceptional case but is normal when you don't need a resourceBundle in a specific view. 
+			// This exception means that there is no field for the ResourceBundle.
+			// This is no exceptional case but is normal when you don't need a resourceBundle in a specific view.
 			// Therefore it's save to silently catch the exception.
 		} catch (IllegalAccessException e) {
 			LOG.warn("Can't inject the ResourceBundle into the view {} because the field isn't accessible", view);

@@ -18,8 +18,9 @@ package de.saxsys.mvvmfx;
 import de.saxsys.mvvmfx.internal.viewloader.View;
 
 /**
- * A view that is implemented with FXML. There has to be an fxml file with the same name (case-insensitive) in the same
- * package that contains the view declaration.
+ * A view that is implemented with FXML. There has to be an fxml file in the same package with the same name 
+ * (case-sensitive) as the implementing view class. So for example when your view class is named 
+ * <code>MyCoolView</code> (filename: MyCoolView.java) then the fxml file has to be named <code>MyCoolView.fxml</code>.
  * 
  * @param <ViewModelType>
  *            the type of the viewModel.
