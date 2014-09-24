@@ -42,13 +42,17 @@ public interface SelectableStringList {
 	
 	/**
 	 * @see #selectedIndexProperty()
+	 * 
+	 * @return the currently selected index.
 	 */
 	public int getSelectedIndex();
 	
 	/**
-	 * @see #selectedIndexProperty();
+	 * @see #selectedIndexProperty()
+	 * 
+	 * @param id the id to be selected
 	 */
-	public void select(int personId);
+	public void select(int id);
 	
 	/**
 	 * Removes the selection.

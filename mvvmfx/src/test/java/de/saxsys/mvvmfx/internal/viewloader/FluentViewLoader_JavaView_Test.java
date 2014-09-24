@@ -45,7 +45,7 @@ import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModel;
  * {@link java.net.URL} named "location" is NOT done by mvvmfx because it doesn't make sense for Java written Views (as
  * there is no FXML file at all).
  */
-public class ViewLoader_JavaView_Test {
+public class FluentViewLoader_JavaView_Test {
 	
 	private ResourceBundle resourceBundle;
 	
@@ -64,7 +64,7 @@ public class ViewLoader_JavaView_Test {
 				if (constructor.getParameters().length == 0) {
 					return constructor.newInstance();
 				} else {
-					return constructor.newInstance(ViewLoader_JavaView_Test.this);
+					return constructor.newInstance(FluentViewLoader_JavaView_Test.this);
 				}
 			} catch (Exception e) {
 				fail("Test View can't be instantiated. This is a problem with the test code");

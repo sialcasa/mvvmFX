@@ -73,7 +73,7 @@ public class SelectableItemListTest {
 	}
 	
 	/**
-	 * Check whether the {@link #selectedItem} changes when the {@link #selectedIndex} was changed.
+	 * Check whether the {@link SelectableItemList#selectedItem} changes when the {@link SelectableItemList#selectedIndexProperty()} was changed.
 	 */
 	@Test
 	public void setSelectedItemByIndex() {
@@ -83,7 +83,7 @@ public class SelectableItemListTest {
 	}
 	
 	/**
-	 * Check whether the {@link #selectedIndex} changes when the {@link #selectedItem} was changed.
+	 * Check whether the {@link SelectableItemList#selectedIndexProperty()} changes when the {@link SelectableItemList#selectedItem} was changed.
 	 */
 	@Test
 	public void setSelectedIndexByItem() {
@@ -92,7 +92,7 @@ public class SelectableItemListTest {
 	}
 	
 	/**
-	 * Check whether changes are refused when an invalid {@link #selectedItem} was set.
+	 * Check whether changes are refused when an invalid {@link SelectableItemList#selectedItem} was set.
 	 */
 	@Test
 	public void setSelectedIndexWithInvalidItem() {
@@ -108,7 +108,7 @@ public class SelectableItemListTest {
 	}
 	
 	/**
-	 * Check whether changes are refused when an invalid {@link #selectedItem} was set.
+	 * Check whether changes are refused when an invalid {@link SelectableItemList#selectedItem} was set.
 	 */
 	@Test
 	public void setSelectedItemWithInvalidIndex() {

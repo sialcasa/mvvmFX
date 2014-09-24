@@ -41,6 +41,14 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<excludePackageNames>
+						de.saxsys.mvvmfx.internal
+					</excludePackageNames>
+				</configuration>
+			</plugin>
 		</plugins>
 
 	</build>

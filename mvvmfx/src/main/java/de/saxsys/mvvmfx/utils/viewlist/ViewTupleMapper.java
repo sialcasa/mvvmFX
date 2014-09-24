@@ -20,7 +20,7 @@ import de.saxsys.mvvmfx.internal.viewloader.View;
 import de.saxsys.mvvmfx.ViewTuple;
 
 /**
- * Declares how to map from a <T> to a {@link ViewTuple}.
+ * Declares how to map from a {@code <T>} to a {@link ViewTuple}.
  * 
  * @author sialcasa
  * 
@@ -31,7 +31,7 @@ import de.saxsys.mvvmfx.ViewTuple;
 public interface ViewTupleMapper<T> {
 	
 	/**
-	 * Map a <T> to a {@link ViewTuple}.
+	 * Map a {@code <T>} to a {@link ViewTuple}.
 	 * 
 	 * @param element
 	 *            to map

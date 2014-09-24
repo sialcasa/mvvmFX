@@ -170,6 +170,8 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	}
 	
 	/**
+	 * @param item the item will be selected.
+	 * 
 	 * @see #selectedItemProperty()
 	 */
 	public void select(ListType item) {
@@ -177,6 +179,8 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	}
 	
 	/**
+	 * @return the currently selected item.
+	 * 
 	 * @see #selectedItemProperty()
 	 */
 	public ListType getSelectedItem() {

@@ -6,18 +6,47 @@ import de.saxsys.mvvmfx.internal.viewloader.FxmlViewLoader;
 import de.saxsys.mvvmfx.internal.viewloader.JavaViewLoader;
 
 /**
- * Fluent API for loading Views. This is basically a wrapper around the {@link de.saxsys.jfx.mvvm.viewloader.ViewLoader}
- * to get a better usable API.
+ * Fluent API for loading Views. 
+ * <br>
+ * 
+ * The typical usage will look like this:
+ * 
+ * <br>
+ * 
+ * <pre>
+ * public class MyCoolViewModel implements ViewModel {...}
+ * public class MyCoolView implements FxmlView{@code <MyCoolViewModel>} {...}
+ * 
+ * 
+ * public class MyApp extends Application {
+ *     
+ *    {@literal @}Override
+ *     public void start(Stage stage) {
+ * 		ViewTuple{@code <MyCoolView, MyCoolViewModel>} viewTuple 
+ * 				= FluentViewLoader.fxmlView(MyCoolView.class).load(); 
+ * 			
+ * 		Parent root = viewTuple.getView();
+ * 		stage.setScene(new Scene(root));
+ * 		stage.show();	
+ *     }
+ * }
+ *     
+ * </pre>
+ * 
+ * 
+ * This class is implemented as a Step-Builder. You can choose between {@link FxmlView} and {@link JavaView} with the
+ * first method call. After that you will only get builder-methods that are suitable for the view type you have chosen.
  * 
  * @author manuel.mauky
  */
 public class FluentViewLoader {
 	
 	/**
-	 * This class is the builder step to load a java based view.
+	 * This class is the builder step to load a java based view. It is accessed from the {@link FluentViewLoader} with the
+	 * method {@link FluentViewLoader#javaView(Class)}.
 	 * 
-	 * @param <ViewType>
-	 * @param <ViewModelType>
+	 * @param <ViewType> the generic type of the View that should be loaded. This type has to implement {@link de.saxsys.mvvmfx.JavaView}.
+	 * @param <ViewModelType> the generic type of the ViewModel. This type has to implement {@link de.saxsys.mvvmfx.ViewModel}.
 	 */
 	public static class JavaViewStep<ViewType extends JavaView<? extends ViewModelType>, ViewModelType extends ViewModel> {
 		
@@ -41,7 +70,7 @@ public class FluentViewLoader {
 		}
 
 		/**
-		 * This param is used to define an existing viewModel instance to be used when loading the view.
+		 * This param is used to define an existing viewModel instance to be used when loading the view.<br>
 		 *
 		 * A typical use case is when you like to have two or more views that are sharing the same viewModel.
 		 *
@@ -67,10 +96,11 @@ public class FluentViewLoader {
 	}
 	
 	/**
-	 * This class is the builder step to load a fxml based view.
-	 * 
-	 * @param <ViewType>
-	 * @param <ViewModelType>
+	 * This class is the builder step to load a fxml based view. It is accessed from the {@link FluentViewLoader} with the
+	 * method {@link FluentViewLoader#fxmlView(Class)}.
+	 *
+	 * @param <ViewType> the generic type of the View that should be loaded. This type has to implement {@link de.saxsys.mvvmfx.FxmlView}.
+	 * @param <ViewModelType> the generic type of the ViewModel. This type has to implement {@link de.saxsys.mvvmfx.ViewModel}.
 	 */
 	public static class FxmlViewStep<ViewType extends FxmlView<? extends ViewModelType>, ViewModelType extends ViewModel> {
 		
@@ -95,7 +125,7 @@ public class FluentViewLoader {
 		}
 		
 		/**
-		 * This param is used to define a JavaFX node that is used as the root element when loading the fxml file. <br />
+		 * This param is used to define a JavaFX node that is used as the root element when loading the fxml file. <br>
 		 * 
 		 * This can be useful when creating custom controls with the fx:root element.
 		 * 
@@ -110,7 +140,7 @@ public class FluentViewLoader {
 		
 		/**
 		 * This param is used to define an existing instance of the codeBehind class that is used instead of creating a
-		 * new one while loading. <br />
+		 * new one while loading. <br>
 		 *
 		 * This can be useful when creating custom controls with the fx:root element.
 		 *
@@ -124,7 +154,7 @@ public class FluentViewLoader {
 		}
 
 		/**
-		 * This param is used to define an existing viewModel instance to be used when loading the view.
+		 * This param is used to define an existing viewModel instance to be used when loading the view.<br>
 		 * 
 		 * A typical use case is when you like to have two or more views that are sharing the same viewModel.
 		 * 
@@ -151,6 +181,12 @@ public class FluentViewLoader {
 	
 	/**
 	 * This method is the entry point of the Fluent API to load a java based view.
+	 * 
+	 * @param viewType the type of the view that should be loaded.
+	 * @param <ViewType> the type of the View that should be loaded. This type has to implement {@link de.saxsys.mvvmfx.JavaView}.
+	 * @param <ViewModelType> the type of the ViewModel. This type has to implement {@link de.saxsys.mvvmfx.ViewModel}.
+	 *                       
+	 * @return a builder step that can be further configured and then load the actual view.
 	 */
 	public static <ViewType extends JavaView<? extends ViewModelType>, ViewModelType extends ViewModel>
 			JavaViewStep<ViewType, ViewModelType> javaView(Class<? extends ViewType> viewType) {
@@ -159,6 +195,12 @@ public class FluentViewLoader {
 	
 	/**
 	 * This method is the entry point of the Fluent API to load a fxml based View.
+	 * 
+	 * @param viewType the type of the view that should be loaded.
+	 * @param <ViewType> the generic type of the View that should be loaded. This type has to implement {@link de.saxsys.mvvmfx.FxmlView}.
+	 * @param <ViewModelType> the generic type of the ViewModel. This type has to implement {@link de.saxsys.mvvmfx.ViewModel}.
+	 *                       
+	 * @return a builder step that can be further configured and then load the actual view.
 	 */
 	public static <ViewType extends FxmlView<? extends ViewModelType>, ViewModelType extends ViewModel>
 			FxmlViewStep<ViewType, ViewModelType> fxmlView(Class<? extends ViewType> viewType) {
