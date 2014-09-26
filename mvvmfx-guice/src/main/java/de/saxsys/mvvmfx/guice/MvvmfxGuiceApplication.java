@@ -21,6 +21,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
 import de.saxsys.mvvmfx.guice.internal.GuiceInjector;
 import de.saxsys.mvvmfx.guice.internal.MvvmfxModule;
+import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.stage.Stage;
 
@@ -84,5 +85,6 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication {
 	 * @throws Exception
 	 *             exc
 	 */
-	public abstract void initGuiceModules(List<Module> modules) throws Exception;
+	public void initGuiceModules(List<Module> modules) throws Exception{
+	}
 }

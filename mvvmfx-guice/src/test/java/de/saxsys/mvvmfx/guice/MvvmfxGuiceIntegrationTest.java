@@ -17,20 +17,17 @@ package de.saxsys.mvvmfx.guice;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.List;
-
-import de.saxsys.mvvmfx.guice.internal.GuiceInjector;
-import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
+import javax.inject.Inject;
+
 import org.junit.Test;
 
-import com.google.inject.Module;
-
-import javax.inject.Inject;
+import de.saxsys.mvvmfx.guice.internal.GuiceInjector;
+import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 
 public class MvvmfxGuiceIntegrationTest {
 	
@@ -69,10 +66,6 @@ public class MvvmfxGuiceIntegrationTest {
 			
 			// we can't shutdown the application in the test case so we need to do it here.
 			Platform.exit();
-		}
-		
-		@Override
-		public void initGuiceModules(List<Module> modules) throws Exception {
 		}
 	}
 
