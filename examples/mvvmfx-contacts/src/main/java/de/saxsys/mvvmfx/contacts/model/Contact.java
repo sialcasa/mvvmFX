@@ -3,6 +3,10 @@ package de.saxsys.mvvmfx.contacts.model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+
+/**
+ * An entity class that represents a contact.
+ */
 public class Contact extends Identity{
 	
 	private String firstname;

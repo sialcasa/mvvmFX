@@ -7,6 +7,9 @@ import org.controlsfx.validation.Validator;
 
 import java.time.LocalDate;
 
+/**
+ * A validator that verifies that a given date (the birthday) is not in the future.
+ */
 public class BirthdayValidator implements Validator<LocalDate>{
 	@Override 
 	public ValidationResult apply(Control control, LocalDate newValue) {

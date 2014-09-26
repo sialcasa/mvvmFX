@@ -1,5 +1,8 @@
 package de.saxsys.mvvmfx.contacts.model;
 
+/**
+ * An entity class that represents an address.
+ */
 public class Address extends Identity{
 	
 	private Country country;

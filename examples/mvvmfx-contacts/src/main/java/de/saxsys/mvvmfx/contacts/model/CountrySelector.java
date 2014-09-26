@@ -28,6 +28,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * This class is used to encapsulate the process of loading available countries and there subdivisions (if available).
+ * 
+ * This class is meant to be a stateful wrapper around the existing countries. 
+ * You should create an instance of this class, call the {@link #init()} method and then bind the UI to the provided
+ * observable lists ({@link #availableCountries()} and {@link #subdivisions()}). 
+ * 
+ * To choose a country have to use the {@link #setCountry(Country)} method. This will lead to a change of the {@link #subdivisions()} list.
+ * 
+ * 
+ * At the moment this class used two XML files ({@link #ISO_3166_LOCATION} and {@link #ISO_3166_2_LOCATION}) that contain 
+ * information about countries, country-codes and subdivisions according to ISO 3166 and ISO 3166-2.
+ * 
+ * The loading process is implemented with the DataFX framework. 
+ */
 public class CountrySelector {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CountrySelector.class);
@@ -46,11 +61,20 @@ public class CountrySelector {
 	private Map<Country, String> countryCodeSubdivisionNameMap = new HashMap<>();
 
 
+	/**
+	 * This method triggers the loading of the available countries and subdivisions. 
+	 */
 	public void init(){
 		inProgress.set(true);
 		loadCountries();
 	}
 
+	/**
+	 * Set the currently selected country. This will lead to an update of the
+	 * {@link #subdivisions()} observable list and the {@link #subdivisionLabel()}.
+	 * 
+ 	 * @param country the country that will be selected or <code>null</code> if no country is selected.
+	 */
 	public void setCountry(Country country){
 		if(country == null){
 			subdivisionLabel.set(null);
@@ -65,7 +89,11 @@ public class CountrySelector {
 			subdivisions.addAll(countryCodeSubdivisionMap.get(country));
 		}
 	}
-	
+
+
+	/**
+	 * Load all countries from the XML file source with DataFX.
+	 */
 	void loadCountries(){
 		URL iso3166Resource = this.getClass().getResource(ISO_3166_LOCATION);
 		if(iso3166Resource == null){
@@ -81,6 +109,7 @@ public class CountrySelector {
 			listDataProvider.setResultObservableList(countries);
 
 			Worker<ObservableList<Country>> worker = listDataProvider.retrieve();
+			// when the countries are loaded we start the loading of the subdivisions.
 			worker.stateProperty().addListener(obs -> {
 				if (worker.getState() == Worker.State.SUCCEEDED) {
 					loadSubdivisions();
@@ -90,7 +119,10 @@ public class CountrySelector {
 			LOG.error("A problem was detected while loading the XML file with the available countries.", e);
 		}
 	}
-	
+
+	/**
+	 * Load all subdivisions from the XML file source with DataFX.
+	 */
 	void loadSubdivisions(){
 
 		URL iso3166_2Resource = this.getClass().getResource(ISO_3166_2_LOCATION);
@@ -145,10 +177,12 @@ public class CountrySelector {
 	private Country findCountryByCode(String code){
 		return countries.stream().filter(country-> country.getCountryCode().equals(code)).findFirst().orElse(null);
 	}
-	
-	
-	
 
+
+
+	/**
+	 * XML entity class. These classes represent the structure of the XML files to be loaded.
+	 */
 	@XmlRootElement(name = "iso_3166_subset")
 	@XmlAccessorType(XmlAccessType.FIELD)
 	static class ISO3166_2_EntryEntity{
@@ -158,7 +192,9 @@ public class CountrySelector {
 		public String name;
 	}
 
-
+	/**
+	 * XML entity class. These classes represent the structure of the XML files to be loaded.
+	 */
 	@XmlRootElement(name = "iso_3166_subset")
 	@XmlAccessorType(XmlAccessType.FIELD)
 	static class ISO3166_2_SubsetEntity{
@@ -169,6 +205,9 @@ public class CountrySelector {
 		public String subdivisionType;
 	}
 
+	/**
+	 * XML entity class. These classes represent the structure of the XML files to be loaded.
+	 */
 	@XmlRootElement(name = "iso_3166_country")
 	@XmlAccessorType(XmlAccessType.FIELD)
 	static class ISO3166_2_CountryEntity{
@@ -187,8 +226,6 @@ public class CountrySelector {
 	public ObservableList<Country> availableCountries(){
 		return countries;
 	}
-	
-	
 	
 	public ReadOnlyStringProperty subdivisionLabel(){
 		return subdivisionLabel.getReadOnlyProperty();

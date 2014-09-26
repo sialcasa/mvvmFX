@@ -43,7 +43,6 @@ public class AddContactDialogViewModel implements ViewModel {
 	
 	public void addContactAction() {
 		if (contactDialogViewModel.validProperty().get()) {
-			// Add logic to persist the new contact.
 			
 			contactDialogViewModel.getAddressFormViewModel().commitChanges();
 			Contact contact = contactDialogViewModel.getContactFormViewModel().getContact();

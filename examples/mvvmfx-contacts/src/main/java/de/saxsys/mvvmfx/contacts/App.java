@@ -20,8 +20,6 @@ import de.saxsys.mvvmfx.contacts.model.Repository;
 import de.saxsys.mvvmfx.contacts.ui.main.MainView;
 import de.saxsys.mvvmfx.contacts.ui.main.MainViewModel;
 
-
-
 public class App extends MvvmfxCdiApplication{
 	
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
@@ -65,8 +63,10 @@ public class App extends MvvmfxCdiApplication{
 		stage.setScene(rootScene);
 		stage.show();
 	}
-	
-	
+
+	/**
+	 * The shutdown of the application can be triggered by firing the {@link TriggerShutdownEvent} CDI event.
+	 */
 	public void triggerShutdown(@Observes TriggerShutdownEvent event){
 		LOG.info("Application will now shut down");
 		Platform.exit();	

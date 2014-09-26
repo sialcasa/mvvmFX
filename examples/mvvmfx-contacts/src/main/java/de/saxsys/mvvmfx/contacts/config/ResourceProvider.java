@@ -5,6 +5,9 @@ import javax.inject.Singleton;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * A singleton CDI provider that is used to load the resource bundle and provide it for the CDI injection.
+ */
 @Singleton
 public class ResourceProvider {
 
