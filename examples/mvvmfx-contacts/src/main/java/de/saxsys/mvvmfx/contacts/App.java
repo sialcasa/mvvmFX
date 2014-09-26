@@ -41,11 +41,10 @@ public class App extends MvvmfxCdiApplication{
 	public void init() throws Exception {
 		super.init();
 		
-		repository.save(ContactFactory.createRandomContact());
-		repository.save(ContactFactory.createRandomContact());
-		repository.save(ContactFactory.createRandomContact());
-		repository.save(ContactFactory.createRandomContact());
-		repository.save(ContactFactory.createRandomContact());
+		int numberOfContacts = 30;
+		for(int i=0 ; i<numberOfContacts ; i++){
+			repository.save(ContactFactory.createRandomContact());
+		}
 	}
 
 	@Override 
