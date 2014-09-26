@@ -14,8 +14,7 @@ public class MyApp extends MvvmfxCdiApplication {
 	static Stage stage;
 	
 	@Override
-	public void start(Stage stage) throws Exception {
-		makePrimaryStageInjectable(stage);
+	public void startMvvmfx(Stage stage) throws Exception {
 		MyApp.stage = stage;
 		MyApp.viewTuple = FluentViewLoader.fxmlView(MyView.class).load();
 		Platform.exit();

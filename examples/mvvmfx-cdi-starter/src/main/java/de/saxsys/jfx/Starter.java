@@ -22,7 +22,7 @@ public class Starter extends MvvmfxCdiApplication {
 	}
 	
 	@Override
-	public void start(Stage stage) {
+	public void startMvvmfx(Stage stage) {
 		ViewTuple<MainContainerView, MainContainerViewModel> tuple =
 				FluentViewLoader.fxmlView(MainContainerView.class).load();
 		

@@ -46,9 +46,8 @@ public class App extends MvvmfxCdiApplication{
 	}
 
 	@Override 
-	public void start(Stage stage) throws Exception {
+	public void startMvvmfx(Stage stage) throws Exception {
 		LOG.info("Starting the Application");
-		makePrimaryStageInjectable(stage);
 		
 		stage.setTitle(resourceBundle.getString("window.title"));
 		

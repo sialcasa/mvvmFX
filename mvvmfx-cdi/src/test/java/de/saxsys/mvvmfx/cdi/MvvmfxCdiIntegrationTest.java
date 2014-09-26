@@ -49,7 +49,7 @@ public class MvvmfxCdiIntegrationTest {
 		private InjectionExample injectionExample;
 		
 		@Override
-		public void start(Stage stage) throws Exception {
+		public void startMvvmfx(Stage stage) throws Exception {
 			
 			MyApplication.startMethodWasExecuted = true;
 			
