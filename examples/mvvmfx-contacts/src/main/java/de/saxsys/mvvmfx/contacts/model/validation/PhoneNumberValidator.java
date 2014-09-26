@@ -7,6 +7,9 @@ import org.controlsfx.validation.Validator;
 
 import java.util.regex.Pattern;
 
+/**
+ * A Validator that verifies that a given String is a valid phone number.
+ */
 public class PhoneNumberValidator implements Validator<String> {
 	private static final Pattern SIMPLE_PHONE_PATTERN = Pattern.compile("\\+?[0-9\\s]{3,20}");
 	private String message;

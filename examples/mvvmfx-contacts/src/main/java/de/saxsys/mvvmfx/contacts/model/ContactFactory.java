@@ -5,8 +5,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+
+/**
+ * A factory that produces contacts. This is used to create dummy data for tests and for the demo.
+ */
 public class ContactFactory {
-	
+
+	/**
+	 * @return a contact with random generated demo content.
+	 */
 	public static Contact createRandomContact(){
 		Contact contact = new Contact();
 

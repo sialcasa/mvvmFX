@@ -7,6 +7,9 @@ import org.controlsfx.validation.Validator;
 
 import java.util.regex.Pattern;
 
+/**
+ * A validator that verifies a given String to be a valid email address.
+ */
 public class EmailAddressValidator implements Validator<String> {
 
 	private static final Pattern SIMPLE_EMAIL_PATTERN = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
