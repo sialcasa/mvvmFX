@@ -58,10 +58,25 @@ public abstract class MvvmfxCdiApplication extends Application {
 		beanManager = weldContainer.getBeanManager();
 		
 	}
-	
-	protected void makePrimaryStageInjectable(Stage primaryStage){
+
+	/**
+	 * This method is overridden to initialize the mvvmFX framework. Override the
+	 * {@link #startMvvmfx(javafx.stage.Stage)} method for your application entry point and startup code instead of this
+	 * method.
+	 */
+	@Override
+	public final void start(Stage primaryStage) throws Exception {
 		producer.setPrimaryStage(primaryStage);
+		
+		startMvvmfx(primaryStage);
 	}
+
+	/**
+	 * Override this method with your application startup logic.
+	 * <p/>
+	 * This method is a wrapper method for javafx's {@link javafx.application.Application#start(javafx.stage.Stage)}.
+	 */
+	public abstract void startMvvmfx(Stage primaryStage) throws Exception;
 
 	/**
 	 * This method is called when the javafx application is initialized. See {@link javafx.application.Application#init()}

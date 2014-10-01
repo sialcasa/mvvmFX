@@ -73,7 +73,8 @@ public class MvvmfxProducer {
 	public Stage producePrimaryStage(){
 		if(primaryStage == null){
 			throw new IllegalStateException("The primary Stage is not available for injection. " +
-					"In your application class please call 'makePrimaryStageInjectable' method from within the 'start' method");
+					"This shouldn't happen and seems to be an error in the mvvmfx framework. " +
+					"Please file a bug in the mvvmfx issue tracker.");
 		}
 		return primaryStage;
 	}

@@ -41,6 +41,8 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication {
 	@Inject
 	private GuiceInjector guiceInjector;
 	
+	private Stage primaryStage;
+	
 	@Override
 	public final void init(List<Module> modules) throws Exception {
 		modules.add(new MvvmfxModule());
@@ -56,6 +58,18 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication {
 			}
 		});
 		
+		modules.add(new AbstractModule() {
+			@Override
+			protected void configure() {
+				bind(Stage.class).toProvider(new Provider<Stage>() {
+					@Override
+					public Stage get() {
+						return primaryStage;
+					}
+				});
+			}
+		});
+		
 		this.initGuiceModules(modules);
 	}
 	
@@ -65,6 +79,7 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication {
 	 * method.
 	 */
 	public final void start(Stage stage) throws Exception {
+		this.primaryStage = stage;
 		MvvmFX.setCustomDependencyInjector(guiceInjector);
 		
 		this.startMvvmfx(stage);
