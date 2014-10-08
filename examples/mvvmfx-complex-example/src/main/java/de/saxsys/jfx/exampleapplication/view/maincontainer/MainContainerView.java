@@ -1,11 +1,16 @@
 package de.saxsys.jfx.exampleapplication.view.maincontainer;
 
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
-
+import de.saxsys.jfx.exampleapplication.view.personlogin.PersonLoginView;
+import de.saxsys.jfx.exampleapplication.view.personwelcome.PersonWelcomeView;
+import de.saxsys.jfx.exampleapplication.viewmodel.maincontainer.MainContainerViewModel;
+import de.saxsys.jfx.exampleapplication.viewmodel.personwelcome.PersonWelcomeViewModel;
 import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
+import de.saxsys.mvvmfx.utils.notifications.NotificationObserver;
+import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -14,19 +19,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.StackPane;
 
 import javax.inject.Inject;
-
-import de.saxsys.jfx.exampleapplication.view.personlogin.PersonLoginView;
-import de.saxsys.jfx.exampleapplication.view.personwelcome.PersonWelcomeView;
-import de.saxsys.jfx.exampleapplication.viewmodel.maincontainer.MainContainerViewModel;
-import de.saxsys.jfx.exampleapplication.viewmodel.personwelcome.PersonWelcomeViewModel;
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.internal.viewloader.View;
-import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
-import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
-import de.saxsys.mvvmfx.utils.notifications.NotificationObserver;
-import de.saxsys.mvvmfx.ViewTuple;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * Main View which creates the necessary subviews, and manages them. Does not need a concrete Viewmodel, so it is typed
@@ -83,26 +79,24 @@ public class MainContainerView implements FxmlView<MainContainerViewModel>, Init
 						viewModel.displayedPersonsProperty().add(id);
 					}
 				});
-		
-		// Configure List with views
-		personWelcomeListView.setCellFactory(new ViewListCellFactory<Integer>() {
-			@Override
-			public ViewTuple<? extends View, ? extends ViewModel> map(Integer element) {
-				if (!viewMap.containsKey(element)) {
-					ViewTuple<PersonWelcomeView, PersonWelcomeViewModel> loadedViewTuple
-					= FluentViewLoader.fxmlView(PersonWelcomeView.class).load();
-					
-					PersonWelcomeView codeBehind = loadedViewTuple.getCodeBehind();
-					
-					codeBehind.getViewModel()
-							.setPersonId(element);
-					
-					viewMap.put(element, loadedViewTuple);
-				}
-				
-				return viewMap.get(element);
-			}
-		});
+
+      // Configure List with views
+      final ViewListCellFactory<Integer> cellFactory = element -> {
+          if (!viewMap.containsKey(element)) {
+              ViewTuple<PersonWelcomeView, PersonWelcomeViewModel> loadedViewTuple
+                  = FluentViewLoader.fxmlView(PersonWelcomeView.class).load();
+
+              PersonWelcomeView codeBehind = loadedViewTuple.getCodeBehind();
+
+              codeBehind.getViewModel()
+                  .setPersonId(element);
+
+              viewMap.put(element, loadedViewTuple);
+          }
+
+          return viewMap.get(element);
+      };
+      personWelcomeListView.setCellFactory(cellFactory);
 		
 		// Bind list
 		personWelcomeListView.itemsProperty().bind(
