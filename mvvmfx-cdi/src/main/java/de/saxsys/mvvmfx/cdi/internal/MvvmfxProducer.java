@@ -43,6 +43,7 @@ public class MvvmfxProducer {
 	private HostServices hostServices;
 	
 	private Stage primaryStage;
+	private Application.Parameters parameters;
 
 	@Produces
 	public NotificationCenter produceNotificationCenter() {
@@ -63,6 +64,15 @@ public class MvvmfxProducer {
 	@Produces
 	public HostServices produceHostServices(){
 		return hostServices;
+	}
+	
+	@Produces
+	public Application.Parameters produceApplicationParameters(){
+		return parameters;
+	}
+
+	public void setApplicationParameters(Application.Parameters parameters){
+		this.parameters = parameters;
 	}
 	
 	public void setPrimaryStage(Stage primaryStage){

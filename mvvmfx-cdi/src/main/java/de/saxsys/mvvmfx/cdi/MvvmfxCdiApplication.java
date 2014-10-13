@@ -97,6 +97,8 @@ public abstract class MvvmfxCdiApplication extends Application {
 	
 		injectionTarget.inject(this, ctx);
 		injectionTarget.postConstruct(this);
+
+		producer.setApplicationParameters(getParameters());
 	}
 
 
