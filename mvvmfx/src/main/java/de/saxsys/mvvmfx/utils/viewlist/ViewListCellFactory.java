@@ -33,14 +33,15 @@ import de.saxsys.mvvmfx.ViewTuple;
  * @param <T>
  *            Datatype which is the mapping source
  */
-public abstract class ViewListCellFactory<T> implements
+@FunctionalInterface
+public interface ViewListCellFactory<T> extends
 		Callback<ListView<T>, ListCell<T>>, ViewTupleMapper<T> {
 	
 	@Override
-	public abstract ViewTuple<? extends View, ? extends ViewModel> map(T element);
+	ViewTuple<? extends View, ? extends ViewModel> map(T element);
 	
 	@Override
-	public ViewListCell<T> call(ListView<T> element) {
+	default ViewListCell<T> call(ListView<T> element) {
 		return new ViewListCell<T>() {
 			@Override
 			public ViewTuple<? extends View, ? extends ViewModel> map(T element) {
