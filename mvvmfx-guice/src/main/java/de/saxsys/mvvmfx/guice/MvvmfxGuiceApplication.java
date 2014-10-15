@@ -16,19 +16,18 @@
 package de.saxsys.mvvmfx.guice;
 
 import java.util.List;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Provider;
-import de.saxsys.mvvmfx.guice.internal.GuiceInjector;
-import de.saxsys.mvvmfx.guice.internal.MvvmfxModule;
-import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.stage.Stage;
 
 import com.cathive.fx.guice.GuiceApplication;
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
+import com.google.inject.Provider;
+
 import de.saxsys.mvvmfx.MvvmFX;
+import de.saxsys.mvvmfx.guice.internal.GuiceInjector;
+import de.saxsys.mvvmfx.guice.internal.MvvmfxModule;
 
 /**
  * This class has to be extended by the user to build a javafx application powered by Guice.
@@ -48,27 +47,30 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication {
 		modules.add(new MvvmfxModule());
 		
 		modules.add(new AbstractModule() {
-			@Override 
+			@Override
 			protected void configure() {
 				bind(HostServices.class).toProvider(new Provider<HostServices>() {
 					@Override public HostServices get() {
 						return getHostServices();
 					}
 				});
-			}
-		});
-		
-		modules.add(new AbstractModule() {
-			@Override
-			protected void configure() {
+				
 				bind(Stage.class).toProvider(new Provider<Stage>() {
 					@Override
 					public Stage get() {
 						return primaryStage;
 					}
 				});
+
+				bind(Parameters.class).toProvider(new Provider<Parameters> (){
+					@Override
+					public Parameters get() {
+						return getParameters();
+					}
+				});
 			}
 		});
+		
 		
 		this.initGuiceModules(modules);
 	}
