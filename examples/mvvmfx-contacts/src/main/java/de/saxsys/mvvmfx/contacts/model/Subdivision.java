@@ -7,7 +7,7 @@ public class Subdivision {
 	
 	private final Country country;
 	
-	Subdivision(String name, String abbr, Country country){
+	public Subdivision(String name, String abbr, Country country){
 		this.name = name;
 		this.abbr = abbr;
 		this.country = country;

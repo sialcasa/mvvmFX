@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
 
 @RunWith(JfxRunner.class)
-public class CountrySelectorTest {
+public class CountrySelectorIntegrationTest {
 	
 	private CountrySelector countrySelector;
 	
@@ -145,7 +145,7 @@ public class CountrySelectorTest {
 		Platform.runLater(function);
 
 		try {
-			blocker.get(1, TimeUnit.SECONDS);
+			blocker.get(5, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
