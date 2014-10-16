@@ -11,8 +11,10 @@ public class IntegrationTest {
 	
 	@Before
 	public void setup(){
-		MyApp.wasPostConstructCalled=false;
-		MyApp.wasPreDestroyCalled=false;
+		MyApp.wasPostConstructCalled = false;
+		MyApp.wasPreDestroyCalled = false;
+		MyApp.wasInitCalled = false;
+		MyApp.wasStopCalled = false;
 	}
 	
 	@Test
@@ -22,6 +24,8 @@ public class IntegrationTest {
 		assertThat(MyApp.wasPostConstructCalled).isTrue();
 		assertThat(MyApp.wasPreDestroyCalled).isTrue();
 		
+		assertThat(MyApp.wasInitCalled).isTrue();
+		assertThat(MyApp.wasStopCalled).isTrue();
 		
 		assertThat(MyApp.viewTuple).isNotNull();
 		assertThat(MyApp.stage).isNotNull();

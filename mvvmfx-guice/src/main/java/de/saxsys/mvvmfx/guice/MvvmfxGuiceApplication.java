@@ -16,6 +16,8 @@
 package de.saxsys.mvvmfx.guice;
 
 import java.util.List;
+
+import de.saxsys.mvvmfx.internal.MvvmfxApplication;
 import javafx.application.HostServices;
 import javafx.stage.Stage;
 
@@ -34,7 +36,7 @@ import de.saxsys.mvvmfx.guice.internal.MvvmfxModule;
  *
  * @author manuel.mauky
  */
-public abstract class MvvmfxGuiceApplication extends GuiceApplication {
+public abstract class MvvmfxGuiceApplication extends GuiceApplication implements MvvmfxApplication{
 	
 	
 	@Inject
@@ -50,11 +52,12 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication {
 			@Override
 			protected void configure() {
 				bind(HostServices.class).toProvider(new Provider<HostServices>() {
-					@Override public HostServices get() {
+					@Override
+					public HostServices get() {
 						return getHostServices();
 					}
 				});
-				
+
 				bind(Stage.class).toProvider(new Provider<Stage>() {
 					@Override
 					public Stage get() {
@@ -62,7 +65,7 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication {
 					}
 				});
 
-				bind(Parameters.class).toProvider(new Provider<Parameters> (){
+				bind(Parameters.class).toProvider(new Provider<Parameters>() {
 					@Override
 					public Parameters get() {
 						return getParameters();
@@ -73,6 +76,7 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication {
 		
 		
 		this.initGuiceModules(modules);
+		this.initMvvmfx();
 	}
 	
 	/**
@@ -86,14 +90,12 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication {
 		
 		this.startMvvmfx(stage);
 	}
-	
-	/**
-	 * Override this method with your application startup logic.
-	 * <p/>
-	 * This method is a wrapper method for javafx's {@link javafx.application.Application#start(javafx.stage.Stage)}.
-	 */
-	public abstract void startMvvmfx(Stage stage) throws Exception;
-	
+
+	@Override
+	public final void stop() throws Exception {
+		stopMvvmfx();
+	}
+
 	/**
 	 * Configure the guice modules.
 	 *
