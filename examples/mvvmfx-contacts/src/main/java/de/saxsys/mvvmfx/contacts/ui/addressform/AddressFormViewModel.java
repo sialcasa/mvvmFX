@@ -68,25 +68,9 @@ public class AddressFormViewModel implements ViewModel {
 		loadingInProgress.bind(countrySelector.inProgressProperty());
 		countrySelector.init();
 		
-		
-		subdivisionLabel.bind(
-				Bindings.when(
-						countrySelector.subdivisionLabel().isEmpty())
-						.then(resourceBundle.getString(SUBDIVISION_LABEL_KEY))
-						.otherwise(countrySelector.subdivisionLabel()));
-
-		countryItemList = new ItemList<>(countrySelector.availableCountries(), Country::getName);
-		
-		ObservableList<String> mappedList = countryItemList.getTargetList();
-		
-		countries = createListWithNothingSelectedMarker(
-				mappedList);
-
-		countries.addListener((ListChangeListener<String>) c -> selectedCountry.set(NOTHING_SELECTED_MARKER));
-		
-		subdivisionItemList = new ItemList<>(countrySelector.subdivisions(), Subdivision::getName);
-		subdivisions = createListWithNothingSelectedMarker(subdivisionItemList.getTargetList());
-		subdivisions.addListener((ListChangeListener<String>) c -> selectedSubdivision.set(NOTHING_SELECTED_MARKER));
+		initSubdivisionLabel();
+		initCountryList();
+		initSubdivisionList();
 		
 		selectedCountry.addListener((obs, oldV, newV) -> {
 			if (newV != null && !newV.equals(NOTHING_SELECTED_MARKER)) {
@@ -121,10 +105,33 @@ public class AddressFormViewModel implements ViewModel {
 		});		
 
 		countryInputDisabled.bind(loadingInProgress);
-
 		subdivisionInputDisabled.bind(loadingInProgress.or(Bindings.size(subdivisionsList()).lessThanOrEqualTo(1)));
 	}
-	
+
+	void initSubdivisionLabel(){
+		subdivisionLabel.bind(
+				Bindings.when(
+						countrySelector.subdivisionLabel().isEmpty())
+						.then(resourceBundle.getString(SUBDIVISION_LABEL_KEY))
+						.otherwise(countrySelector.subdivisionLabel()));
+	}
+
+	private void initSubdivisionList() {
+		subdivisionItemList = new ItemList<>(countrySelector.subdivisions(), Subdivision::getName);
+		subdivisions = createListWithNothingSelectedMarker(subdivisionItemList.getTargetList());
+		subdivisions.addListener((ListChangeListener<String>) c -> selectedSubdivision.set(NOTHING_SELECTED_MARKER));
+	}
+
+	private void initCountryList() {
+		countryItemList = new ItemList<>(countrySelector.availableCountries(), Country::getName);
+
+		ObservableList<String> mappedList = countryItemList.getTargetList();
+
+		countries = createListWithNothingSelectedMarker(
+				mappedList);
+
+		countries.addListener((ListChangeListener<String>) c -> selectedCountry.set(NOTHING_SELECTED_MARKER));
+	}
 	
 	
 	public void commitChanges(){

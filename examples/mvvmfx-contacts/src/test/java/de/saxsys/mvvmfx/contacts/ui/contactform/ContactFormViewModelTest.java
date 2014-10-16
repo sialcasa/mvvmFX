@@ -21,7 +21,6 @@ import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.mvvmfx.contacts.util.CentralClock;
 
 
-@Ignore("Fix threading problems")
 @RunWith(JfxRunner.class)
 public class ContactFormViewModelTest {
 	
