@@ -36,9 +36,7 @@ public class App extends MvvmfxCdiApplication{
 	private Repository repository;
 	
 	@Override 
-	public void init() throws Exception {
-		super.init();
-		
+	public void initMvvmfx() throws Exception {
 		int numberOfContacts = 30;
 		for(int i=0 ; i<numberOfContacts ; i++){
 			repository.save(ContactFactory.createRandomContact());

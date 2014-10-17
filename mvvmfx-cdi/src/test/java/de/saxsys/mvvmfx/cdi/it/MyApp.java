@@ -14,6 +14,9 @@ public class MyApp extends MvvmfxCdiApplication {
 	static boolean wasPreDestroyCalled = false;
 	static boolean wasPostConstructCalled = false;
 	
+	static boolean wasInitCalled = false;
+	static boolean wasStopCalled = false;
+	
 
 
 	static ViewTuple<MyView, MyViewModel> viewTuple;
@@ -35,5 +38,16 @@ public class MyApp extends MvvmfxCdiApplication {
 	@PreDestroy
 	public void preDestroy(){
 		wasPreDestroyCalled = true;
+	}
+
+
+	@Override
+	public void initMvvmfx() throws Exception {
+		wasInitCalled = true;
+	}
+
+	@Override
+	public void stopMvvmfx() throws Exception {
+		wasStopCalled = true;
 	}
 }

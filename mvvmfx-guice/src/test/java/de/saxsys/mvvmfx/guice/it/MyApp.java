@@ -13,6 +13,10 @@ import javax.inject.Inject;
 
 
 public class MyApp extends MvvmfxGuiceApplication {
+
+
+	static boolean wasInitCalled = false;
+	static boolean wasStopCalled = false;
 	
 	public static void main(String...args){
 		launch(args);
@@ -46,5 +50,15 @@ public class MyApp extends MvvmfxGuiceApplication {
 		
 		// we can't shutdown the application in the test case so we need to do it here.
 		Platform.exit();
+	}
+
+	@Override
+	public void initMvvmfx() throws Exception {
+		wasInitCalled = true;
+	}
+
+	@Override
+	public void stopMvvmfx() throws Exception {
+		wasStopCalled = true;
 	}
 }

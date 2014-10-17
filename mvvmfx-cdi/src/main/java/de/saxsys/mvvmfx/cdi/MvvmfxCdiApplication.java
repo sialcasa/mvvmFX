@@ -15,6 +15,7 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.cdi;
 
+import de.saxsys.mvvmfx.internal.MvvmfxApplication;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -35,7 +36,7 @@ import de.saxsys.mvvmfx.cdi.internal.MvvmfxProducer;
  *
  * @author manuel.mauky
  */
-public abstract class MvvmfxCdiApplication extends Application {
+public abstract class MvvmfxCdiApplication extends Application implements MvvmfxApplication {
 
 
 	private final BeanManager beanManager;
@@ -71,12 +72,6 @@ public abstract class MvvmfxCdiApplication extends Application {
 		startMvvmfx(primaryStage);
 	}
 
-	/**
-	 * Override this method with your application startup logic.
-	 * <p/>
-	 * This method is a wrapper method for javafx's {@link javafx.application.Application#start(javafx.stage.Stage)}.
-	 */
-	public abstract void startMvvmfx(Stage primaryStage) throws Exception;
 
 	/**
 	 * This method is called when the javafx application is initialized. See {@link javafx.application.Application#init()}
@@ -90,7 +85,7 @@ public abstract class MvvmfxCdiApplication extends Application {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override 
-	public void init() throws Exception {
+	public final void init() throws Exception {
 		ctx = beanManager.createCreationalContext(null);
 		injectionTarget = beanManager.createInjectionTarget(
 				beanManager.createAnnotatedType((Class<MvvmfxCdiApplication>) this.getClass()));
@@ -99,6 +94,8 @@ public abstract class MvvmfxCdiApplication extends Application {
 		injectionTarget.postConstruct(this);
 
 		producer.setApplicationParameters(getParameters());
+		
+		initMvvmfx();
 	}
 
 
@@ -113,7 +110,8 @@ public abstract class MvvmfxCdiApplication extends Application {
 	 * @throws Exception
 	 */
 	@Override 
-	public void stop() throws Exception {
+	public final void stop() throws Exception {
+		stopMvvmfx();
 		
 		injectionTarget.preDestroy(this);
 		injectionTarget.dispose(this);
