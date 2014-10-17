@@ -23,7 +23,11 @@ public class PhoneNumberValidator implements Validator<String> {
 		if(input == null ||input.trim().isEmpty()){
 			return null;
 		}
+		
+		if(!SIMPLE_PHONE_PATTERN.matcher(input).matches()){
+			return ValidationResult.fromError(control, message);
+		}
 
-		return ValidationResult.fromErrorIf(control, message, !SIMPLE_PHONE_PATTERN.matcher(input).matches());
+		return null;
 	}
 }
