@@ -17,45 +17,66 @@ package de.saxsys.mvvmfx.guice;
 
 import java.util.List;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Provider;
-import de.saxsys.mvvmfx.guice.internal.GuiceInjector;
-import de.saxsys.mvvmfx.guice.internal.MvvmfxModule;
+import de.saxsys.mvvmfx.internal.MvvmfxApplication;
 import javafx.application.HostServices;
 import javafx.stage.Stage;
 
 import com.cathive.fx.guice.GuiceApplication;
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
+import com.google.inject.Provider;
+
 import de.saxsys.mvvmfx.MvvmFX;
+import de.saxsys.mvvmfx.guice.internal.GuiceInjector;
+import de.saxsys.mvvmfx.guice.internal.MvvmfxModule;
 
 /**
  * This class has to be extended by the user to build a javafx application powered by Guice.
  *
  * @author manuel.mauky
  */
-public abstract class MvvmfxGuiceApplication extends GuiceApplication {
+public abstract class MvvmfxGuiceApplication extends GuiceApplication implements MvvmfxApplication{
 	
 	
 	@Inject
 	private GuiceInjector guiceInjector;
+	
+	private Stage primaryStage;
 	
 	@Override
 	public final void init(List<Module> modules) throws Exception {
 		modules.add(new MvvmfxModule());
 		
 		modules.add(new AbstractModule() {
-			@Override 
+			@Override
 			protected void configure() {
 				bind(HostServices.class).toProvider(new Provider<HostServices>() {
-					@Override public HostServices get() {
+					@Override
+					public HostServices get() {
 						return getHostServices();
+					}
+				});
+
+				bind(Stage.class).toProvider(new Provider<Stage>() {
+					@Override
+					public Stage get() {
+						return primaryStage;
+					}
+				});
+
+				bind(Parameters.class).toProvider(new Provider<Parameters>() {
+					@Override
+					public Parameters get() {
+						return getParameters();
 					}
 				});
 			}
 		});
 		
+		
 		this.initGuiceModules(modules);
+		this.initMvvmfx();
 	}
 	
 	/**
@@ -64,18 +85,17 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication {
 	 * method.
 	 */
 	public final void start(Stage stage) throws Exception {
+		this.primaryStage = stage;
 		MvvmFX.setCustomDependencyInjector(guiceInjector);
 		
 		this.startMvvmfx(stage);
 	}
-	
-	/**
-	 * Override this method with your application startup logic.
-	 * <p/>
-	 * This method is a wrapper method for javafx's {@link javafx.application.Application#start(javafx.stage.Stage)}.
-	 */
-	public abstract void startMvvmfx(Stage stage) throws Exception;
-	
+
+	@Override
+	public final void stop() throws Exception {
+		stopMvvmfx();
+	}
+
 	/**
 	 * Configure the guice modules.
 	 *
@@ -84,5 +104,6 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication {
 	 * @throws Exception
 	 *             exc
 	 */
-	public abstract void initGuiceModules(List<Module> modules) throws Exception;
+	public void initGuiceModules(List<Module> modules) throws Exception{
+	}
 }

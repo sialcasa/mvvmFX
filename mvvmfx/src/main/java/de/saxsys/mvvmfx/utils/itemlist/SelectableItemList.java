@@ -26,6 +26,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SingleSelectionModel;
 
+import java.util.List;
+
 /**
  * Element that you can use in a View Model to transform any list to a string representation which can be bound to UI
  * Elements like {@link ChoiceBox} or {@link ListView}. <b>You should only expose the {@link #stringListProperty()}
@@ -147,6 +149,13 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	public ReadOnlyListProperty<String> stringListProperty() {
 		return targetListProperty();
 	}
+
+	/**
+	 * @return String representation of {@link #modelListProperty()} as List.
+	 */
+	public List<String> getStringList(){
+		return targetListProperty().get();
+	}
 	
 	
 	/**
@@ -161,6 +170,8 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	}
 	
 	/**
+	 * @param item the item will be selected.
+	 * 
 	 * @see #selectedItemProperty()
 	 */
 	public void select(ListType item) {
@@ -168,6 +179,8 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	}
 	
 	/**
+	 * @return the currently selected item.
+	 * 
 	 * @see #selectedItemProperty()
 	 */
 	public ListType getSelectedItem() {

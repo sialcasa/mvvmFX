@@ -21,16 +21,19 @@ import javafx.scene.control.ListView;
 
 /**
  * Element that you can use in a View Model to transform any list to a string representation which can be bound to UI
- * Elements like {@link ListView}. <b>You should only expose the {@link #stringListProperty()} to the view, otherwise
- * you create a visibility of the view to the model. Create something like this in your View Model:
+ * Elements like {@link ListView}. <strong>You should only expose the {@link #stringListProperty()} to the
+ * view</strong>, otherwise you create a visibility of the view to the model. Create something like this in your View
+ * Model: <br>
+ * <br>
  * 
- * <code>
- * public ObservableList<String> stringListProperty(){
+ * <pre>
+ * public ObservableList{@code <String>} stringListProperty(){
  * 		return itemList.stringListProperty();
  * }
- * </code>
+ * </pre>
  * 
- * </b> You have to provide a {@link ModelToStringFunction} to define how to map between the model type and a string and
+ * <br>
+ * You have to provide a {@link ModelToStringFunction} to define how to map between the model type and a string and
  * back. In addition you have properties which represents the actual selection state of a list.
  * 
  * @author sialcasa
@@ -51,7 +54,7 @@ public class ItemList<ListType> extends ListTransformation<ListType, String> {
 			final ModelToStringFunction<ListType> modelToStringMapper) {
 		super(modelList, modelToStringMapper);
 	}
-
+	
 	/**
 	 * @return String representation of {@link #modelListProperty()}.
 	 */

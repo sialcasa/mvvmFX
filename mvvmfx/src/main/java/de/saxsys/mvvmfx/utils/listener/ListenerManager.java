@@ -53,8 +53,9 @@ public class ListenerManager implements ICleanable {
 	 * Register the given {@link ChangeListener} to the {@link ObservableValue}. The listener is added to the observable
 	 * and will be added for management so it can be cleaned up with the {@link #clean()} method.
 	 * 
-	 * @param observable
-	 * @param listener
+	 * @param observable the observable that the listener is added to.
+	 * @param listener the listener that is registered.
+	 * @param <T> the generic type of the observable value.   
 	 */
 	public <T> void register(ObservableValue<T> observable, ChangeListener<? super T> listener) {
 		if(!simpleChangeListeners.containsKey(observable)){
@@ -70,8 +71,9 @@ public class ListenerManager implements ICleanable {
 	 * Register the given {@link ListChangeListener} to the {@link ObservableList}. The listener is added to the
 	 * observable and will be added for management so it can be cleaned up with the {@link #clean()} method.
 	 * 
-	 * @param observable
-	 * @param listener
+	 * @param observable the observable list that the listener is added to.
+	 * @param listener the listener that is registered.
+	 * @param <T> the generic type of the observable list.     
 	 */
 	public <T> void register(ObservableList<T> observable, ListChangeListener<? super T> listener) {
 		if(!listChangeListeners.containsKey(observable)){
@@ -87,8 +89,8 @@ public class ListenerManager implements ICleanable {
 	 * Register the given {@link InvalidationListener} to the {@link Observable} . The listener is added to the
 	 * observable and will be added for management so it can be cleaned up with the {@link #clean()} method.
 	 * 
-	 * @param observable
-	 * @param listener
+	 * @param observable the observable that the listener is added to.
+	 * @param listener the listener that is registered.
 	 */
 	public void register(Observable observable, InvalidationListener listener) {
 		if(!invalidationListeners.containsKey(observable)){

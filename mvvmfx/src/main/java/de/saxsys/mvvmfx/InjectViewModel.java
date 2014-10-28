@@ -20,6 +20,24 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * This annotation is used to mark the ViewModel field in the View so that the mvvmFX framework will inject the
+ * corresponding ViewModel instance. <br>
+ * Example: <br>
+ * <br>
+ * 
+ * <pre>
+ * public class MyCoolView implements FxmlView{@code <MyCoolViewModel>} {
+ * 
+ *        {@literal @}InjectViewModel
+ *         private MyCoolViewModel viewModel;
+ *         ...
+ * }
+ * </pre>
+ * 
+ * 
+ * @author manuel.mauky
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface InjectViewModel {

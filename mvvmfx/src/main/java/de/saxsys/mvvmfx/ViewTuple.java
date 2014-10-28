@@ -20,8 +20,25 @@ import javafx.scene.Parent;
 import de.saxsys.mvvmfx.internal.viewloader.View;
 
 /**
+ * <p>
  * Tuple for carrying view / code-behind pair. The code-behind part is the class which is known as the controller class
  * behind a FXML file.
+ * </p>
+ * 
+ * <p>
+ * As a user you typically won't create instances of this class on your own. Instead you will obtain instances of this
+ * class with the {@link FluentViewLoader} when you are loading a view.
+ * </p>
+ * 
+ * <p>
+ * Instances of this class are immutable.
+ * </p>
+ * 
+ * 
+ * @param <ViewType>
+ *            the generic type of the view that was loaded.
+ * @param <ViewModelType>
+ *            the generic type of the viewModel that was loaded.
  */
 public class ViewTuple<ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> {
 	
@@ -31,9 +48,11 @@ public class ViewTuple<ViewType extends View<? extends ViewModelType>, ViewModel
 	
 	/**
 	 * @param codeBehind
-	 *            to set
+	 *            the codeBehind for this viewTuple
 	 * @param view
-	 *            to set
+	 *            the view for this viewTuple
+	 * @param viewModel
+	 *            the viewModel for this viewTuple
 	 */
 	public ViewTuple(final ViewType codeBehind, final Parent view, final ViewModelType viewModel) {
 		this.codeBehind = codeBehind;
@@ -42,23 +61,35 @@ public class ViewTuple<ViewType extends View<? extends ViewModelType>, ViewModel
 	}
 	
 	/**
-	 * @return the code behind of the View. (known as controller class in JavaFX FXML)
+	 * <p>
+	 * The code behind part of the view. When using FXML ({@link FxmlView}) this will be an instance of the class that
+	 * is specified in the fxml file with <code>fx:controller</code>.
+	 * </p>
+	 * 
+	 * <p>
+	 * When the view is implemented in pure java ({@link JavaView}) the instance returned by this method will typically be the same
+	 * instance that is returned by {@link #getView()}.
+	 * </p>
+	 * 
+	 * @return the code behind of the View.
 	 */
 	public ViewType getCodeBehind() {
 		return codeBehind;
 	}
 	
 	/**
+	 * The root object of the view. This can be added to the scene graph.
+	 * 
 	 * @return the view
 	 */
 	public Parent getView() {
 		return view;
 	}
-
+	
 	/**
 	 * @return the viewModel
 	 */
-	public ViewModelType getViewModel(){
+	public ViewModelType getViewModel() {
 		return viewModel;
 	}
 }

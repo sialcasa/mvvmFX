@@ -20,7 +20,7 @@ package de.saxsys.mvvmfx.utils.notifications;
  * Central component to provide a notification mechanism. You can add observers by using keys to get notifications for
  * it. If you want you can pass an
  * 
- * @Object[] with a notification.
+ * {@code Object[]} with a notification.
  * 
  * @author sialcasa
  * 
@@ -62,7 +62,7 @@ public interface NotificationCenter {
 	/**
 	 * Post a notification to all @MVVMNotificationObserver which are registered with the given @String. You can pass
 	 * 
-	 * @Object[].
+	 * {@code Object[]}.
 	 * 
 	 * @param name
 	 *            of the notification which sould be send

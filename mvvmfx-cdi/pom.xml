@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmFX-parent</artifactId>
-		<version>0.3.0</version>
+		<version>0.4.0</version>
 	</parent>
 
 	<artifactId>mvvmFX-cdi</artifactId>
@@ -41,6 +41,12 @@
 						<phase>deploy</phase>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<forkMode>always</forkMode>
+				</configuration>
 			</plugin>
 		</plugins>
 

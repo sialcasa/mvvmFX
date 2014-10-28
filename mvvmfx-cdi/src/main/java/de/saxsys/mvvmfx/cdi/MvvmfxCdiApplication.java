@@ -15,12 +15,20 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.cdi;
 
+import de.saxsys.mvvmfx.internal.MvvmfxApplication;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import javax.enterprise.event.Observes;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.InjectionTarget;
+import javax.inject.Inject;
 
-import de.saxsys.mvvmfx.cdi.internal.WeldStartupHelper;
+import org.jboss.weld.environment.se.Weld;
+import org.jboss.weld.environment.se.WeldContainer;
+
+import de.saxsys.mvvmfx.MvvmFX;
+import de.saxsys.mvvmfx.cdi.internal.MvvmfxProducer;
 
 
 /**
@@ -28,56 +36,88 @@ import de.saxsys.mvvmfx.cdi.internal.WeldStartupHelper;
  *
  * @author manuel.mauky
  */
-public abstract class MvvmfxCdiApplication {
+public abstract class MvvmfxCdiApplication extends Application implements MvvmfxApplication {
+
+
+	private final BeanManager beanManager;
+	private CreationalContext<MvvmfxCdiApplication> ctx;
+	private InjectionTarget<MvvmfxCdiApplication> injectionTarget;
+	private final Weld weld;
 	
+	@Inject
+	private MvvmfxProducer producer;
+
+	public MvvmfxCdiApplication(){
+		weld = new Weld();
+		WeldContainer weldContainer = weld.initialize();
+
+		MvvmFX.setCustomDependencyInjector((type) -> weldContainer.instance().select(type).get());
 	
-	/**
-	 * The event that was fired to start this application. It contains values that are provided by the javafx
-	 * Application
-	 */
-	private WeldStartupHelper.StartupEvent startupEvent;
-	
-	/**
-	 * This method is equivalent to javafx's {@link javafx.application.Application#launch(String...)}. You have to call
-	 * this method to startup you application.
-	 * <p/>
-	 * Please notice that there is not launch method that takes a parameter of type {@link Class} as first param as it
-	 * is available in {@link javafx.application.Application}. The reason is that we need this method internally to
-	 * support the startup with CDI.
-	 *
-	 * @param args
-	 *            the arguments from the console interface.
-	 */
-	public static void launch(String... args) {
-		Application.launch(WeldStartupHelper.class, args);
-	}
-	
-	/**
-	 * This is an observer method for the {@link javafx.stage.Stage}. This event is fired by
-	 * {@link de.saxsys.mvvmfx.cdi.internal.WeldStartupHelper}. This way we can get the stage from javafx into our CDI
-	 * environment.
-	 */
-	void listenToStartup(@Observes WeldStartupHelper.StartupEvent startupEvent) throws Exception {
-		this.startupEvent = startupEvent;
-		this.start(startupEvent.getStage());
-	}
-	
-	/**
-	 * Override this method to setup your application. This method is equivalent to javafx's
-	 * {@link javafx.application.Application#start(javafx.stage.Stage)} method.
-	 */
-	public abstract void start(Stage stage) throws Exception;
-	
-	
-	/**
-	 * Returns the application parameters. See {@link javafx.application.Application#getParameters()}.
-	 */
-	public Application.Parameters getParameters() {
-		if(startupEvent == null){
-			throw new IllegalStateException("The application wasn't started correctly!");
-		}
+		MvvmfxProducer mvvmfxProducer = weldContainer.instance().select(MvvmfxProducer.class).get();
+		mvvmfxProducer.setHostServices(getHostServices());
+
+		beanManager = weldContainer.getBeanManager();
 		
-		return startupEvent.getParameters();
 	}
+
+	/**
+	 * This method is overridden to initialize the mvvmFX framework. Override the
+	 * {@link #startMvvmfx(javafx.stage.Stage)} method for your application entry point and startup code instead of this
+	 * method.
+	 */
+	@Override
+	public final void start(Stage primaryStage) throws Exception {
+		producer.setPrimaryStage(primaryStage);
+		
+		startMvvmfx(primaryStage);
+	}
+
+
+	/**
+	 * This method is called when the javafx application is initialized. See {@link javafx.application.Application#init()}
+	 * for more details. 
+	 *
+	 * Unlike the original init method in {@link javafx.application.Application} this method
+	 * contains logic to initialize the CDI container. Therefor it's important to
+	 * call <code>super.init()</code> when you override this method.
+	 *
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	@Override 
+	public final void init() throws Exception {
+		ctx = beanManager.createCreationalContext(null);
+		injectionTarget = beanManager.createInjectionTarget(
+				beanManager.createAnnotatedType((Class<MvvmfxCdiApplication>) this.getClass()));
 	
+		injectionTarget.inject(this, ctx);
+		injectionTarget.postConstruct(this);
+
+		producer.setApplicationParameters(getParameters());
+		
+		initMvvmfx();
+	}
+
+
+	/**
+	 * This method is called when the application should stop. See {@link javafx.application.Application#stop()}
+	 * for more details. 
+	 * 
+	 * Unlike the original stop method in {@link javafx.application.Application} this method
+	 * contains logic to release resources managed by the CDI container. Therefor it's important to
+	 * call <code>super.stop()</code> when you override this method.
+	 * 
+	 * @throws Exception
+	 */
+	@Override 
+	public final void stop() throws Exception {
+		stopMvvmfx();
+		
+		injectionTarget.preDestroy(this);
+		injectionTarget.dispose(this);
+		
+		ctx.release();
+		
+		weld.shutdown();
+	}
 }
