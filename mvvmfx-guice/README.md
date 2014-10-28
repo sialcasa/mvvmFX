@@ -12,17 +12,9 @@ To create an application that is powered by Guice you have to extend `MvvmfxGuic
             launch(args);
         }
 
-        @Inject
-        private ViewLoader viewLoader;
-
         @Override
         public void startMvvmfx(final Stage stage) throws Exception {
             // your code to initialize the view
-        }
-
-        @Override
-        public void initGuiceModules(List<Module> modules) throws Exception {
-            // add your guice modules here
         }
     }
 

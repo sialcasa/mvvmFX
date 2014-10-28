@@ -10,11 +10,8 @@ To create an application that is powered by CDI / Weld you have to extend `Mvvmf
             launch(args);
     	}
 
-        @Inject
-        private ViewLoader viewLoader;
-
         @Override
-        public void start(Stage stage){
+        public void startMvvmfx(Stage stage){
            // your code to initialize the view.
         }
     }
