@@ -23,23 +23,4 @@
 		<module>mvvmfx-contacts</module>
 	</modules>
 
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<executions>
-						<execution>
-							<id>default-deploy</id>
-							<phase>none</phase>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-
-		</pluginManagement>
-	</build>
-
-
 </project>
