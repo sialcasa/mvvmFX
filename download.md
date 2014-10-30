@@ -9,9 +9,9 @@ permalink: /download/
 
 ## Maven
 
-- [mvvmFX](http://search.maven.org/#search|ga|1|mvvmfx)
-- [mvvmFX-cdi](http://search.maven.org/#search|ga|1|mvvmfx-cdi)
-- [mvvmFX-guice](http://search.maven.org/#search|ga|1|mvvmfx-guice)
+- [mvvmFX](http://search.maven.org/#search%7Cga%7C1%7Cmvvmfx)
+- [mvvmFX-cdi](http://search.maven.org/#search%7Cga%7C1%7Cmvvmfx-cdi)
+- [mvvmFX-guice](http://search.maven.org/#search%7Cga%7C1%7Cmvvmfx-guice)
 
 ## Binary distribution
 
