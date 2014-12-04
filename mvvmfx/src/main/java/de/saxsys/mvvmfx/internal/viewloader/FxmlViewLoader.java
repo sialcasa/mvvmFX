@@ -61,10 +61,37 @@ public class FxmlViewLoader {
 	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
 			Class<? extends ViewType> viewType, ResourceBundle resourceBundle, Object controller, Object root,
 			ViewModelType viewModel) {
-		final String pathToFXML = "/" + viewType.getPackage().getName().replaceAll("\\.", "/") + "/"
-				+ viewType.getSimpleName() + ".fxml";
-		
+		final String pathToFXML = createFxmlPath(viewType);
 		return loadFxmlViewTuple(pathToFXML, resourceBundle, controller, root, viewModel);
+	}
+
+	/**
+	 * This method is used to create a String with the path to the FXML file for a given View class.
+	 * 
+	 * This is done by taking the package of the view class (if any) and replace "." with "/". 
+	 * After that the Name of the class and the file ending ".fxml" is appended.
+	 * 
+	 * Example: de.saxsys.myapp.ui.MainView as view class will be transformed to "/de/saxsys/myapp/ui/MainView.fxml"
+	 * 
+	 * Example 2: MainView (located in the default package) will be transformed to "/MainView.fxml"
+	 * 
+	 * @param viewType the view class type.
+	 * @return the path to the fxml file as string.
+	 */
+	private String createFxmlPath(Class<?> viewType){
+		final StringBuilder pathBuilder = new StringBuilder();
+
+		pathBuilder.append("/");
+		
+		if(viewType.getPackage() != null){
+			pathBuilder.append(viewType.getPackage().getName().replaceAll("\\.","/"));
+			pathBuilder.append("/");
+		}
+
+		pathBuilder.append(viewType.getSimpleName());
+		pathBuilder.append(".fxml");
+
+		return pathBuilder.toString();
 	}
 	
 	/**
