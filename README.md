@@ -13,7 +13,7 @@ __MVVM__ is the enhanced version of the [Presentation Model](http://martinfowler
 ```
 <dependency>
 		<groupId>de.saxsys</groupId>
-		<artifactId>mvvmFX</artifactId>
+		<artifactId>mvvmfx</artifactId>
 		<version>0.4.0</version>
 </dependency>
 ```
