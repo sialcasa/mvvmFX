@@ -15,7 +15,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>de.saxsys</groupId>
-			<artifactId>mvvmFX</artifactId>
+			<artifactId>mvvmfx</artifactId>
 			<version>${version}</version>
 		</dependency>
 	</dependencies>
