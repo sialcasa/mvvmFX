@@ -13,5 +13,3 @@ To use this archetype:
         
 
 This creates an example mvvmfx project similar to the [mvvmfx-helloworld example](/examples/mvvmfx-helloworld).
-
-*Hint:* At the moment the archetype isn't available in the central archetype catalogue. This means that you have to `mvn install` the archetype into your local repository to be able to use it.
