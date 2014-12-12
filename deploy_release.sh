@@ -15,7 +15,7 @@
 #     <server>
 #       <id>sonatype-nexus-snapshots</id>
 #       <username>YOUR USERNAME</username>
-#       <password>>OUR PASSWORD</password>
+#       <password>YOUR PASSWORD</password>
 #     </server>
 #     <server>
 #       <id>sonatype-nexus-staging</id>
