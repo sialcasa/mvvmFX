@@ -1,6 +1,8 @@
 # MvvmFX with SynchronizeFX
 
-This example shows how you can combine mvvmFX with the framework [SynchronizeFX](https://github.com/saxsys/SynchronizeFX).
+This example shows how you can combine mvvmFX with the framework [SynchronizeFX](https://github.com/saxsys/SynchronizeFX) 
+to create a distributed ViewModel. This way the state of the UI of different instances of the App 
+(on different JVM's, on different computers) is always synchronized between the apps.
 
 SynchronizeFX is a library for JavaFX that enables property bindings between different JVMs over the network.
 
