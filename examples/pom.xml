@@ -21,6 +21,7 @@
 		<module>mvvmfx-helloworld-without-fxml</module>
 		<module>mvvmfx-synchronizefx</module>
 		<module>mvvmfx-contacts</module>
+		<module>mvvmfx-books-example</module>
 	</modules>
 
 </project>
