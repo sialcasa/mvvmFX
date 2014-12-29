@@ -1,10 +1,11 @@
 package de.saxsys.jfx.exampleapplication.model;
 
-import java.util.Random;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+
+import java.util.Random;
 
 /**
  * The class represents a Person with a firstname and a lastname. It provides access with JavaFX Properties.
@@ -17,7 +18,7 @@ public class Person {
 	private int technicalID;
 	private final StringProperty firstName = new SimpleStringProperty();
 	private final StringProperty lastName = new SimpleStringProperty();
-	private final BooleanProperty male = new SimpleBooleanProperty();
+	private final ObjectProperty<Gender> gender = new SimpleObjectProperty<>();
 	
 	/**
 	 * Creates a person with given name.
@@ -26,11 +27,13 @@ public class Person {
 	 *            of person
 	 * @param lastName
 	 *            of person
+	 * @param gender
+	 *            of person
 	 */
-	public Person(final String firstName, final String lastName, final boolean isMale) {
+	public Person(final String firstName, final String lastName, Gender gender) {
 		this.firstName.set(firstName);
 		this.lastName.set(lastName);
-		this.male.set(isMale);
+		this.gender.set(gender);
 	}
 	
 	/**
@@ -46,12 +49,13 @@ public class Person {
 	public StringProperty lastNameProperty() {
 		return lastName;
 	}
-	
+
+
 	/**
-	 * @return male as {@link BooleanProperty}
+	 * @return the gender of the person as {@link javafx.beans.property.ObjectProperty}.
 	 */
-	public BooleanProperty maleProperty() {
-		return male;
+	public ObjectProperty<Gender> genderProperty() {
+		return gender;
 	}
 	
 	/**
@@ -84,20 +88,19 @@ public class Person {
 	}
 	
 	/**
-	 * @return male as boolean
+	 * @return the gender of the person as {@link String}
 	 */
-	public boolean isMale() {
-		return male.get();
+	public Gender getGender() {
+		return gender.get();
 	}
-	
+
 	/**
-	 * @see #isMale()
-	 * @param male
-	 *            whether the person is male
+	 * @see #getGender()
 	 */
-	public void setMale(boolean male) {
-		this.male.set(male);
+	public void setGender(Gender gender){
+		this.gender.set(gender);
 	}
+
 	
 	/**
 	 * Gets the technical id.
