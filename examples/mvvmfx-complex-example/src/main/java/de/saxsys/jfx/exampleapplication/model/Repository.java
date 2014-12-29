@@ -1,9 +1,9 @@
 package de.saxsys.jfx.exampleapplication.model;
 
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Singleton;
 
 /**
  * Service class for providing some dummy data.
@@ -19,9 +19,9 @@ public class Repository {
 	 * Creates the Repo.
 	 */
 	public Repository() {
-		persons.add(new Person("Alexander", "Casall", true));
-		persons.add(new Person("Bernd", "Grams", true));
-		persons.add(new Person("Anna", "Schulze", false));
+		persons.add(new Person("Alexander", "Casall", Gender.MALE));
+		persons.add(new Person("Bernd", "Grams", Gender.MALE));
+		persons.add(new Person("Anna", "Schulze", Gender.NOT_SPECIFIED));
 	}
 	
 	/**
