@@ -21,9 +21,10 @@ public class Repository {
 	public Repository() {
 		persons.add(new Person("Alexander", "Casall", Gender.MALE));
 		persons.add(new Person("Bernd", "Grams", Gender.MALE));
-		persons.add(new Person("Anna", "Schulze", Gender.NOT_SPECIFIED));
+		persons.add(new Person("Anna", "Schulze", Gender.FEMALE));
+		persons.add(new Person("Andy", "Mueller", Gender.NOT_SPECIFIED));
 	}
-	
+
 	/**
 	 * @return available {@link Person}s
 	 */
