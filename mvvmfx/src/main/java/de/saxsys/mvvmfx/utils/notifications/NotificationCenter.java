@@ -30,45 +30,45 @@ public interface NotificationCenter {
 	
 	
 	/**
-	 * Add an observer to the @MVVMNotificationCenter which gets notifications for the given @String.
+	 * Add an observer to the NotificationCenter which gets notifications for the given String.
 	 * 
-	 * @param name
+	 * @param messageName
 	 *            key of the notification to listen
 	 * @param observer
 	 *            which listens for the notification
 	 */
-	public abstract void addObserverForName(String name,
-			NotificationObserver observer);
+	void subscribe(String messageName,
+				   NotificationObserver observer);
 	
 	/**
-	 * Removes an observer from the @MVVMNotificationCenter.
+	 * Removes an observer from the NotificationCenter.
 	 * 
-	 * @param name
+	 * @param messageName
 	 *            key of the notification to remove
 	 * @param observer
 	 *            which listens for the notification
 	 */
-	public abstract void removeObserverForName(String name,
-			NotificationObserver observer);
+	void unsubscribe(String messageName,
+					 NotificationObserver observer);
 	
 	/**
-	 * Remove all registrations of an @MVVMNotificationObserver.
+	 * Remove all registrations of an NotificationObserver.
 	 * 
 	 * @param observer
 	 *            for remove all notifications
 	 */
-	public abstract void removeObserver(NotificationObserver observer);
+	void unsubscribe(NotificationObserver observer);
 	
 	/**
-	 * Post a notification to all @MVVMNotificationObserver which are registered with the given @String. You can pass
+	 * Post a notification to all NotificationObserver which are registered with the given String.
+	 *
+	 * You can additionally add a varying number of Objects as a payload that the observer will receive.
 	 * 
-	 * {@code Object[]}.
-	 * 
-	 * @param name
+	 * @param messageName
 	 *            of the notification which sould be send
-	 * @param objects
+	 * @param payload
 	 *            which should be passed
 	 */
-	public abstract void postNotification(String name, Object... objects);
+	void publish(String messageName, Object... payload);
 	
 }

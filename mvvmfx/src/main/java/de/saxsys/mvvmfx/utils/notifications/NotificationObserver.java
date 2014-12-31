@@ -21,14 +21,15 @@ package de.saxsys.mvvmfx.utils.notifications;
  * @author sialcasa
  * 
  */
+@FunctionalInterface
 public interface NotificationObserver {
 	/**
-	 * Handle the Notification which is passed by the @MVVMNotificationCenter. An @Object[] could be shipped.
+	 * Handle the Notification which is passed by the NotificationCenter. An @Object[] could be shipped.
 	 * 
 	 * @param key
 	 *            notification name
-	 * @param objects
+	 * @param payload
 	 *            which are passed
 	 */
-	public void receivedNotification(String key, Object... objects);
+	public void receivedNotification(String key, Object... payload);
 }

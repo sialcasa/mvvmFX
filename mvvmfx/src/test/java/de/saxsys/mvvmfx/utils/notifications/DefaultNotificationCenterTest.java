@@ -42,35 +42,35 @@ public class DefaultNotificationCenterTest {
 	
 	@Test
 	public void addObserverToDefaultNotificationCenterAndPostNotification() throws Exception {
-		defaultCenter.addObserverForName(TEST_NOTIFICATION, observer1);
-		defaultCenter.postNotification(TEST_NOTIFICATION);
+		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
+		defaultCenter.publish(TEST_NOTIFICATION);
 		Mockito.verify(observer1).receivedNotification(TEST_NOTIFICATION);
 	}
 	
 	@Test
 	public void addObserverToDefaultNotificationCenterAndPostObjectNotification() throws Exception {
-		defaultCenter.addObserverForName(TEST_NOTIFICATION, observer1);
-		defaultCenter.postNotification(TEST_NOTIFICATION, OBJECT_ARRAY_FOR_NOTIFICATION);
+		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
+		defaultCenter.publish(TEST_NOTIFICATION, OBJECT_ARRAY_FOR_NOTIFICATION);
 		Mockito.verify(observer1).receivedNotification(TEST_NOTIFICATION, OBJECT_ARRAY_FOR_NOTIFICATION);
 	}
 	
 	@Test
 	public void addAndRemoveObserverToDefaultNotificationCenterAndPostNotification() throws Exception {
-		defaultCenter.addObserverForName(TEST_NOTIFICATION, observer1);
-		defaultCenter.addObserverForName(TEST_NOTIFICATION, observer2);
-		defaultCenter.addObserverForName(TEST_NOTIFICATION, observer3);
-		defaultCenter.removeObserver(observer1);
-		defaultCenter.postNotification(TEST_NOTIFICATION);
+		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
+		defaultCenter.subscribe(TEST_NOTIFICATION, observer2);
+		defaultCenter.subscribe(TEST_NOTIFICATION, observer3);
+		defaultCenter.unsubscribe(observer1);
+		defaultCenter.publish(TEST_NOTIFICATION);
 		Mockito.verify(observer1, Mockito.never()).receivedNotification(TEST_NOTIFICATION);
 	}
 	
 	@Test
 	public void addObserversToDefaultNotificationCenterAndPostNotification() throws Exception {
-		defaultCenter.addObserverForName(TEST_NOTIFICATION, observer1);
-		defaultCenter.addObserverForName(TEST_NOTIFICATION_2, observer2);
-		defaultCenter.addObserverForName(TEST_NOTIFICATION, observer3);
+		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
+		defaultCenter.subscribe(TEST_NOTIFICATION_2, observer2);
+		defaultCenter.subscribe(TEST_NOTIFICATION, observer3);
 		
-		defaultCenter.postNotification(TEST_NOTIFICATION);
+		defaultCenter.publish(TEST_NOTIFICATION);
 		Mockito.verify(observer1, Mockito.only()).receivedNotification(TEST_NOTIFICATION);
 		Mockito.verify(observer2, Mockito.never()).receivedNotification(TEST_NOTIFICATION_2);
 		Mockito.verify(observer3, Mockito.only()).receivedNotification(TEST_NOTIFICATION);
@@ -78,15 +78,15 @@ public class DefaultNotificationCenterTest {
 	
 	@Test
 	public void addAndRemoveObserverForNameToDefaultNotificationCenterAndPostNotification() throws Exception {
-		defaultCenter.addObserverForName(TEST_NOTIFICATION, observer1);
-		defaultCenter.removeObserverForName(TEST_NOTIFICATION, observer1);
-		defaultCenter.postNotification(TEST_NOTIFICATION);
+		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
+		defaultCenter.unsubscribe(TEST_NOTIFICATION, observer1);
+		defaultCenter.publish(TEST_NOTIFICATION);
 		Mockito.verify(observer1, Mockito.never()).receivedNotification(TEST_NOTIFICATION);
 	}
 	
 	private class DummyNotificationObserver implements NotificationObserver {
 		@Override
-		public void receivedNotification(String key, Object... objects) {
+		public void receivedNotification(String key, Object... payload) {
 			
 		}
 	}
