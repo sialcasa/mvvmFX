@@ -36,26 +36,26 @@ class DefaultNotificationCenter implements NotificationCenter {
 	private final Map<String, List<NotificationObserver>> observersForName = new HashMap<String, List<NotificationObserver>>();
 	
 	@Override
-	public void addObserverForName(String name, NotificationObserver observer) {
-		List<NotificationObserver> observers = this.observersForName.get(name);
+	public void subscribe(String messageName, NotificationObserver observer) {
+		List<NotificationObserver> observers = this.observersForName.get(messageName);
 		if (observers == null) {
-			this.observersForName.put(name, new ArrayList<NotificationObserver>());
+			this.observersForName.put(messageName, new ArrayList<NotificationObserver>());
 		}
-		observers = this.observersForName.get(name);
+		observers = this.observersForName.get(messageName);
 		observers.add(observer);
 	}
 	
 	@Override
-	public void removeObserverForName(String name, NotificationObserver observer) {
-		List<NotificationObserver> observers = this.observersForName.get(name);
+	public void unsubscribe(String messageName, NotificationObserver observer) {
+		List<NotificationObserver> observers = this.observersForName.get(messageName);
 		observers.remove(observer);
 		if (observers.size() == 0) {
-			this.observersForName.remove(name);
+			this.observersForName.remove(messageName);
 		}
 	}
 	
 	@Override
-	public void removeObserver(NotificationObserver observer) {
+	public void unsubscribe(NotificationObserver observer) {
 		Iterator<String> iterator = this.observersForName.keySet().iterator();
 		while (iterator.hasNext()) {
 			String key = iterator.next();
@@ -71,11 +71,11 @@ class DefaultNotificationCenter implements NotificationCenter {
 	}
 	
 	@Override
-	public void postNotification(String name, Object... objects) {
-		Collection<NotificationObserver> notificationReceivers = observersForName.get(name);
+	public void publish(String messageName, Object... payload) {
+		Collection<NotificationObserver> notificationReceivers = observersForName.get(messageName);
 		if (notificationReceivers != null) {
 			for (NotificationObserver observer : notificationReceivers) {
-				observer.receivedNotification(name, objects);
+				observer.receivedNotification(messageName, payload);
 			}
 		}
 	}
