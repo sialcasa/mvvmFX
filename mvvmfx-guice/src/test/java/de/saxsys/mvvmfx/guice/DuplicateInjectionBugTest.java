@@ -4,7 +4,6 @@ import com.google.inject.Module;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.inject.Inject;
@@ -17,10 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * A class that is injected into the application is instantiated twice. 
  * 
  * see: <a href="https://github.com/sialcasa/mvvmFX/issues/124">issues 124</a>
- * 
- * Ignored until the bug is fixed.
  */
-@Ignore
 public class DuplicateInjectionBugTest {
 	
 	
