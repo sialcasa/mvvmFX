@@ -4,12 +4,13 @@
 
 	<parent>
 		<groupId>de.saxsys</groupId>
-		<artifactId>mvvmFX-parent</artifactId>
-		<version>0.4.0</version>
+		<artifactId>mvvmfx-parent</artifactId>
+		<version>1.0.0</version>
 	</parent>
 
 
-	<artifactId>mvvmFX-archetype</artifactId>
+	<artifactId>mvvmfx-archetype</artifactId>
+	<packaging>maven-archetype</packaging>
 	<name>mvvmFX Archetype</name>
 	
 	<description>
@@ -22,22 +23,29 @@
 	
 
 	<build>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.archetype</groupId>
+				<artifactId>archetype-packaging</artifactId>
+				<version>2.2</version>
+			</extension>
+		</extensions>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-archetype-plugin</artifactId>
+					<version>2.2</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<configuration>
 					<escapeString>\</escapeString>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>default-deploy</id>
-						<phase>deploy</phase>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 		

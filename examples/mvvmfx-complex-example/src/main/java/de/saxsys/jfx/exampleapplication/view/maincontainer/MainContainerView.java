@@ -9,7 +9,6 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
-import de.saxsys.mvvmfx.utils.notifications.NotificationObserver;
 import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -57,16 +56,12 @@ public class MainContainerView implements FxmlView<MainContainerViewModel>, Init
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		// Listen for close notifications
-		notificationCenter.addObserverForName("hidePersonWelcome",
-				new NotificationObserver() {
-					@Override
-					public void receivedNotification(String key,
-							Object... objects) {
-						int personIdToHide = (int) objects[0];
-						viewModel.displayedPersonsProperty().remove(
-								new Integer(personIdToHide));
-					}
-				});
+		notificationCenter.subscribe("hidePersonWelcome",
+				(key, payload) -> {
+                    int personIdToHide = (int) payload[0];
+                    viewModel.displayedPersonsProperty().remove(
+                            new Integer(personIdToHide));
+                });
 		
 		// When the login button of the loginView, the pickedPersonProperty is
 		// going to have the index of the selected person

@@ -19,11 +19,11 @@
 
 	<parent>
 		<groupId>de.saxsys</groupId>
-		<artifactId>mvvmFX-parent</artifactId>
-		<version>0.4.0</version>
+		<artifactId>mvvmfx-parent</artifactId>
+		<version>1.0.0</version>
 	</parent>
 
-	<artifactId>mvvmFX</artifactId>
+	<artifactId>mvvmfx</artifactId>
 	<packaging>jar</packaging>
 
 	<name>mvvmFX core</name>
@@ -31,16 +31,6 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>default-deploy</id>
-						<phase>deploy</phase>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration>
@@ -54,10 +44,6 @@
 	</build>
 
 	<dependencies>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -78,17 +64,6 @@
 			<artifactId>mockito-all</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-module-junit4</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-api-mockito</artifactId>
-			<scope>test</scope>
-		</dependency>
 
 		<dependency>
 			<groupId>org.assertj</groupId>
@@ -106,7 +81,7 @@
 		<dependency>
 			<groupId>de.saxsys</groupId>
 			<artifactId>jfx-testrunner</artifactId>
-			<version>1.0</version>
+			<version>1.1</version>
 			<scope>test</scope>
 		</dependency>
 

@@ -1,8 +1,9 @@
 # MvvmFX Guice
 
-This Module is an extension for the [MvvmFX](https://github.com/sialcasa/mvvmFX) framework that adds support for Guice as a dependency injection framework.
+This module is an extension for the [MvvmFX](https://github.com/sialcasa/mvvmFX) framework that adds support for 
+[Guice](https://github.com/google/guice) as dependency injection framework.
 
-It is base on [fx-guice](https://github.com/cathive/fx-guice).
+It is based on [fx-guice](https://github.com/cathive/fx-guice).
 
 To create an application that is powered by Guice you have to extend `MvvmfxGuiceApplication`:
 
@@ -19,6 +20,6 @@ To create an application that is powered by Guice you have to extend `MvvmfxGuic
     }
 
 
-A simple example for this is available at [mvvmfx-guice-starter](/examples/mvvmfx-guice-starter)
+A simple example for this is available at [mvvmfx-guice-starter](/examples/mvvmfx-guice-starter).
 
-If you prefer CDI as a dependency injection framework you can use [mvvnfx-cdi](/mvvmfx-parent/mvvmfx-cdi)
+If you prefer CDI as dependency injection framework you can use [mvvnfx-cdi](/mvvmfx-cdi).

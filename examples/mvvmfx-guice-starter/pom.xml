@@ -11,8 +11,8 @@
 
 	<parent>
 		<groupId>de.saxsys</groupId>
-		<artifactId>mvvmFX-examples</artifactId>
-		<version>0.4.0</version>
+		<artifactId>mvvmfx-examples</artifactId>
+		<version>1.0.0</version>
 	</parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,12 +45,12 @@
 		</dependency>
 		<dependency>
 			<groupId>de.saxsys</groupId>
-			<artifactId>mvvmFX</artifactId>
+			<artifactId>mvvmfx</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.saxsys</groupId>
-			<artifactId>mvvmFX-guice</artifactId>
+			<artifactId>mvvmfx-guice</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>

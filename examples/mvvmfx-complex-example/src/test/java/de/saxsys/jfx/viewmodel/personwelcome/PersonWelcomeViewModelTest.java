@@ -1,13 +1,13 @@
 package de.saxsys.jfx.viewmodel.personwelcome;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Before;
-import org.junit.Test;
-
+import de.saxsys.jfx.exampleapplication.model.Gender;
 import de.saxsys.jfx.exampleapplication.model.Person;
 import de.saxsys.jfx.exampleapplication.model.Repository;
 import de.saxsys.jfx.exampleapplication.viewmodel.personwelcome.PersonWelcomeViewModel;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class PersonWelcomeViewModelTest {
 	
@@ -70,7 +70,7 @@ public class PersonWelcomeViewModelTest {
 	public void changeGenderOfPersonIsReflectedInViewModel() throws Exception {
 		final Person person = repository.getPersons().get(0);
 		personWelcomeViewModel.setPersonId(person.getId());
-		person.setMale(false);
+		person.setGender(Gender.FEMALE);
 		assertEquals(
 				"Willkommen Frau Casall, oder wollen Sie Alexander genannt werden?",
 				personWelcomeViewModel.welcomeStringProperty().get());

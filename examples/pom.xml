@@ -4,11 +4,11 @@
 
 	<parent>
 		<groupId>de.saxsys</groupId>
-		<artifactId>mvvmFX-parent</artifactId>
-		<version>0.4.0</version>
+		<artifactId>mvvmfx-parent</artifactId>
+		<version>1.0.0</version>
 	</parent>
 
-	<artifactId>mvvmFX-examples</artifactId>
+	<artifactId>mvvmfx-examples</artifactId>
 	<packaging>pom</packaging>
 
 
@@ -21,25 +21,7 @@
 		<module>mvvmfx-helloworld-without-fxml</module>
 		<module>mvvmfx-synchronizefx</module>
 		<module>mvvmfx-contacts</module>
+		<module>mvvmfx-books-example</module>
 	</modules>
-
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<executions>
-						<execution>
-							<id>default-deploy</id>
-							<phase>none</phase>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-
-		</pluginManagement>
-	</build>
-
 
 </project>

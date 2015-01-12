@@ -4,9 +4,9 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>mvvmFX-examples</artifactId>
+		<artifactId>mvvmfx-examples</artifactId>
 		<groupId>de.saxsys</groupId>
-		<version>0.4.0</version>
+		<version>1.0.0</version>
 	</parent>
 	<artifactId>mvvmfx-contacts</artifactId>
 
@@ -32,13 +32,13 @@
 	<dependencies>
 		<dependency>
 			<groupId>de.saxsys</groupId>
-			<artifactId>mvvmFX</artifactId>
-			<version>0.4.0</version>
+			<artifactId>mvvmfx</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>de.saxsys</groupId>
-			<artifactId>mvvmFX-cdi</artifactId>
-			<version>0.4.0</version>
+			<artifactId>mvvmfx-cdi</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>

@@ -19,11 +19,11 @@
 
 	<parent>
 		<groupId>de.saxsys</groupId>
-		<artifactId>mvvmFX-parent</artifactId>
-		<version>0.4.0</version>
+		<artifactId>mvvmfx-parent</artifactId>
+		<version>1.0.0</version>
 	</parent>
 
-	<artifactId>mvvmFX-cdi</artifactId>
+	<artifactId>mvvmfx-cdi</artifactId>
 	<packaging>jar</packaging>
 
 	<name>mvvmFX cdi</name>
@@ -32,16 +32,6 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>default-deploy</id>
-						<phase>deploy</phase>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
@@ -57,7 +47,7 @@
 
 		<dependency>
 			<groupId>de.saxsys</groupId>
-			<artifactId>mvvmFX</artifactId>
+			<artifactId>mvvmfx</artifactId>
 			<version>${project.parent.version}</version>
 			<scope>provided</scope>
 		</dependency>
@@ -93,17 +83,6 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-module-junit4</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-api-mockito</artifactId>
 			<scope>test</scope>
 		</dependency>
 

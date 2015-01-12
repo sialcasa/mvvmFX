@@ -1,17 +1,16 @@
 package de.saxsys.jfx.exampleapplication.viewmodel.personlogin;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.collections.FXCollections;
-
-import javax.inject.Inject;
-
 import de.saxsys.jfx.exampleapplication.model.Person;
 import de.saxsys.jfx.exampleapplication.model.Repository;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.itemlist.ModelToStringFunction;
 import de.saxsys.mvvmfx.utils.itemlist.SelectableItemList;
 import de.saxsys.mvvmfx.utils.itemlist.SelectableStringList;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+
+import javax.inject.Inject;
 
 /**
  * ViewModel for a login view for the persons. It provides the data which should be visualized in the frontend e.g. the
@@ -31,12 +30,7 @@ public class PersonLoginViewModel implements ViewModel {
 	
 	@Inject
 	public PersonLoginViewModel(Repository repository) {
-		ModelToStringFunction<Person> personMapper = new ModelToStringFunction<Person>() {
-			@Override
-			public String apply(Person person) {
-				return person.getFirstName() + " " + person.getLastName();
-			}
-		};
+		ModelToStringFunction<Person> personMapper = person -> person.getFirstName() + " " + person.getLastName();
 		selectablePersons = new SelectableItemList<Person>(
 				FXCollections.observableArrayList(repository.getPersons()),
 				personMapper);
