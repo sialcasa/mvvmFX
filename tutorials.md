@@ -7,8 +7,8 @@ permalink: /tutorials/
 
 # Tutorials
 
-[Getting-Started Hello World (english)](https://github.com/sialcasa/mvvmFX/wiki/Getting-Started-HelloWorld-%28english%29).
-[Getting-Started Hello World (german)](https://github.com/sialcasa/mvvmFX/wiki/Getting-Started-HelloWorld-%28deutsch%29).
+- [Getting-Started Hello World (english)](https://github.com/sialcasa/mvvmFX/wiki/Getting-Started-HelloWorld-%28english%29).
+- [Getting-Started Hello World (german)](https://github.com/sialcasa/mvvmFX/wiki/Getting-Started-HelloWorld-%28deutsch%29).
 
 
 
