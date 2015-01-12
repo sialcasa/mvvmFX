@@ -8,15 +8,26 @@ __MVVM__ is the enhanced version of the [Presentation Model](http://martinfowler
 
 ###[Howto](../../wiki "Howto")###
 
-###Maven dependency###
+### Maven dependency###
 
+#### Stable Release
 ```
 <dependency>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmFX</artifactId>
-		<version>0.4.0</version>
+		<version>1.0.0</version>
 </dependency>
 ```
+
+#### Development Snapshot
+```
+<dependency>
+		<groupId>de.saxsys</groupId>
+		<artifactId>mvvmFX</artifactId>
+		<version>1.1.0-SNAPSHOT</version>
+</dependency>
+```
+
 
 ### Get Help
 
@@ -25,6 +36,7 @@ If you need help you can use the forums on [Google Groups](https://groups.google
 ### Links
 
 - [Project Page](http://sialcasa.github.io/mvvmFX/)
-- [javadoc mvvmfx core](http://sialcasa.github.io/mvvmFX/javadoc/0.4.0/mvvmfx/)
-- [javadoc mvvmfx-cdi](http://sialcasa.github.io/mvvmFX/javadoc/0.4.0/mvvmfx-cdi/)
-- [javadoc mvvmfx-guice](http://sialcasa.github.io/mvvmFX/javadoc/0.4.0/mvvmfx-guice/)
+- [javadoc mvvmfx core](http://sialcasa.github.io/mvvmFX/javadoc/1.0.0/mvvmfx/)
+- [javadoc mvvmfx-cdi](http://sialcasa.github.io/mvvmFX/javadoc/1.0.0/mvvmfx-cdi/)
+- [javadoc mvvmfx-guice](http://sialcasa.github.io/mvvmFX/javadoc/1.0.0/mvvmfx-guice/)
+
