@@ -12,13 +12,13 @@ permalink: /tutorials/
 
 
 
-## (Open-Source-) Applications that are using mvvmFX
+## Small Open-Source Games using mvvmFX
 
 #### SnakeFX
-[SnakeFX](https://github.com/lestard/SnakeFX) is a small JavaFX Game clone of the old mobile phone game 'snake' .
-It uses an own [static dependency injection implementation](https://github.com/lestard/SnakeFX/blob/master/src/main/java/eu/lestard/snakefx/inject/DependencyInjector.java)
-that is integrated into the [mvvmFX live cycle](https://github.com/lestard/SnakeFX/blob/master/src/main/java/eu/lestard/snakefx/Launcher.java#L27-L29).
-
+[SnakeFX](https://github.com/lestard/SnakeFX) is a small JavaFX clone of the old mobile phone game 'snake' .
 
 #### ColorPuzzleFX
 [ColorPuzzleFX](https://github.com/lestard/ColorPuzzleFX) is another small JavaFX game based on mvvmFX.
+
+#### Nonogram
+[Nonogram](https://github.com/lestard/nonogram) is a [nonogram](https://en.wikipedia.org/wiki/Nonogram) puzzle game written in JavaFX with mvvmFX.
