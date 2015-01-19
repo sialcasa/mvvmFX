@@ -9,9 +9,9 @@ permalink: /download/
 
 ## Maven
 
-- [mvvmFX](http://search.maven.org/#search%7Cga%7C1%7Cmvvmfx)
-- [mvvmFX-cdi](http://search.maven.org/#search%7Cga%7C1%7Cmvvmfx-cdi)
-- [mvvmFX-guice](http://search.maven.org/#search%7Cga%7C1%7Cmvvmfx-guice)
+- [mvvmfx](http://search.maven.org/#search%7Cga%7C1%7Cmvvmfx)
+- [mvvmfx-cdi](http://search.maven.org/#search%7Cga%7C1%7Cmvvmfx-cdi)
+- [mvvmfx-guice](http://search.maven.org/#search%7Cga%7C1%7Cmvvmfx-guice)
 
 ## Binary distribution
 
@@ -22,6 +22,6 @@ You can find the JAR files for download on our [github Releases page](https://gi
 
 Snapshot releases of **mvvmFX** are published to the [sonatype snapshot repository](https://oss.sonatype.org/content/repositories/snapshots/):
 
-- [mvvmFX](https://oss.sonatype.org/content/repositories/snapshots/de/saxsys/mvvmFX/)
-- [mvvmFX-cdi](https://oss.sonatype.org/content/repositories/snapshots/de/saxsys/mvvmFX-cdi/)
-- [mvvmFX-guice](https://oss.sonatype.org/content/repositories/snapshots/de/saxsys/mvvmFX-guice/)
+- [mvvmfx](https://oss.sonatype.org/content/repositories/snapshots/de/saxsys/mvvmfx/)
+- [mvvmfx-cdi](https://oss.sonatype.org/content/repositories/snapshots/de/saxsys/mvvmfx-cdi/)
+- [mvvmfx-guice](https://oss.sonatype.org/content/repositories/snapshots/de/saxsys/mvvmfx-guice/)
