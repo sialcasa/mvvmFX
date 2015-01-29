@@ -8,19 +8,16 @@ import org.fxmisc.easybind.monadic.MonadicObservableValue;
 
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.scopes.model.Note;
-import de.saxsys.mvvmfx.scopes.InjectScope;
-import de.saxsys.mvvmfx.scopes.ScopeTarget;
+import de.saxsys.mvvmfx.internal.viewloader.ScopeTarget;
 
-public class NoteTextViewModel implements ViewModel, ScopeTarget {
+public class NoteTextViewModel implements ViewModel, ScopeTarget<ScopeViewModel> {
 	
-	private StringProperty content = new SimpleStringProperty("some text");
+	private StringProperty content = new SimpleStringProperty();
 	
 	
-	@InjectScope
-	private ScopeViewModel scopeViewModel;
 	
 	@Override
-	public void afterScopeInjection() {
+	public void initializeScope(ScopeViewModel scopeViewModel) {
 		MonadicObservableValue<Note> note = EasyBind.monadic(scopeViewModel.noteProperty());
 		
 		content.bind(note.flatMap(Note::textProperty));

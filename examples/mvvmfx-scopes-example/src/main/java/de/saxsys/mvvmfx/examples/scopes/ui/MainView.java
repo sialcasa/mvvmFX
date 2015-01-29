@@ -5,15 +5,11 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.examples.scopes.model.Note;
-import de.saxsys.mvvmfx.scopes.ScopeHelper;
-import javafx.event.ActionEvent;
+import de.saxsys.mvvmfx.internal.viewloader.ScopeHelper;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
 public class MainView implements FxmlView<MainViewModel> {
 
@@ -44,9 +40,8 @@ public class MainView implements FxmlView<MainViewModel> {
 		root.getChildren().add(row);
 
 
-		ScopeViewModel scopeViewModel = new ScopeViewModel();
+		ScopeViewModel scopeViewModel = ScopeHelper.newScope(ScopeViewModel.class, textViewTuple.getViewModel(), infoViewTuple.getViewModel());
 		scopeViewModel.setNote(note);
-		ScopeHelper.newScope(scopeViewModel, textViewTuple.getViewModel(), infoViewTuple.getViewModel());
 	}
 	
 }
