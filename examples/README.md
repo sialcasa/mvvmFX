@@ -2,6 +2,7 @@
 
 Content:
 
+- **mvvmfx-books-example**: An app to search for books in a library. Connects to a REST backend.
 - **mvvmfx-complex-example**: contains the user interface and logic code for an example application.
 To run this example you need either mvvmfx-cdi-starter or mvvmfx-guice-starter.
 - **mvvmfx-cdi-starter**: contains the startup code to run the mvvmfx-complex-example with CDI/Weld
