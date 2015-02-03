@@ -5,7 +5,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.examples.scopes.model.Note;
-import de.saxsys.mvvmfx.internal.viewloader.ScopeHelper;
+import de.saxsys.mvvmfx.internal.scopes.ScopeHelper;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;

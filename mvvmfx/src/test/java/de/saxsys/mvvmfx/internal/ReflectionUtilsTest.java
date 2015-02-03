@@ -1,7 +1,9 @@
-package de.saxsys.mvvmfx.internal.viewloader;
+package de.saxsys.mvvmfx.internal;
 
 import static org.assertj.core.api.Assertions.*;
 
+import de.saxsys.mvvmfx.internal.ReflectionUtils;
+import de.saxsys.mvvmfx.internal.viewloader.View;
 import org.junit.Test;
 
 import de.saxsys.mvvmfx.ViewModel;

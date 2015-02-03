@@ -18,6 +18,8 @@ package de.saxsys.mvvmfx.internal.viewloader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import de.saxsys.mvvmfx.internal.ReflectionUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.util.Callback;

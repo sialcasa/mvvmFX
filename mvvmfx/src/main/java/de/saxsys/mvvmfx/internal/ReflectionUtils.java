@@ -1,7 +1,9 @@
-package de.saxsys.mvvmfx.internal.viewloader;
+package de.saxsys.mvvmfx.internal;
 
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.internal.viewloader.DependencyInjector;
+import de.saxsys.mvvmfx.internal.viewloader.View;
 import net.jodah.typetools.TypeResolver;
 
 import java.lang.reflect.Field;
@@ -11,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -18,6 +21,15 @@ import java.util.stream.Collectors;
  * the view loading.
  */
 public class ReflectionUtils {
+
+	/**
+	 * A functional interface that is used in this class to express callbacks that don't take any
+	 * argument and don't return anything. Such a callback have to work only by side effects.
+	 */
+	@FunctionalInterface
+	public static interface SideEffect {
+		void call() throws Exception;
+	}
 	
 	/**
 	 * Returns the {@link java.lang.reflect.Field} of the viewModel for a given view type and viewModel type.
@@ -27,7 +39,7 @@ public class ReflectionUtils {
 	 * @param viewModelType the type of the viewModel
 	 * @return an Optional that contains the Field when the field exists.
 	 */
-	static Optional<Field> getViewModelField(Class<? extends View> viewType, Class<?> viewModelType){
+	public static Optional<Field> getViewModelField(Class<? extends View> viewType, Class<?> viewModelType){
 		List<Field> viewModelFields = Arrays.stream(viewType.getDeclaredFields())
 				.filter(field -> field.isAnnotationPresent(InjectViewModel.class))
 				.filter(field -> field.getType().isAssignableFrom(viewModelType))
@@ -54,7 +66,7 @@ public class ReflectionUtils {
 	 * @return the ViewModel instance or null if no viewModel could be found.
 	 */
 	@SuppressWarnings("unchecked")
-	static <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewModelType getViewModel(ViewType view){
+	public static <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewModelType getViewModel(ViewType view){
 
 		final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
 		Optional<Field> fieldOptional = ReflectionUtils.getViewModelField(view.getClass(), viewModelType);
@@ -71,16 +83,60 @@ public class ReflectionUtils {
 	/**
 	 * Helper method to execute a callback on a given field. This method encapsulates the error handling logic and the 
 	 * handling of accessibility of the field.
+	 *
+	 * After the callback is executed the accessibility of the field will be reset to the originally state.
+	 * 
+	 * @param field the field that is made accessible to run the callback
+	 * @param callable the callback that will be executed.
+	 * @param errorMessage the error message that is used in the exception when something went wrong.
+	 *                     
+	 * @return the return value of the given callback.
+	 *
+	 * @throws IllegalStateException when something went wrong. 
 	 */
-	static <T> T accessField(final Field field, final Callable<T> callable, String errorMessage){
+	public static <T> T accessField(final Field field, final Callable<T> callable, String errorMessage){
+		if(callable == null){
+			return null;
+		}
+		
 		return AccessController.doPrivileged((PrivilegedAction<T>) () -> {
+			boolean wasAccessible = field.isAccessible();
+	
+			try {
+				field.setAccessible(true);
+				return callable.call();
+			} catch (Exception exception) {
+				throw new IllegalStateException(errorMessage, exception);
+			} finally {
+				field.setAccessible(wasAccessible);
+			}
+		});
+	}
+
+	/**
+	 * Helper method to execute a callback on a given field. This method encapsulates the error handling logic and the
+	 * handling of accessibility of the field. The difference to {@link ReflectionUtils#accessField(Field, Callable, String)}
+	 * is that this method takes a callback that doesn't return anything but only creates a sideeffect. 
+	 * 
+	 * After the callback is executed the accessibility of the field will be reset to the originally state.
+	 * 
+	 * @param field the field that is made accessible to run the callback
+	 * @param sideEffect the callback that will be executed.
+	 * @param errorMessage the error message that is used in the exception when something went wrong.
+	 *                     
+	 *  @throws IllegalStateException when something went wrong.                   
+	 */
+	public static void accessField(final Field field, final SideEffect sideEffect, String errorMessage){
+		if(sideEffect == null){
+			return;
+		}
+		
+		AccessController.doPrivileged((PrivilegedAction) () -> {
 			boolean wasAccessible = field.isAccessible();
 
 			try {
 				field.setAccessible(true);
-				if (callable != null) {
-					return callable.call();
-				}
+				sideEffect.call();
 			} catch (Exception exception) {
 				throw new IllegalStateException(errorMessage, exception);
 			} finally {
@@ -88,6 +144,7 @@ public class ReflectionUtils {
 			}
 			return null;
 		});
+		
 	}
 
 
@@ -99,7 +156,7 @@ public class ReflectionUtils {
 	 * @param view
 	 * @param viewModel
 	 */
-	static void injectViewModel(final View view, ViewModel viewModel){
+	public static void injectViewModel(final View view, ViewModel viewModel){
 		if(viewModel == null){
 			return;
 		}
@@ -116,8 +173,6 @@ public class ReflectionUtils {
 					field.setAccessible(true);
 					field.set(view, viewModel);
 				}
-
-				return null;
 			}, "Can't inject ViewModel of type <" + viewModel.getClass()
 					+ "> into the view <" + view + ">");
 		}
@@ -136,7 +191,7 @@ public class ReflectionUtils {
 	 * @return the viewModel instance or <code>null</code> if the viewModel type can't be found or the viewModel can't be created.
 	 */
 	@SuppressWarnings("unchecked")
-	static <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewModelType createViewModel(
+	public static <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewModelType createViewModel(
 			ViewType view){
 		final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
 
@@ -148,6 +203,6 @@ public class ReflectionUtils {
 			return null;
 		}
 		
-		return (ViewModelType)DependencyInjector.getInstance().getInstanceOf(viewModelType);
+		return (ViewModelType) DependencyInjector.getInstance().getInstanceOf(viewModelType);
 	}
 }

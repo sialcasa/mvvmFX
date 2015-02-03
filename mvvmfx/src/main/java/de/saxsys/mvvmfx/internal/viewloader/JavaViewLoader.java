@@ -19,6 +19,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ResourceBundle;
+
+import de.saxsys.mvvmfx.internal.ReflectionUtils;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 
