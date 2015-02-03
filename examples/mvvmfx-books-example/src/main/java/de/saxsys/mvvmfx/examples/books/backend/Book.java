@@ -8,18 +8,12 @@ public class Book {
     private final String title;
     private String author;
     private String desc;
-    private Integer borrower;
-    private final Link relLend;
-    private final Link relReturn;
 
-    public Book(String href, String title, String author, String desc, Link relLend, Link relReturn) {
-        super();
+    public Book(String href, String title, String author, String desc) {
         this.href = href;
         this.title = title;
         this.author = author;
         this.desc = desc;
-        this.relLend = relLend;
-        this.relReturn = relReturn;
     }
 
     public String getHref() {
@@ -46,31 +40,4 @@ public class Book {
         this.desc = desc;
     }
 
-    public Integer getBorrower() {
-        return borrower;
-    }
-
-    public void setBorrower(Integer borrower) {
-        this.borrower = borrower;
-    }
-
-    public Link getRelLend() {
-        return relLend;
-    }
-
-    public Link getRelReturn() {
-        return relReturn;
-    }
-
-    public boolean isLent() {
-        return borrower != null;
-    }
-
-    public boolean isAvailable() {
-        return null != relLend;
-    }
-
-    public boolean isReturnable() {
-        return null != relReturn;
-    }
 }
