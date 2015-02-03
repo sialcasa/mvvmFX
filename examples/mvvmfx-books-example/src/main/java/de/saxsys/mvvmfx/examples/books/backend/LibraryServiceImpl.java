@@ -90,67 +90,11 @@ public class LibraryServiceImpl implements Serializable, LibraryService {
         }
     }
 
-    @Override
-    public Book lend(String lendTo, Book detailBook, Consumer<Error> errorCallback) {
-        LOGGER.debug("Lend book {} to member {}", detailBook.getTitle(), lendTo);
-        try {
-            Integer.valueOf(lendTo);
-        } catch (NumberFormatException e) {
-            errorCallback.accept(Error.error("Invalid MemberID", "MemberID is not a number"));
-            return null;
-        }
-        Response response =
-                apiClient.target(detailBook.getRelLend().getHref())
-                        .request(HAL_JSON)
-                        .put(Entity.json("{\"memberId\":" + lendTo + "}"));
-        ContentRepresentation rep = response.readEntity(ContentRepresentation.class);
-        if (response.getStatus() >= 400) {
-            String message = (String) rep.getValue("title");
-            String detail = (String) rep.getValue("detail", null);
-            LOGGER.error("{} {} {}", response.getStatus(), message, detail);
-            errorCallback.accept(Error.error(message, detail));
-            return null;
-        } else {
-            detailBook = toBook(rep);
-            LOGGER.debug("Book {} lent to member {}", detailBook.getTitle(),
-                    detailBook.getBorrower());
-            return detailBook;
-        }
-    }
-
-    @Override
-    public Book takeBack(Book detailBook, Consumer<Error> errorCallback) {
-        LOGGER.debug("Return book {} from member {}", detailBook.getTitle(),
-                detailBook.getBorrower());
-        Response response =
-                apiClient.target(
-                        HalUtil.replaceParam(detailBook.getRelReturn().getHref(), detailBook.getBorrower()
-                            .toString()))
-                        .request(HAL_JSON)
-                        .delete();
-        ContentRepresentation rep = response.readEntity(ContentRepresentation.class);
-        if (response.getStatus() >= 400) {
-            String message = (String) rep.getValue("title");
-            String detail = (String) rep.getValue("detail", null);
-            LOGGER.error("{} {}", message, detail);
-            errorCallback.accept(Error.error(message, detail));
-            return null;
-        } else {
-            LOGGER.debug("Book {} returned", detailBook.getTitle());
-            return toBook(rep);
-        }
-    }
-
+   
     private Book toBook(ReadableRepresentation rep) {
-        Book book =
-                new Book(
-                        rep.getResourceLink().getHref(), (String) rep.getValue("title", null),
-                        (String) rep.getValue("author", null), (String) rep.getValue("description",
-                                null), rep.getLinkByRel("lib:lend"), rep.getLinkByRel("lib:return"));
-        // add borrower if available
-        List<? extends ReadableRepresentation> borrowerResource = rep.getResourcesByRel("borrower");
-        if (1 == borrowerResource.size())
-            book.setBorrower(Integer.valueOf((String) borrowerResource.get(0).getValue("id")));
-        return book;
+        return new Book(
+				rep.getResourceLink().getHref(), (String) rep.getValue("title", null),
+				(String) rep.getValue("author", null), (String) rep.getValue("description",
+						null));
     }
 }
