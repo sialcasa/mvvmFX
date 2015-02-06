@@ -39,3 +39,4 @@ The app uses the following libraries (among others):
 - [EasyDI](https://github.com/lestard/EasyDI)  // Dependency-Injection
 - [AssertJ-JavaFX](https://github.com/lestard/assertj-javafx)    // Testing
 - [HALBuilder](https://github.com/HalBuilder)    // REST-Client
+- [TestFX](https://github.com/TestFX/TestFX) // Integration-Test

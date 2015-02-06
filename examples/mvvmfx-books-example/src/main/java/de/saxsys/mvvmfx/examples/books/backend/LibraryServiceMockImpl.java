@@ -18,6 +18,15 @@ public class LibraryServiceMockImpl implements LibraryService{
 		Arrays.stream(books).forEach(this.books::add);
 	}
 	
+	public void addSomeBooks(){
+		this.addBooks(
+				new Book("/1", "A Game of Thrones", "Georg R. R. Martin", "First part of SOIF"),
+				new Book("/2", "A Clash of Kings", "Georg R. R. Martin", "Second part of SOIF"),
+				new Book("/3", "A Storm of Swords", "Georg R. R. Martin", "Third part of SOIF"),
+				new Book("/4", "The Metamorphosis", "Franz Kafka", "A man turns into an insect")
+		);
+	}
+	
 	@Override
 	public List<Book> search(String query, Consumer<Error> errorCallback) {
 		return books.stream()

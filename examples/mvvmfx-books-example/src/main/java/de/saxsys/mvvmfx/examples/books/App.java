@@ -31,7 +31,8 @@ public class App extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		if (ENABLE_MOCK_SERVICE) {
 			context.bindInterface(LibraryService.class, LibraryServiceMockImpl.class);
-			initMockService();
+			LibraryServiceMockImpl libraryServiceMock = context.getInstance(LibraryServiceMockImpl.class);
+			libraryServiceMock.addSomeBooks();
 		} else {
 			context.bindInterface(LibraryService.class, LibraryServiceImpl.class);
 		}
@@ -44,22 +45,10 @@ public class App extends Application {
 		primaryStage.setMaxWidth(1200);
 		primaryStage.setMinHeight(700);
 		
-		Scene scene = new Scene(FluentViewLoader.fxmlView(MainView.class).load().getView(), 1200, 700);
-		
+		Scene scene = new Scene(FluentViewLoader.fxmlView(MainView.class).load().getView());
 		scene.setFill(Color.TRANSPARENT);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		FlatterFX.style(FlatterInputType.DEFAULT);
-	}
-	
-	private void initMockService() {
-		LibraryServiceMockImpl libraryServiceMock = context.getInstance(LibraryServiceMockImpl.class);
-		
-		libraryServiceMock.addBooks(
-				new Book("/1", "A Game of Thrones", "Georg R. R. Martin", "First part of SOIF"),
-				new Book("/2", "A Clash of Kings", "Georg R. R. Martin", "Second part of SOIF"),
-				new Book("/3", "A Storm of Swords", "Georg R. R. Martin", "Third part of SOIF"),
-				new Book("/4", "The Metamorphosis", "Franz Kafka", "A man turns into an insect")
-				);
 	}
 }
