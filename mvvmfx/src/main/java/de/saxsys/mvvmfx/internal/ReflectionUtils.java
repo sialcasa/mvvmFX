@@ -7,6 +7,8 @@ import de.saxsys.mvvmfx.internal.viewloader.View;
 import net.jodah.typetools.TypeResolver;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
@@ -145,6 +147,22 @@ public class ReflectionUtils {
 			return null;
 		});
 		
+	}
+	
+	
+	public static Object invokePrivateMethod(final Method method, Object target, String errorMessage, Object...params){
+		return AccessController.doPrivileged((PrivilegedAction) () -> {
+			boolean wasAccessible = method.isAccessible();
+			
+			try{
+				method.setAccessible(true);
+				return method.invoke(target, params);
+			} catch (Exception e) {
+				throw new IllegalStateException(errorMessage, e);
+			} finally {
+				method.setAccessible(wasAccessible);
+			}
+		});
 	}
 
 

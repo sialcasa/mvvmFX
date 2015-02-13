@@ -1,6 +1,6 @@
 package de.saxsys.mvvmfx.examples.scopes.ui;
 
-import de.saxsys.mvvmfx.internal.scopes.InjectScope;
+import de.saxsys.mvvmfx.scopes.InitScope;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -14,11 +14,8 @@ public class NoteTextViewModel implements ViewModel {
 	
 	private StringProperty content = new SimpleStringProperty();
 	
-	@InjectScope
-	private ScopeViewModel myNoteScope;
-	
-	
-	public void initMyNoteScope() {
+	@InitScope
+	public void initMyNoteScope(ScopeViewModel myNoteScope) {
 		MonadicObservableValue<Note> note = EasyBind.monadic(myNoteScope.noteProperty());
 		
 		content.bind(note.flatMap(Note::textProperty));

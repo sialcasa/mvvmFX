@@ -5,7 +5,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.examples.scopes.model.Note;
-import de.saxsys.mvvmfx.internal.scopes.ScopeHelper;
+import de.saxsys.mvvmfx.scopes.ScopeHelper;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -38,6 +38,8 @@ public class MainView implements FxmlView<MainViewModel> {
 		row.getChildren().addAll(infoView, textView);
 
 		root.getChildren().add(row);
+		
+		
 
 
 		ScopeViewModel scopeViewModel = ScopeHelper.newScope(ScopeViewModel.class, textViewTuple.getViewModel(), infoViewTuple.getViewModel());
