@@ -1,5 +1,6 @@
 package de.saxsys.mvvmfx.guice.it;
 
+import com.google.inject.Module;
 import de.saxsys.mvvmfx.guice.internal.GuiceInjector;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -10,6 +11,7 @@ import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.guice.MvvmfxGuiceApplication;
 
 import javax.inject.Inject;
+import java.util.List;
 
 
 public class MyApp extends MvvmfxGuiceApplication {
@@ -33,6 +35,9 @@ public class MyApp extends MvvmfxGuiceApplication {
 	static Stage stage;
 
 	static Application.Parameters parameters;
+	
+	@Inject
+	private MyService myService;
 
 	@Inject
 	private GuiceInjector guiceInjector;
@@ -50,6 +55,12 @@ public class MyApp extends MvvmfxGuiceApplication {
 		
 		// we can't shutdown the application in the test case so we need to do it here.
 		Platform.exit();
+	}
+
+
+	@Override
+	public void initGuiceModules(List<Module> modules) throws Exception {
+		modules.add(new MyModule());
 	}
 
 	@Override
