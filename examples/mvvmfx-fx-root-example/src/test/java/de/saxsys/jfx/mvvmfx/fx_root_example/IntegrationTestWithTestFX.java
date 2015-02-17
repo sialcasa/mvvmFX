@@ -9,7 +9,7 @@ import org.loadui.testfx.GuiTest;
 
 import static org.loadui.testfx.Assertions.verifyThat;
 
-public class TestFxIT extends GuiTest{
+public class IntegrationTestWithTestFX extends GuiTest{
 
 	@Override
 	protected Parent getRootNode() {
