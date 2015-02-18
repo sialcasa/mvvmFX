@@ -16,8 +16,12 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+
+import de.saxsys.mvvmfx.InjectResourceBundle;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.util.Callback;
@@ -167,9 +171,9 @@ public class FxmlViewLoader {
 		// when the user provides a viewModel but no controller, we need to use the custom controller factory.
 		// in all other cases the default factory can be used.
 		if (viewModel != null && controller == null) {
-			fxmlLoader.setControllerFactory(new ControllerFactoryForCustomViewModel(viewModel));
+			fxmlLoader.setControllerFactory(new ControllerFactoryForCustomViewModel(viewModel, resourceBundle));
 		} else {
-			fxmlLoader.setControllerFactory(new DefaultControllerFactory());
+			fxmlLoader.setControllerFactory(new DefaultControllerFactory(resourceBundle));
 		}
 		
 		// When the user provides a controller instance we take care of the injection of the viewModel to this
@@ -195,6 +199,11 @@ public class FxmlViewLoader {
 	 * a view.
 	 */
 	private static class DefaultControllerFactory implements Callback<Class<?>, Object> {
+		private ResourceBundle resourceBundle;
+		
+		public DefaultControllerFactory(ResourceBundle resourceBundle){
+			this.resourceBundle = resourceBundle;
+		}
 		
 		@Override
 		public Object call(Class<?> type) {
@@ -202,26 +211,44 @@ public class FxmlViewLoader {
 			
 			if (controller instanceof View) {
 				View view = (View) controller;
-				
-				ReflectionUtils.injectViewModel(view, ReflectionUtils.createViewModel(view));
+
+				handleInjection(view, resourceBundle);
 			}
 			
 			return controller;
 		}
+		
+		public static void handleInjection(View view, ResourceBundle resourceBundle){
+			final ViewModel viewModel = ReflectionUtils.createViewModel(view);
+			
+			ResourceBundleInjector.injectResourceBundle(view, resourceBundle);
+			
+			if(viewModel != null){
+				ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
+				ReflectionUtils.injectViewModel(view, viewModel);
+			}
+		}
 	}
 	
+	
 	/**
-	 * A controller factory that is used for the special case where the user privides an existing view model to be used
+	 * A controller factory that is used for the special case where the user provides an existing viewModel to be used
 	 * while loading.
 	 * 
 	 * This factory will use this existing viewModel instance for injection of the <strong>first</strong> view that is
 	 * requested from this factory. For all later requests this factory will work the same way as the default factory
 	 * {@link de.saxsys.mvvmfx.internal.viewloader.FxmlViewLoader.DefaultControllerFactory}.
 	 * 
-	 * The reason for this behaviour is that the existing viewModel belongs to the view class that the user provides to
-	 * the ViewLoader. This view will be the root element of the scene graph to load. The first method call that the
-	 * FXMLLoader will make on the controller factory will always be for the controller of this root element. This way
-	 * we can be sure that only the root element gets the existing viewModel injected.
+	 * The problem we are facing here is the following: The user wants to load a specific View with a specific ViewModel instance.
+	 * But this root View (fxml file) can declare other sub views. Only the root View has to get the existing ViewModel instance, all
+	 * other sub Views have to get their ViewModels via the default way (i.e. DependencyInjection or a new instance every time).
+	 * 
+	 * But, from the perspective of the controller factory, when a View instance is requested, we can't know if this is the
+	 * root View or a sub View. How do we know when to use the existing ViewModel instance? 
+	 * 
+	 * To fix this we depend on the standard JavaFX behaviour of the {@link FXMLLoader}: The first instance that the FXMLLoader
+	 * will request from the controller factory will always be the controller for the root fxml file. In this case 
+	 * we can use the existing ViewModel. All subsequent requests will be handled with the default behaviour.
 	 */
 	private static class ControllerFactoryForCustomViewModel implements Callback<Class<?>, Object> {
 		
@@ -229,8 +256,11 @@ public class FxmlViewLoader {
 		
 		private ViewModel customViewModel;
 		
-		public ControllerFactoryForCustomViewModel(ViewModel customViewModel) {
+		private ResourceBundle resourceBundle;
+		
+		public ControllerFactoryForCustomViewModel(ViewModel customViewModel, ResourceBundle resourceBundle) {
 			this.customViewModel = customViewModel;
+			this.resourceBundle = resourceBundle;
 		}
 		
 		@Override
@@ -241,13 +271,17 @@ public class FxmlViewLoader {
 				View view = (View) controller;
 				
 				if (!customViewModelInjected) {
+					ResourceBundleInjector.injectResourceBundle(customViewModel, resourceBundle);
+					ResourceBundleInjector.injectResourceBundle(view, resourceBundle);
+					
 					ReflectionUtils.injectViewModel(view, customViewModel);
+					
 					
 					customViewModelInjected = true;
 					return view;
 				}
-				
-				ReflectionUtils.injectViewModel(view, ReflectionUtils.createViewModel(view));
+
+				DefaultControllerFactory.handleInjection(view, resourceBundle);
 			}
 			
 			return controller;
