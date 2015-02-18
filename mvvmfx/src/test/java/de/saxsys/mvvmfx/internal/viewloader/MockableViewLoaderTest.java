@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
  * The API of MvvmFX reflects this: The methods in {@link FluentViewLoader} to load a view are static for a better usability. 
  * They are not optimized for unit-testing and mocking.
  * 
- * This test will show that mocking the loading process is still possible when with a little bit of extra code. 
+ * This test will show that mocking the loading process is still possible with a little bit of extra code. 
  * 
  */
 public class MockableViewLoaderTest {

@@ -81,7 +81,13 @@ public class JavaViewLoader {
 			viewModel = ReflectionUtils.createViewModel(view);
 		}
 		
-		ReflectionUtils.injectViewModel(view, viewModel);
+		ResourceBundleInjector.injectResourceBundle(view, resourceBundle);
+		
+		if(viewModel != null){
+			ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
+			ReflectionUtils.injectViewModel(view, viewModel);
+		}
+		
 		
 		if (view instanceof Initializable) {
 			Initializable initializable = (Initializable) view;
