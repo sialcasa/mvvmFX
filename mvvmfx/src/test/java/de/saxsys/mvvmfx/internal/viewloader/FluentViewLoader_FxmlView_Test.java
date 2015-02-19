@@ -66,6 +66,9 @@ public class FluentViewLoader_FxmlView_Test {
 	@Test
 	public void testLoadFxmlViewTuple() throws IOException {
 		
+		TestFxmlView.instanceCounter = 0;
+		TestViewModel.instanceCounter = 0;
+		
 		final ViewTuple<TestFxmlView, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlView.class).resourceBundle(resourceBundle).load();
 		
 		assertThat(viewTuple).isNotNull();
@@ -78,6 +81,9 @@ public class FluentViewLoader_FxmlView_Test {
 		assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
 		
 		assertThat(codeBehind.viewModelWasNull).isFalse();
+		
+		assertThat(TestFxmlView.instanceCounter).isEqualTo(1);
+		assertThat(TestViewModel.instanceCounter).isEqualTo(1);
 	}
 	
 	@Test

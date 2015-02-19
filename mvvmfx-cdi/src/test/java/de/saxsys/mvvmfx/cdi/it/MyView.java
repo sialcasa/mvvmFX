@@ -23,4 +23,10 @@ public class MyView implements FxmlView<MyViewModel> {
 
 	@Inject
 	HostServices hostServices;
+
+	public static int instanceCounter = 0;
+	
+	public MyView(){
+		instanceCounter++;
+	}
 }
