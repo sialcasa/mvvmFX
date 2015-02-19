@@ -23,7 +23,6 @@ public class IntegrationTest {
 	}
 	
 	@Test
-	@Ignore("temporary ignored while fixing bug #181")
 	public void test(){
 		assertThat(MyViewModel.instanceCounter).isEqualTo(0);
 		assertThat(MyView.instanceCounter).isEqualTo(0);

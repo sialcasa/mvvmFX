@@ -28,6 +28,7 @@ import javafx.fxml.LoadException;
 import javafx.scene.layout.VBox;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -83,6 +84,23 @@ public class FluentViewLoader_FxmlView_Test {
 		assertThat(codeBehind.viewModelWasNull).isFalse();
 		
 		assertThat(TestFxmlView.instanceCounter).isEqualTo(1);
+		assertThat(TestViewModel.instanceCounter).isEqualTo(1);
+	}
+
+	/**
+	 * This is a test case to reproduce bug #181 (<a href="https://github.com/sialcasa/mvvmFX/issues/181">issues 181</a>).
+	 * 
+	 * When the View has no field for the ViewModel, then there are two instances created of the ViewModel.
+	 */
+	@Test
+	public void testBugMultipleViewModelsCreated(){
+		TestFxmlViewWithoutViewModelField.instanceCounter = 0;
+		TestViewModel.instanceCounter = 0;
+
+		final ViewTuple<TestFxmlViewWithoutViewModelField, TestViewModel> viewTuple = FluentViewLoader
+				.fxmlView(TestFxmlViewWithoutViewModelField.class).load();
+		
+		assertThat(TestFxmlViewWithoutViewModelField.instanceCounter).isEqualTo(1);
 		assertThat(TestViewModel.instanceCounter).isEqualTo(1);
 	}
 	
