@@ -48,10 +48,6 @@ public class DuplicateInjectionBugTest {
 		public void startMvvmfx(Stage stage) throws Exception {
 			Platform.exit();
 		}
-
-		@Override 
-		public void initGuiceModules(List<Module> modules) throws Exception {
-		}
 	}
 	
 	

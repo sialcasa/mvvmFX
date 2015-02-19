@@ -16,12 +16,10 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.URL;
-import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
-import de.saxsys.mvvmfx.InjectResourceBundle;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.util.Callback;
@@ -138,7 +136,7 @@ public class FxmlViewLoader {
 			}
 			
 			
-			ViewModelType loadedViewModel = ReflectionUtils.getViewModel(loadedController);
+			ViewModelType loadedViewModel = ReflectionUtils.getExistingViewModel(loadedController);
 			
 			if (loadedViewModel == null) {
 				loadedViewModel = ReflectionUtils.createViewModel(loadedController);
@@ -184,7 +182,7 @@ public class FxmlViewLoader {
 			if (controller instanceof View) {
 				View view = (View) controller;
 				if (viewModel == null) {
-					ReflectionUtils.injectViewModel(view, ReflectionUtils.createViewModel(view));
+					ReflectionUtils.createAndInjectViewModel(view);
 				} else {
 					ReflectionUtils.injectViewModel(view, viewModel);
 				}
@@ -219,13 +217,17 @@ public class FxmlViewLoader {
 		}
 		
 		public static void handleInjection(View view, ResourceBundle resourceBundle){
-			final ViewModel viewModel = ReflectionUtils.createViewModel(view);
+
+			final Optional viewModelOptional = ReflectionUtils.createAndInjectViewModel(view);
 			
 			ResourceBundleInjector.injectResourceBundle(view, resourceBundle);
 			
-			if(viewModel != null){
-				ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
-				ReflectionUtils.injectViewModel(view, viewModel);
+			if(viewModelOptional.isPresent()){
+				final Object viewModel = viewModelOptional.get();
+				
+				if(viewModel instanceof ViewModel){
+					ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
+				}
 			}
 		}
 	}
