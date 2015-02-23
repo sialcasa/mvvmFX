@@ -136,10 +136,10 @@ public class FxmlViewLoader {
 			}
 			
 			
-			ViewModelType loadedViewModel = ReflectionUtils.getExistingViewModel(loadedController);
+			ViewModelType loadedViewModel = ViewLoaderReflectionUtils.getExistingViewModel(loadedController);
 			
 			if (loadedViewModel == null) {
-				loadedViewModel = ReflectionUtils.createViewModel(loadedController);
+				loadedViewModel = ViewLoaderReflectionUtils.createViewModel(loadedController);
 			}
 			
 			return new ViewTuple<>(loadedController, loadedRoot, loadedViewModel);
@@ -182,9 +182,9 @@ public class FxmlViewLoader {
 			if (controller instanceof View) {
 				View view = (View) controller;
 				if (viewModel == null) {
-					ReflectionUtils.createAndInjectViewModel(view);
+					ViewLoaderReflectionUtils.createAndInjectViewModel(view);
 				} else {
-					ReflectionUtils.injectViewModel(view, viewModel);
+					ViewLoaderReflectionUtils.injectViewModel(view, viewModel);
 				}
 			}
 		}
@@ -218,7 +218,7 @@ public class FxmlViewLoader {
 		
 		public static void handleInjection(View view, ResourceBundle resourceBundle){
 
-			final Optional viewModelOptional = ReflectionUtils.createAndInjectViewModel(view);
+			final Optional viewModelOptional = ViewLoaderReflectionUtils.createAndInjectViewModel(view);
 			
 			ResourceBundleInjector.injectResourceBundle(view, resourceBundle);
 			
@@ -276,7 +276,7 @@ public class FxmlViewLoader {
 					ResourceBundleInjector.injectResourceBundle(customViewModel, resourceBundle);
 					ResourceBundleInjector.injectResourceBundle(view, resourceBundle);
 					
-					ReflectionUtils.injectViewModel(view, customViewModel);
+					ViewLoaderReflectionUtils.injectViewModel(view, customViewModel);
 					
 					
 					customViewModelInjected = true;

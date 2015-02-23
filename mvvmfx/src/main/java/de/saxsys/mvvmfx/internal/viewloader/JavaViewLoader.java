@@ -78,14 +78,14 @@ public class JavaViewLoader {
 		}
 		
 		if (viewModel == null) {
-			viewModel = ReflectionUtils.createViewModel(view);
+			viewModel = ViewLoaderReflectionUtils.createViewModel(view);
 		}
 		
 		ResourceBundleInjector.injectResourceBundle(view, resourceBundle);
 		
 		if(viewModel != null){
 			ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
-			ReflectionUtils.injectViewModel(view, viewModel);
+			ViewLoaderReflectionUtils.injectViewModel(view, viewModel);
 		}
 		
 		
