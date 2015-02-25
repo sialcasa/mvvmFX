@@ -18,6 +18,8 @@ package de.saxsys.mvvmfx.internal.viewloader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -85,6 +87,7 @@ public class JavaViewLoader {
 		
 		if(viewModel != null){
 			ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
+			ViewLoaderReflectionUtils.initializeViewModel(viewModel);
 			ViewLoaderReflectionUtils.injectViewModel(view, viewModel);
 		}
 		
@@ -103,7 +106,7 @@ public class JavaViewLoader {
 	/**
 	 * This method is trying to invoke the initialize method of the given view by reflection. This is done to meet the
 	 * conventions of the {@link javafx.fxml.FXMLLoader}. The conventions say that when there is a
-	 * <strong>public</strong> no-args method called "initialize" and the class does not implement the
+	 * <strong>public</strong> no-args method with the simple name "initialize" and the class does not implement the
 	 * {@link javafx.fxml.Initializable} interface, the initialize method will be invoked. <br>
 	 * This method is package scoped for better testability.
 	 *
@@ -115,8 +118,27 @@ public class JavaViewLoader {
 	<ViewModelType extends ViewModel> void callInitialize(View<? extends ViewModelType> view) {
 		try {
 			final Method initializeMethod = view.getClass().getMethod(NAMING_CONVENTION_INITIALIZE_IDENTIFIER);
+
+			AccessController.doPrivileged((PrivilegedAction) ()-> {
+				try {
+					return initializeMethod.invoke(view);
+				} catch (InvocationTargetException e) {
+					LOG.warn("The '{}' method of the view {} has thrown an exception!",
+							NAMING_CONVENTION_INITIALIZE_IDENTIFIER, view);
+
+					Throwable cause = e.getCause();
+					if (cause instanceof RuntimeException) {
+						throw (RuntimeException) cause;
+					} else {
+						throw new RuntimeException(cause);
+					}
+				} catch (IllegalAccessException e) {
+					LOG.warn("Can't invoke the '{}' method of the view {} because it is not accessible",
+							NAMING_CONVENTION_INITIALIZE_IDENTIFIER, view);
+				}
+				return null;
+			});
 			
-			initializeMethod.invoke(view);
 		} catch (NoSuchMethodException e) {
 			// This exception means that there is no initialize method declared.
 			// While it's possible that the user has no such method by design,
@@ -125,19 +147,6 @@ public class JavaViewLoader {
 			// So it's likely that the user has misspelled the method name or uses a wrong naming convention.
 			// For this reason we give the user the log message.
 			LOG.debug("There is no '{}' method declared at the view {}", NAMING_CONVENTION_INITIALIZE_IDENTIFIER, view);
-		} catch (InvocationTargetException e) {
-			LOG.warn("The '{}' method of the view {} has thrown an exception!",
-					NAMING_CONVENTION_INITIALIZE_IDENTIFIER, view);
-			
-			Throwable cause = e.getCause();
-			if (cause instanceof RuntimeException) {
-				throw (RuntimeException) cause;
-			} else {
-				throw new RuntimeException(cause);
-			}
-		} catch (IllegalAccessException e) {
-			LOG.warn("Can't invoke the '{}' method of the view {} because it is not accessible",
-					NAMING_CONVENTION_INITIALIZE_IDENTIFIER, view);
 		}
 	}
 	

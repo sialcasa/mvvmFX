@@ -224,6 +224,7 @@ public class FxmlViewLoader {
 			final Object viewModel = viewModelOptional.get();
 			if(viewModel instanceof ViewModel) {
 				ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
+				ViewLoaderReflectionUtils.initializeViewModel((ViewModel)viewModel);
 			}
 		}
 	}

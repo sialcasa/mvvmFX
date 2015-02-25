@@ -22,18 +22,18 @@ import java.io.StringReader;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlViewResourceBundle;
+import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelWithResourceBundle;
 import javafx.fxml.LoadException;
 import javafx.scene.layout.VBox;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import de.saxsys.javafx.test.JfxRunner;
-import de.saxsys.mvvmfx.testingutils.TestUtils;
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.internal.viewloader.example.InvalidFxmlTestView;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlView;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlViewFxRoot;
@@ -47,6 +47,7 @@ import de.saxsys.mvvmfx.internal.viewloader.example.TestViewA;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestViewB;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModel;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelA;
+import de.saxsys.mvvmfx.testingutils.TestUtils;
 
 /**
  * Test the loading of FxmlViews.
@@ -59,7 +60,7 @@ public class FluentViewLoader_FxmlView_Test {
 	private ResourceBundle resourceBundle;
 	
 	@Before
-	public void setup() throws Exception{
+	public void setup() throws Exception {
 		resourceBundle = new PropertyResourceBundle(new StringReader(""));
 	}
 	
@@ -70,7 +71,8 @@ public class FluentViewLoader_FxmlView_Test {
 		TestFxmlView.instanceCounter = 0;
 		TestViewModel.instanceCounter = 0;
 		
-		final ViewTuple<TestFxmlView, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlView.class).resourceBundle(resourceBundle).load();
+		final ViewTuple<TestFxmlView, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlView.class)
+				.resourceBundle(resourceBundle).load();
 		
 		assertThat(viewTuple).isNotNull();
 		
@@ -86,17 +88,36 @@ public class FluentViewLoader_FxmlView_Test {
 		assertThat(TestFxmlView.instanceCounter).isEqualTo(1);
 		assertThat(TestViewModel.instanceCounter).isEqualTo(1);
 	}
-
+	
+	
+	@Test
+	public void test_initializeOfViewModel() {
+		// given
+		TestViewModelWithResourceBundle.wasInitialized = false;
+		TestViewModelWithResourceBundle.resourceBundleWasAvailableAtInitialize = false;
+		
+		// when
+		
+		final ViewTuple<TestFxmlViewResourceBundle, TestViewModelWithResourceBundle> viewTuple = FluentViewLoader.fxmlView(TestFxmlViewResourceBundle.class)
+				.resourceBundle(resourceBundle).load();
+		
+		// then
+		assertThat(TestViewModelWithResourceBundle.wasInitialized).isTrue();
+		assertThat(TestViewModelWithResourceBundle.resourceBundleWasAvailableAtInitialize).isTrue();
+	}
+	
+	
 	/**
-	 * This is a test case to reproduce bug #181 (<a href="https://github.com/sialcasa/mvvmFX/issues/181">issues 181</a>).
+	 * This is a test case to reproduce bug #181 (<a href="https://github.com/sialcasa/mvvmFX/issues/181">issues
+	 * 181</a>).
 	 * 
 	 * When the View has no field for the ViewModel, then there are two instances created of the ViewModel.
 	 */
 	@Test
-	public void testBugMultipleViewModelsCreated(){
+	public void testBugMultipleViewModelsCreated() {
 		TestFxmlViewWithoutViewModelField.instanceCounter = 0;
 		TestViewModel.instanceCounter = 0;
-
+		
 		final ViewTuple<TestFxmlViewWithoutViewModelField, TestViewModel> viewTuple = FluentViewLoader
 				.fxmlView(TestFxmlViewWithoutViewModelField.class).load();
 		
@@ -138,17 +159,17 @@ public class FluentViewLoader_FxmlView_Test {
 	
 	
 	/**
-	 * It is possible to use an existing instance of the codeBehind/controller. 
+	 * It is possible to use an existing instance of the codeBehind/controller.
 	 */
 	@Test
-	public void testUseExistingCodeBehind(){
+	public void testUseExistingCodeBehind() {
 		TestFxmlViewWithMissingController codeBehind = new TestFxmlViewWithMissingController();
-
-		ViewTuple<TestFxmlViewWithMissingController, TestViewModel> viewTuple = 
+		
+		ViewTuple<TestFxmlViewWithMissingController, TestViewModel> viewTuple =
 				FluentViewLoader.fxmlView(TestFxmlViewWithMissingController.class).codeBehind(codeBehind).load();
-
+		
 		assertThat(viewTuple).isNotNull();
-
+		
 		assertThat(viewTuple.getCodeBehind()).isEqualTo(codeBehind);
 		assertThat(viewTuple.getCodeBehind().viewModel).isNotNull();
 	}
@@ -175,7 +196,7 @@ public class FluentViewLoader_FxmlView_Test {
 			fail("A LoadException from FXMLLoader is expected");
 		} catch (Exception e) {
 			assertThat(e).hasCauseInstanceOf(LoadException.class).hasRootCauseInstanceOf(ClassNotFoundException.class);
-
+			
 			Throwable cause = TestUtils.getRootCause(e);
 			assertThat(cause).hasMessageContaining("WrongControllerNameTROLOLO");
 		}
@@ -191,84 +212,87 @@ public class FluentViewLoader_FxmlView_Test {
 					"Could not load the controller for the View");
 		}
 	}
-
-
+	
+	
 	/**
-	 * When there is already a Controller defined in the fxml file (fx:controller) then
-	 * it is not possible to use an existing controller instance with the viewLoader. 
+	 * When there is already a Controller defined in the fxml file (fx:controller) then it is not possible to use an
+	 * existing controller instance with the viewLoader.
 	 */
 	@Test
 	public void testUseExistingCodeBehindFailWhenControllerIsDefinedInFXML() {
-
+		
 		try {
 			TestFxmlView codeBehind = new TestFxmlView(); // the fxml file for this class has a fx:controller defined.
-			ViewTuple<TestFxmlView, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlView.class).codeBehind(codeBehind).load();
-
+			ViewTuple<TestFxmlView, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlView.class)
+					.codeBehind(codeBehind).load();
+			
 			fail("Expected a LoadException to be thrown");
-		}catch(Exception e) {
+		} catch (Exception e) {
 			assertThat(e).hasCauseInstanceOf(LoadException.class).hasMessageContaining(
 					"Controller value already specified");
 		}
 	}
-
+	
 	@Test(expected = RuntimeException.class)
 	public void testLoadFailNoSuchFxmlFile() {
-		ViewTuple<InvalidFxmlTestView, TestViewModel> viewTuple = FluentViewLoader.fxmlView(InvalidFxmlTestView.class).load();
+		ViewTuple<InvalidFxmlTestView, TestViewModel> viewTuple = FluentViewLoader.fxmlView(InvalidFxmlTestView.class)
+				.load();
 	}
-
+	
 	/**
-	 * The user can define a codeBehind instance that should be used by the viewLoader.
-	 * When this codeBehind instance has already has a ViewModel it should not be overwritten when the view is loaded.
+	 * The user can define a codeBehind instance that should be used by the viewLoader. When this codeBehind instance
+	 * has already has a ViewModel it should not be overwritten when the view is loaded.
 	 */
 	@Test
-	public void testAlreadyExistingViewModelShouldNotBeOverwritten(){
-
+	public void testAlreadyExistingViewModelShouldNotBeOverwritten() {
+		
 		TestFxmlViewWithMissingController codeBehind = new TestFxmlViewWithMissingController();
-
+		
 		TestViewModel existingViewModel = new TestViewModel();
-
+		
 		codeBehind.viewModel = existingViewModel;
-
-		ViewTuple<TestFxmlViewWithMissingController, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlViewWithMissingController.class).codeBehind(codeBehind).load();
-
+		
+		ViewTuple<TestFxmlViewWithMissingController, TestViewModel> viewTuple = FluentViewLoader
+				.fxmlView(TestFxmlViewWithMissingController.class).codeBehind(codeBehind).load();
+		
 		assertThat(viewTuple.getCodeBehind()).isNotNull();
 		assertThat(viewTuple.getCodeBehind().viewModel).isEqualTo(existingViewModel);
 	}
-
-
+	
+	
 	@Test
-	public void testViewModelIsAvailableInViewTupleForFXMLView(){
-
+	public void testViewModelIsAvailableInViewTupleForFXMLView() {
+		
 		ViewTuple<TestFxmlView, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlView.class).load();
-
+		
 		TestViewModel viewModel = viewTuple.getViewModel();
-
+		
 		assertThat(viewModel).isNotNull();
 		assertThat(viewModel).isEqualTo(viewTuple.getCodeBehind().getViewModel());
 	}
-
-
+	
+	
 	@Test
-	public void testThrowExceptionWhenMoreThenOneViewModelIsDefinedInFxmlView(){
-		try{
+	public void testThrowExceptionWhenMoreThenOneViewModelIsDefinedInFxmlView() {
+		try {
 			FluentViewLoader.fxmlView(TestFxmlViewMultipleViewModels.class).load();
 			fail("Expecting an Exception because in the view class there are 2 viewmodels defined.");
-		}catch(Exception e){
+		} catch (Exception e) {
 			assertThat(TestUtils.getRootCause(e)).isInstanceOf(RuntimeException.class).hasMessageContaining(
 					"<2> viewModel fields");
 		}
 	}
-
-
+	
+	
 	/**
-	 * When a mvvmFX view A is part of another mvvmFX view B (i.e. referenced in the fxml file of B) 
-	 * we have to verify that both A and B are correctly initialized and that the viewModels are injected.
+	 * When a mvvmFX view A is part of another mvvmFX view B (i.e. referenced in the fxml file of B) we have to verify
+	 * that both A and B are correctly initialized and that the viewModels are injected.
 	 */
 	@Test
-	public void testSubViewIsCorrectlyInitialized(){
-
+	public void testSubViewIsCorrectlyInitialized() {
+		
 		ViewTuple<TestViewA, TestViewModelA> viewTuple = FluentViewLoader.fxmlView(TestViewA.class).load();
-
+		
 		TestViewA codeBehindA = viewTuple.getCodeBehind();
 		assertThat(codeBehindA).isNotNull();
 		assertThat(codeBehindA.initializeWasCalled).isTrue();
@@ -280,31 +304,31 @@ public class FluentViewLoader_FxmlView_Test {
 		assertThat(codeBehindB).isNotNull();
 		assertThat(codeBehindB.initializeWasCalled).isTrue();
 		assertThat(codeBehindB.viewModel).isNotNull();
-
+		
 	}
-
-
+	
+	
 	/**
-	 * It is possible to (re-)use an existing ViewModel when loading a view. A possible use case is when 
-	 * you like to have 2 views that share the same viewModel instance.
+	 * It is possible to (re-)use an existing ViewModel when loading a view. A possible use case is when you like to
+	 * have 2 views that share the same viewModel instance.
 	 */
 	@Test
-	public void testUseExistingViewModel(){
+	public void testUseExistingViewModel() {
 		
 		TestViewModel viewModel = new TestViewModel();
-
-		ViewTuple<TestFxmlView, TestViewModel> viewTupleOne = FluentViewLoader.fxmlView(TestFxmlView.class).viewModel
-				(viewModel)
+		
+		ViewTuple<TestFxmlView, TestViewModel> viewTupleOne = FluentViewLoader.fxmlView(TestFxmlView.class)
+				.viewModel(viewModel)
 				.load();
 		
 		assertThat(viewTupleOne).isNotNull();
 		
 		assertThat(viewTupleOne.getCodeBehind().getViewModel()).isEqualTo(viewModel);
 		assertThat(viewTupleOne.getViewModel()).isEqualTo(viewModel);
-
-
-		ViewTuple<TestFxmlView, TestViewModel> viewTupleTwo = FluentViewLoader.fxmlView(TestFxmlView.class).viewModel
-				(viewModel)
+		
+		
+		ViewTuple<TestFxmlView, TestViewModel> viewTupleTwo = FluentViewLoader.fxmlView(TestFxmlView.class)
+				.viewModel(viewModel)
 				.load();
 		
 		assertThat(viewTupleTwo).isNotNull();
@@ -314,19 +338,19 @@ public class FluentViewLoader_FxmlView_Test {
 		
 		assertThat(viewTupleTwo.getCodeBehind()).isNotEqualTo(viewTupleOne.getCodeBehind());
 	}
-
+	
 	/**
 	 * When the ViewModel isn't injected in the view it should still be available in the ViewTuple.
 	 */
 	@Test
-	public void testViewModelIsAvailableInViewTupleEvenIfItIsntInjectedInTheView(){
-
+	public void testViewModelIsAvailableInViewTupleEvenIfItIsntInjectedInTheView() {
+		
 		ViewTuple<TestFxmlViewWithoutViewModelField, TestViewModel> viewTuple = FluentViewLoader
 				.fxmlView(TestFxmlViewWithoutViewModelField.class).load();
 		
 		assertThat(viewTuple.getCodeBehind().wasInitialized).isTrue();
 		
 		assertThat(viewTuple.getViewModel()).isNotNull();
-
+		
 	}
 }
