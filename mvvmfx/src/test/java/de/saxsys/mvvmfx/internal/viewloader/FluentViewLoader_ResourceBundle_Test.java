@@ -3,17 +3,18 @@ package de.saxsys.mvvmfx.internal.viewloader;
 import static org.assertj.core.api.Assertions.*;
 
 import java.io.StringReader;
-import java.lang.reflect.Field;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import de.saxsys.mvvmfx.JavaView;
+import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlViewResourceBundleWithoutController;
 import javafx.scene.layout.VBox;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.InjectResourceBundle;
+import de.saxsys.mvvmfx.JavaView;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlViewResourceBundle;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelWithResourceBundle;
@@ -52,9 +53,9 @@ public class FluentViewLoader_ResourceBundle_Test {
 	}
 	
 	@Test
-	public void success_fxml_injectionWithExistingViewModel(){
+	public void success_fxml_injectionWithExistingViewModel() {
 		TestViewModelWithResourceBundle viewModel = new TestViewModelWithResourceBundle();
-
+		
 		final ViewTuple<TestFxmlViewResourceBundle, TestViewModelWithResourceBundle> viewTuple = FluentViewLoader
 				.fxmlView(TestFxmlViewResourceBundle.class)
 				.resourceBundle(resourceBundle)
@@ -63,20 +64,62 @@ public class FluentViewLoader_ResourceBundle_Test {
 		
 		assertThat(viewTuple.getViewModel()).isEqualTo(viewModel);
 		final TestFxmlViewResourceBundle view = viewTuple.getCodeBehind();
-
+		
 		
 		assertThat(view.resourceBundle).isNotNull().isEqualTo(resourceBundle);
 		assertThat(viewModel.resourceBundle).isNotNull().isEqualTo(resourceBundle);
 	}
-	
+
+
+	@Test
+	public void success_fxml_existingCodeBehind(){
+		TestFxmlViewResourceBundleWithoutController codeBehind = new TestFxmlViewResourceBundleWithoutController();
+		
+		final ViewTuple<TestFxmlViewResourceBundleWithoutController, TestViewModelWithResourceBundle> viewTuple =
+				FluentViewLoader
+						.fxmlView(TestFxmlViewResourceBundleWithoutController.class)
+						.codeBehind(codeBehind)
+						.resourceBundle(resourceBundle)
+						.load();
+
+		assertThat(viewTuple.getCodeBehind()).isEqualTo(codeBehind);
+		final TestViewModelWithResourceBundle viewModel = viewTuple.getViewModel();
+
+		assertThat(viewModel.resourceBundle).isEqualTo(resourceBundle);
+		assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
+	}
+
+	@Test
+	public void success_fxml_existingCodeBehind_and_existingViewModel() {
+		TestFxmlViewResourceBundleWithoutController codeBehind = new TestFxmlViewResourceBundleWithoutController();
+		TestViewModelWithResourceBundle viewModel = new TestViewModelWithResourceBundle();
+
+		final ViewTuple<TestFxmlViewResourceBundleWithoutController, TestViewModelWithResourceBundle> viewTuple =
+				FluentViewLoader
+						.fxmlView(TestFxmlViewResourceBundleWithoutController.class)
+						.codeBehind(codeBehind)
+						.viewModel(viewModel)
+						.resourceBundle(resourceBundle)
+						.load();
+
+
+
+		assertThat(viewTuple.getCodeBehind()).isEqualTo(codeBehind);
+		assertThat(viewTuple.getViewModel()).isEqualTo(viewModel);
+
+		assertThat(viewModel.resourceBundle).isEqualTo(resourceBundle);
+		assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
+	}
+
+
 	@Test
 	public void fail_fxml_noResourceBundleProvidedOnLoad() {
-		try{
+		try {
 			FluentViewLoader
 					.fxmlView(TestFxmlViewResourceBundle.class)
 					.load();
 			fail("Expected an IllegalStateException");
-		} catch (Exception e){
+		} catch (Exception e) {
 			assertThat(e).hasRootCauseInstanceOf(IllegalStateException.class);
 		}
 	}
@@ -86,8 +129,8 @@ public class FluentViewLoader_ResourceBundle_Test {
 		@InjectResourceBundle
 		ResourceBundle resourceBundle;
 	}
-
-
+	
+	
 	@Test
 	public void success_java_injectionOfResourceBundles() {
 		final ViewTuple<TestJavaView, TestViewModelWithResourceBundle> viewTuple =
@@ -95,41 +138,41 @@ public class FluentViewLoader_ResourceBundle_Test {
 						.javaView(TestJavaView.class)
 						.resourceBundle(resourceBundle)
 						.load();
-
+		
 		final TestViewModelWithResourceBundle viewModel = viewTuple.getViewModel();
 		final TestJavaView view = viewTuple.getCodeBehind();
-
+		
 		assertThat(view.resourceBundle).isNotNull().isEqualTo(resourceBundle);
-
+		
 		assertThat(viewModel.resourceBundle).isNotNull().isEqualTo(resourceBundle);
 	}
-
+	
 	@Test
-	public void success_java_injectionWithExistingViewModel(){
+	public void success_java_injectionWithExistingViewModel() {
 		TestViewModelWithResourceBundle viewModel = new TestViewModelWithResourceBundle();
-
+		
 		final ViewTuple<TestJavaView, TestViewModelWithResourceBundle> viewTuple = FluentViewLoader
 				.javaView(TestJavaView.class)
 				.resourceBundle(resourceBundle)
 				.viewModel(viewModel)
 				.load();
-
+		
 		assertThat(viewTuple.getViewModel()).isEqualTo(viewModel);
 		final TestJavaView view = viewTuple.getCodeBehind();
-
-
+		
+		
 		assertThat(view.resourceBundle).isNotNull().isEqualTo(resourceBundle);
 		assertThat(viewModel.resourceBundle).isNotNull().isEqualTo(resourceBundle);
 	}
-
+	
 	@Test
 	public void fail_java_noResourceBundleProvidedOnLoad() {
-		try{
+		try {
 			FluentViewLoader
 					.javaView(TestJavaView.class)
 					.load();
 			fail("Expected an IllegalStateException");
-		} catch (Exception e){
+		} catch (Exception e) {
 			assertThat(e).isInstanceOf(IllegalStateException.class);
 		}
 	}
