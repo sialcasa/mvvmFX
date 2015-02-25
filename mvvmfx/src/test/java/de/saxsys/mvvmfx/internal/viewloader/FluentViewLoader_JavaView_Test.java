@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelWithResourceBundle;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.VBox;
 
@@ -95,6 +96,23 @@ public class FluentViewLoader_JavaView_Test {
 		assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
 		assertThat(viewTuple.getCodeBehind()).isNotNull();
 		assertThat(viewTuple.getViewModel()).isNotNull();
+	}
+	
+	@Test
+	public void test_initializeOfViewModel(){
+		// given
+		TestViewModelWithResourceBundle.wasInitialized = false;
+		TestViewModelWithResourceBundle.resourceBundleWasAvailableAtInitialize = false;
+		
+		class TestView extends VBox implements JavaView<TestViewModelWithResourceBundle> {
+		}
+		
+		// when
+		FluentViewLoader.javaView(TestView.class).resourceBundle(resourceBundle).load();
+		
+		// then
+		assertThat(TestViewModelWithResourceBundle.wasInitialized).isTrue();
+		assertThat(TestViewModelWithResourceBundle.resourceBundleWasAvailableAtInitialize).isTrue();
 	}
 	
 	
