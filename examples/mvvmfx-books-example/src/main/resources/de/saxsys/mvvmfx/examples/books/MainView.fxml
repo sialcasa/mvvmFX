@@ -8,7 +8,7 @@
 <?import javafx.collections.*?>
 <?import de.jensd.fx.fontawesome.*?>
 
-<AnchorPane minWidth="1000.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.examples.books.MainView">
+<AnchorPane minWidth="1000.0" prefHeight="700.0" prefWidth="1200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.examples.books.MainView">
 	<children>
 		<StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<children>
@@ -21,13 +21,13 @@
 										<HBox alignment="CENTER" spacing="5.0">
 											<children>
 												<Label text="Search for" HBox.hgrow="ALWAYS" />
-												<TextField fx:id="searchTextField" promptText="Query" HBox.hgrow="SOMETIMES" />
-												<Button fx:id="searchButton" defaultButton="true" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" HBox.hgrow="ALWAYS" />
+												<TextField id="searchTextField" fx:id="searchTextField" promptText="Query" HBox.hgrow="SOMETIMES" />
+												<Button id="searchButton" fx:id="searchButton" defaultButton="true" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" HBox.hgrow="ALWAYS" />
 											</children>
 										</HBox>
 										<StackPane VBox.vgrow="ALWAYS">
 											<children>
-												<ListView fx:id="bookList">
+												<ListView id="bookList" fx:id="bookList">
 												</ListView>
 											</children>
 										</StackPane>
@@ -39,7 +39,7 @@
 							<children>
 								<StackPane layoutX="-6.735429763793945" layoutY="-6.889407157897949" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 									<children>
-										<Icon awesomeIcon="BOOK" size="" style="-fx-font-size: 3em; -fx-text-fill: gray;"  StackPane.alignment="TOP_RIGHT">
+										<Icon awesomeIcon="STAR" size="" style="-fx-font-size: 3em; -fx-text-fill: gray;" StackPane.alignment="TOP_RIGHT">
 											<padding>
 												<Insets right="10.0" top="10" />
 												
@@ -47,9 +47,9 @@
 										</Icon>
 										<VBox spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
 											<children>
-												<Label fx:id="titleLabel" styleClass="title1" text="Titel" />
-												<Label fx:id="authorLabel" styleClass="title2" text="Aiuthorname" />
-												<Label fx:id="descriptionLabel" prefWidth="500.0" text="SomeCooltext" wrapText="true" VBox.vgrow="NEVER" />
+												<Label id="titleLabel" fx:id="titleLabel" styleClass="title1" text="Titel" />
+												<Label id="authorLabel" fx:id="authorLabel" styleClass="title2" text="Authorname" />
+												<Label id="descriptionLabel" fx:id="descriptionLabel" prefWidth="500.0" text="SomeCooltext" wrapText="true" VBox.vgrow="NEVER" />
 												<Label fx:id="errorLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" styleClass="errorLabel" text="Label" textAlignment="CENTER" />
 											</children>
 											<padding>

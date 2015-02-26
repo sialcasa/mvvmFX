@@ -13,6 +13,8 @@ public class IntegrationTest {
 	public void setup(){
 		MyApp.wasInitCalled = false;
 		MyApp.wasStopCalled = false;
+		MyModule.works = false;
+		MyViewModel.works = false;
 	}
 	
 	@Test
@@ -43,6 +45,9 @@ public class IntegrationTest {
 		
 		assertThat(codeBehind.parameters).isNotNull();
 		assertThat(codeBehind.parameters.getUnnamed()).contains("test");
+		
+		assertThat(MyModule.works).isTrue();
+		assertThat(MyViewModel.works).isTrue();
 
 	}
 	

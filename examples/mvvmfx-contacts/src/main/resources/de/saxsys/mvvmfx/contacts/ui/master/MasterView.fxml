@@ -11,7 +11,7 @@
 
 <AnchorPane minHeight="50.0" minWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.contacts.ui.master.MasterView">
 	<children>
-		<TableView fx:id="contactTable" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+		<TableView id="masterContactTable" fx:id="contactTable" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<columns>
 				<TableColumn prefWidth="75.0" text="%master.table.firstname">
 					<cellValueFactory>
