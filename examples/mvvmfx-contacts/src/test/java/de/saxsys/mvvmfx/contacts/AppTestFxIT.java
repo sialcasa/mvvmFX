@@ -1,30 +1,26 @@
 package de.saxsys.mvvmfx.contacts;
 
-import javafx.geometry.VerticalDirection;
-import javafx.scene.Parent;
+import static org.testfx.api.FxAssert.verifyThat;
+import static org.testfx.matcher.control.TableViewMatchers.hasTableCell;
+
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.loadui.testfx.Assertions;
-import org.loadui.testfx.GuiTest;
 import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
-
-import static org.loadui.testfx.Assertions.verifyThat;
-import static org.loadui.testfx.controls.TableViews.containsCell;
 
 public class AppTestFxIT extends FxRobot {
 	
 	@Before
-	public  void setupApp() throws Exception{
-
+	public void setupApp() throws Exception {
+		
 		FxToolkit.registerPrimaryStage();
-	
+		
 		FxToolkit.setupApplication(App.class);
 	}
 	
 	@Test
-	public void testAddNewContact(){
+	public void testAddNewContact() {
+		
 		clickOn("#addNewContactButton");
 		
 		clickOn("#firstnameInput");
@@ -41,8 +37,8 @@ public class AppTestFxIT extends FxRobot {
 		
 		clickOn("#okButton");
 		
-		verifyThat("#masterContactTable", containsCell("luke"));
-		verifyThat("#masterContactTable", containsCell("skywalker"));
-		verifyThat("#masterContactTable", containsCell("luke.skywalker@example.org"));
+		verifyThat("#masterContactTable", hasTableCell("luke"));
+		verifyThat("#masterContactTable", hasTableCell("skywalker"));
+		verifyThat("#masterContactTable", hasTableCell("luke.skywalker@example.org"));
 	}
 }
