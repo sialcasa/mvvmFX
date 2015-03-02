@@ -62,9 +62,9 @@ public class FxmlViewLoader {
 	 */
 	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
 			Class<? extends ViewType> viewType, ResourceBundle resourceBundle, ViewType codeBehind, Object root,
-			ViewModelType viewModel) {
+			ViewModelType viewModel, Object scope) {
 		final String pathToFXML = createFxmlPath(viewType);
-		return loadFxmlViewTuple(pathToFXML, resourceBundle, codeBehind, root, viewModel);
+		return loadFxmlViewTuple(pathToFXML, resourceBundle, codeBehind, root, viewModel, scope);
 	}
 
 	/**
@@ -120,10 +120,10 @@ public class FxmlViewLoader {
 	 */
 	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
 			final String resource, ResourceBundle resourceBundle, final ViewType codeBehind, final Object root,
-			ViewModelType viewModel) {
+			ViewModelType viewModel, Object scope) {
 		try {
 			
-			final FXMLLoader loader = createFxmlLoader(resource, resourceBundle, codeBehind, root, viewModel);
+			final FXMLLoader loader = createFxmlLoader(resource, resourceBundle, codeBehind, root, viewModel, scope);
 			
 			loader.load();
 			
@@ -151,7 +151,7 @@ public class FxmlViewLoader {
 	
 	
 	private FXMLLoader createFxmlLoader(String resource, ResourceBundle resourceBundle, View codeBehind, Object root,
-			ViewModel viewModel)
+			ViewModel viewModel, Object scope)
 			throws IOException {
 		
 		// Load FXML file
@@ -169,9 +169,9 @@ public class FxmlViewLoader {
 		// when the user provides a viewModel but no codeBehind, we need to use the custom controller factory.
 		// in all other cases the default factory can be used.
 		if (viewModel != null && codeBehind == null) {
-			fxmlLoader.setControllerFactory(new ControllerFactoryForCustomViewModel(viewModel, resourceBundle));
+			fxmlLoader.setControllerFactory(new ControllerFactoryForCustomViewModel(viewModel, resourceBundle, scope));
 		} else {
-			fxmlLoader.setControllerFactory(new DefaultControllerFactory(resourceBundle));
+			fxmlLoader.setControllerFactory(new DefaultControllerFactory(resourceBundle, scope));
 		}
 		
 		// When the user provides a codeBehind instance we take care of the injection of the viewModel to this
@@ -180,7 +180,7 @@ public class FxmlViewLoader {
 			fxmlLoader.setController(codeBehind);
 			
 			if (viewModel == null) {
-				handleInjection(codeBehind, resourceBundle);
+				handleInjection(codeBehind, resourceBundle, scope);
 			} else {
 				handleInjection(codeBehind, resourceBundle, viewModel);
 			}
@@ -195,9 +195,11 @@ public class FxmlViewLoader {
 	 */
 	private static class DefaultControllerFactory implements Callback<Class<?>, Object> {
 		private ResourceBundle resourceBundle;
+		private Object scope;
 		
-		public DefaultControllerFactory(ResourceBundle resourceBundle){
+		public DefaultControllerFactory(ResourceBundle resourceBundle, Object scope){
 			this.resourceBundle = resourceBundle;
+			this.scope = scope;
 		}
 		
 		@Override
@@ -207,7 +209,7 @@ public class FxmlViewLoader {
 			if (controller instanceof View) {
 				View codeBehind = (View) controller;
 
-				handleInjection(codeBehind, resourceBundle);
+				handleInjection(codeBehind, resourceBundle, scope);
 			}
 			
 			return controller;
@@ -215,7 +217,7 @@ public class FxmlViewLoader {
 	}
 	
 	
-	private static void handleInjection(View codeBehind, ResourceBundle resourceBundle){
+	private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, Object scope){
 		ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
 		
 		final Optional viewModelOptional = ViewLoaderReflectionUtils.createAndInjectViewModel(codeBehind);
@@ -224,6 +226,8 @@ public class FxmlViewLoader {
 			final Object viewModel = viewModelOptional.get();
 			if(viewModel instanceof ViewModel) {
 				ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
+				ScopeInjector.injectScope((ViewModel)viewModel, scope);
+				
 				ViewLoaderReflectionUtils.initializeViewModel((ViewModel)viewModel);
 			}
 		}
@@ -266,9 +270,12 @@ public class FxmlViewLoader {
 		
 		private ResourceBundle resourceBundle;
 		
-		public ControllerFactoryForCustomViewModel(ViewModel customViewModel, ResourceBundle resourceBundle) {
+		private Object scope;
+		
+		public ControllerFactoryForCustomViewModel(ViewModel customViewModel, ResourceBundle resourceBundle, Object scope) {
 			this.customViewModel = customViewModel;
 			this.resourceBundle = resourceBundle;
+			this.scope = scope;
 		}
 		
 		@Override
@@ -280,6 +287,7 @@ public class FxmlViewLoader {
 				
 				if (!customViewModelInjected) {
 					ResourceBundleInjector.injectResourceBundle(customViewModel, resourceBundle);
+					ScopeInjector.injectScope(customViewModel, scope);
 					ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
 					
 					ViewLoaderReflectionUtils.injectViewModel(codeBehind, customViewModel);
@@ -289,7 +297,7 @@ public class FxmlViewLoader {
 					return codeBehind;
 				}
 
-				handleInjection(codeBehind, resourceBundle);
+				handleInjection(codeBehind, resourceBundle, scope);
 			}
 			
 			return controller;

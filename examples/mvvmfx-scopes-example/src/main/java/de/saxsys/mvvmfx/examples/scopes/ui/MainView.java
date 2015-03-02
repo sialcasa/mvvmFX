@@ -1,49 +1,42 @@
 package de.saxsys.mvvmfx.examples.scopes.ui;
 
-import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.ViewTuple;
-import de.saxsys.mvvmfx.examples.scopes.model.Note;
-import de.saxsys.mvvmfx.scopes.ScopeHelper;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.examples.scopes.model.Note;
 
 public class MainView implements FxmlView<MainViewModel> {
 
 
 	@FXML
 	public VBox root;
-	
+
 	@InjectViewModel
 	MainViewModel viewModel;
-	
-	public void initialize(){
-		
+
+	public void initialize() {
+
 		viewModel.getNotes().forEach(this::createNoteView);
-		
+
 	}
-	
-	public void createNoteView(Note note){
+
+	public void createNoteView(Note note) {
 		HBox row = new HBox();
 
-		ViewTuple<NoteInfoView, NoteInfoViewModel> infoViewTuple = FluentViewLoader.fxmlView(NoteInfoView.class).load();
-		Parent infoView = infoViewTuple.getView();
+		ScopeViewModel scopeViewModel = new ScopeViewModel();
+		scopeViewModel.setNote(note);
 
-		ViewTuple<NoteTextView, NoteTextViewModel> textViewTuple = FluentViewLoader.fxmlView(NoteTextView.class).load();
-		Parent textView = textViewTuple.getView();
+		Parent infoView = FluentViewLoader.fxmlView(NoteInfoView.class).scope(scopeViewModel).load().getView();
+		Parent textView = FluentViewLoader.fxmlView(NoteTextView.class).scope(scopeViewModel).load().getView();
 
 		row.getChildren().addAll(infoView, textView);
 
 		root.getChildren().add(row);
-		
-		
-
-
-		ScopeViewModel scopeViewModel = ScopeHelper.newScope(ScopeViewModel.class, textViewTuple.getViewModel(), infoViewTuple.getViewModel());
-		scopeViewModel.setNote(note);
 	}
-	
+
 }

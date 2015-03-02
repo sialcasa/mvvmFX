@@ -55,8 +55,16 @@ public class FluentViewLoader {
 		
 		private ViewModelType viewModel;
 		
+		private Object scope;
+		
 		JavaViewStep(Class<? extends ViewType> viewType) {
 			this.viewType = viewType;
+		}
+		
+		
+		public JavaViewStep<ViewType, ViewModelType> scope(Object scope) {
+			this.scope = scope;
+			return this;
 		}
 		
 		/**
@@ -109,9 +117,16 @@ public class FluentViewLoader {
 		private Object root;
 		private ViewType codeBehind;
 		private ViewModelType viewModel;
+		private Object scope;
 
 		FxmlViewStep(Class<? extends ViewType> viewType) {
 			this.viewType = viewType;
+		}
+
+
+		public FxmlViewStep<ViewType, ViewModelType> scope(Object scope) {
+			this.scope = scope;
+			return this;
 		}
 		
 		/**
@@ -174,7 +189,7 @@ public class FluentViewLoader {
 		public ViewTuple<ViewType, ViewModelType> load() {
 			FxmlViewLoader fxmlViewLoader = new FxmlViewLoader();
 			
-			return fxmlViewLoader.loadFxmlViewTuple(viewType, resourceBundle, codeBehind, root, viewModel);
+			return fxmlViewLoader.loadFxmlViewTuple(viewType, resourceBundle, codeBehind, root, viewModel, scope);
 		}
 	}
 	
