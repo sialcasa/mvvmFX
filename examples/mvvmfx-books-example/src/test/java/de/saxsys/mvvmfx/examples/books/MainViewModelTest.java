@@ -33,8 +33,8 @@ public class MainViewModelTest {
         Book book1 = createBook("Das Leben des Horst", "Horst", "Eine geschichte über Horst");
         Book book2 = createBook("Die Verwandlung", "Franz Kafka", "Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte...");
 
-        final BookViewModel bookViewModel1 = new BookViewModel(book1);
-        final BookViewModel bookViewModel2 = new BookViewModel(book2);
+        final BookListItemViewModel bookViewModel1 = new BookListItemViewModel(book1);
+        final BookListItemViewModel bookViewModel2 = new BookListItemViewModel(book2);
 
         viewModel.booksProperty().add(bookViewModel1);
         viewModel.booksProperty().add(bookViewModel2);
@@ -88,10 +88,10 @@ public class MainViewModelTest {
 
         // then
         assertThat(viewModel.booksProperty()).hasSize(2);
-        assertThat(viewModel.booksProperty().get(0).getTitle()).isEqualTo("a book starting with a");
-        assertThat(viewModel.booksProperty().get(0).getDescription()).isEqualTo("some description 1");
-        assertThat(viewModel.booksProperty().get(1).getTitle()).isEqualTo("another book starting with a");
-        assertThat(viewModel.booksProperty().get(1).getDescription()).isEqualTo("some description 2");
+        assertThat(viewModel.booksProperty().get(0).getBook().getTitle()).isEqualTo("a book starting with a");
+        assertThat(viewModel.booksProperty().get(0).getBook().getDesc()).isEqualTo("some description 1");
+        assertThat(viewModel.booksProperty().get(1).getBook().getTitle()).isEqualTo("another book starting with a");
+        assertThat(viewModel.booksProperty().get(1).getBook().getDesc()).isEqualTo("some description 2");
 
 
         // when
@@ -100,8 +100,8 @@ public class MainViewModelTest {
 
         // then
         assertThat(viewModel.booksProperty()).hasSize(1);
-        assertThat(viewModel.booksProperty().get(0).getTitle()).isEqualTo("book starting with b");
-        assertThat(viewModel.booksProperty().get(0).getDescription()).isEqualTo("some description 3");
+        assertThat(viewModel.booksProperty().get(0).getBook().getTitle()).isEqualTo("book starting with b");
+        assertThat(viewModel.booksProperty().get(0).getBook().getDesc()).isEqualTo("some description 3");
 
 
         // when

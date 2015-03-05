@@ -18,7 +18,7 @@ import eu.lestard.easydi.EasyDI;
 
 public class App extends Application {
 	
-	private static final boolean ENABLE_MOCK_SERVICE = false;
+	private static final boolean ENABLE_MOCK_SERVICE = true;
 	
 	private EasyDI context = new EasyDI();
 	
