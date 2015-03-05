@@ -27,18 +27,18 @@ public class MainViewModel implements ViewModel {
     private StringProperty bookAuthor = new SimpleStringProperty();
     private StringProperty bookDescription = new SimpleStringProperty();
 
-    private ObservableList<BookViewModel> books = FXCollections.observableArrayList();
+    private ObservableList<BookListItemViewModel> books = FXCollections.observableArrayList();
 
-    private ObjectProperty<BookViewModel> selectedBook = new SimpleObjectProperty<>();
+    private ObjectProperty<BookListItemViewModel> selectedBook = new SimpleObjectProperty<>();
 
     private StringProperty error = new SimpleStringProperty();
 
     public MainViewModel(LibraryService libraryService){
         this.libraryService = libraryService;
 
-        bookTitle.bind(ObjectBindings.map(selectedBook, BookViewModel::getTitle));
-        bookAuthor.bind(ObjectBindings.map(selectedBook, BookViewModel::getAuthor));
-        bookDescription.bind(ObjectBindings.map(selectedBook, BookViewModel::getDescription));
+        bookTitle.bind(ObjectBindings.map(selectedBook, bookItem -> bookItem.getBook().getTitle()));
+        bookAuthor.bind(ObjectBindings.map(selectedBook, bookItem -> bookItem.getBook().getAuthor()));
+        bookDescription.bind(ObjectBindings.map(selectedBook, bookItem -> bookItem.getBook().getDesc()));
     }
 
 
@@ -51,7 +51,7 @@ public class MainViewModel implements ViewModel {
         books.addAll(result
             .stream()
             .map(bookWithoutDescription -> libraryService.showDetails(bookWithoutDescription, errorHandler))
-            .map(BookViewModel::new)
+            .map(BookListItemViewModel::new)
             .collect(Collectors.toList()));
     }
 
@@ -72,11 +72,11 @@ public class MainViewModel implements ViewModel {
         return bookDescription;
     }
 
-    public ObservableList<BookViewModel> booksProperty(){
+    public ObservableList<BookListItemViewModel> booksProperty(){
         return books;
     }
 
-    public ObjectProperty<BookViewModel> selectedBookProperty(){
+    public ObjectProperty<BookListItemViewModel> selectedBookProperty(){
         return selectedBook;
     }
 

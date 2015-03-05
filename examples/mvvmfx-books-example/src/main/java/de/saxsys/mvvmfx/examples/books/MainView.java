@@ -1,7 +1,11 @@
 package de.saxsys.mvvmfx.examples.books;
 
+import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -27,7 +31,7 @@ public class MainView implements FxmlView<MainViewModel> {
     private Label descriptionLabel;
 
     @FXML
-    private ListView<BookViewModel> bookList;
+    private ListView<BookListItemViewModel> bookList;
 
     @FXML
     private Label errorLabel;
@@ -40,8 +44,14 @@ public class MainView implements FxmlView<MainViewModel> {
         titleLabel.textProperty().bind(viewModel.bookTitleProperty());
         authorLabel.textProperty().bind(viewModel.bookAuthorProperty());
         descriptionLabel.textProperty().bind(viewModel.bookDescriptionProperty());
-
+		
         bookList.setItems(viewModel.booksProperty());
+
+		
+		final ViewListCellFactory<BookListItemViewModel> cellFactory = 
+				viewModel -> FluentViewLoader.fxmlView(BookListItemView.class).viewModel(viewModel).load();
+		
+		bookList.setCellFactory(cellFactory);
 
         viewModel.selectedBookProperty().bind(bookList.getSelectionModel().selectedItemProperty());
         errorLabel.textProperty().bind(viewModel.errorProperty());
