@@ -32,4 +32,10 @@ public class ItemViewModel implements ViewModel {
 	public BooleanProperty completedProperty() {
 		return completed;
 	}
+
+
+	@Override
+	public String toString() {
+		return content.get();
+	}
 }
