@@ -12,12 +12,15 @@ public class TodoItemStore {
 	
 	
 	private static final TodoItemStore SINGLETON = new TodoItemStore();
-	private TodoItemStore(){}
-	public static TodoItemStore getInstance(){
+	
+	private TodoItemStore() {
+	}
+	
+	public static TodoItemStore getInstance() {
 		return SINGLETON;
 	}
-
-	public ObservableList<TodoItem> getItems(){
+	
+	public ObservableList<TodoItem> getItems() {
 		return items;
 	}
 }

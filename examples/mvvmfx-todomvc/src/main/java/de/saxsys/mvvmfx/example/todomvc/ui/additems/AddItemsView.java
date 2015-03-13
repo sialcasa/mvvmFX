@@ -1,10 +1,11 @@
 package de.saxsys.mvvmfx.example.todomvc.ui.additems;
 
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 
 /**
  * @author manuel.mauky
@@ -18,7 +19,7 @@ public class AddItemsView implements FxmlView<AddItemsViewModel> {
 	@InjectViewModel
 	private AddItemsViewModel viewModel;
 	
-	public void initialize(){
+	public void initialize() {
 		addInput.textProperty().bindBidirectional(viewModel.newItemValueProperty());
 		
 		addInput.setOnAction(event -> viewModel.addItem());
