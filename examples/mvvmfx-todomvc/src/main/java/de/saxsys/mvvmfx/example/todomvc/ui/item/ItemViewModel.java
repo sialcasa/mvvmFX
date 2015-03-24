@@ -2,6 +2,8 @@ package de.saxsys.mvvmfx.example.todomvc.ui.item;
 
 import de.saxsys.mvvmfx.example.todomvc.model.TodoItemStore;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -16,7 +18,10 @@ public class ItemViewModel implements ViewModel {
 	
 	private BooleanProperty completed = new SimpleBooleanProperty();
 	
+	private BooleanProperty editMode = new SimpleBooleanProperty();
+	
 	private StringProperty content = new SimpleStringProperty();
+	
 	private TodoItem item;
 
 	public ItemViewModel(TodoItem item) {
@@ -35,5 +40,9 @@ public class ItemViewModel implements ViewModel {
 	
 	public BooleanProperty completedProperty() {
 		return completed;
+	}
+	
+	public BooleanProperty editModeProperty(){
+		return editMode;
 	}
 }

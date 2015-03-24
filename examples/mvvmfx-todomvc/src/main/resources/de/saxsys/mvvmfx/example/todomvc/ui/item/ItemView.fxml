@@ -7,7 +7,16 @@
 <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.example.todomvc.ui.item.ItemView">
 	<children>
 		<CheckBox fx:id="completed" mnemonicParsing="false" />
-		<TextField fx:id="content" promptText="What needs to be done?" />
-      <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#delete" text="x" />
+      <StackPane alignment="CENTER_LEFT">
+         <children>
+            <HBox fx:id="contentBox">
+               <children>
+                  <Label fx:id="contentLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#delete" text="x" />
+               </children>
+            </HBox>
+      		<TextField fx:id="contentInput" promptText="What needs to be done?" visible="false" />
+         </children>
+      </StackPane>
 	</children>
 </HBox>
