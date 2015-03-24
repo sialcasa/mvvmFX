@@ -1,5 +1,6 @@
 package de.saxsys.mvvmfx.example.todomvc.ui.item;
 
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import de.saxsys.mvvmfx.ViewModel;
@@ -17,9 +18,7 @@ public class ItemOverviewViewModel implements ViewModel {
 	final ListTransformation<TodoItem, ItemViewModel> listTransformation;
 	
 	public ItemOverviewViewModel() {
-		final ObservableList<TodoItem> todoItems = TodoItemStore.getInstance().getItems();
-		
-		listTransformation = new ListTransformation<>(todoItems, ItemViewModel::new);
+		listTransformation = new ListTransformation<>(TodoItemStore.getInstance().getItems(), ItemViewModel::new);
 		items = listTransformation.getTargetList();
 	}
 	

@@ -45,4 +45,8 @@ public class ItemViewModel implements ViewModel {
 	public BooleanProperty editModeProperty(){
 		return editMode;
 	}
+	
+	public ReadOnlyBooleanProperty textStrikeThrough() {
+		return completed;
+	}
 }
