@@ -52,6 +52,10 @@
 			<groupId>net.jodah</groupId>
 			<artifactId>typetools</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>eu.lestard</groupId>
+			<artifactId>doc-annotations</artifactId>
+		</dependency>
 
 		<!-- Testing Frameworks -->
 		<dependency>
