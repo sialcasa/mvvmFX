@@ -20,7 +20,7 @@ public class SliderView implements FxmlView<SliderViewModel> {
 	private SliderViewModel viewModel;
 	
 	
-	public void initialize(){
+	public void initialize() {
 		mySlider.valueProperty().bindBidirectional(viewModel.sliderValueProperty());
 		
 		myLabel.textProperty().bind(viewModel.labelTextProperty());

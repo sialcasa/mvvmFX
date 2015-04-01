@@ -49,8 +49,8 @@ public class Person {
 	public StringProperty lastNameProperty() {
 		return lastName;
 	}
-
-
+	
+	
 	/**
 	 * @return the gender of the person as {@link javafx.beans.property.ObjectProperty}.
 	 */
@@ -93,14 +93,14 @@ public class Person {
 	public Gender getGender() {
 		return gender.get();
 	}
-
+	
 	/**
 	 * @see #getGender()
 	 */
-	public void setGender(Gender gender){
+	public void setGender(Gender gender) {
 		this.gender.set(gender);
 	}
-
+	
 	
 	/**
 	 * Gets the technical id.

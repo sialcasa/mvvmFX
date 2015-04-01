@@ -20,8 +20,9 @@ public class Starter extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Hello World Application");
-
-		ViewTuple<HelloWorldView, HelloWorldViewModel> viewTuple = FluentViewLoader.fxmlView(HelloWorldView.class).load();
+		
+		ViewTuple<HelloWorldView, HelloWorldViewModel> viewTuple = FluentViewLoader.fxmlView(HelloWorldView.class)
+				.load();
 		
 		Parent root = viewTuple.getView();
 		stage.setScene(new Scene(root));

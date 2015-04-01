@@ -9,11 +9,11 @@ import java.util.Scanner;
 
 public class ServerApp {
 	
-	public static void main(String...args){
+	public static void main(String... args) {
 		System.out.println("Starting server");
 		
 		SliderViewModel centralViewModel = new SliderViewModel();
-
+		
 		final SynchronizeFxServer syncFxServer =
 				SynchronizeFxBuilder.create().server().model(centralViewModel).callback(
 						exception -> System.out.println("Server Error:" + exception.getLocalizedMessage())).build();

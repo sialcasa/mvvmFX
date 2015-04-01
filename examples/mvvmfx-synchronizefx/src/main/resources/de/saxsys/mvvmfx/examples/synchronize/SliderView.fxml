@@ -6,9 +6,17 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox fx:controller="de.saxsys.mvvmfx.examples.synchronize.SliderView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-<padding>
-<Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-</padding>
-<children><Text fill="dimgray" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 24;" text="MvvmFX &amp; SynchronizeFX Example" /><Slider fx:id="mySlider" majorTickUnit="20.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" snapToTicks="true" /><Label fx:id="myLabel" textFill="dimgray" style="-fx-font-size: 15;" text="Label" />
-</children></VBox>
+<VBox fx:controller="de.saxsys.mvvmfx.examples.synchronize.SliderView" maxHeight="-Infinity" maxWidth="-Infinity"
+	  minHeight="-Infinity" minWidth="-Infinity" spacing="20.0" xmlns="http://javafx.com/javafx/8"
+	  xmlns:fx="http://javafx.com/fxml/1">
+	<padding>
+		<Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+	</padding>
+	<children>
+		<Text fill="dimgray" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 24;"
+			  text="MvvmFX &amp; SynchronizeFX Example"/>
+		<Slider fx:id="mySlider" majorTickUnit="20.0" minorTickCount="5" showTickLabels="true" showTickMarks="true"
+				snapToTicks="true"/>
+		<Label fx:id="myLabel" textFill="dimgray" style="-fx-font-size: 15;" text="Label"/>
+	</children>
+</VBox>
