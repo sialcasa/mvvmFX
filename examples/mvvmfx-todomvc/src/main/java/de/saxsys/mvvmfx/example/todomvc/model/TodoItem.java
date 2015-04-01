@@ -30,7 +30,7 @@ public class TodoItem {
 		this.text.set(text);
 	}
 	
-	public boolean getCompleted() {
+	public boolean isCompleted() {
 		return completed.get();
 	}
 	
