@@ -14,7 +14,7 @@ public class BookListItemView implements FxmlView<BookListItemViewModel> {
 	@InjectViewModel
 	private BookListItemViewModel viewModel;
 	
-	public void initialize(){
+	public void initialize() {
 		titleLabel.textProperty().bind(viewModel.titleProperty());
 		authorLabel.textProperty().bind(viewModel.authorProperty());
 	}

@@ -35,13 +35,13 @@ public class EditContactDialogViewModelTest {
 	private ResourceBundle resourceBundle;
 	
 	@Before
-	public void setup(){
+	public void setup() {
 		// sadly the ResourceBundle.getString method is final so we can't use mockito
 		ResourceBundle resourceBundle = new ListResourceBundle() {
 			@Override
 			protected Object[][] getContents() {
 				return new Object[][] {
-						{TITLE_LABEL_KEY, "default_subdivision_label"}
+						{ TITLE_LABEL_KEY, "default_subdivision_label" }
 				};
 			}
 		};
@@ -65,10 +65,10 @@ public class EditContactDialogViewModelTest {
 		
 		viewModel.setContactDialogViewModel(contactDialogViewModel);
 	}
-
-
+	
+	
 	@Test
-	public void testOpenDialogSuccess(){
+	public void testOpenDialogSuccess() {
 		Contact chewie = new Contact();
 		chewie.setFirstname("Chewbacca");
 		
@@ -82,7 +82,7 @@ public class EditContactDialogViewModelTest {
 	}
 	
 	@Test
-	public void testOpenDialogNoSuchContact(){
+	public void testOpenDialogNoSuchContact() {
 		when(repository.findById("12345")).thenReturn(Optional.empty());
 		
 		viewModel.openDialog("12345");

@@ -141,7 +141,7 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	public int getSelectedIndex() {
 		return selectedIndexProperty().get();
 	}
-
+	
 	/**
 	 * @return String representation of {@link #modelListProperty()}.
 	 */
@@ -149,11 +149,11 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	public ReadOnlyListProperty<String> stringListProperty() {
 		return targetListProperty();
 	}
-
+	
 	/**
 	 * @return String representation of {@link #modelListProperty()} as List.
 	 */
-	public List<String> getStringList(){
+	public List<String> getStringList() {
 		return targetListProperty().get();
 	}
 	
@@ -170,7 +170,8 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	}
 	
 	/**
-	 * @param item the item will be selected.
+	 * @param item
+	 *            the item will be selected.
 	 * 
 	 * @see #selectedItemProperty()
 	 */

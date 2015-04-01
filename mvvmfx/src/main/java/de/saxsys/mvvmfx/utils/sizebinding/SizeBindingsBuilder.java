@@ -28,8 +28,7 @@ import javafx.scene.shape.Rectangle;
 
 
 /**
- * This class is a helper for binding/unbind the size of two components. It can handle the following component types:
- * <br>
+ * This class is a helper for binding/unbind the size of two components. It can handle the following component types: <br>
  * <ul>
  * <li>{@link javafx.scene.layout.Region}</li>
  * <li>{@link javafx.scene.control.Control}</li>

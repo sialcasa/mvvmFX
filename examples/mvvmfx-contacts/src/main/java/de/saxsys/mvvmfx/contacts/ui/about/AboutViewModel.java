@@ -2,8 +2,6 @@ package de.saxsys.mvvmfx.contacts.ui.about;
 
 import java.util.function.Consumer;
 
-import de.saxsys.mvvmfx.contacts.events.OpenAboutDialogEvent;
-import de.saxsys.mvvmfx.contacts.events.OpenAuthorPageEvent;
 import javafx.application.HostServices;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
@@ -18,13 +16,14 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.contacts.events.OpenAuthorPageEvent;
 
 public class AboutViewModel implements ViewModel {
 	
 	private BooleanProperty dialogOpen = new SimpleBooleanProperty();
 	
 	private ReadOnlyStringWrapper librariesLabelText = new ReadOnlyStringWrapper("");
-
+	
 	ObservableMap<String, String> libraryLinkMap = FXCollections.observableHashMap();
 	
 	@Inject
@@ -32,15 +31,14 @@ public class AboutViewModel implements ViewModel {
 	
 	@Inject
 	private HostServices hostServices;
-
+	
 	/**
-	 * Sadly the {@link javafx.application.HostServices} class
-	 * of JavaFX is <code>final</code> so we can't mock it in tests. To still be able to test link actions we have
-	 * introduced this handler as a mockable indirection.
+	 * Sadly the {@link javafx.application.HostServices} class of JavaFX is <code>final</code> so we can't mock it in
+	 * tests. To still be able to test link actions we have introduced this handler as a mockable indirection.
 	 */
 	Consumer<String> onLinkClickedHandler;
-
-	public AboutViewModel(){
+	
+	public AboutViewModel() {
 		libraryLinkMap.addListener((MapChangeListener<String, String>) change -> {
 			StringBuilder labelText = new StringBuilder();
 			
@@ -55,7 +53,7 @@ public class AboutViewModel implements ViewModel {
 	}
 	
 	@PostConstruct
-	public void initLibraryMap(){
+	public void initLibraryMap() {
 		onLinkClickedHandler = hostServices::showDocument;
 		
 		libraryLinkMap.put("DataFX", "http://www.javafxdata.org/");
@@ -65,25 +63,25 @@ public class AboutViewModel implements ViewModel {
 		libraryLinkMap.put("AssertJ-JavaFX", "https://github.com/lestard/assertj-javafx");
 		libraryLinkMap.put("JFX-Testrunner", "https://github.com/sialcasa/jfx-testrunner");
 	}
-
+	
 	public void openDialog() {
 		dialogOpen.set(true);
 	}
 	
-	public void onLinkClicked(String linkText){
-		if(libraryLinkMap.containsKey(linkText)){
+	public void onLinkClicked(String linkText) {
+		if (libraryLinkMap.containsKey(linkText)) {
 			onLinkClickedHandler.accept(libraryLinkMap.get(linkText));
 		}
 	}
-
+	
 	public BooleanProperty dialogOpenProperty() {
 		return dialogOpen;
 	}
 	
-	public ReadOnlyStringProperty librariesLabelTextProperty(){
+	public ReadOnlyStringProperty librariesLabelTextProperty() {
 		return librariesLabelText.getReadOnlyProperty();
 	}
-
+	
 	public void openAuthorPage() {
 		openAuthorPageEvent.fire(new OpenAuthorPageEvent());
 	}

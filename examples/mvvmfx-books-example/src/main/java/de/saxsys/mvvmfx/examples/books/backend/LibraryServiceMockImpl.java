@@ -9,22 +9,22 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Singleton
-public class LibraryServiceMockImpl implements LibraryService{
+public class LibraryServiceMockImpl implements LibraryService {
 	
 	private Set<Book> books = new HashSet<>();
 	
 	
-	public void addBooks(Book...books){
+	public void addBooks(Book... books) {
 		Arrays.stream(books).forEach(this.books::add);
 	}
 	
-	public void addSomeBooks(){
+	public void addSomeBooks() {
 		this.addBooks(
 				new Book("/1", "A Game of Thrones", "Georg R. R. Martin", "First part of SOIF"),
 				new Book("/2", "A Clash of Kings", "Georg R. R. Martin", "Second part of SOIF"),
 				new Book("/3", "A Storm of Swords", "Georg R. R. Martin", "Third part of SOIF"),
 				new Book("/4", "The Metamorphosis", "Franz Kafka", "A man turns into an insect")
-		);
+				);
 	}
 	
 	@Override
@@ -35,7 +35,7 @@ public class LibraryServiceMockImpl implements LibraryService{
 				.sorted((a, b) -> a.getTitle().compareTo(b.getTitle()))
 				.collect(Collectors.toList());
 	}
-
+	
 	@Override
 	public Book showDetails(Book book, Consumer<Error> errorCallback) {
 		return books.stream()

@@ -53,12 +53,15 @@ public class ListenerManager implements ICleanable {
 	 * Register the given {@link ChangeListener} to the {@link ObservableValue}. The listener is added to the observable
 	 * and will be added for management so it can be cleaned up with the {@link #clean()} method.
 	 * 
-	 * @param observable the observable that the listener is added to.
-	 * @param listener the listener that is registered.
-	 * @param <T> the generic type of the observable value.   
+	 * @param observable
+	 *            the observable that the listener is added to.
+	 * @param listener
+	 *            the listener that is registered.
+	 * @param <T>
+	 *            the generic type of the observable value.
 	 */
 	public <T> void register(ObservableValue<T> observable, ChangeListener<? super T> listener) {
-		if(!simpleChangeListeners.containsKey(observable)){
+		if (!simpleChangeListeners.containsKey(observable)) {
 			this.simpleChangeListeners.put(observable, Collections.newSetFromMap(new WeakHashMap<>()));
 		}
 		
@@ -71,15 +74,18 @@ public class ListenerManager implements ICleanable {
 	 * Register the given {@link ListChangeListener} to the {@link ObservableList}. The listener is added to the
 	 * observable and will be added for management so it can be cleaned up with the {@link #clean()} method.
 	 * 
-	 * @param observable the observable list that the listener is added to.
-	 * @param listener the listener that is registered.
-	 * @param <T> the generic type of the observable list.     
+	 * @param observable
+	 *            the observable list that the listener is added to.
+	 * @param listener
+	 *            the listener that is registered.
+	 * @param <T>
+	 *            the generic type of the observable list.
 	 */
 	public <T> void register(ObservableList<T> observable, ListChangeListener<? super T> listener) {
-		if(!listChangeListeners.containsKey(observable)){
+		if (!listChangeListeners.containsKey(observable)) {
 			this.listChangeListeners.put(observable, Collections.newSetFromMap(new WeakHashMap<>()));
 		}
-
+		
 		Set<ListChangeListener> observers = this.listChangeListeners.get(observable);
 		observers.add(listener);
 		observable.addListener(listener);
@@ -89,14 +95,16 @@ public class ListenerManager implements ICleanable {
 	 * Register the given {@link InvalidationListener} to the {@link Observable} . The listener is added to the
 	 * observable and will be added for management so it can be cleaned up with the {@link #clean()} method.
 	 * 
-	 * @param observable the observable that the listener is added to.
-	 * @param listener the listener that is registered.
+	 * @param observable
+	 *            the observable that the listener is added to.
+	 * @param listener
+	 *            the listener that is registered.
 	 */
 	public void register(Observable observable, InvalidationListener listener) {
-		if(!invalidationListeners.containsKey(observable)){
+		if (!invalidationListeners.containsKey(observable)) {
 			this.invalidationListeners.put(observable, Collections.newSetFromMap(new WeakHashMap<>()));
 		}
-
+		
 		Set<InvalidationListener> observers = this.invalidationListeners.get(observable);
 		observers.add(listener);
 		observable.addListener(listener);

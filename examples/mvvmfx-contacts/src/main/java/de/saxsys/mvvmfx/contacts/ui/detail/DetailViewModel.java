@@ -1,11 +1,10 @@
 package de.saxsys.mvvmfx.contacts.ui.detail;
 
+import static eu.lestard.advanced_bindings.api.ObjectBindings.map;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.function.Function;
 
-import de.saxsys.mvvmfx.contacts.model.Address;
-import eu.lestard.advanced_bindings.api.ObjectBindings;
 import javafx.application.HostServices;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
@@ -15,7 +14,6 @@ import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.value.ObservableObjectValue;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
@@ -23,11 +21,10 @@ import javax.inject.Inject;
 
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.contacts.events.OpenEditContactDialogEvent;
+import de.saxsys.mvvmfx.contacts.model.Address;
 import de.saxsys.mvvmfx.contacts.model.Contact;
 import de.saxsys.mvvmfx.contacts.model.Repository;
 import de.saxsys.mvvmfx.contacts.ui.master.MasterViewModel;
-
-import static eu.lestard.advanced_bindings.api.ObjectBindings.map;
 
 public class DetailViewModel implements ViewModel {
 	
@@ -112,7 +109,7 @@ public class DetailViewModel implements ViewModel {
 		phone.bind(emptyStringOnNull(map(contactProperty, Contact::getPhoneNumber)));
 		
 		mobile.bind(emptyStringOnNull(map(contactProperty, Contact::getMobileNumber)));
-
+		
 		ObjectBinding<Address> addressBinding = map(contactProperty, Contact::getAddress);
 		
 		cityPostalcode.bind(emptyStringOnNull(map(addressBinding, address -> {
@@ -120,7 +117,7 @@ public class DetailViewModel implements ViewModel {
 			if (address.getCity() != null) {
 				result.append(address.getCity());
 			}
-
+			
 			if (address.getPostalcode() != null) {
 				result.append(" (");
 				result.append(address.getPostalcode());
@@ -136,7 +133,7 @@ public class DetailViewModel implements ViewModel {
 			if (address.getCountry() != null) {
 				result.append(address.getCountry().getName());
 			}
-
+			
 			if (address.getSubdivision() != null) {
 				result.append(" / ");
 				result.append(address.getSubdivision().getName());
@@ -148,17 +145,16 @@ public class DetailViewModel implements ViewModel {
 		removeButtonDisabled.bind(masterViewModel.selectedContactProperty().isNull());
 		editButtonDisabled.bind(masterViewModel.selectedContactProperty().isNull());
 	}
-
+	
 	/**
-	 * When the given source binding has a value of <code>null</code>
-	 * an empty string is used for the returned binding. Otherwise the
-	 * value of the source binding is used.
+	 * When the given source binding has a value of <code>null</code> an empty string is used for the returned binding.
+	 * Otherwise the value of the source binding is used.
 	 */
-	private StringBinding emptyStringOnNull(ObjectBinding<String> source){
-		return Bindings.createStringBinding(()->{
-			if(source.get() == null){
+	private StringBinding emptyStringOnNull(ObjectBinding<String> source) {
+		return Bindings.createStringBinding(() -> {
+			if (source.get() == null) {
 				return "";
-			}else{
+			} else {
 				return source.get();
 			}
 		}, source);

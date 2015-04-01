@@ -73,7 +73,8 @@ public class SelectableItemListTest {
 	}
 	
 	/**
-	 * Check whether the {@link SelectableItemList#selectedItem} changes when the {@link SelectableItemList#selectedIndexProperty()} was changed.
+	 * Check whether the {@link SelectableItemList#selectedItem} changes when the
+	 * {@link SelectableItemList#selectedIndexProperty()} was changed.
 	 */
 	@Test
 	public void setSelectedItemByIndex() {
@@ -83,7 +84,8 @@ public class SelectableItemListTest {
 	}
 	
 	/**
-	 * Check whether the {@link SelectableItemList#selectedIndexProperty()} changes when the {@link SelectableItemList#selectedItem} was changed.
+	 * Check whether the {@link SelectableItemList#selectedIndexProperty()} changes when the
+	 * {@link SelectableItemList#selectedItem} was changed.
 	 */
 	@Test
 	public void setSelectedIndexByItem() {

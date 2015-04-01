@@ -14,35 +14,35 @@ import java.util.Set;
 public class InmemoryRepository implements Repository {
 	
 	private Set<Contact> contacts = new HashSet<>();
-
+	
 	@Inject
 	private Event<ContactsUpdatedEvent> contactsUpdatedEvent;
 	
-
-	@Override 
+	
+	@Override
 	public Set<Contact> findAll() {
 		return Collections.unmodifiableSet(contacts);
 	}
-
-	@Override 
+	
+	@Override
 	public Optional<Contact> findById(String id) {
 		return contacts.stream().filter(contact -> contact.getId().equals(id)).findFirst();
 	}
-
-	@Override 
+	
+	@Override
 	public void save(Contact contact) {
 		contacts.add(contact);
 		fireUpdateEvent();
 	}
-
-	@Override 
+	
+	@Override
 	public void delete(Contact contact) {
 		contacts.remove(contact);
 		fireUpdateEvent();
 	}
 	
-	private void fireUpdateEvent(){
-		if(contactsUpdatedEvent != null){
+	private void fireUpdateEvent() {
+		if (contactsUpdatedEvent != null) {
 			contactsUpdatedEvent.fire(new ContactsUpdatedEvent());
 		}
 	}

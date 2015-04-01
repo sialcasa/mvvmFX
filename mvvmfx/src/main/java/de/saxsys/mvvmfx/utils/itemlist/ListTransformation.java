@@ -33,8 +33,10 @@ import javafx.collections.WeakListChangeListener;
  * {@link javafx.collections.ObservableList} that contains elements of {@link SourceType}. This is different to the
  * normal list binding offered by JavaFX where the lists have to contain elements of the same type.
  *
- * @param <SourceType> the generic type of the source list.
- * @param <TargetType> the generic type of the target list.
+ * @param <SourceType>
+ *            the generic type of the source list.
+ * @param <TargetType>
+ *            the generic type of the target list.
  */
 public class ListTransformation<SourceType, TargetType> {
 	
@@ -191,12 +193,12 @@ public class ListTransformation<SourceType, TargetType> {
 	public void setModelList(ObservableList<SourceType> modelList) {
 		this.modelList.set(modelList);
 	}
-
-
+	
+	
 	/**
 	 * @return the model list that should be synchronized with the target list.
 	 */
-	public ObservableList<SourceType> getModelList(){
+	public ObservableList<SourceType> getModelList() {
 		return modelList.get();
 	}
 	
@@ -206,12 +208,12 @@ public class ListTransformation<SourceType, TargetType> {
 	public ReadOnlyListProperty<TargetType> targetListProperty() {
 		return viewModelList.getReadOnlyProperty();
 	}
-
-
+	
+	
 	/**
 	 * @return {@link TargetType} representation of {@link #modelListProperty()}.
 	 */
-	public ObservableList<TargetType> getTargetList(){
+	public ObservableList<TargetType> getTargetList() {
 		return viewModelList.getReadOnlyProperty().get();
 	}
 	

@@ -10,9 +10,9 @@ public class GCVerifierTest {
 	public void testCollectable() {
 		
 		Object testObject = new Object();
-
+		
 		GCVerifier verifier = GCVerifier.create(testObject);
-
+		
 		assertThat(testObject).isNotNull();
 		
 		
@@ -25,7 +25,7 @@ public class GCVerifierTest {
 	@Test
 	public void testNotCollectable() {
 		Object testObject = new Object();
-
+		
 		GCVerifier verifier = GCVerifier.create(testObject);
 		
 		try {

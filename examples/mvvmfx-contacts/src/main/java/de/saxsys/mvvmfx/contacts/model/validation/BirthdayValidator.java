@@ -10,13 +10,13 @@ import java.time.LocalDate;
 /**
  * A validator that verifies that a given date (the birthday) is not in the future.
  */
-public class BirthdayValidator implements Validator<LocalDate>{
-	@Override 
+public class BirthdayValidator implements Validator<LocalDate> {
+	@Override
 	public ValidationResult apply(Control control, LocalDate newValue) {
-		if(newValue != null){
+		if (newValue != null) {
 			LocalDate now = LocalDate.now(CentralClock.getClock());
-
-			if(newValue.isAfter(now)){
+			
+			if (newValue.isAfter(now)) {
 				return ValidationResult.fromError(control, "The birthday can't be set in the future");
 			}
 		}

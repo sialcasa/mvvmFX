@@ -1,9 +1,9 @@
 package de.saxsys.mvvmfx.contacts.ui.about;
 
 import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Hyperlink;
 import javafx.stage.Stage;
 
@@ -35,29 +35,29 @@ public class AboutView implements FxmlView<AboutViewModel> {
 	private Parent root;
 	
 	@Inject
-	AboutView(ResourceBundle defaultResourceBundle){
-		ViewTuple<AboutView, AboutViewModel> viewTuple = FluentViewLoader.fxmlView(this.getClass()).codeBehind(this)
+	AboutView(ResourceBundle defaultResourceBundle) {
+		ViewTuple<AboutView, AboutViewModel> viewTuple = FluentViewLoader.fxmlView(AboutView.class).codeBehind(this)
 				.resourceBundle(defaultResourceBundle).load();
 		root = viewTuple.getView();
 	}
 	
-	public void initialize(){
-		DialogHelper.initDialog(viewModel.dialogOpenProperty(), primaryStage, ()->root);
+	public void initialize() {
+		DialogHelper.initDialog(viewModel.dialogOpenProperty(), primaryStage, () -> root);
 		
 		librariesLabel.textProperty().bind(viewModel.librariesLabelTextProperty());
-		librariesLabel.setOnAction(event->{
-			Hyperlink link = (Hyperlink)event.getSource();
+		librariesLabel.setOnAction(event -> {
+			Hyperlink link = (Hyperlink) event.getSource();
 			String str = link == null ? "" : link.getText();
 			viewModel.onLinkClicked(str);
 		});
 	}
 	
 	@FXML
-	public void openAuthorPage(){
+	public void openAuthorPage() {
 		viewModel.openAuthorPage();
 	}
 	
-	public void open(@Observes OpenAboutDialogEvent event){
+	public void open(@Observes OpenAboutDialogEvent event) {
 		viewModel.openDialog();
 	}
 }

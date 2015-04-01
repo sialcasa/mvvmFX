@@ -24,7 +24,7 @@ public class TestFxmlView implements FxmlView<TestViewModel>, Initializable {
 	
 	public boolean viewModelWasNull = true;
 	
-	public TestFxmlView(){
+	public TestFxmlView() {
 		instanceCounter++;
 	}
 	
@@ -36,7 +36,7 @@ public class TestFxmlView implements FxmlView<TestViewModel>, Initializable {
 		viewModelWasNull = viewModel == null;
 	}
 	
-	public TestViewModel getViewModel(){
+	public TestViewModel getViewModel() {
 		return viewModel;
 	}
 	

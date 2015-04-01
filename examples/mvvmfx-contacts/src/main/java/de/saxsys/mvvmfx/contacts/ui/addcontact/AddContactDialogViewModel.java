@@ -20,26 +20,26 @@ public class AddContactDialogViewModel implements ViewModel {
 	private Repository repository;
 	
 	private ContactDialogViewModel contactDialogViewModel;
-
+	
 	@Inject
 	private ResourceBundle defaultResourceBundle;
 	
-	public AddContactDialogViewModel(){
-		dialogOpen.addListener((obs, oldV, newV)->{
-			if(!newV) {
+	public AddContactDialogViewModel() {
+		dialogOpen.addListener((obs, oldV, newV) -> {
+			if (!newV) {
 				contactDialogViewModel.resetDialogPage();
 			}
 		});
 	}
 	
 	
-	public void setContactDialogViewModel(ContactDialogViewModel contactDialogViewModel){
+	public void setContactDialogViewModel(ContactDialogViewModel contactDialogViewModel) {
 		this.contactDialogViewModel = contactDialogViewModel;
 		
 		contactDialogViewModel.setOkAction(this::addContactAction);
 		contactDialogViewModel.titleTextProperty().set(defaultResourceBundle.getString(TITLE_LABEL_KEY));
 	}
-		
+	
 	
 	public void addContactAction() {
 		if (contactDialogViewModel.validProperty().get()) {
@@ -55,7 +55,7 @@ public class AddContactDialogViewModel implements ViewModel {
 	
 	public void openDialog() {
 		contactDialogViewModel.resetForms();
-
+		
 		Contact contact = new Contact();
 		contactDialogViewModel.getContactFormViewModel().initWithContact(contact);
 		contactDialogViewModel.getAddressFormViewModel().initWithAddress(contact.getAddress());
