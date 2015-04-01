@@ -35,7 +35,7 @@ public class AddContactDialog implements FxmlView<AddContactDialogViewModel> {
 	
 	@Inject
 	AddContactDialog(ResourceBundle defaultResourceBundle) {
-		ViewTuple<AddContactDialog, AddContactDialogViewModel> viewTuple = FluentViewLoader.fxmlView(this.getClass())
+		ViewTuple<AddContactDialog, AddContactDialogViewModel> viewTuple = FluentViewLoader.fxmlView(AddContactDialog.class)
 				.codeBehind(this).resourceBundle(defaultResourceBundle).load();
 		
 		root = viewTuple.getView();

@@ -20,7 +20,7 @@ public class MasterView implements FxmlView<MasterViewModel> {
 		viewModel.selectedTableRowProperty().bind(contactTable.getSelectionModel().selectedItemProperty());
 		
 		// When the selectedTableRowProperty changes in the viewModel we need to update the table
-		viewModel.setOnSelect(contactTable.getSelectionModel()::select);
+		viewModel.setOnSelect(vm -> contactTable.getSelectionModel().select(vm));
 	}
 	
 }

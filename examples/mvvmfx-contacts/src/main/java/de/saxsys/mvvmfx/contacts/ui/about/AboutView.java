@@ -36,7 +36,7 @@ public class AboutView implements FxmlView<AboutViewModel> {
 	
 	@Inject
 	AboutView(ResourceBundle defaultResourceBundle) {
-		ViewTuple<AboutView, AboutViewModel> viewTuple = FluentViewLoader.fxmlView(this.getClass()).codeBehind(this)
+		ViewTuple<AboutView, AboutViewModel> viewTuple = FluentViewLoader.fxmlView(AboutView.class).codeBehind(this)
 				.resourceBundle(defaultResourceBundle).load();
 		root = viewTuple.getView();
 	}

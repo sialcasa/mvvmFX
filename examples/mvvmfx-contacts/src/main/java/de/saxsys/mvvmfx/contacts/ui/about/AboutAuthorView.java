@@ -25,7 +25,7 @@ public class AboutAuthorView implements FxmlView<AboutAuthorViewModel> {
 	private AboutAuthorViewModel viewModel;
 	
 	AboutAuthorView() {
-		root = FluentViewLoader.fxmlView(this.getClass()).codeBehind(this).load().getView();
+		root = FluentViewLoader.fxmlView(AboutAuthorView.class).codeBehind(this).load().getView();
 	}
 	
 	public void initialize() {

@@ -38,7 +38,7 @@ public class App extends Application {
 		}
 		
 		
-		MvvmFX.setCustomDependencyInjector(context::getInstance);
+		MvvmFX.setCustomDependencyInjector(type -> context.getInstance(type));
 		
 		primaryStage.setTitle("Library JavaFX");
 		primaryStage.setMinWidth(1200);
