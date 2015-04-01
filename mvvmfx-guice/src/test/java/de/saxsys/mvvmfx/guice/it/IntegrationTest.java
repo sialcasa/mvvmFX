@@ -10,7 +10,7 @@ import de.saxsys.mvvmfx.guice.internal.GuiceInjector;
 public class IntegrationTest {
 	
 	@Before
-	public void setup(){
+	public void setup() {
 		MyApp.wasInitCalled = false;
 		MyApp.wasStopCalled = false;
 		MyModule.works = false;
@@ -18,9 +18,9 @@ public class IntegrationTest {
 	}
 	
 	@Test
-	public void testInjectionOfPrimaryStage(){
+	public void testInjectionOfPrimaryStage() {
 		MyApp.main("test");
-
+		
 		assertThat(MyApp.wasInitCalled).isTrue();
 		assertThat(MyApp.wasStopCalled).isTrue();
 		
@@ -30,10 +30,10 @@ public class IntegrationTest {
 		
 		GuiceInjector injector = MyApp.staticInjector;
 		assertThat(injector).isNotNull();
-
-
+		
+		
 		assertThat(MyApp.viewTuple).isNotNull();
-
+		
 		MyView codeBehind = MyApp.viewTuple.getCodeBehind();
 		
 		assertThat(codeBehind).isNotNull();
@@ -48,7 +48,7 @@ public class IntegrationTest {
 		
 		assertThat(MyModule.works).isTrue();
 		assertThat(MyViewModel.works).isTrue();
-
+		
 	}
 	
 }

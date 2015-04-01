@@ -12,12 +12,12 @@ public class MyViewModel implements ViewModel {
 	public static boolean works = false;
 	
 	@Inject
-	public MyViewModel(MyService service){
-		Supplier<String> supplier = ()-> "lambda in ViewModel works";
+	public MyViewModel(MyService service) {
+		Supplier<String> supplier = () -> "lambda in ViewModel works";
 		assertThat(supplier.get()).isNotEmpty().contains("works");
 		assertThat(service).isNotNull();
 		works = true;
 	}
 	
-
+	
 }
