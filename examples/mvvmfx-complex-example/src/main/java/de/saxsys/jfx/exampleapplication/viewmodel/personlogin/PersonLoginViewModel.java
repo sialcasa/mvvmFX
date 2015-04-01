@@ -1,16 +1,18 @@
 package de.saxsys.jfx.exampleapplication.viewmodel.personlogin;
 
-import de.saxsys.jfx.exampleapplication.model.Person;
-import de.saxsys.jfx.exampleapplication.model.Repository;
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.utils.itemlist.ModelToStringFunction;
-import de.saxsys.mvvmfx.utils.itemlist.SelectableItemList;
-import de.saxsys.mvvmfx.utils.itemlist.SelectableStringList;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 
 import javax.inject.Inject;
+
+import de.saxsys.jfx.exampleapplication.model.Person;
+import de.saxsys.jfx.exampleapplication.model.Repository;
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.utils.commands.Command;
+import de.saxsys.mvvmfx.utils.itemlist.ModelToStringFunction;
+import de.saxsys.mvvmfx.utils.itemlist.SelectableItemList;
+import de.saxsys.mvvmfx.utils.itemlist.SelectableStringList;
 
 /**
  * ViewModel for a login view for the persons. It provides the data which should be visualized in the frontend e.g. the
@@ -28,12 +30,16 @@ public class PersonLoginViewModel implements ViewModel {
 	
 	private final IntegerProperty loggedInPersonId = new SimpleIntegerProperty();
 	
+	private final Command loginCommand;
+	
 	@Inject
 	public PersonLoginViewModel(Repository repository) {
 		ModelToStringFunction<Person> personMapper = person -> person.getFirstName() + " " + person.getLastName();
-		selectablePersons = new SelectableItemList<Person>(
-				FXCollections.observableArrayList(repository.getPersons()),
-				personMapper);
+		selectablePersons =
+				new SelectableItemList<Person>(FXCollections.observableArrayList(repository.getPersons()), personMapper);
+		
+		loginCommand = new Command(() -> loggedInPersonId.set(selectablePersons.getSelectedItem().getId()),
+				selectablePersons.selectedIndexProperty().isNotEqualTo(-1));
 	}
 	
 	/**
@@ -59,5 +65,9 @@ public class PersonLoginViewModel implements ViewModel {
 	 */
 	public void login() {
 		loggedInPersonId.set(selectablePersons.getSelectedItem().getId());
+	}
+	
+	public Command getLoginCommand() {
+		return loginCommand;
 	}
 }
