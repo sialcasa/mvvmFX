@@ -7,8 +7,8 @@ import javafx.stage.Stage;
  * This interface defines a common set of methods that the root application classes of extensions of mvvmfx should
  * implement.
  * 
- * The interface is intended as an internal helper to unify the API of the official mvvmFX extensions (Guice and CDI at the
- * moment). It is <strong>not</strong> intended to be used for other use cases.
+ * The interface is intended as an internal helper to unify the API of the official mvvmFX extensions (Guice and CDI at
+ * the moment). It is <strong>not</strong> intended to be used for other use cases.
  * 
  * A mvvmfx extension has to do the following:
  * <ol>

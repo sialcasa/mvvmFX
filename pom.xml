@@ -112,7 +112,7 @@
 				<artifactId>doc-annotations</artifactId>
 				<version>0.1</version>
 			</dependency>
-			
+
 			<!-- Testing Frameworks -->
 			<dependency>
 				<groupId>junit</groupId>

@@ -11,7 +11,7 @@ public class ToolbarViewModel implements ViewModel {
 	@Inject
 	private Event<OpenAddContactDialogEvent> openPopupEvent;
 	
-	public void addNewContactAction(){
+	public void addNewContactAction() {
 		openPopupEvent.fire(new OpenAddContactDialogEvent());
 	}
 }

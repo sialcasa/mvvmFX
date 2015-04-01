@@ -98,7 +98,8 @@ public class FluentViewLoader_FxmlView_Test {
 		
 		// when
 		
-		final ViewTuple<TestFxmlViewResourceBundle, TestViewModelWithResourceBundle> viewTuple = FluentViewLoader.fxmlView(TestFxmlViewResourceBundle.class)
+		final ViewTuple<TestFxmlViewResourceBundle, TestViewModelWithResourceBundle> viewTuple = FluentViewLoader
+				.fxmlView(TestFxmlViewResourceBundle.class)
 				.resourceBundle(resourceBundle).load();
 		
 		// then
@@ -135,7 +136,8 @@ public class FluentViewLoader_FxmlView_Test {
 		assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
 		assertThat(viewTuple.getCodeBehind()).isNotNull().isInstanceOf(TestFxmlViewWithoutViewModelType.class);
 		
-		final TestFxmlViewWithoutViewModelType codeBehind = (TestFxmlViewWithoutViewModelType) viewTuple.getCodeBehind();
+		final TestFxmlViewWithoutViewModelType codeBehind = (TestFxmlViewWithoutViewModelType) viewTuple
+				.getCodeBehind();
 		
 		assertThat(codeBehind.wasInitialized).isTrue();
 		assertThat(codeBehind.viewModel).isNull();

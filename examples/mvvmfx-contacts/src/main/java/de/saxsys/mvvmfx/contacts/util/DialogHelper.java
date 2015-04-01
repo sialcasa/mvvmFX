@@ -27,8 +27,8 @@ public class DialogHelper {
 	 *            the Stage that is used as parent to initialize the ownership of the dialog. This way modal dialogs can
 	 *            be created.
 	 * @param rootSupplier
-	 *            a supplier function that is called when the dialog is made visible for the first time. This function has to
-	 *            return a {@link Parent} instance that is used as the root node of the dialog scene. 
+	 *            a supplier function that is called when the dialog is made visible for the first time. This function
+	 *            has to return a {@link Parent} instance that is used as the root node of the dialog scene.
 	 */
 	public static void initDialog(BooleanProperty openProperty, final Stage parentStage, Supplier<Parent> rootSupplier) {
 		final Stage dialogStage = new Stage(StageStyle.UTILITY);

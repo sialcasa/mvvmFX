@@ -15,14 +15,11 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.listener;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-
-import de.saxsys.mvvmfx.testingutils.GCVerifier;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -35,6 +32,8 @@ import javafx.collections.ListChangeListener;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import de.saxsys.mvvmfx.testingutils.GCVerifier;
 
 /**
  * Test to verify the behaviour of the {@link de.saxsys.mvvmfx.utils.listener.ListenerManager}.
@@ -148,30 +147,32 @@ public class ListenerManagerTest {
 		stringProperty.set("test2");
 		verifyNoMoreInteractions(invalidationListener);
 	}
-
+	
 	/**
-	 * This test is used to verify that when the property and listener are available for garbage collection
-	 * when they aren't used anymore and only the listenerManager holds references to them.
+	 * This test is used to verify that when the property and listener are available for garbage collection when they
+	 * aren't used anymore and only the listenerManager holds references to them.
 	 */
 	@Test
-	public void testGC(){
+	public void testGC() {
 		StringProperty property = new SimpleStringProperty();
-	
+		
 		// We need to create a listener that uses objects from the outer scope
 		// This is needed because otherwise the java compiler would transfer the lambda expression into a static method
 		// and this static method can't be garbage collected. And this is absolutely ok because
 		// when the listener has no references to the outside it can't prevent other instances from being collected.
 		Object testObject = new Object();
 		
-		// A lambda expression that has references to the outside is comparable to an anonymous inner class. 
-		// When this listener isn't correctly garbage collected it will also prevent the object which reference it has from
+		// A lambda expression that has references to the outside is comparable to an anonymous inner class.
+		// When this listener isn't correctly garbage collected it will also prevent the object which reference it has
+		// from
 		// being collected (in this case "testObject"). This could produce a memory leak.
-		ChangeListener<String> listener = (observable, oldValue, newValue) -> System.out.println(">" + newValue + "" + testObject);
-
+		ChangeListener<String> listener = (observable, oldValue, newValue) -> System.out.println(">" + newValue + ""
+				+ testObject);
+		
 		GCVerifier propertyVerifier = GCVerifier.create(property);
 		GCVerifier listenerVerifier = GCVerifier.create(listener);
 		
-
+		
 		manager.register(property, listener);
 		
 		property = new SimpleStringProperty();

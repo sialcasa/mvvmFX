@@ -62,7 +62,7 @@ public class PersonWelcomeViewModel implements ViewModel {
 						.otherwise(
 								Bindings.when(person.genderProperty().isEqualTo(Gender.MALE))
 										.then("Herr ").otherwise("Frau "));
-
+		
 		welcomeString.unbind();
 		welcomeString.bind(Bindings.concat("Willkommen ", salutationBinding,
 				person.lastNameProperty(), ", oder wollen Sie ",

@@ -13,8 +13,8 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 public class AboutAuthorView implements FxmlView<AboutAuthorViewModel> {
-
-
+	
+	
 	private Parent root;
 	
 	@Inject
@@ -24,25 +24,25 @@ public class AboutAuthorView implements FxmlView<AboutAuthorViewModel> {
 	@InjectViewModel
 	private AboutAuthorViewModel viewModel;
 	
-	AboutAuthorView(){
-		root = FluentViewLoader.fxmlView(this.getClass()).codeBehind(this).load().getView();
+	AboutAuthorView() {
+		root = FluentViewLoader.fxmlView(AboutAuthorView.class).codeBehind(this).load().getView();
 	}
 	
-	public void initialize(){
-		DialogHelper.initDialog(viewModel.dialogOpenProperty(), primaryStage, ()->root);
+	public void initialize() {
+		DialogHelper.initDialog(viewModel.dialogOpenProperty(), primaryStage, () -> root);
 	}
 	
-	public void openDialog(@Observes OpenAuthorPageEvent event){
+	public void openDialog(@Observes OpenAuthorPageEvent event) {
 		viewModel.openDialog();
 	}
 	
 	@FXML
-	public void openBlog(){
+	public void openBlog() {
 		viewModel.openBlog();
 	}
 	
 	@FXML
-	public void openTwitter(){
+	public void openTwitter() {
 		viewModel.openTwitter();
 	}
 }

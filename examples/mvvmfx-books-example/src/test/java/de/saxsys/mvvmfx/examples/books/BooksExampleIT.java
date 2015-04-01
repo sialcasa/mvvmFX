@@ -27,7 +27,7 @@ public class BooksExampleIT extends GuiTest {
 		LibraryServiceMockImpl libraryService = context.getInstance(LibraryServiceMockImpl.class);
 		libraryService.addSomeBooks();
 		
-		MvvmFX.setCustomDependencyInjector(context::getInstance);
+		MvvmFX.setCustomDependencyInjector(type -> context.getInstance(type));
 		
 		return FluentViewLoader.fxmlView(MainView.class).load().getView();
 	}

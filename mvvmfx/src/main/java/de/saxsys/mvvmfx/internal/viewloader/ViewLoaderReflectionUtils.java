@@ -3,7 +3,6 @@ package de.saxsys.mvvmfx.internal.viewloader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.AccessControlContext;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
@@ -187,24 +186,27 @@ public class ViewLoaderReflectionUtils {
 		}
 		return (ViewModelType) DependencyInjector.getInstance().getInstanceOf(viewModelType);
 	}
-
-
+	
+	
 	/**
-	 * If a ViewModel has a method with the signature <code>public void initialize()</code>
-	 * it will be invoked. If no such method is available nothing happens.
+	 * If a ViewModel has a method with the signature <code>public void initialize()</code> it will be invoked. If no
+	 * such method is available nothing happens.
 	 * 
-	 * @param viewModel the viewModel that's initialize method (if available) will be invoked.
-	 * @param <ViewModelType> the generic type of the ViewModel.
+	 * @param viewModel
+	 *            the viewModel that's initialize method (if available) will be invoked.
+	 * @param <ViewModelType>
+	 *            the generic type of the ViewModel.
 	 */
-	public static <ViewModelType extends ViewModel> void initializeViewModel(ViewModelType viewModel){
+	public static <ViewModelType extends ViewModel> void initializeViewModel(ViewModelType viewModel) {
 		try {
 			final Method initMethod = viewModel.getClass().getMethod("initialize");
-
-			AccessController.doPrivileged((PrivilegedAction) ()-> {
+			
+			AccessController.doPrivileged((PrivilegedAction) () -> {
 				try {
 					return initMethod.invoke(viewModel);
 				} catch (InvocationTargetException | IllegalAccessException e) {
-					throw new IllegalStateException("mvvmFX wasn't able to call the initialize method of ViewModel [" + viewModel + "].", e);
+					throw new IllegalStateException("mvvmFX wasn't able to call the initialize method of ViewModel ["
+							+ viewModel + "].", e);
 				}
 			});
 		} catch (NoSuchMethodException e) {

@@ -16,56 +16,59 @@ import de.saxsys.synchronizefx.core.exceptions.SynchronizeFXException;
  * 
  * @author manuel.mauky
  */
-public class ClientApp extends Application{
+public class ClientApp extends Application {
 	
 	private static final String SERVER = "localhost";
-
+	
 	private SynchronizeFxClient client;
 	
-	public static void main(String...args){
+	public static void main(String... args) {
 		launch(args);
 	}
 	
-	@Override 
+	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
 		primaryStage.setTitle("MvvmFX and SynchronizeFX Example Client");
 		
 		client = SynchronizeFxBuilder.create().client().address(SERVER).callback(new ClientCallback() {
-			@Override public void modelReady(Object object) {
-
+			@Override
+			public void modelReady(Object object) {
+				
 				System.out.println("Ready");
-
+				
 				if (object instanceof SliderViewModel) {
 					SliderViewModel viewModel = (SliderViewModel) object;
-
+					
 					ViewTuple<SliderView, SliderViewModel> viewTuple = FluentViewLoader.fxmlView(SliderView.class)
 							.viewModel(viewModel).load();
 					
-					primaryStage.setScene(new Scene(viewTuple.getView(),400,200));
+					primaryStage.setScene(new Scene(viewTuple.getView(), 400, 200));
 					
 					primaryStage.show();
 				} else {
 					System.err.println("The type of the synchronized model is wrong!");
 				}
 			}
-
-			@Override public void onError(SynchronizeFXException e) {
+			
+			@Override
+			public void onError(SynchronizeFXException e) {
 				System.out.println("Client Error: " + e.getLocalizedMessage());
 			}
-
-			@Override public void onServerDisconnect() {
+			
+			@Override
+			public void onServerDisconnect() {
 				System.out.println("Server disconnected");
 			}
 		}).build();
 		
 		client.connect();
 	}
-
+	
 	/**
 	 * Disconnect the client when the application is closed.
 	 */
-	@Override 
+	@Override
 	public void stop() throws Exception {
 		System.out.print("Stopping the client...");
 		client.disconnect();

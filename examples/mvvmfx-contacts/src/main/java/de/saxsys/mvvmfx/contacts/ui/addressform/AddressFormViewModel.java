@@ -61,7 +61,7 @@ public class AddressFormViewModel implements ViewModel {
 	// Don't inline this field. It's needed to prevent the list mapping from being garbage collected.
 	private ItemList<Subdivision> subdivisionItemList;
 	private Address address;
-
+	
 	@PostConstruct
 	public void init() {
 		
@@ -89,52 +89,52 @@ public class AddressFormViewModel implements ViewModel {
 			selectedSubdivision.set(NOTHING_SELECTED_MARKER);
 		});
 		
-		selectedSubdivision.addListener((obs, oldV, newV)->{
-			if(newV != null && !newV.equals(NOTHING_SELECTED_MARKER)){
+		selectedSubdivision.addListener((obs, oldV, newV) -> {
+			if (newV != null && !newV.equals(NOTHING_SELECTED_MARKER)) {
 				Optional<Subdivision> subdivisionOptional = countrySelector.subdivisions().stream()
 						.filter(subdivision -> subdivision.getName().equals(newV)).findFirst();
 				
-				if(subdivisionOptional.isPresent()){
+				if (subdivisionOptional.isPresent()) {
 					subdivision.set(subdivisionOptional.get());
-				}else{
+				} else {
 					subdivision.set(null);
 				}
-			}else{
+			} else {
 				subdivision.set(null);
 			}
-		});		
-
+		});
+		
 		countryInputDisabled.bind(loadingInProgress);
 		subdivisionInputDisabled.bind(loadingInProgress.or(Bindings.size(subdivisionsList()).lessThanOrEqualTo(1)));
 	}
-
-	void initSubdivisionLabel(){
+	
+	void initSubdivisionLabel() {
 		subdivisionLabel.bind(
 				Bindings.when(
 						countrySelector.subdivisionLabel().isEmpty())
 						.then(resourceBundle.getString(SUBDIVISION_LABEL_KEY))
 						.otherwise(countrySelector.subdivisionLabel()));
 	}
-
+	
 	private void initSubdivisionList() {
 		subdivisionItemList = new ItemList<>(countrySelector.subdivisions(), Subdivision::getName);
 		subdivisions = createListWithNothingSelectedMarker(subdivisionItemList.getTargetList());
 		subdivisions.addListener((ListChangeListener<String>) c -> selectedSubdivision.set(NOTHING_SELECTED_MARKER));
 	}
-
+	
 	private void initCountryList() {
 		countryItemList = new ItemList<>(countrySelector.availableCountries(), Country::getName);
-
+		
 		ObservableList<String> mappedList = countryItemList.getTargetList();
-
+		
 		countries = createListWithNothingSelectedMarker(
 				mappedList);
-
+		
 		countries.addListener((ListChangeListener<String>) c -> selectedCountry.set(NOTHING_SELECTED_MARKER));
 	}
 	
 	
-	public void commitChanges(){
+	public void commitChanges() {
 		address.setStreet(street.get());
 		address.setCity(city.get());
 		address.setPostalcode(postalCode.get());
@@ -143,17 +143,17 @@ public class AddressFormViewModel implements ViewModel {
 		address.setSubdivision(subdivision.get());
 	}
 	
-	public void initWithAddress(Address address){
+	public void initWithAddress(Address address) {
 		this.address = address;
 		
 		street.set(address.getStreet());
 		city.set(address.getCity());
 		postalCode.set(address.getPostalcode());
-
-		if(address.getCountry() != null){
+		
+		if (address.getCountry() != null) {
 			selectedCountry.set(address.getCountry().getName());
 		}
-		if(address.getSubdivision() != null){
+		if (address.getSubdivision() != null) {
 			selectedSubdivision.set(address.getSubdivision().getName());
 		}
 	}
@@ -213,18 +213,18 @@ public class AddressFormViewModel implements ViewModel {
 		return subdivisionLabel.getReadOnlyProperty();
 	}
 	
-	public ReadOnlyBooleanProperty loadingInProgressProperty(){
+	public ReadOnlyBooleanProperty loadingInProgressProperty() {
 		return loadingInProgress.getReadOnlyProperty();
 	}
 	
-	public ReadOnlyBooleanProperty countryInputDisabledProperty(){
+	public ReadOnlyBooleanProperty countryInputDisabledProperty() {
 		return countryInputDisabled.getReadOnlyProperty();
 	}
 	
-	public ReadOnlyBooleanProperty subdivisionInputDisabledProperty(){
+	public ReadOnlyBooleanProperty subdivisionInputDisabledProperty() {
 		return subdivisionInputDisabled.getReadOnlyProperty();
 	}
-
+	
 	public void resetForm() {
 		street.set("");
 		city.set("");

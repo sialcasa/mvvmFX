@@ -30,26 +30,26 @@ public class AddressFormViewModelTest {
 	private AddressFormViewModel viewModel;
 	
 	private CountrySelector countrySelector;
-
+	
 	private Country germany = new Country("Germany", "DE");
 	private Country austria = new Country("Austria", "AU");
-
-
+	
+	
 	private StringProperty subdivisionLabel = new SimpleStringProperty();
 	
 	private ObservableList<Country> availableCountries = FXCollections.observableArrayList();
 	private ObservableList<Subdivision> subdivisions = FXCollections.observableArrayList();
 	
 	@Before
-	public void setup(){
+	public void setup() {
 		availableCountries.addAll(germany, austria);
 		
 		// sadly the ResourceBundle.getString method is final so we can't use mockito
-		ResourceBundle resourceBundle = new ListResourceBundle() {  
+		ResourceBundle resourceBundle = new ListResourceBundle() {
 			@Override
 			protected Object[][] getContents() {
 				return new Object[][] {
-						{SUBDIVISION_LABEL_KEY, SUBDIVISION_DEFAULT_LABEL}
+						{ SUBDIVISION_LABEL_KEY, SUBDIVISION_DEFAULT_LABEL }
 				};
 			}
 		};
@@ -59,7 +59,7 @@ public class AddressFormViewModelTest {
 		when(countrySelector.availableCountries()).thenReturn(availableCountries);
 		when(countrySelector.subdivisions()).thenReturn(subdivisions);
 		
-		// when "germany" is selected, fill in the subdivisions of germany ... 
+		// when "germany" is selected, fill in the subdivisions of germany ...
 		doAnswer(invocation -> {
 			helper_fillCountrySelectorWithGermanSubdivisions();
 			return null;
@@ -77,14 +77,14 @@ public class AddressFormViewModelTest {
 			return null;
 		}).when(countrySelector).setCountry(null);
 		
-
+		
 		viewModel = new AddressFormViewModel();
 		viewModel.resourceBundle = resourceBundle;
 		viewModel.countrySelector = countrySelector;
 	}
 	
 	@Test
-	public void testSubdivisionLabel(){
+	public void testSubdivisionLabel() {
 		viewModel.initSubdivisionLabel();
 		
 		assertThat(viewModel.subdivisionLabel()).hasValue(SUBDIVISION_DEFAULT_LABEL);
@@ -98,12 +98,12 @@ public class AddressFormViewModelTest {
 		subdivisionLabel.set("");
 		assertThat(viewModel.subdivisionLabel()).hasValue(SUBDIVISION_DEFAULT_LABEL);
 	}
-
+	
 	@Test
-	public void testCountryAndFederalStateLists() throws Exception{
+	public void testCountryAndFederalStateLists() throws Exception {
 		viewModel.init();
 		
-		assertThat(viewModel.countriesList()).hasSize(3).contains(NOTHING_SELECTED_MARKER,"Austria", "Germany");
+		assertThat(viewModel.countriesList()).hasSize(3).contains(NOTHING_SELECTED_MARKER, "Austria", "Germany");
 		assertThat(viewModel.countriesList().get(0)).isEqualTo(NOTHING_SELECTED_MARKER);
 		assertThat(viewModel.subdivisionsList()).hasSize(1).contains(NOTHING_SELECTED_MARKER);
 		
@@ -113,7 +113,7 @@ public class AddressFormViewModelTest {
 		
 		viewModel.selectedCountryProperty().set("Germany");
 		
-
+		
 		
 		assertThat(viewModel.subdivisionsList()).hasSize(17).contains(NOTHING_SELECTED_MARKER, "Sachsen", "Berlin",
 				"Bayern"); // test sample
@@ -121,8 +121,8 @@ public class AddressFormViewModelTest {
 		assertThat(viewModel.selectedSubdivisionProperty()).hasValue(NOTHING_SELECTED_MARKER);
 		
 		viewModel.selectedSubdivisionProperty().set("Sachsen");
-
-
+		
+		
 		viewModel.selectedCountryProperty().set("Austria");
 		
 		assertThat(viewModel.selectedSubdivisionProperty()).hasValue(NOTHING_SELECTED_MARKER);
@@ -131,18 +131,18 @@ public class AddressFormViewModelTest {
 		assertThat(viewModel.subdivisionsList().get(0)).isEqualTo(NOTHING_SELECTED_MARKER);
 		
 		viewModel.selectedSubdivisionProperty().set("Wien");
-
-
+		
+		
 		viewModel.selectedCountryProperty().set(NOTHING_SELECTED_MARKER);
 		assertThat(viewModel.selectedSubdivisionProperty()).hasValue(NOTHING_SELECTED_MARKER);
-	
+		
 		assertThat(viewModel.subdivisionsList()).hasSize(1).contains(NOTHING_SELECTED_MARKER);
 	}
-
+	
 	@Test
-	public void testCreateListWithNothingSelectedMarker(){
+	public void testCreateListWithNothingSelectedMarker() {
 		ObservableList<String> sourceList = FXCollections.observableArrayList();
-
+		
 		ObservableList<String> target = AddressFormViewModel
 				.createListWithNothingSelectedMarker(sourceList);
 		
@@ -163,7 +163,7 @@ public class AddressFormViewModelTest {
 	}
 	
 	
-	private void helper_fillCountrySelectorWithGermanSubdivisions(){
+	private void helper_fillCountrySelectorWithGermanSubdivisions() {
 		subdivisions.clear();
 		
 		subdivisions.add(new Subdivision("Baden-Württemberg", "BW", germany));
@@ -184,9 +184,9 @@ public class AddressFormViewModelTest {
 		subdivisions.add(new Subdivision("Thüringen", "TH", germany));
 	}
 	
-	private void helper_fillCountrySelectorWithAustrianSubdivisions(){
+	private void helper_fillCountrySelectorWithAustrianSubdivisions() {
 		subdivisions.clear();
-
+		
 		subdivisions.add(new Subdivision("Burgenland", "Bgld.", austria));
 		subdivisions.add(new Subdivision("Kärnten", "Ktn.", austria));
 		subdivisions.add(new Subdivision("Niederösterreich", "NÖ", austria));
