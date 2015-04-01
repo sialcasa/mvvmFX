@@ -1,4 +1,4 @@
-package de.saxsys.mvvmfx.utils.commands;
+package de.saxsys.mvvmfx.utils.validation;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
