@@ -69,10 +69,10 @@ public class FluentViewLoader_ResourceBundle_Test {
 		assertThat(view.resourceBundle).isNotNull().isEqualTo(resourceBundle);
 		assertThat(viewModel.resourceBundle).isNotNull().isEqualTo(resourceBundle);
 	}
-
-
+	
+	
 	@Test
-	public void success_fxml_existingCodeBehind(){
+	public void success_fxml_existingCodeBehind() {
 		TestFxmlViewResourceBundleWithoutController codeBehind = new TestFxmlViewResourceBundleWithoutController();
 		
 		final ViewTuple<TestFxmlViewResourceBundleWithoutController, TestViewModelWithResourceBundle> viewTuple =
@@ -81,19 +81,19 @@ public class FluentViewLoader_ResourceBundle_Test {
 						.codeBehind(codeBehind)
 						.resourceBundle(resourceBundle)
 						.load();
-
+		
 		assertThat(viewTuple.getCodeBehind()).isEqualTo(codeBehind);
 		final TestViewModelWithResourceBundle viewModel = viewTuple.getViewModel();
-
+		
 		assertThat(viewModel.resourceBundle).isEqualTo(resourceBundle);
 		assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
 	}
-
+	
 	@Test
 	public void success_fxml_existingCodeBehind_and_existingViewModel() {
 		TestFxmlViewResourceBundleWithoutController codeBehind = new TestFxmlViewResourceBundleWithoutController();
 		TestViewModelWithResourceBundle viewModel = new TestViewModelWithResourceBundle();
-
+		
 		final ViewTuple<TestFxmlViewResourceBundleWithoutController, TestViewModelWithResourceBundle> viewTuple =
 				FluentViewLoader
 						.fxmlView(TestFxmlViewResourceBundleWithoutController.class)
@@ -101,17 +101,17 @@ public class FluentViewLoader_ResourceBundle_Test {
 						.viewModel(viewModel)
 						.resourceBundle(resourceBundle)
 						.load();
-
-
-
+		
+		
+		
 		assertThat(viewTuple.getCodeBehind()).isEqualTo(codeBehind);
 		assertThat(viewTuple.getViewModel()).isEqualTo(viewModel);
-
+		
 		assertThat(viewModel.resourceBundle).isEqualTo(resourceBundle);
 		assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
 	}
-
-
+	
+	
 	@Test
 	public void fail_fxml_noResourceBundleProvidedOnLoad() {
 		try {

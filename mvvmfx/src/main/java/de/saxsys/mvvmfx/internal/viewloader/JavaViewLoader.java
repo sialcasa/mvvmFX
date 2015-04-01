@@ -85,7 +85,7 @@ public class JavaViewLoader {
 		
 		ResourceBundleInjector.injectResourceBundle(view, resourceBundle);
 		
-		if(viewModel != null){
+		if (viewModel != null) {
 			ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
 			ViewLoaderReflectionUtils.initializeViewModel(viewModel);
 			ViewLoaderReflectionUtils.injectViewModel(view, viewModel);
@@ -118,14 +118,14 @@ public class JavaViewLoader {
 	<ViewModelType extends ViewModel> void callInitialize(View<? extends ViewModelType> view) {
 		try {
 			final Method initializeMethod = view.getClass().getMethod(NAMING_CONVENTION_INITIALIZE_IDENTIFIER);
-
-			AccessController.doPrivileged((PrivilegedAction) ()-> {
+			
+			AccessController.doPrivileged((PrivilegedAction) () -> {
 				try {
 					return initializeMethod.invoke(view);
 				} catch (InvocationTargetException e) {
 					LOG.warn("The '{}' method of the view {} has thrown an exception!",
 							NAMING_CONVENTION_INITIALIZE_IDENTIFIER, view);
-
+					
 					Throwable cause = e.getCause();
 					if (cause instanceof RuntimeException) {
 						throw (RuntimeException) cause;

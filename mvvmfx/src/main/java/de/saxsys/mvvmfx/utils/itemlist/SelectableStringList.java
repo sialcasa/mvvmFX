@@ -50,7 +50,8 @@ public interface SelectableStringList {
 	/**
 	 * @see #selectedIndexProperty()
 	 * 
-	 * @param id the id to be selected
+	 * @param id
+	 *            the id to be selected
 	 */
 	public void select(int id);
 	

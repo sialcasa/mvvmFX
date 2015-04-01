@@ -64,8 +64,7 @@ public class DependencyInjectorTest {
 	
 	/**
 	 * When no customInjector callback is defined, the default instantiation mechanism is used to get an instance of the
-	 * desired class.
-	 * <br>
+	 * desired class. <br>
 	 * By default for every method call a new instance is created.
 	 */
 	@Test
@@ -112,8 +111,7 @@ public class DependencyInjectorTest {
 	
 	/**
 	 * By default when no customInjector callback is defined the instances are created on the fly. But this is only
-	 * possible for classes with public constructor without parameters.
-	 * <br>
+	 * possible for classes with public constructor without parameters. <br>
 	 * In this test an Exception is thrown because the desired class has no public constructor.
 	 */
 	@Test
@@ -129,8 +127,7 @@ public class DependencyInjectorTest {
 	
 	/**
 	 * By default when no customInjector callback is defined the instances are created on the fly. But this is only
-	 * possible for classes with public constructor without parameters.
-	 * <br>
+	 * possible for classes with public constructor without parameters. <br>
 	 * <br>
 	 * In this test an Exception is thrown because the desired class has only one public constructor that expects
 	 * parameters.

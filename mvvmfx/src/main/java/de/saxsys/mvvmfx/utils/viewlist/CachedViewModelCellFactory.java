@@ -12,14 +12,14 @@ import java.util.Map;
 
 /**
  * 
- * An implementation of the {@link ViewListCellFactory} that can be used for {@link ListView}s that are based 
- * on a list of ViewModels. Additionally this CellFactory has a cache for {@link ViewTuple}s that where already
- * loaded before. <br><br>
- *     
- * This can be useful because the ListView can call the CellFactory not only when the items list changes but also on other
- * events like scrolling. Without a cache a new View would be loaded each time. This can cause unwanted effects like
- * view items that are not responding to clicks on controls in the item view. 
- * <br><br>
+ * An implementation of the {@link ViewListCellFactory} that can be used for {@link ListView}s that are based on a list
+ * of ViewModels. Additionally this CellFactory has a cache for {@link ViewTuple}s that where already loaded before. <br>
+ * <br>
+ * 
+ * This can be useful because the ListView can call the CellFactory not only when the items list changes but also on
+ * other events like scrolling. Without a cache a new View would be loaded each time. This can cause unwanted effects
+ * like view items that are not responding to clicks on controls in the item view. <br>
+ * <br>
  * Typical useage:
  * 
  * <pre>
@@ -45,19 +45,19 @@ import java.util.Map;
  * @author manuel.mauky
  */
 @Beta
-public class CachedViewModelCellFactory<V extends View<VM>, VM extends ViewModel> implements ViewListCellFactory<VM>{
+public class CachedViewModelCellFactory<V extends View<VM>, VM extends ViewModel> implements ViewListCellFactory<VM> {
 	
 	private Map<VM, ViewTuple<V, VM>> cache = new HashMap<>();
 	
 	private Callback<VM, ViewTuple<V, VM>> loadFactory;
-
+	
 	private CachedViewModelCellFactory(Callback<VM, ViewTuple<V, VM>> loadFactory) {
 		this.loadFactory = loadFactory;
 	}
-
+	
 	@Override
 	public ViewTuple<V, VM> map(VM viewModel) {
-		if(! cache.containsKey(viewModel)){
+		if (!cache.containsKey(viewModel)) {
 			final ViewTuple<V, VM> viewTuple = loadFactory.call(viewModel);
 			cache.put(viewModel, viewTuple);
 		}
@@ -66,7 +66,8 @@ public class CachedViewModelCellFactory<V extends View<VM>, VM extends ViewModel
 	}
 	
 	
-	public static <V extends View<VM>, VM extends ViewModel> CachedViewModelCellFactory<V,VM> create(Callback<VM, ViewTuple<V,VM>> callback) {
-		return new CachedViewModelCellFactory<>(callback) ;
+	public static <V extends View<VM>, VM extends ViewModel> CachedViewModelCellFactory<V, VM> create(
+			Callback<VM, ViewTuple<V, VM>> callback) {
+		return new CachedViewModelCellFactory<>(callback);
 	}
 }

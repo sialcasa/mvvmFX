@@ -21,8 +21,8 @@ import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModel;
 
 
 /**
- * This test verifies the API of the {@link de.saxsys.mvvmfx.FluentViewLoader}. The functionality of
- * loading Views is not part of this test as it is already tested in other tests for the ViewLoader itself.
+ * This test verifies the API of the {@link de.saxsys.mvvmfx.FluentViewLoader}. The functionality of loading Views is
+ * not part of this test as it is already tested in other tests for the ViewLoader itself.
  */
 public class FluentViewLoader_API_Test {
 	
@@ -35,7 +35,7 @@ public class FluentViewLoader_API_Test {
 	}
 	
 	
-	/// FXML VIEW ///
+	// / FXML VIEW ///
 	
 	@Test
 	public void testLoadFxmlView() {
@@ -47,17 +47,19 @@ public class FluentViewLoader_API_Test {
 	}
 	
 	@Test
-	public void testLoadFxmlViewWithResourceBundle() throws IOException{
-		ViewTuple<TestFxmlView, TestViewModel> viewTuple  = FluentViewLoader.fxmlView(TestFxmlView.class).resourceBundle(resourceBundle).load();
+	public void testLoadFxmlViewWithResourceBundle() throws IOException {
+		ViewTuple<TestFxmlView, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlView.class)
+				.resourceBundle(resourceBundle).load();
 		assertThat(viewTuple).isNotNull();
 	}
 	
 	
 	@Test
-	public void testLoadFxRoot(){
+	public void testLoadFxRoot() {
 		TestFxmlViewFxRoot fxRoot = new TestFxmlViewFxRoot();
 		
-		ViewTuple<TestFxmlViewFxRoot, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlViewFxRoot.class).codeBehind(fxRoot).root(fxRoot).load();
+		ViewTuple<TestFxmlViewFxRoot, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlViewFxRoot.class)
+				.codeBehind(fxRoot).root(fxRoot).load();
 		
 		assertThat(viewTuple).isNotNull();
 		assertThat(viewTuple.getCodeBehind()).isEqualTo(fxRoot);
@@ -65,7 +67,7 @@ public class FluentViewLoader_API_Test {
 	}
 	
 	@Test
-	public void testLoadFxmlViewWithAllParams() throws IOException{
+	public void testLoadFxmlViewWithAllParams() throws IOException {
 		TestFxmlViewFxRoot customControl = new TestFxmlViewFxRoot();
 		ViewTuple<TestFxmlViewFxRoot, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlViewFxRoot.class)
 				.codeBehind(customControl)
@@ -80,7 +82,7 @@ public class FluentViewLoader_API_Test {
 	}
 	
 	
-	/// JAVA VIEW ///
+	// / JAVA VIEW ///
 	
 	@Test
 	public void testLoadJavaView() {

@@ -35,8 +35,7 @@ public class MvvmFX {
 	
 	/**
 	 * This method is used to integrate the mvvmFX framework into your dependency injection environment. This way you
-	 * can tell the framework how it can get instances of classes f.e. services or business facades.
-	 * <br>
+	 * can tell the framework how it can get instances of classes f.e. services or business facades. <br>
 	 * The callback has to return an instance for a given class type. This is the same way as it is done with the
 	 * {@link javafx.fxml.FXMLLoader#setControllerFactory(javafx.util.Callback)} that is normally used with JavaFX's
 	 * fxml.
