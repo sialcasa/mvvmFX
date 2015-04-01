@@ -17,16 +17,16 @@ public class MyView implements FxmlView<MyViewModel> {
 	
 	@Inject
 	Application.Parameters parameters;
-
+	
 	@Inject
 	NotificationCenter notificationCenter;
-
+	
 	@Inject
 	HostServices hostServices;
-
+	
 	public static int instanceCounter = 0;
 	
-	public MyView(){
+	public MyView() {
 		instanceCounter++;
 	}
 }

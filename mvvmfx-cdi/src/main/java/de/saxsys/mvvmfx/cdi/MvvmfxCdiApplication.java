@@ -37,8 +37,8 @@ import de.saxsys.mvvmfx.cdi.internal.MvvmfxProducer;
  * @author manuel.mauky
  */
 public abstract class MvvmfxCdiApplication extends Application implements MvvmfxApplication {
-
-
+	
+	
 	private final BeanManager beanManager;
 	private CreationalContext<MvvmfxCdiApplication> ctx;
 	private InjectionTarget<MvvmfxCdiApplication> injectionTarget;
@@ -46,20 +46,20 @@ public abstract class MvvmfxCdiApplication extends Application implements Mvvmfx
 	
 	@Inject
 	private MvvmfxProducer producer;
-
-	public MvvmfxCdiApplication(){
+	
+	public MvvmfxCdiApplication() {
 		weld = new Weld();
 		WeldContainer weldContainer = weld.initialize();
-
+		
 		MvvmFX.setCustomDependencyInjector((type) -> weldContainer.instance().select(type).get());
-	
+		
 		MvvmfxProducer mvvmfxProducer = weldContainer.instance().select(MvvmfxProducer.class).get();
 		mvvmfxProducer.setHostServices(getHostServices());
-
+		
 		beanManager = weldContainer.getBeanManager();
 		
 	}
-
+	
 	/**
 	 * This method is overridden to initialize the mvvmFX framework. Override the
 	 * {@link #startMvvmfx(javafx.stage.Stage)} method for your application entry point and startup code instead of this
@@ -71,45 +71,45 @@ public abstract class MvvmfxCdiApplication extends Application implements Mvvmfx
 		
 		startMvvmfx(primaryStage);
 	}
-
-
+	
+	
 	/**
-	 * This method is called when the javafx application is initialized. See {@link javafx.application.Application#init()}
-	 * for more details. 
+	 * This method is called when the javafx application is initialized. See
+	 * {@link javafx.application.Application#init()} for more details.
 	 *
-	 * Unlike the original init method in {@link javafx.application.Application} this method
-	 * contains logic to initialize the CDI container. Therefor it's important to
-	 * call <code>super.init()</code> when you override this method.
+	 * Unlike the original init method in {@link javafx.application.Application} this method contains logic to
+	 * initialize the CDI container. Therefor it's important to call <code>super.init()</code> when you override this
+	 * method.
 	 *
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	@Override 
+	@Override
 	public final void init() throws Exception {
 		ctx = beanManager.createCreationalContext(null);
 		injectionTarget = beanManager.createInjectionTarget(
 				beanManager.createAnnotatedType((Class<MvvmfxCdiApplication>) this.getClass()));
-	
+		
 		injectionTarget.inject(this, ctx);
 		injectionTarget.postConstruct(this);
-
+		
 		producer.setApplicationParameters(getParameters());
 		
 		initMvvmfx();
 	}
-
-
+	
+	
 	/**
-	 * This method is called when the application should stop. See {@link javafx.application.Application#stop()}
-	 * for more details. 
+	 * This method is called when the application should stop. See {@link javafx.application.Application#stop()} for
+	 * more details.
 	 * 
-	 * Unlike the original stop method in {@link javafx.application.Application} this method
-	 * contains logic to release resources managed by the CDI container. Therefor it's important to
-	 * call <code>super.stop()</code> when you override this method.
+	 * Unlike the original stop method in {@link javafx.application.Application} this method contains logic to release
+	 * resources managed by the CDI container. Therefor it's important to call <code>super.stop()</code> when you
+	 * override this method.
 	 * 
 	 * @throws Exception
 	 */
-	@Override 
+	@Override
 	public final void stop() throws Exception {
 		stopMvvmfx();
 		

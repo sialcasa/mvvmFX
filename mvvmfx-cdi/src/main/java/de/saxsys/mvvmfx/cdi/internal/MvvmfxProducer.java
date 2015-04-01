@@ -37,51 +37,51 @@ import javafx.stage.Stage;
  */
 @Singleton
 public class MvvmfxProducer {
-
-
-
+	
+	
+	
 	private HostServices hostServices;
 	
 	private Stage primaryStage;
 	private Application.Parameters parameters;
-
+	
 	@Produces
 	public NotificationCenter produceNotificationCenter() {
 		return MvvmFX.getNotificationCenter();
 	}
 	
 	/**
-	 * The {@link javafx.application.HostServices} instance is only available
-	 * in the application class. Therefore it needs to be set from there to be 
-	 * available for injection.
+	 * The {@link javafx.application.HostServices} instance is only available in the application class. Therefore it
+	 * needs to be set from there to be available for injection.
 	 * 
-	 * @param hostServices the instance of hostServices from the Application.
+	 * @param hostServices
+	 *            the instance of hostServices from the Application.
 	 */
-	public void setHostServices(HostServices hostServices){
+	public void setHostServices(HostServices hostServices) {
 		this.hostServices = hostServices;
 	}
 	
 	@Produces
-	public HostServices produceHostServices(){
+	public HostServices produceHostServices() {
 		return hostServices;
 	}
 	
 	@Produces
-	public Application.Parameters produceApplicationParameters(){
+	public Application.Parameters produceApplicationParameters() {
 		return parameters;
 	}
-
-	public void setApplicationParameters(Application.Parameters parameters){
+	
+	public void setApplicationParameters(Application.Parameters parameters) {
 		this.parameters = parameters;
 	}
 	
-	public void setPrimaryStage(Stage primaryStage){
+	public void setPrimaryStage(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 	}
 	
 	@Produces
-	public Stage producePrimaryStage(){
-		if(primaryStage == null){
+	public Stage producePrimaryStage() {
+		if (primaryStage == null) {
 			throw new IllegalStateException("The primary Stage is not available for injection. " +
 					"This shouldn't happen and seems to be an error in the mvvmfx framework. " +
 					"Please file a bug in the mvvmfx issue tracker.");

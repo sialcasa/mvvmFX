@@ -11,7 +11,7 @@ public class MyViewModel implements ViewModel {
 	@Inject
 	private MyService myService;
 	
-	public MyViewModel(){
+	public MyViewModel() {
 		instanceCounter++;
 	}
 	
