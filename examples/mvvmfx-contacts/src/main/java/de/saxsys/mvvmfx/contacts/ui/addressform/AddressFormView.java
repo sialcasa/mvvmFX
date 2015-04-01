@@ -36,16 +36,16 @@ public class AddressFormView implements FxmlView<AddressFormViewModel> {
 	private AddressFormViewModel viewModel;
 	
 	
-	public void initialize(){
+	public void initialize() {
 		subdivisionLabel.textProperty().bind(viewModel.subdivisionLabel());
-		subdivisionLabel.disableProperty(). bind(viewModel.subdivisionInputDisabledProperty());
+		subdivisionLabel.disableProperty().bind(viewModel.subdivisionInputDisabledProperty());
 		
 		countryLabel.disableProperty().bind(viewModel.countryInputDisabledProperty());
 		
 		streetInput.textProperty().bindBidirectional(viewModel.streetProperty());
 		postalcodeInput.textProperty().bindBidirectional(viewModel.postalCodeProperty());
 		cityInput.textProperty().bindBidirectional(viewModel.cityProperty());
-
+		
 		countryInput.setItems(viewModel.countriesList());
 		countryInput.valueProperty().bindBidirectional(viewModel.selectedCountryProperty());
 		countryInput.disableProperty().bind(viewModel.countryInputDisabledProperty());

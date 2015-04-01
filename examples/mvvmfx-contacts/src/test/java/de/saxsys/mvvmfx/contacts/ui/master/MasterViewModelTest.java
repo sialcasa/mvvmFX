@@ -31,11 +31,11 @@ public class MasterViewModelTest {
 	private Contact contact1;
 	private Contact contact2;
 	private Contact contact3;
-
+	
 	private Consumer<MasterTableViewModel> onSelectConsumer;
-
+	
 	@Before
-	public void setup(){
+	public void setup() {
 		repository = new InmemoryRepository();
 		viewModel = new MasterViewModel();
 		viewModel.repository = repository;
@@ -43,45 +43,44 @@ public class MasterViewModelTest {
 		contact1 = ContactFactory.createRandomContact();
 		contact2 = ContactFactory.createRandomContact();
 		contact3 = ContactFactory.createRandomContact();
-
+		
 		repository.save(contact1);
 		repository.save(contact2);
 		repository.save(contact3);
-
-
+		
+		
 		onSelectConsumer = mock(Consumer.class);
 		viewModel.setOnSelect(onSelectConsumer);
 	}
 	
 	@Test
-	public void testSelectContact(){
+	public void testSelectContact() {
 		viewModel.init();
 		
 		
 		assertThat(viewModel.selectedTableRowProperty()).hasNullValue();
 		assertThat(viewModel.selectedContactProperty()).hasNullValue();
-
-
+		
+		
 		MasterTableViewModel firstRow = viewModel.contactList().get(0);
 		
 		viewModel.selectedTableRowProperty().set(firstRow);
-
+		
 		assertThat(viewModel.selectedContactProperty()).hasNotNullValue();
 		assertThat(viewModel.selectedContactProperty().get().getId()).isEqualTo(firstRow.getId());
-
+		
 		
 		viewModel.selectedTableRowProperty().set(null);
 		
 		assertThat(viewModel.selectedContactProperty()).hasNullValue();
 	}
-
-
+	
+	
 	/**
-	 * When no item is selected before an update then after the update still no
-	 * item should be selected.
+	 * When no item is selected before an update then after the update still no item should be selected.
 	 */
 	@Test
-	public void testUpdateContactListNoSelection(){
+	public void testUpdateContactListNoSelection() {
 		viewModel.init();
 		viewModel.selectedTableRowProperty().set(null);
 		
@@ -91,14 +90,13 @@ public class MasterViewModelTest {
 		
 		verify(onSelectConsumer, never()).accept(any());
 	}
-
+	
 	/**
-	 * When the contactList is updated and the item that was selected before the update is still
-	 * available in the repository (i.e. it wasn't removed) this item should still be selected 
-	 * after the update.
+	 * When the contactList is updated and the item that was selected before the update is still available in the
+	 * repository (i.e. it wasn't removed) this item should still be selected after the update.
 	 */
 	@Test
-	public void testUpdateContactListSelectionPersistsAfterUpdate(){
+	public void testUpdateContactListSelectionPersistsAfterUpdate() {
 		viewModel.init();
 		assertThat(getContactIdsInTable()).contains(contact1.getId(), contact2.getId(), contact3.getId());
 		
@@ -112,56 +110,57 @@ public class MasterViewModelTest {
 		viewModel.onContactsUpdateEvent(new ContactsUpdatedEvent());
 		
 		
-		assertThat(getContactIdsInTable()).contains(contact2.getId(), contact3.getId()).doesNotContain(contact1.getId());
+		assertThat(getContactIdsInTable()).contains(contact2.getId(), contact3.getId())
+				.doesNotContain(contact1.getId());
 		
 		verify(onSelectConsumer).accept(row2);
 	}
-
+	
 	/**
-	 * When the contactList is updated and the item that was selected before the update is now
-	 * not available in the repository anymore (because it was removed) then no item should be selected.
+	 * When the contactList is updated and the item that was selected before the update is now not available in the
+	 * repository anymore (because it was removed) then no item should be selected.
 	 */
 	@Test
-	public void testUpdateContactListNoSelectionWhenSelectedItemIsRemoved(){
+	public void testUpdateContactListNoSelectionWhenSelectedItemIsRemoved() {
 		viewModel.init();
 		MasterTableViewModel row2 = findTableViewModelForContact(contact2);
-
+		
 		viewModel.selectedTableRowProperty().set(row2);
-
-
+		
+		
 		repository.delete(contact2); // The selected contact
-
-
+		
+		
 		viewModel.onContactsUpdateEvent(new ContactsUpdatedEvent());
-
-
-		assertThat(getContactIdsInTable()).contains(contact1.getId(), contact3.getId()).doesNotContain(contact2.getId());
-
+		
+		
+		assertThat(getContactIdsInTable()).contains(contact1.getId(), contact3.getId())
+				.doesNotContain(contact2.getId());
+		
 		verify(onSelectConsumer).accept(null);
 	}
 	
 	
 	/**
-	 * This helper extracts the IDs of all Contact rows in that are shown in the TableView. 
+	 * This helper extracts the IDs of all Contact rows in that are shown in the TableView.
 	 * 
-	 * The TableView doesn't directly show instances of {@link de.saxsys.mvvmfx.contacts.model.Contact} but
-	 * instead contains instances of {@link de.saxsys.mvvmfx.contacts.ui.master.MasterTableViewModel}. 
+	 * The TableView doesn't directly show instances of {@link de.saxsys.mvvmfx.contacts.model.Contact} but instead
+	 * contains instances of {@link de.saxsys.mvvmfx.contacts.ui.master.MasterTableViewModel}.
 	 * 
-	 * Every {@link de.saxsys.mvvmfx.contacts.ui.master.MasterTableViewModel} has an ID attribute corresponding to
-	 * the ID of the contact that is shown. 
-	 * This method extracts these IDs and returns them as List. This way we can verify what Contacts are shown
-	 * in the Table.
+	 * Every {@link de.saxsys.mvvmfx.contacts.ui.master.MasterTableViewModel} has an ID attribute corresponding to the
+	 * ID of the contact that is shown. This method extracts these IDs and returns them as List. This way we can verify
+	 * what Contacts are shown in the Table.
 	 */
-	private List<String> getContactIdsInTable(){
+	private List<String> getContactIdsInTable() {
 		return viewModel.contactList().stream().map(MasterTableViewModel::getId).collect(
 				Collectors.toList());
 	}
-
+	
 	/**
-	 * Returns the {@link de.saxsys.mvvmfx.contacts.ui.master.MasterTableViewModel} for the given {@link de.saxsys.mvvmfx.contacts.model.Contact}
-	 * from the contact list. 
+	 * Returns the {@link de.saxsys.mvvmfx.contacts.ui.master.MasterTableViewModel} for the given
+	 * {@link de.saxsys.mvvmfx.contacts.model.Contact} from the contact list.
 	 */
-	private MasterTableViewModel findTableViewModelForContact(Contact contact){
-		return viewModel.contactList().stream().filter(row-> row.getId().equals(contact.getId())).findFirst().get();
+	private MasterTableViewModel findTableViewModelForContact(Contact contact) {
+		return viewModel.contactList().stream().filter(row -> row.getId().equals(contact.getId())).findFirst().get();
 	}
 }

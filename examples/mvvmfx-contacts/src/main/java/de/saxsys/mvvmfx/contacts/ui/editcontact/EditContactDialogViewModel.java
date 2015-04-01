@@ -16,7 +16,7 @@ import de.saxsys.mvvmfx.contacts.ui.master.MasterViewModel;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
-public class EditContactDialogViewModel implements ViewModel{
+public class EditContactDialogViewModel implements ViewModel {
 	static final String TITLE_LABEL_KEY = "dialog.editcontact.title";
 	
 	private BooleanProperty dialogOpen = new SimpleBooleanProperty();
@@ -26,13 +26,13 @@ public class EditContactDialogViewModel implements ViewModel{
 	
 	@Inject
 	Repository repository;
-
+	
 	@Inject
 	ResourceBundle defaultResourceBundle;
 	
 	private ContactDialogViewModel contactDialogViewModel;
-
-
+	
+	
 	public void setContactDialogViewModel(ContactDialogViewModel contactDialogViewModel) {
 		this.contactDialogViewModel = contactDialogViewModel;
 		
@@ -40,18 +40,18 @@ public class EditContactDialogViewModel implements ViewModel{
 		contactDialogViewModel.titleTextProperty().set(defaultResourceBundle.getString(TITLE_LABEL_KEY));
 		
 		dialogOpen.addListener((observable, oldValue, newValue) -> {
-			if(!newValue){
+			if (!newValue) {
 				contactDialogViewModel.resetDialogPage();
 			}
 		});
 	}
 	
 	public void applyAction() {
-		if(contactDialogViewModel.validProperty().get()){
-
+		if (contactDialogViewModel.validProperty().get()) {
+			
 			contactDialogViewModel.getAddressFormViewModel().commitChanges();
 			repository.save(contactDialogViewModel.getContactFormViewModel().getContact());
-
+			
 			dialogOpen.set(false);
 		}
 	}
@@ -66,10 +66,10 @@ public class EditContactDialogViewModel implements ViewModel{
 		});
 	}
 	
-	public BooleanProperty dialogOpenProperty(){
-		return dialogOpen; 
+	public BooleanProperty dialogOpenProperty() {
+		return dialogOpen;
 	}
-
 	
-
+	
+	
 }

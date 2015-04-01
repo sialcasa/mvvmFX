@@ -39,10 +39,10 @@ public class EditContactDialog implements FxmlView<EditContactDialogViewModel> {
 	
 	@Inject
 	private Stage primaryStage;
-
+	
 	@InjectViewModel
 	private EditContactDialogViewModel viewModel;
-
+	
 	@Inject
 	EditContactDialog(ResourceBundle defaultResourceBundle) {
 		ViewTuple<EditContactDialog, EditContactDialogViewModel> viewTuple = FluentViewLoader.fxmlView(this.getClass())
@@ -51,13 +51,13 @@ public class EditContactDialog implements FxmlView<EditContactDialogViewModel> {
 		root = viewTuple.getView();
 	}
 	
-	public void initialize(){
+	public void initialize() {
 		viewModel.setContactDialogViewModel(contactDialogViewController.getViewModel());
 		
 		DialogHelper.initDialog(viewModel.dialogOpenProperty(), primaryStage, () -> root);
 	}
 	
-	public void open(@Observes OpenEditContactDialogEvent event){
+	public void open(@Observes OpenEditContactDialogEvent event) {
 		viewModel.openDialog(event.getContactId());
 	}
 }

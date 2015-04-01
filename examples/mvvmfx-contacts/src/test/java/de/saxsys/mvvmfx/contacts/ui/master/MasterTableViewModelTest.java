@@ -17,14 +17,14 @@ public class MasterTableViewModelTest {
 	
 	
 	@Test
-	public void testCalculationOfAge(){
-
+	public void testCalculationOfAge() {
+		
 		ZonedDateTime now = ZonedDateTime
 				.of(LocalDate.of(2010, Month.JANUARY, 1), LocalTime.of(0, 0), ZoneId.systemDefault()); // 2010-01-01T00:00
 		
 		CentralClock.setFixedClock(now);
-
-	
+		
+		
 		Contact contact = new Contact();
 		contact.setBirthday(LocalDate.of(1987, Month.DECEMBER, 13));
 		

@@ -33,7 +33,7 @@ public class DetailView implements FxmlView<DetailViewModel> {
 	@FXML
 	public Label countrySubdivisionLabel;
 	
-
+	
 	@FXML
 	public Button editButton;
 	@FXML
@@ -84,27 +84,27 @@ public class DetailView implements FxmlView<DetailViewModel> {
 		initIcons();
 	}
 	
-	private void initVisibilityBindings(Labeled label){
+	private void initVisibilityBindings(Labeled label) {
 		label.visibleProperty().bind(label.textProperty().isNotEmpty());
 		label.managedProperty().bind(label.visibleProperty());
 	}
 	
-	private void initIcons(){
+	private void initIcons() {
 		AwesomeDude.setIcon(birthdayLabel, AwesomeIcon.BIRTHDAY_CAKE);
 		AwesomeDude.setIcon(roleDepartmentLabel, AwesomeIcon.USERS);
 		AwesomeDude.setIcon(emailHyperlink, AwesomeIcon.AT);
 		AwesomeDude.setIcon(mobileLabel, AwesomeIcon.MOBILE_PHONE);
 		AwesomeDude.setIcon(phoneLabel, AwesomeIcon.PHONE);
-
+		
 		AwesomeDude.setIcon(editButton, AwesomeIcon.EDIT);
 		AwesomeDude.setIcon(removeButton, AwesomeIcon.TRASH_ALT);
 	}
-
+	
 	@FXML
-	public void edit(){
+	public void edit() {
 		viewModel.editAction();
 	}
-
+	
 	@FXML
 	public void remove() {
 		viewModel.removeAction();

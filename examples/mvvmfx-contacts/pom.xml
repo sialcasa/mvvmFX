@@ -73,7 +73,7 @@
 			<groupId>eu.lestard</groupId>
 			<artifactId>advanced-bindings</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

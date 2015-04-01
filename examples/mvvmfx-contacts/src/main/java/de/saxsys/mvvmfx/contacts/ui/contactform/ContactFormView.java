@@ -8,7 +8,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 
 public class ContactFormView implements FxmlView<ContactFormViewModel> {
-
+	
 	@FXML
 	public TextField firstnameInput;
 	@FXML
@@ -33,7 +33,7 @@ public class ContactFormView implements FxmlView<ContactFormViewModel> {
 	private ContactFormViewModel viewModel;
 	
 	
-	public void initialize(){
+	public void initialize() {
 		firstnameInput.textProperty().bindBidirectional(viewModel.firstnameProperty());
 		lastnameInput.textProperty().bindBidirectional(viewModel.lastnameProperty());
 		titleInput.textProperty().bindBidirectional(viewModel.titleProperty());
@@ -43,18 +43,18 @@ public class ContactFormView implements FxmlView<ContactFormViewModel> {
 		phoneNumberInput.textProperty().bindBidirectional(viewModel.phoneNumberProperty());
 		emailInput.textProperty().bindBidirectional(viewModel.emailProperty());
 		birthdayInput.valueProperty().bindBidirectional(viewModel.birthdayProperty());
-
+		
 		// init the validation. The logic for the actual validation is hidden in the viewModel.
 		viewModel.initValidationForFirstname(firstnameInput);
 		viewModel.initValidationForLastname(lastnameInput);
 		viewModel.initValidationForBirthday(birthdayInput);
-
+		
 		viewModel.initValidationForEmail(emailInput);
 		viewModel.initValidationForPhoneNumber(phoneNumberInput);
 		viewModel.initValidationForMobileNumber(mobileNumberInput);
 	}
 	
-	public ContactFormViewModel getViewModel(){
+	public ContactFormViewModel getViewModel() {
 		return viewModel;
 	}
 	

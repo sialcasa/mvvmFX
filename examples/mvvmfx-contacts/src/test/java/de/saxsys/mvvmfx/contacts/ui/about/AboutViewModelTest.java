@@ -27,7 +27,7 @@ public class AboutViewModelTest {
 	
 	@SuppressWarnings("unchecked")
 	@Before
-	public void setup(){
+	public void setup() {
 		viewModel = new AboutViewModel();
 		
 		onLinkClickedHandler = mock(Consumer.class);
@@ -35,14 +35,14 @@ public class AboutViewModelTest {
 	}
 	
 	@Test
-	public void testLibrariesLabel(){
-
+	public void testLibrariesLabel() {
+		
 		ReadOnlyStringProperty libraries = viewModel.librariesLabelTextProperty();
 		
 		assertThat(libraries).hasValue("");
-
+		
 		viewModel.libraryLinkMap.put(MY_COOL_LIB_NAME, MY_COOL_LIB_URL);
-
+		
 		assertThat(libraries).hasValue("- [my cool library]\n");
 		
 		viewModel.libraryLinkMap.put(OTHER_FX_NAME, OTHER_FX_URL);
@@ -50,7 +50,7 @@ public class AboutViewModelTest {
 	}
 	
 	@Test
-	public void testOnLinkClicked(){
+	public void testOnLinkClicked() {
 		
 		viewModel.libraryLinkMap.put(MY_COOL_LIB_NAME, MY_COOL_LIB_URL);
 		viewModel.libraryLinkMap.put(OTHER_FX_NAME, OTHER_FX_URL);

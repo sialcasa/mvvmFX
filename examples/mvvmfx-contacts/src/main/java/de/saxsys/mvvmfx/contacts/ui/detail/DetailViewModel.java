@@ -112,7 +112,7 @@ public class DetailViewModel implements ViewModel {
 		phone.bind(emptyStringOnNull(map(contactProperty, Contact::getPhoneNumber)));
 		
 		mobile.bind(emptyStringOnNull(map(contactProperty, Contact::getMobileNumber)));
-
+		
 		ObjectBinding<Address> addressBinding = map(contactProperty, Contact::getAddress);
 		
 		cityPostalcode.bind(emptyStringOnNull(map(addressBinding, address -> {
@@ -120,7 +120,7 @@ public class DetailViewModel implements ViewModel {
 			if (address.getCity() != null) {
 				result.append(address.getCity());
 			}
-
+			
 			if (address.getPostalcode() != null) {
 				result.append(" (");
 				result.append(address.getPostalcode());
@@ -136,7 +136,7 @@ public class DetailViewModel implements ViewModel {
 			if (address.getCountry() != null) {
 				result.append(address.getCountry().getName());
 			}
-
+			
 			if (address.getSubdivision() != null) {
 				result.append(" / ");
 				result.append(address.getSubdivision().getName());
@@ -148,17 +148,16 @@ public class DetailViewModel implements ViewModel {
 		removeButtonDisabled.bind(masterViewModel.selectedContactProperty().isNull());
 		editButtonDisabled.bind(masterViewModel.selectedContactProperty().isNull());
 	}
-
+	
 	/**
-	 * When the given source binding has a value of <code>null</code>
-	 * an empty string is used for the returned binding. Otherwise the
-	 * value of the source binding is used.
+	 * When the given source binding has a value of <code>null</code> an empty string is used for the returned binding.
+	 * Otherwise the value of the source binding is used.
 	 */
-	private StringBinding emptyStringOnNull(ObjectBinding<String> source){
-		return Bindings.createStringBinding(()->{
-			if(source.get() == null){
+	private StringBinding emptyStringOnNull(ObjectBinding<String> source) {
+		return Bindings.createStringBinding(() -> {
+			if (source.get() == null) {
 				return "";
-			}else{
+			} else {
 				return source.get();
 			}
 		}, source);

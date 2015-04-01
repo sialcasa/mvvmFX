@@ -23,12 +23,12 @@ public class BirthdayValidatorTest {
 	
 	private BirthdayValidator validator;
 	private DatePicker datePicker;
-
+	
 	@Before
-	public void setup(){
+	public void setup() {
 		ZonedDateTime now = ZonedDateTime
 				.of(LocalDate.of(2014, Month.JANUARY, 1), LocalTime.of(0, 0), ZoneId.systemDefault());
-
+		
 		CentralClock.setFixedClock(now);
 		
 		validator = new BirthdayValidator();
@@ -37,25 +37,25 @@ public class BirthdayValidatorTest {
 	
 	@Test
 	public void testBirthdayInThePast() {
-
+		
 		LocalDate now = LocalDate.now(CentralClock.getClock());
-
+		
 		LocalDate birthday = now.minusYears(20);
-
+		
 		ValidationResult result = validator.apply(datePicker, birthday);
-
+		
 		assertThat(result).isNull();
 	}
 	
 	@Test
-	public void testBirthdayInTheFuture(){
-
+	public void testBirthdayInTheFuture() {
+		
 		LocalDate now = LocalDate.now(CentralClock.getClock());
-
+		
 		LocalDate birthday = now.plusDays(1);
-
+		
 		ValidationResult result = validator.apply(datePicker, birthday);
-
+		
 		assertThat(result).isNotNull();
 		assertThat(result.getErrors()).hasSize(1);
 	}

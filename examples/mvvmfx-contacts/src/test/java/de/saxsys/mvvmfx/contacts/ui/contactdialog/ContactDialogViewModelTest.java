@@ -24,7 +24,7 @@ public class ContactDialogViewModelTest {
 	private BooleanProperty addressFormValid = new SimpleBooleanProperty();
 	
 	@Before
-	public void setup(){
+	public void setup() {
 		
 		contactFormViewModel = mock(ContactFormViewModel.class);
 		when(contactFormViewModel.validProperty()).thenReturn(contactFormValid);
@@ -38,9 +38,9 @@ public class ContactDialogViewModelTest {
 	}
 	
 	@Test
-	public void testValid(){
+	public void testValid() {
 		viewModel = new ContactDialogViewModel();
-
+		
 		addressFormValid.set(true);
 		contactFormValid.set(true);
 		
@@ -66,7 +66,7 @@ public class ContactDialogViewModelTest {
 	}
 	
 	@Test
-	public void testWorkflow(){
+	public void testWorkflow() {
 		assertThat(viewModel.dialogPageProperty()).hasValue(0);
 		
 		contactFormValid.set(false);
@@ -111,11 +111,11 @@ public class ContactDialogViewModelTest {
 		// add button is now visible but still disabled
 		assertThat(viewModel.okButtonVisibleProperty()).isTrue();
 		assertThat(viewModel.okButtonDisabledProperty()).isTrue();
-
+		
 		// next button is invisible and enabled
 		assertThat(viewModel.nextButtonVisibleProperty()).isFalse();
 		assertThat(viewModel.nextButtonDisabledProperty()).isFalse();
-
+		
 		// previous button is now visible but still disabled
 		assertThat(viewModel.previousButtonVisibleProperty()).isTrue();
 		assertThat(viewModel.previousButtonDisabledProperty()).isTrue();
@@ -123,15 +123,15 @@ public class ContactDialogViewModelTest {
 		
 		// lets enter valid address informations...
 		addressFormValid.set(true);
-
+		
 		// add button is still visible and now also enabled
 		assertThat(viewModel.okButtonVisibleProperty()).isTrue();
 		assertThat(viewModel.okButtonDisabledProperty()).isFalse();
-
+		
 		// next button is invisible and enabled
 		assertThat(viewModel.nextButtonVisibleProperty()).isFalse();
 		assertThat(viewModel.nextButtonDisabledProperty()).isFalse();
-
+		
 		// previous button is still visible and now also enabled
 		assertThat(viewModel.previousButtonVisibleProperty()).isTrue();
 		assertThat(viewModel.previousButtonDisabledProperty()).isFalse();
@@ -140,18 +140,18 @@ public class ContactDialogViewModelTest {
 		// lets go back to the previous page. The address form is still valid.
 		viewModel.previousAction();
 		assertThat(viewModel.dialogPageProperty()).hasValue(0);
-
+		
 		// add button is invisible again and but still enabled
 		assertThat(viewModel.okButtonVisibleProperty()).isFalse();
 		assertThat(viewModel.okButtonDisabledProperty()).isFalse();
-
+		
 		// next button is visible again and still enabled
 		assertThat(viewModel.nextButtonVisibleProperty()).isTrue();
 		assertThat(viewModel.nextButtonDisabledProperty()).isFalse();
-
+		
 		// previous button is now invisible but stays enabled
 		assertThat(viewModel.previousButtonVisibleProperty()).isFalse();
-		assertThat(viewModel.previousButtonDisabledProperty()).isFalse();		
+		assertThat(viewModel.previousButtonDisabledProperty()).isFalse();
 		
 	}
 }

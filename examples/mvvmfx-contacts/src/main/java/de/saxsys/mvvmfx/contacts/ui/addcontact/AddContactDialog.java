@@ -44,7 +44,7 @@ public class AddContactDialog implements FxmlView<AddContactDialogViewModel> {
 	public void initialize() {
 		viewModel.setContactDialogViewModel(contactDialogViewController.getViewModel());
 		
-		DialogHelper.initDialog(viewModel.dialogOpenProperty(), primaryStage, ()-> root);
+		DialogHelper.initDialog(viewModel.dialogOpenProperty(), primaryStage, () -> root);
 	}
 	
 	public void open(@Observes OpenAddContactDialogEvent event) {
