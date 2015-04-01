@@ -1,17 +1,16 @@
 package de.saxsys.mvvmfx.contacts.ui.about;
 
-import javafx.beans.property.ReadOnlyStringProperty;
-import org.junit.Before;
-import org.junit.Test;
+import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.util.function.Consumer;
 
-import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import javafx.beans.property.ReadOnlyStringProperty;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class AboutViewModelTest {
 	

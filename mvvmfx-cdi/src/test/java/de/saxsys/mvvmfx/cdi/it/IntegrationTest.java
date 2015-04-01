@@ -1,11 +1,9 @@
 package de.saxsys.mvvmfx.cdi.it;
 
-import static org.assertj.core.api.Assertions.*;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import javafx.application.Application;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class IntegrationTest {

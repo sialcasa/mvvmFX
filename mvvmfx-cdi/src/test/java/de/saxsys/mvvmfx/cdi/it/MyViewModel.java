@@ -1,9 +1,8 @@
 package de.saxsys.mvvmfx.cdi.it;
 
-import de.saxsys.mvvmfx.InjectResourceBundle;
-import de.saxsys.mvvmfx.ViewModel;
-
 import javax.inject.Inject;
+
+import de.saxsys.mvvmfx.ViewModel;
 
 public class MyViewModel implements ViewModel {
 	public static int instanceCounter = 0;

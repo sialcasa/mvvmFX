@@ -1,11 +1,11 @@
 package de.saxsys.mvvmfx.contacts.model.validation;
 
+import java.util.regex.Pattern;
+
 import javafx.scene.control.Control;
-import javafx.util.Callback;
+
 import org.controlsfx.validation.ValidationResult;
 import org.controlsfx.validation.Validator;
-
-import java.util.regex.Pattern;
 
 /**
  * A Validator that verifies that a given String is a valid phone number.

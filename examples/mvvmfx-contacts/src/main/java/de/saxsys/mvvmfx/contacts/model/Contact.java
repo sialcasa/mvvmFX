@@ -1,7 +1,6 @@
 package de.saxsys.mvvmfx.contacts.model;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 
 /**

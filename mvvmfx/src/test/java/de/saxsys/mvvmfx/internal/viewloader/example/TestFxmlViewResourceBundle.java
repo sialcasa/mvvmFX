@@ -1,11 +1,10 @@
 package de.saxsys.mvvmfx.internal.viewloader.example;
 
+import java.util.ResourceBundle;
+
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectResourceBundle;
 import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.fxml.FXML;
-
-import java.util.ResourceBundle;
 
 public class TestFxmlViewResourceBundle implements FxmlView<TestViewModelWithResourceBundle> {
 	

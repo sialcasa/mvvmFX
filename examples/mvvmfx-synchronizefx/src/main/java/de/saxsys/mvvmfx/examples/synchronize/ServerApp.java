@@ -1,11 +1,9 @@
 package de.saxsys.mvvmfx.examples.synchronize;
 
-import de.saxsys.synchronizefx.SynchronizeFxBuilder;
-import de.saxsys.synchronizefx.core.clientserver.ServerCallback;
-import de.saxsys.synchronizefx.core.clientserver.SynchronizeFxServer;
-import de.saxsys.synchronizefx.core.exceptions.SynchronizeFXException;
-
 import java.util.Scanner;
+
+import de.saxsys.synchronizefx.SynchronizeFxBuilder;
+import de.saxsys.synchronizefx.core.clientserver.SynchronizeFxServer;
 
 public class ServerApp {
 	

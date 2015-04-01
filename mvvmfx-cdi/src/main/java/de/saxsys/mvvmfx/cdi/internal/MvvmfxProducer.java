@@ -15,16 +15,15 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.cdi.internal;
 
+import javafx.application.Application;
 import javafx.application.HostServices;
+import javafx.stage.Stage;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Singleton;
 
 import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
-import javafx.application.Application;
-import javafx.application.HostServices;
-import javafx.stage.Stage;
 
 
 /**

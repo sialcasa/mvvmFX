@@ -1,15 +1,15 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
-import de.saxsys.mvvmfx.InjectResourceBundle;
-import org.junit.Before;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.StringReader;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import org.junit.Before;
+import org.junit.Test;
+
+import de.saxsys.mvvmfx.InjectResourceBundle;
 
 public class ResourceBundleInjectorTest {
 	

@@ -1,18 +1,15 @@
 package de.saxsys.mvvmfx.contacts.ui.contactdialog;
 
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableBooleanValue;
-
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.contacts.ui.addressform.AddressFormViewModel;
 import de.saxsys.mvvmfx.contacts.ui.contactform.ContactFormViewModel;

@@ -10,7 +10,6 @@ import com.guigarage.flatterfx.FlatterInputType;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.MvvmFX;
-import de.saxsys.mvvmfx.examples.books.backend.Book;
 import de.saxsys.mvvmfx.examples.books.backend.LibraryService;
 import de.saxsys.mvvmfx.examples.books.backend.LibraryServiceImpl;
 import de.saxsys.mvvmfx.examples.books.backend.LibraryServiceMockImpl;

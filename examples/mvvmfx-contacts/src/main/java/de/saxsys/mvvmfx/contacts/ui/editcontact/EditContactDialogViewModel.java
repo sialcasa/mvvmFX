@@ -2,8 +2,6 @@ package de.saxsys.mvvmfx.contacts.ui.editcontact;
 
 import java.util.ResourceBundle;
 
-import de.saxsys.mvvmfx.contacts.model.Address;
-import de.saxsys.mvvmfx.contacts.model.Contact;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -13,8 +11,6 @@ import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.contacts.model.Repository;
 import de.saxsys.mvvmfx.contacts.ui.contactdialog.ContactDialogViewModel;
 import de.saxsys.mvvmfx.contacts.ui.master.MasterViewModel;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
 public class EditContactDialogViewModel implements ViewModel {
 	static final String TITLE_LABEL_KEY = "dialog.editcontact.title";

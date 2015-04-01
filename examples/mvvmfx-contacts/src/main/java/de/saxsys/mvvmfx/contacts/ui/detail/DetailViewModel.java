@@ -1,11 +1,10 @@
 package de.saxsys.mvvmfx.contacts.ui.detail;
 
+import static eu.lestard.advanced_bindings.api.ObjectBindings.map;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.function.Function;
 
-import de.saxsys.mvvmfx.contacts.model.Address;
-import eu.lestard.advanced_bindings.api.ObjectBindings;
 import javafx.application.HostServices;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
@@ -15,7 +14,6 @@ import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.value.ObservableObjectValue;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
@@ -23,11 +21,10 @@ import javax.inject.Inject;
 
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.contacts.events.OpenEditContactDialogEvent;
+import de.saxsys.mvvmfx.contacts.model.Address;
 import de.saxsys.mvvmfx.contacts.model.Contact;
 import de.saxsys.mvvmfx.contacts.model.Repository;
 import de.saxsys.mvvmfx.contacts.ui.master.MasterViewModel;
-
-import static eu.lestard.advanced_bindings.api.ObjectBindings.map;
 
 public class DetailViewModel implements ViewModel {
 	

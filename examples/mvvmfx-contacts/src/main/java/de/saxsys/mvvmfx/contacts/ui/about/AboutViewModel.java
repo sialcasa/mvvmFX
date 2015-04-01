@@ -2,8 +2,6 @@ package de.saxsys.mvvmfx.contacts.ui.about;
 
 import java.util.function.Consumer;
 
-import de.saxsys.mvvmfx.contacts.events.OpenAboutDialogEvent;
-import de.saxsys.mvvmfx.contacts.events.OpenAuthorPageEvent;
 import javafx.application.HostServices;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
@@ -18,6 +16,7 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.contacts.events.OpenAuthorPageEvent;
 
 public class AboutViewModel implements ViewModel {
 	

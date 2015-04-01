@@ -1,25 +1,24 @@
 package de.saxsys.mvvmfx.contacts.ui.master;
 
-import de.saxsys.mvvmfx.contacts.events.ContactsUpdatedEvent;
-import de.saxsys.mvvmfx.contacts.model.Contact;
-import de.saxsys.mvvmfx.contacts.model.ContactFactory;
-import de.saxsys.mvvmfx.contacts.model.InmemoryRepository;
-import de.saxsys.mvvmfx.contacts.model.Repository;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
 import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import de.saxsys.mvvmfx.contacts.events.ContactsUpdatedEvent;
+import de.saxsys.mvvmfx.contacts.model.Contact;
+import de.saxsys.mvvmfx.contacts.model.ContactFactory;
+import de.saxsys.mvvmfx.contacts.model.InmemoryRepository;
+import de.saxsys.mvvmfx.contacts.model.Repository;
 
 @SuppressWarnings("unchecked")
 public class MasterViewModelTest {

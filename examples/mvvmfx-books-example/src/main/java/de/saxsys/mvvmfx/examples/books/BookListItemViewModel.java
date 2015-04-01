@@ -1,12 +1,9 @@
 package de.saxsys.mvvmfx.examples.books;
 
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ObservableStringValue;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.books.backend.Book;
-import javafx.beans.property.ReadOnlySetProperty;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableStringValue;
 
 /**
  * A viewModel for list entries of books.

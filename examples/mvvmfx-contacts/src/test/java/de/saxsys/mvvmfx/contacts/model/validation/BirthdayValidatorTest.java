@@ -1,14 +1,6 @@
 package de.saxsys.mvvmfx.contacts.model.validation;
 
-import de.saxsys.javafx.test.JfxRunner;
-import de.saxsys.mvvmfx.contacts.ui.contactform.ContactFormViewModel;
-import de.saxsys.mvvmfx.contacts.util.CentralClock;
-import javafx.scene.control.DatePicker;
-import org.assertj.core.internal.cglib.core.Local;
-import org.controlsfx.validation.ValidationResult;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,7 +8,15 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import javafx.scene.control.DatePicker;
+
+import org.controlsfx.validation.ValidationResult;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import de.saxsys.javafx.test.JfxRunner;
+import de.saxsys.mvvmfx.contacts.util.CentralClock;
 
 @RunWith(JfxRunner.class)
 public class BirthdayValidatorTest {

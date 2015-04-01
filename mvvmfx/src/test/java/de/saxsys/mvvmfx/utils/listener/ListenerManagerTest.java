@@ -15,14 +15,11 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.listener;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-
-import de.saxsys.mvvmfx.testingutils.GCVerifier;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -35,6 +32,8 @@ import javafx.collections.ListChangeListener;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import de.saxsys.mvvmfx.testingutils.GCVerifier;
 
 /**
  * Test to verify the behaviour of the {@link de.saxsys.mvvmfx.utils.listener.ListenerManager}.

@@ -1,15 +1,13 @@
 package de.saxsys.mvvmfx.guice;
 
-import com.google.inject.Module;
+import static org.assertj.core.api.Assertions.assertThat;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import org.junit.Test;
 
 import javax.inject.Inject;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
 
 /**
  * This test is used to reproduce a bug in the mvvmfx-guice module. A class that is injected into the application is

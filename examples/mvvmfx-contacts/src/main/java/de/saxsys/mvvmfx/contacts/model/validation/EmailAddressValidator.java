@@ -1,11 +1,11 @@
 package de.saxsys.mvvmfx.contacts.model.validation;
 
+import java.util.regex.Pattern;
+
 import javafx.scene.control.Control;
-import javafx.util.Callback;
+
 import org.controlsfx.validation.ValidationResult;
 import org.controlsfx.validation.Validator;
-
-import java.util.regex.Pattern;
 
 /**
  * A validator that verifies a given String to be a valid email address.

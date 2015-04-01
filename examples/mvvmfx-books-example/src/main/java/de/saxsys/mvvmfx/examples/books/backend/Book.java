@@ -1,6 +1,5 @@
 package de.saxsys.mvvmfx.examples.books.backend;
 
-import com.theoryinpractise.halbuilder.api.Link;
 
 public class Book {
 	

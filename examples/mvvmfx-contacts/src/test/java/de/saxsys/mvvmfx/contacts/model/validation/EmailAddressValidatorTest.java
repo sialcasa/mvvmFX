@@ -1,13 +1,13 @@
 package de.saxsys.mvvmfx.contacts.model.validation;
 
-import de.saxsys.javafx.test.JfxRunner;
+import static org.assertj.core.api.Assertions.assertThat;
 import javafx.scene.control.TextField;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThat;
+import de.saxsys.javafx.test.JfxRunner;
 
 @RunWith(JfxRunner.class)
 public class EmailAddressValidatorTest {
