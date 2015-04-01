@@ -9,7 +9,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableStringValue;
 
 /**
- * A viewModel for list entries of books. 
+ * A viewModel for list entries of books.
  * 
  * @author manuel.mauky
  */
@@ -18,18 +18,18 @@ public class BookListItemViewModel implements ViewModel {
 	private ReadOnlyStringWrapper title = new ReadOnlyStringWrapper();
 	private ReadOnlyStringWrapper author = new ReadOnlyStringWrapper();
 	private Book book;
-
-
-	public BookListItemViewModel(Book book){
+	
+	
+	public BookListItemViewModel(Book book) {
 		this.book = book;
 		title.set(book.getTitle());
 		author.set("(" + book.getAuthor() + ")");
 	}
 	
-	public Book getBook(){
+	public Book getBook() {
 		return book;
 	}
-
+	
 	public ObservableStringValue titleProperty() {
 		return title.getReadOnlyProperty();
 	}
