@@ -42,6 +42,10 @@ public class ItemViewModel implements ViewModel {
 		return completed;
 	}
 	
+	public boolean isCompleted(){
+		return completed.get();
+	}
+	
 	public BooleanProperty editModeProperty(){
 		return editMode;
 	}

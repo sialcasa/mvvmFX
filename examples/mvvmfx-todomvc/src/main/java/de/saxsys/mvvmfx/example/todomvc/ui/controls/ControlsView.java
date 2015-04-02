@@ -21,14 +21,14 @@ public class ControlsView implements FxmlView<ControlsViewModel> {
 	}
 	
 	public void all() {
-		
+		viewModel.all();
 	}
 	
 	public void active() {
-		
+		viewModel.active();
 	}
 	
 	public void completed() {
-		
+		viewModel.completed();
 	}
 }
