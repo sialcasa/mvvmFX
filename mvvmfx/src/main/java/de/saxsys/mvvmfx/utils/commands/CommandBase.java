@@ -2,7 +2,9 @@ package de.saxsys.mvvmfx.utils.commands;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
+import eu.lestard.doc.Beta;
 
+@Beta
 public abstract class CommandBase implements Command {
 	
 	// Default true, so the Command can fire even if the user didn't provided an executable condition.

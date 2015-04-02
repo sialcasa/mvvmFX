@@ -5,7 +5,9 @@ import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import eu.lestard.doc.Beta;
 
+@Beta
 public class CompositeCommand extends CommandBase {
 	
 	private final ObservableList<Command> registeredCommands = FXCollections.observableArrayList();

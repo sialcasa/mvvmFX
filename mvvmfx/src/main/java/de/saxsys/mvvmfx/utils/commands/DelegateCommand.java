@@ -1,7 +1,9 @@
 package de.saxsys.mvvmfx.utils.commands;
 
 import javafx.beans.value.ObservableBooleanValue;
+import eu.lestard.doc.Beta;
 
+@Beta
 public class DelegateCommand extends CommandBase {
 	
 	private final Runnable action;
