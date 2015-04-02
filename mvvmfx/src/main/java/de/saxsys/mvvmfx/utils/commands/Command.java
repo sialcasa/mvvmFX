@@ -1,38 +1,29 @@
 package de.saxsys.mvvmfx.utils.commands;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
-import javafx.beans.value.ObservableBooleanValue;
 
-public class Command {
+/**
+ * A command combines an action with a condition. This can be used for example to provide an {@link #execute()}-action
+ * which should perform on a button click. The button should be disabled, while the Command is not executable.
+ * 
+ * @author alexander.casall
+ *
+ */
+public interface Command {
 	
-	// Default True, wenn kein binding angegeben ist
-	private final ReadOnlyBooleanWrapper executeable = new ReadOnlyBooleanWrapper(true);
-	private final Runnable action;
+	/**
+	 * Executes the Command.
+	 */
+	void execute();
 	
-	public Command(Runnable action) {
-		this.action = action;
-	}
+	/**
+	 * @see #isExecuteable()
+	 */
+	ReadOnlyBooleanProperty executeableProperty();
 	
-	public Command(Runnable action, ObservableBooleanValue executableBinding) {
-		this.action = action;
-		executeable.bind(executableBinding);
-	}
-	
-	public void fire() {
-		if (!isExecuteable()) {
-			throw new RuntimeException("Not executable");
-		} else {
-			action.run();
-		}
-	}
-	
-	public final ReadOnlyBooleanProperty executeableProperty() {
-		return this.executeable.getReadOnlyProperty();
-	}
-	
-	public final boolean isExecuteable() {
-		return this.executeableProperty().get();
-	}
+	/**
+	 * @return whether the {@link Command} can execute
+	 */
+	boolean isExecuteable();
 	
 }

@@ -33,7 +33,7 @@ public class PersonLoginView implements FxmlView<PersonLoginViewModel>, Initiali
 
     @FXML
     void loginButtonPressed(final ActionEvent event) {
-        getViewModel().getLoginCommand().fire();
+        getViewModel().getLoginCommand().execute();
     }
 
     public PersonLoginViewModel getViewModel() {

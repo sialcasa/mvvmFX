@@ -10,6 +10,7 @@ import de.saxsys.jfx.exampleapplication.model.Person;
 import de.saxsys.jfx.exampleapplication.model.Repository;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.commands.Command;
+import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import de.saxsys.mvvmfx.utils.itemlist.ModelToStringFunction;
 import de.saxsys.mvvmfx.utils.itemlist.SelectableItemList;
 import de.saxsys.mvvmfx.utils.itemlist.SelectableStringList;
@@ -38,7 +39,7 @@ public class PersonLoginViewModel implements ViewModel {
 		selectablePersons =
 				new SelectableItemList<Person>(FXCollections.observableArrayList(repository.getPersons()), personMapper);
 		
-		loginCommand = new Command(() -> loggedInPersonId.set(selectablePersons.getSelectedItem().getId()),
+		loginCommand = new DelegateCommand(() -> loggedInPersonId.set(selectablePersons.getSelectedItem().getId()),
 				selectablePersons.selectedIndexProperty().isNotEqualTo(-1));
 	}
 	
