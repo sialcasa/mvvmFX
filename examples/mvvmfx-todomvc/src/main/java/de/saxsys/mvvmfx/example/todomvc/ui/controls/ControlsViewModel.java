@@ -27,7 +27,7 @@ public class ControlsViewModel implements ViewModel {
 	public ControlsViewModel() {
 		final ObservableList<TodoItem> items = TodoItemStore.getInstance().getItems();
 		
-		ObservableList<TodoItem> completedItems = FilterHelper.filter(items, TodoItem::completedProperty);
+		ObservableList<TodoItem> completedItems = FilterHelper.filterInverted(items, TodoItem::completedProperty);
 		
 		final IntegerBinding size = Bindings.size(completedItems);
 		
