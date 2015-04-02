@@ -22,6 +22,11 @@
 			<artifactId>easybind</artifactId>
 			<version>1.0.3</version>
 		</dependency>
+		<dependency>
+			<groupId>de.jensd</groupId>
+			<artifactId>fontawesomefx</artifactId>
+			<version>8.2</version>
+		</dependency>
 	</dependencies>
 
 </project>

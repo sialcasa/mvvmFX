@@ -29,13 +29,25 @@ public class ItemView implements FxmlView<ItemViewModel> {
 	
 	@FXML
 	public Button deleteButton;
-	
+	@FXML
+	public HBox root;
+
 	@InjectViewModel
 	private ItemViewModel viewModel;
 	
 	
 	public void initialize() {
+		deleteButton.setVisible(false);
+		root.setOnMouseEntered(event -> {
+			deleteButton.setVisible(true);
+		});
+		
+		root.setOnMouseExited(event -> {
+			deleteButton.setVisible(false);
+		});
+		
 		completed.selectedProperty().bindBidirectional(viewModel.completedProperty());
+		
 		contentInput.textProperty().bindBidirectional(viewModel.contentProperty());
 		contentInput.visibleProperty().bind(viewModel.editModeProperty());
 		contentInput.setOnAction(event -> viewModel.editModeProperty().set(false));
@@ -46,6 +58,7 @@ public class ItemView implements FxmlView<ItemViewModel> {
 		});
 		
 		contentBox.visibleProperty().bind(viewModel.editModeProperty().not());
+		completed.visibleProperty().bind(viewModel.editModeProperty().not());
 		
 		contentLabel.textProperty().bind(viewModel.contentProperty());
 		contentLabel.setOnMouseClicked(event -> {
