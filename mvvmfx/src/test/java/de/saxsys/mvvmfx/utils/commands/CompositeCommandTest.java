@@ -112,6 +112,7 @@ public class CompositeCommandTest {
 		
 		DelegateCommand delegateCommand2 = new DelegateCommand(() -> {
 			sleep(1000);
+			future.complete(null);
 		}, condition, true);
 		
 		DelegateCommand delegateCommand3 = new DelegateCommand(() -> {

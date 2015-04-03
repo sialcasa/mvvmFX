@@ -49,7 +49,6 @@ public class PersonLoginViewModel implements ViewModel {
 			}
 			Platform.runLater(() -> {
 				loggedInPersonId.set(selectablePersons.getSelectedItem().getId());
-				System.out.println("test");
 			});
 		},
 				createLoginPossibleBinding(), true);
