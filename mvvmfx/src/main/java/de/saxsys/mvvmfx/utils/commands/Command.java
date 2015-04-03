@@ -26,4 +26,14 @@ public interface Command {
 	 */
 	boolean isExecuteable();
 	
+	/**
+	 * @see #isExecuteable()
+	 */
+	ReadOnlyBooleanProperty runningProperty();
+	
+	/**
+	 * @return whether the {@link Command} can execute
+	 */
+	boolean isRunning();
+	
 }

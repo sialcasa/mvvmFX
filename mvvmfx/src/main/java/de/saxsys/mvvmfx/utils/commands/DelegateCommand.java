@@ -36,7 +36,9 @@ public class DelegateCommand extends CommandBase {
 		if (!isExecuteable()) {
 			throw new RuntimeException("Not executable");
 		} else {
+			running.set(true);
 			action.run();
+			running.set(false);
 		}
 	}
 	

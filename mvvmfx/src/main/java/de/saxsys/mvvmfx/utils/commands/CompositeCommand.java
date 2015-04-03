@@ -55,11 +55,9 @@ public class CompositeCommand extends CommandBase {
 		if (!isExecuteable()) {
 			throw new RuntimeException("Not executable");
 		} else {
+			running.set(true);
 			registeredCommands.forEach(t -> t.execute());
+			running.set(false);
 		}
 	}
-	
-	
-	
-	
 }

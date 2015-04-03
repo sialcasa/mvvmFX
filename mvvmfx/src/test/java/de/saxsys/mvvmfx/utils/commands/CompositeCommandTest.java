@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -70,5 +71,24 @@ public class CompositeCommandTest {
 		compositeCommand.unregister(delegateCommand2);
 		assertTrue(compositeCommand.isExecuteable());
 		assertTrue(compositeCommand.executeableProperty().get());
+	}
+	
+	@Test
+	public void running() throws Exception {
+		BooleanProperty run = new SimpleBooleanProperty();
+		BooleanProperty finished = new SimpleBooleanProperty();
+		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1, delegateCommand2);
+		
+		compositeCommand.runningProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
+			if (!oldValue && newValue)
+				run.set(true);
+			if (oldValue && !newValue)
+				finished.set(true);
+		});
+		
+		compositeCommand.execute();
+		
+		assertTrue(run.get());
+		assertTrue(finished.get());
 	}
 }
