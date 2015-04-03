@@ -1,5 +1,7 @@
 package de.saxsys.jfx.exampleapplication.viewmodel.personlogin;
 
+import javafx.application.Platform;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
@@ -39,8 +41,22 @@ public class PersonLoginViewModel implements ViewModel {
 		selectablePersons =
 				new SelectableItemList<Person>(FXCollections.observableArrayList(repository.getPersons()), personMapper);
 		
-		loginCommand = new DelegateCommand(() -> loggedInPersonId.set(selectablePersons.getSelectedItem().getId()),
-				selectablePersons.selectedIndexProperty().isNotEqualTo(-1));
+		loginCommand = new DelegateCommand(() -> {
+			try {
+				// fakesleep, simulating latency
+				Thread.sleep(2000);
+			} catch (Exception e) {
+			}
+			Platform.runLater(() -> {
+				loggedInPersonId.set(selectablePersons.getSelectedItem().getId());
+				System.out.println("test");
+			});
+		},
+				createLoginPossibleBinding(), true);
+	}
+	
+	private BooleanBinding createLoginPossibleBinding() {
+		return selectablePersons.selectedIndexProperty().isNotEqualTo(-1);
 	}
 	
 	/**

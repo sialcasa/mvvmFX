@@ -9,9 +9,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ProgressIndicator;
 import de.saxsys.jfx.exampleapplication.viewmodel.personlogin.PersonLoginViewModel;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.utils.commands.Command;
 
 /**
  * Code behind the fxml for visualization of the {@link PersonLoginView}. The view binds to the properties of the
@@ -20,37 +22,46 @@ import de.saxsys.mvvmfx.InjectViewModel;
  * @author alexander.casall
  */
 public class PersonLoginView implements FxmlView<PersonLoginViewModel>, Initializable {
-
-    @FXML
-    // Injection of the person choiceBox which is declared in the FXML File
-    private ChoiceBox<String> personsChoiceBox;
-
-    @FXML
-    private Button loginButton;
-
-    @InjectViewModel
-    private PersonLoginViewModel viewModel;
-
-    @FXML
-    void loginButtonPressed(final ActionEvent event) {
-        getViewModel().getLoginCommand().execute();
-    }
-
-    public PersonLoginViewModel getViewModel() {
-        return viewModel;
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        personsChoiceBox.itemsProperty().bind(viewModel.selectablePersonsProperty().stringListProperty());
-
-        personsChoiceBox
-                .getSelectionModel()
-                .selectedIndexProperty()
-                .addListener(
-                        (ChangeListener<Number>) (arg0, oldVal, newVal) -> viewModel.selectablePersonsProperty()
-                                .select(newVal.intValue()));
-
-        loginButton.disableProperty().bind(getViewModel().getLoginCommand().executeableProperty().not());
-    }
+	
+	@FXML
+	// Injection of the person choiceBox which is declared in the FXML File
+	private ChoiceBox<String> personsChoiceBox;
+	
+	@FXML
+	private Button loginButton;
+	
+	@FXML
+	private ProgressIndicator loginProgressIndicator;
+	
+	@InjectViewModel
+	private PersonLoginViewModel viewModel;
+	
+	private Command loginCommand;
+	
+	@FXML
+	void loginButtonPressed(final ActionEvent event) {
+		loginCommand.execute();
+	}
+	
+	public PersonLoginViewModel getViewModel() {
+		return viewModel;
+	}
+	
+	@Override
+	public void initialize(URL url, ResourceBundle resourceBundle) {
+		loginCommand = getViewModel().getLoginCommand();
+		
+		personsChoiceBox.itemsProperty().bind(viewModel.selectablePersonsProperty().stringListProperty());
+		
+		personsChoiceBox
+				.getSelectionModel()
+				.selectedIndexProperty()
+				.addListener(
+						(ChangeListener<Number>) (arg0, oldVal, newVal) -> viewModel.selectablePersonsProperty()
+								.select(newVal.intValue()));
+		
+		loginButton.disableProperty()
+				.bind(loginCommand.executeableProperty().not().or(loginCommand.runningProperty()));
+		loginProgressIndicator.visibleProperty().bind(loginCommand.runningProperty());
+	}
 }
