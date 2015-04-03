@@ -38,25 +38,18 @@ public class PersonLoginView implements FxmlView<PersonLoginViewModel>, Initiali
 	
 	private Command loginCommand;
 	
-	@FXML
-	void loginButtonPressed(final ActionEvent event) {
-		loginCommand.execute();
-	}
-	
-	public PersonLoginViewModel getViewModel() {
-		return viewModel;
-	}
-	
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		loginCommand = getViewModel().getLoginCommand();
-		
 		initChoiceBox();
-		
 		loginButton.disableProperty()
 				.bind(loginCommand.executeableProperty().not().or(loginCommand.runningProperty()));
-		
 		loginProgressIndicator.visibleProperty().bind(loginCommand.runningProperty());
+	}
+	
+	@FXML
+	void loginButtonPressed(final ActionEvent event) {
+		loginCommand.execute();
 	}
 	
 	private void initChoiceBox() {
@@ -68,5 +61,9 @@ public class PersonLoginView implements FxmlView<PersonLoginViewModel>, Initiali
 				.addListener(
 						(ChangeListener<Number>) (arg0, oldVal, newVal) -> viewModel.selectablePersonsProperty()
 								.select(newVal.intValue()));
+	}
+	
+	public PersonLoginViewModel getViewModel() {
+		return viewModel;
 	}
 }
