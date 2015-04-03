@@ -6,10 +6,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.40" fx:controller="de.saxsys.jfx.exampleapplication.view.personlogin.PersonLoginView">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.40" fx:controller="de.saxsys.jfx.exampleapplication.view.personlogin.PersonLoginView">
 	<!-- TODO Add Nodes -->
 	<children>
-		<VBox fx:id="layoutVbox" alignment="CENTER" minHeight="37.0" prefHeight="155.0" prefWidth="461.0" spacing="5.0">
+		<VBox fx:id="layoutVbox" alignment="CENTER" minHeight="37.0" spacing="5.0">
 			<children>
 				<Label alignment="CENTER" prefWidth="270.0" text="Personen" textAlignment="LEFT">
 					<font>
@@ -25,7 +25,7 @@
 						</FXCollections>
 					</items>
 				</ChoiceBox>
-				<Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginButtonPressed" text="Login" />
+				<Button fx:id="loginButton" alignment="CENTER" mnemonicParsing="false" onAction="#loginButtonPressed" text="Login" />
 			</children>
 		</VBox>
       <ProgressIndicator fx:id="loginProgressIndicator" />
