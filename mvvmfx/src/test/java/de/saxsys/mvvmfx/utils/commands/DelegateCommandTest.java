@@ -16,7 +16,7 @@ import org.junit.Test;
 public class DelegateCommandTest {
 	
 	@Test
-	public void executeable() throws Exception {
+	public void executeable() {
 		BooleanProperty condition = new SimpleBooleanProperty(true);
 		
 		DelegateCommand delegateCommand = new DelegateCommand(() -> {
@@ -56,6 +56,33 @@ public class DelegateCommandTest {
 		}, condition);
 		
 		delegateCommand.execute();
+	}
+	
+	@Test
+	public void ready() throws Exception {
+		
+		BooleanProperty condition = new SimpleBooleanProperty(false);
+		CompletableFuture<Void> future = new CompletableFuture<>();
+		
+		DelegateCommand delegateCommand = new DelegateCommand(() -> {
+			try {
+				Thread.sleep(1000);
+				future.complete(null);
+			} catch (Exception e) {
+			}
+		}, condition, true);
+		
+		assertFalse(delegateCommand.readyProperty().get());
+		condition.set(true);
+		assertTrue(delegateCommand.readyProperty().get());
+		delegateCommand.execute();
+		assertTrue(delegateCommand.runningProperty().get());
+		assertFalse(delegateCommand.readyProperty().get());
+		future.get(3, TimeUnit.SECONDS);
+		assertFalse(delegateCommand.runningProperty().get());
+		assertTrue(delegateCommand.readyProperty().get());
+		condition.set(false);
+		assertFalse(delegateCommand.readyProperty().get());
 	}
 	
 	@Test

@@ -41,7 +41,7 @@ public class PersonLoginViewModel implements ViewModel {
 	}
 	
 	private BooleanBinding createLoginPossibleBinding() {
-		return selectablePersons.selectedIndexProperty().isNotEqualTo(-1);
+		return selectablePersonsProperty().selectedIndexProperty().isNotEqualTo(-1);
 	}
 	
 	/**
