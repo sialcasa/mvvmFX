@@ -37,14 +37,4 @@ public interface Command {
 	 */
 	ReadOnlyBooleanProperty runningProperty();
 	
-	/**
-	 * @return whether {@link #isExecuteable()} is true and {@link #isRunning()} is false
-	 */
-	boolean isReady();
-	
-	/**
-	 * @see #isReady()
-	 */
-	ReadOnlyBooleanProperty readyProperty();
-	
 }

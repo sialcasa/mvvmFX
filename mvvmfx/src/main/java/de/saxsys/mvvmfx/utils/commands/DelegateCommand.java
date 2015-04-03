@@ -25,7 +25,7 @@ public class DelegateCommand extends CommandBase {
 		this.action = action;
 		this.inBackground = inBackground;
 		if (executableBinding != null) {
-			executeable.bind(executableBinding);
+			executeable.bind(runningProperty().not().and(executableBinding));
 		}
 	}
 	

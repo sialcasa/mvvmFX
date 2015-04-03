@@ -43,7 +43,7 @@ public class PersonLoginView implements FxmlView<PersonLoginViewModel>, Initiali
 		loginCommand = getViewModel().getLoginCommand();
 		initChoiceBox();
 		loginButton.disableProperty()
-				.bind(loginCommand.readyProperty().not());
+				.bind(loginCommand.executeableProperty().not());
 		loginProgressIndicator.visibleProperty().bind(loginCommand.runningProperty());
 	}
 	

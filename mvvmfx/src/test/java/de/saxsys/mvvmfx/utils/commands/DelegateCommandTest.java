@@ -58,32 +58,6 @@ public class DelegateCommandTest {
 		delegateCommand.execute();
 	}
 	
-	@Test
-	public void ready() throws Exception {
-		
-		BooleanProperty condition = new SimpleBooleanProperty(false);
-		CompletableFuture<Void> future = new CompletableFuture<>();
-		
-		DelegateCommand delegateCommand = new DelegateCommand(() -> {
-			try {
-				Thread.sleep(1000);
-				future.complete(null);
-			} catch (Exception e) {
-			}
-		}, condition, true);
-		
-		assertFalse(delegateCommand.readyProperty().get());
-		condition.set(true);
-		assertTrue(delegateCommand.readyProperty().get());
-		delegateCommand.execute();
-		assertTrue(delegateCommand.runningProperty().get());
-		assertFalse(delegateCommand.readyProperty().get());
-		future.get(3, TimeUnit.SECONDS);
-		assertFalse(delegateCommand.runningProperty().get());
-		assertTrue(delegateCommand.readyProperty().get());
-		condition.set(false);
-		assertFalse(delegateCommand.readyProperty().get());
-	}
 	
 	@Test
 	public void running() throws Exception {
@@ -126,8 +100,10 @@ public class DelegateCommandTest {
 		assertFalse(delegateCommand.runningProperty().get());
 		delegateCommand.execute();
 		assertTrue(delegateCommand.runningProperty().get());
+		assertFalse(delegateCommand.executeableProperty().get());
 		future.get(3, TimeUnit.SECONDS);
 		assertFalse(delegateCommand.runningProperty().get());
+		assertTrue(delegateCommand.executeableProperty().get());
 	}
 	
 }

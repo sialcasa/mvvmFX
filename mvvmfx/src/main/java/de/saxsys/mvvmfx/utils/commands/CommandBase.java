@@ -10,11 +10,6 @@ public abstract class CommandBase implements Command {
 	// Default true, so the Command can fire even if the user didn't provided an executable condition.
 	protected final ReadOnlyBooleanWrapper executeable = new ReadOnlyBooleanWrapper(true);
 	protected final ReadOnlyBooleanWrapper running = new ReadOnlyBooleanWrapper(false);
-	protected final ReadOnlyBooleanWrapper ready = new ReadOnlyBooleanWrapper(false);
-	
-	public CommandBase() {
-		ready.bind(runningProperty().not().and(executeableProperty()));
-	}
 	
 	/*
 	 * (non-Javadoc)
@@ -54,26 +49,6 @@ public abstract class CommandBase implements Command {
 	@Override
 	public final boolean isRunning() {
 		return this.running.get();
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.saxsys.mvvmfx.utils.commands.Command#readyProperty()
-	 */
-	@Override
-	public ReadOnlyBooleanProperty readyProperty() {
-		return ready.getReadOnlyProperty();
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.saxsys.mvvmfx.utils.commands.Command#isReady()
-	 */
-	@Override
-	public boolean isReady() {
-		return readyProperty().get();
 	}
 	
 	/*
