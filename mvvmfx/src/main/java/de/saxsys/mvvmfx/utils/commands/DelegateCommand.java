@@ -7,23 +7,26 @@ import eu.lestard.doc.Beta;
 public class DelegateCommand extends CommandBase {
 	
 	private final Runnable action;
+	boolean inBackground = false;
 	
-	/**
-	 * 
-	 * @param action
-	 */
 	public DelegateCommand(Runnable action) {
-		this.action = action;
+		this(action, null);
 	}
 	
-	/**
-	 * 
-	 * @param action
-	 * @param executableBinding
-	 */
+	public DelegateCommand(Runnable action, boolean inBackground) {
+		this(action, null, inBackground);
+	}
+	
 	public DelegateCommand(Runnable action, ObservableBooleanValue executableBinding) {
+		this(action, executableBinding, false);
+	}
+	
+	public DelegateCommand(Runnable action, ObservableBooleanValue executableBinding, boolean inBackground) {
 		this.action = action;
-		executeable.bind(executableBinding);
+		this.inBackground = inBackground;
+		if (executableBinding != null) {
+			executeable.bind(executableBinding);
+		}
 	}
 	
 	/*
@@ -37,9 +40,17 @@ public class DelegateCommand extends CommandBase {
 			throw new RuntimeException("Not executable");
 		} else {
 			running.set(true);
-			action.run();
-			running.set(false);
+			if (inBackground) {
+				new Thread(() -> {
+					action.run();
+					running.set(false);
+				}).start();
+			} else {
+				action.run();
+				running.set(false);
+			}
 		}
 	}
+	
 	
 }

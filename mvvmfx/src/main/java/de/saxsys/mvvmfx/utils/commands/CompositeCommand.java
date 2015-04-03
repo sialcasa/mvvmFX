@@ -22,17 +22,23 @@ public class CompositeCommand extends CommandBase {
 	private void initRegisteredCommandsListener() {
 		this.registeredCommands.addListener((ListChangeListener<Command>) c -> {
 			while (c.next()) {
-				BooleanBinding binding = null;
+				BooleanBinding executableBinding = null;
+				BooleanBinding runningBinding = null;
 				
 				for (int i = 0; i < registeredCommands.size(); i++) {
 					ReadOnlyBooleanProperty currentExecutable = registeredCommands.get(i).executeableProperty();
-					if (binding == null) {
-						binding = currentExecutable.and(currentExecutable);
+					ReadOnlyBooleanProperty currentRunning = registeredCommands.get(i).runningProperty();
+					
+					if (i == 0) {
+						executableBinding = currentExecutable.and(currentExecutable);
+						runningBinding = currentRunning.or(currentRunning);
 					} else {
-						binding = binding.and(currentExecutable);
+						executableBinding = executableBinding.and(currentExecutable);
+						runningBinding = runningBinding.or(currentRunning);
 					}
 				}
-				executeable.bind(binding);
+				executeable.bind(executableBinding);
+				running.bind(runningBinding);
 			}
 		});
 	}
@@ -55,9 +61,8 @@ public class CompositeCommand extends CommandBase {
 		if (!isExecuteable()) {
 			throw new RuntimeException("Not executable");
 		} else {
-			running.set(true);
 			registeredCommands.forEach(t -> t.execute());
-			running.set(false);
 		}
 	}
+	
 }

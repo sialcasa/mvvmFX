@@ -2,6 +2,10 @@ package de.saxsys.mvvmfx.utils.commands;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -75,6 +79,28 @@ public class DelegateCommandTest {
 		
 		assertTrue(run.get());
 		assertTrue(finished.get());
+	}
+	
+	
+	@Test
+	public void longRunningAsync() throws Exception {
+		
+		BooleanProperty condition = new SimpleBooleanProperty(true);
+		CompletableFuture<Void> future = new CompletableFuture<>();
+		
+		DelegateCommand delegateCommand = new DelegateCommand(() -> {
+			try {
+				Thread.sleep(1000);
+				future.complete(null);
+			} catch (Exception e) {
+			}
+		}, condition, true);
+		
+		assertFalse(delegateCommand.runningProperty().get());
+		delegateCommand.execute();
+		assertTrue(delegateCommand.runningProperty().get());
+		future.get(3, TimeUnit.SECONDS);
+		assertFalse(delegateCommand.runningProperty().get());
 	}
 	
 }
