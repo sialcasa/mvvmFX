@@ -1,8 +1,8 @@
 package de.saxsys.mvvmfx.utils.commands;
 
-import eu.lestard.doc.Beta;
+import eu.lestard.doc.Incubator;
 
-@Beta
+@Incubator
 public class CommandManager {
 	// TODO
 }
