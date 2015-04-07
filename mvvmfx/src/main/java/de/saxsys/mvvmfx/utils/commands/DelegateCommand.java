@@ -47,8 +47,9 @@ public class DelegateCommand extends CommandBase {
 	 * Creates a command without an condition about the executability. Pass a <code>true</code> to the
 	 * <code>inBackground</code> parameter to run the {@link Command} in a background thread.
 	 * 
-	 * <b>IF YOU USE THE BACKGROUND THREAD: </b> don't forget to return to the UI-thread by using
-	 * {@link Platform#runLater(Runnable)}, otherwise you get an Exception.
+	 * <b>IF YOU USE THE BACKGROUND THREAD: </b> Your provided action will perform in a background thread. If you
+	 * manipulate data in your action, which will be propagated to the UI, use {@link Platform#runLater(Runnable)} for
+	 * this manipulation, otherwise you get an Exception.
 	 * 
 	 * @param action
 	 *            which should execute
