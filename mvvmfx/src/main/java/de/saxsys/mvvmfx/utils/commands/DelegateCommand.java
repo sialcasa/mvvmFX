@@ -101,7 +101,7 @@ public class DelegateCommand extends CommandBase {
 	@Override
 	public final void execute() {
 		
-		boolean callerOnUIThread = Platform.isFxApplicationThread();
+		final boolean callerOnUIThread = Platform.isFxApplicationThread();
 		
 		if (!isExecutable()) {
 			throw new RuntimeException("The execute()-method of the command was called while it wasn't executable.");

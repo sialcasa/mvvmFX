@@ -1,11 +1,13 @@
 package de.saxsys.mvvmfx.utils.commands;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import de.saxsys.mvvmfx.testingutils.GCVerifier;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -34,8 +36,10 @@ public class CompositeCommandTest {
 	}
 	
 	@Test
-	public void executeable() throws Exception {
+	public void executable() throws Exception {
 		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1, delegateCommand2);
+
+		GCVerifier.forceGC();
 		
 		assertTrue(compositeCommand.isExecutable());
 		assertTrue(compositeCommand.executableProperty().get());
@@ -59,6 +63,44 @@ public class CompositeCommandTest {
 		
 		assertTrue(compositeCommand.isExecutable());
 		assertTrue(compositeCommand.executableProperty().get());
+	}
+	
+	@Test
+	public void executable2() throws Exception {
+		CompositeCommand compositeCommand = new CompositeCommand();
+		GCVerifier.forceGC();
+		
+		
+		assertThat(compositeCommand.isExecutable()).isTrue();
+		assertThat(compositeCommand.executableProperty().get()).isTrue();
+		
+		compositeCommand.register(delegateCommand1);
+		GCVerifier.forceGC();
+		
+		assertThat(compositeCommand.isExecutable()).isTrue();
+		assertThat(compositeCommand.executableProperty().get()).isTrue();
+		
+		condition1.setValue(false);
+		assertThat(compositeCommand.isExecutable()).isFalse();
+		assertThat(compositeCommand.executableProperty().get()).isFalse();
+		
+		condition1.setValue(true);
+		assertThat(compositeCommand.isExecutable()).isTrue();
+		assertThat(compositeCommand.executableProperty().get()).isTrue();
+
+		condition2.setValue(false);
+		assertThat(compositeCommand.isExecutable()).isTrue();
+		assertThat(compositeCommand.executableProperty().get()).isTrue();
+
+		compositeCommand.register(delegateCommand2);
+		GCVerifier.forceGC();
+		assertThat(compositeCommand.isExecutable()).isFalse();
+		assertThat(compositeCommand.executableProperty().get()).isFalse();
+		
+		compositeCommand.unregister(delegateCommand2);
+		GCVerifier.forceGC();
+		assertThat(compositeCommand.isExecutable()).isTrue();
+		assertThat(compositeCommand.executableProperty().get()).isTrue();
 	}
 	
 	@Test

@@ -16,7 +16,7 @@ import org.junit.Test;
 public class DelegateCommandTest {
 	
 	@Test
-	public void executeable() {
+	public void executable() {
 		BooleanProperty condition = new SimpleBooleanProperty(true);
 		
 		DelegateCommand delegateCommand = new DelegateCommand(() -> {

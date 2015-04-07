@@ -32,51 +32,26 @@ public abstract class CommandBase implements Command {
 	protected final ReadOnlyBooleanWrapper executable = new ReadOnlyBooleanWrapper(true);
 	protected final ReadOnlyBooleanWrapper running = new ReadOnlyBooleanWrapper(false);
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.saxsys.mvvmfx.utils.commands.Command#executableProperty()
-	 */
 	@Override
 	public final ReadOnlyBooleanProperty executableProperty() {
 		return this.executable.getReadOnlyProperty();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.saxsys.mvvmfx.utils.commands.Command#isExecutable()
-	 */
 	@Override
 	public final boolean isExecutable() {
 		return this.executableProperty().get();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.saxsys.mvvmfx.utils.commands.Command#executableProperty()
-	 */
 	@Override
 	public final ReadOnlyBooleanProperty runningProperty() {
 		return this.running.getReadOnlyProperty();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.saxsys.mvvmfx.utils.commands.Command#isExecutable()
-	 */
 	@Override
 	public final boolean isRunning() {
 		return this.running.get();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.saxsys.mvvmfx.utils.commands.Command#execute()
-	 */
 	@Override
 	public abstract void execute();
 }
