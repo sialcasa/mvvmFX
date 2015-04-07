@@ -1,16 +1,21 @@
 package de.saxsys.mvvmfx.contacts.ui.contactform;
 
 import java.time.LocalDate;
+import java.util.regex.Pattern;
+
+import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
+import de.saxsys.mvvmfx.utils.validation.ValidationResult;
+import de.saxsys.mvvmfx.utils.validation.Validator;
+import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Control;
-
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
 
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.contacts.model.Contact;
@@ -19,6 +24,7 @@ import de.saxsys.mvvmfx.contacts.model.validation.EmailAddressValidator;
 import de.saxsys.mvvmfx.contacts.model.validation.PhoneNumberValidator;
 
 public class ContactFormViewModel implements ViewModel {
+	
 	
 	private StringProperty firstname = new SimpleStringProperty();
 	private StringProperty title = new SimpleStringProperty();
@@ -34,17 +40,23 @@ public class ContactFormViewModel implements ViewModel {
 	private StringProperty phoneNumber = new SimpleStringProperty();
 	
 	
+	private Validator<String> firstNameValidator;
+	private Validator<String> lastNameValidator;
+	private Validator<String> emailValidator;
 	
-	private ReadOnlyBooleanWrapper valid = new ReadOnlyBooleanWrapper();
-	
-	
-	ValidationSupport validationSupport = new ValidationSupport();
+	private CompositeValidator compositeValidator = new CompositeValidator();
 	private Contact contact;
 	
 	public ContactFormViewModel() {
-		valid.bind(validationSupport.invalidProperty().isNull().or(validationSupport.invalidProperty().isEqualTo
-				(false)));
+		firstNameValidator = new Validator<>(firstname, new NotEmptyValidator("Firstname may not be empty!"));
+		lastNameValidator = new Validator<>(lastname, new NotEmptyValidator("Lastname may not be empty"));
+		emailValidator = new Validator<>(email, new EmailValidator());
 		
+		emailValidator = new Validator<>(email, new EmailValidator());
+		
+		compositeValidator.registerValidator(emailValidator);
+		compositeValidator.registerValidator(firstNameValidator);
+		compositeValidator.registerValidator(lastNameValidator);
 	}
 	
 	public void resetForm() {
@@ -96,32 +108,46 @@ public class ContactFormViewModel implements ViewModel {
 		return resultContact;
 	}
 	
-	public void initValidationForFirstname(Control input) {
-		validationSupport.registerValidator(input, Validator.createEmptyValidator("Firstname may not be empty!"));
+//	public void initValidationForFirstname(Control input) {
+//		validationSupport.registerValidator(input, Validator.createEmptyValidator("Firstname may not be empty!"));
+//	}
+//	
+//	public void initValidationForLastname(Control input) {
+//		validationSupport.registerValidator(input, Validator.createEmptyValidator("Lastname may not be empty!"));
+//	}
+//	
+//	public void initValidationForBirthday(Control input) {
+//		validationSupport.registerValidator(input, false, new BirthdayValidator());
+//	}
+//	
+//	public void initValidationForEmail(Control input) {
+//		validationSupport.registerValidator(input, true, new EmailAddressValidator());
+//	}
+//	
+//	public void initValidationForPhoneNumber(Control input) {
+//		validationSupport.registerValidator(input, false, new PhoneNumberValidator("The phone number is invalid!"));
+//	}
+//	
+//	public void initValidationForMobileNumber(Control input) {
+//		validationSupport.registerValidator(input, false, new PhoneNumberValidator("The mobile number is invalid!"));
+//	}
+	
+	
+	
+	public ObservableValue<ValidationResult> emailValidator(){
+		return emailValidator.validationResultProperty();
 	}
 	
-	public void initValidationForLastname(Control input) {
-		validationSupport.registerValidator(input, Validator.createEmptyValidator("Lastname may not be empty!"));
+	public ObservableValue<ValidationResult> firstNameValidator(){
+		return firstNameValidator.validationResultProperty();
 	}
 	
-	public void initValidationForBirthday(Control input) {
-		validationSupport.registerValidator(input, false, new BirthdayValidator());
+	public ObservableValue<ValidationResult> lastNameValidator(){
+		return lastNameValidator.validationResultProperty();
 	}
 	
-	public void initValidationForEmail(Control input) {
-		validationSupport.registerValidator(input, true, new EmailAddressValidator());
-	}
-	
-	public void initValidationForPhoneNumber(Control input) {
-		validationSupport.registerValidator(input, false, new PhoneNumberValidator("The phone number is invalid!"));
-	}
-	
-	public void initValidationForMobileNumber(Control input) {
-		validationSupport.registerValidator(input, false, new PhoneNumberValidator("The mobile number is invalid!"));
-	}
-	
-	public ReadOnlyBooleanProperty validProperty() {
-		return valid.getReadOnlyProperty();
+	public BooleanExpression validProperty() {
+		return compositeValidator.validProperty();
 	}
 	
 	

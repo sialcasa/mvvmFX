@@ -1,11 +1,13 @@
 package de.saxsys.mvvmfx.contacts.ui.contactform;
 
+import de.saxsys.mvvmfx.utils.validation.Validator;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import org.controlsfx.validation.ValidationSupport;
 
 public class ContactFormView implements FxmlView<ContactFormViewModel> {
 	
@@ -32,7 +34,6 @@ public class ContactFormView implements FxmlView<ContactFormViewModel> {
 	@InjectViewModel
 	private ContactFormViewModel viewModel;
 	
-	
 	public void initialize() {
 		firstnameInput.textProperty().bindBidirectional(viewModel.firstnameProperty());
 		lastnameInput.textProperty().bindBidirectional(viewModel.lastnameProperty());
@@ -45,13 +46,18 @@ public class ContactFormView implements FxmlView<ContactFormViewModel> {
 		birthdayInput.valueProperty().bindBidirectional(viewModel.birthdayProperty());
 		
 		// init the validation. The logic for the actual validation is hidden in the viewModel.
-		viewModel.initValidationForFirstname(firstnameInput);
-		viewModel.initValidationForLastname(lastnameInput);
-		viewModel.initValidationForBirthday(birthdayInput);
+
+		Validator.connectToView(emailInput, viewModel.emailValidator());
+		Validator.connectToView(firstnameInput, viewModel.firstNameValidator());
+		Validator.connectToView(lastnameInput, viewModel.lastNameValidator());
 		
-		viewModel.initValidationForEmail(emailInput);
-		viewModel.initValidationForPhoneNumber(phoneNumberInput);
-		viewModel.initValidationForMobileNumber(mobileNumberInput);
+//		viewModel.initValidationForFirstname(firstnameInput);
+//		viewModel.initValidationForLastname(lastnameInput);
+//		viewModel.initValidationForBirthday(birthdayInput);
+//		
+//		viewModel.initValidationForEmail(emailInput);
+//		viewModel.initValidationForPhoneNumber(phoneNumberInput);
+//		viewModel.initValidationForMobileNumber(mobileNumberInput);
 	}
 	
 	public ContactFormViewModel getViewModel() {
