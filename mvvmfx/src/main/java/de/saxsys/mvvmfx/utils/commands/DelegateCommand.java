@@ -20,9 +20,9 @@ import javafx.beans.value.ObservableBooleanValue;
 import eu.lestard.doc.Beta;
 
 /**
- * A {@link Command} implementation that encapsulates an action ({@link Runnable}). It is possible
- * to define that the action should be executed in the background (not on the JavaFX thread) so that long running 
- * actions can be implemented that aren't blocking the ui thread.
+ * A {@link Command} implementation that encapsulates an action ({@link Runnable}). It is possible to define that the
+ * action should be executed in the background (not on the JavaFX thread) so that long running actions can be
+ * implemented that aren't blocking the ui thread.
  * 
  * @author alexander.casall
  */
@@ -44,8 +44,8 @@ public class DelegateCommand extends CommandBase {
 	}
 	
 	/**
-	 * Creates a command without an condition about the executability. Pass a <code>true</code> to the <code>inBackground</code>
-	 * parameter to run the {@link Command} in a background thread.
+	 * Creates a command without an condition about the executability. Pass a <code>true</code> to the
+	 * <code>inBackground</code> parameter to run the {@link Command} in a background thread.
 	 * 
 	 * <b>IF YOU USE THE BACKGROUND THREAD: </b> don't forget to return to the UI-thread by using
 	 * {@link Platform#runLater(Runnable)}, otherwise you get an Exception.
@@ -101,6 +101,9 @@ public class DelegateCommand extends CommandBase {
 	 */
 	@Override
 	public final void execute() {
+		
+		boolean callerOnUIThread = Platform.isFxApplicationThread();
+		
 		if (!isExecutable()) {
 			throw new RuntimeException("Not executable");
 		} else {
@@ -108,7 +111,11 @@ public class DelegateCommand extends CommandBase {
 			if (inBackground) {
 				new Thread(() -> {
 					action.run();
-					running.set(false);
+					if (callerOnUIThread) {
+						Platform.runLater(() -> running.set(false));
+					} else {
+						running.set(false);
+					}
 				}).start();
 			} else {
 				action.run();
@@ -116,6 +123,5 @@ public class DelegateCommand extends CommandBase {
 			}
 		}
 	}
-	
 	
 }
