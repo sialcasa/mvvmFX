@@ -95,10 +95,8 @@ public class DelegateCommand extends CommandBase {
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.saxsys.mvvmfx.utils.commands.Command#fire()
+	/**
+	 * @see de.saxsys.mvvmfx.utils.commands.Command#execute
 	 */
 	@Override
 	public final void execute() {
@@ -106,7 +104,7 @@ public class DelegateCommand extends CommandBase {
 		boolean callerOnUIThread = Platform.isFxApplicationThread();
 		
 		if (!isExecutable()) {
-			throw new RuntimeException("Not executable");
+			throw new RuntimeException("The execute()-method of the command was called while it wasn't executable.");
 		} else {
 			running.set(true);
 			if (inBackground) {
