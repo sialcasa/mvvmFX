@@ -22,18 +22,18 @@ public class DelegateCommandTest {
 		DelegateCommand delegateCommand = new DelegateCommand(() -> {
 		}, condition);
 		
-		assertTrue(delegateCommand.isExecuteable());
-		assertTrue(delegateCommand.executeableProperty().get());
+		assertTrue(delegateCommand.isExecutable());
+		assertTrue(delegateCommand.executableProperty().get());
 		
 		condition.set(false);
 		
-		assertFalse(delegateCommand.isExecuteable());
-		assertFalse(delegateCommand.executeableProperty().get());
+		assertFalse(delegateCommand.isExecutable());
+		assertFalse(delegateCommand.executableProperty().get());
 		
 		condition.set(true);
 		
-		assertTrue(delegateCommand.isExecuteable());
-		assertTrue(delegateCommand.executeableProperty().get());
+		assertTrue(delegateCommand.isExecutable());
+		assertTrue(delegateCommand.executableProperty().get());
 	}
 	
 	@Test
@@ -100,10 +100,10 @@ public class DelegateCommandTest {
 		assertFalse(delegateCommand.runningProperty().get());
 		delegateCommand.execute();
 		assertTrue(delegateCommand.runningProperty().get());
-		assertFalse(delegateCommand.executeableProperty().get());
+		assertFalse(delegateCommand.executableProperty().get());
 		future.get(3, TimeUnit.SECONDS);
 		assertFalse(delegateCommand.runningProperty().get());
-		assertTrue(delegateCommand.executeableProperty().get());
+		assertTrue(delegateCommand.executableProperty().get());
 	}
 	
 }

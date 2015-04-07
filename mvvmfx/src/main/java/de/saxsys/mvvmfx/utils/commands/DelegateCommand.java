@@ -20,12 +20,11 @@ import javafx.beans.value.ObservableBooleanValue;
 import eu.lestard.doc.Beta;
 
 /**
- * The {@link DelegateCommand} encapsulates logic in the {@link #execute()} method which will called later. This can be
- * used for example to provide an {@link #execute()}-action which should perform on a button click. In addition it is
- * possible to add the an information, whether the {@link Command} is {@link #isExecuteable()} - this is optional. The
- * execution can happen asynchronously - this is optional.
+ * A {@link Command} implementation that encapsulates an action ({@link Runnable}). It is possible
+ * to define that the action should be executed in the background (not on the JavaFX thread) so that long running 
+ * actions can be implemented that aren't blocking the ui thread.
  * 
- * @author sialcasa
+ * @author alexander.casall
  */
 @Beta
 public class DelegateCommand extends CommandBase {
@@ -34,18 +33,18 @@ public class DelegateCommand extends CommandBase {
 	private boolean inBackground = false;
 	
 	/**
-	 * Creates a command without an condition about the executability. The command will perform in the thread which
+	 * Creates a command without a condition about the executability. The command will perform in the thread which
 	 * executes the {@link Command}.
 	 * 
 	 * @param action
 	 *            which should execute
 	 */
 	public DelegateCommand(Runnable action) {
-		this(action, null);
+		this(action, null, false);
 	}
 	
 	/**
-	 * Creates a command without an condition about the executability. Pass a <code>true</code> to the #inBackground
+	 * Creates a command without an condition about the executability. Pass a <code>true</code> to the <code>inBackground</code>
 	 * parameter to run the {@link Command} in a background thread.
 	 * 
 	 * <b>IF YOU USE THE BACKGROUND THREAD: </b> don't forget to return to the UI-thread by using
@@ -91,7 +90,7 @@ public class DelegateCommand extends CommandBase {
 		this.action = action;
 		this.inBackground = inBackground;
 		if (executableBinding != null) {
-			executeable.bind(runningProperty().not().and(executableBinding));
+			executable.bind(runningProperty().not().and(executableBinding));
 		}
 	}
 	
@@ -101,8 +100,8 @@ public class DelegateCommand extends CommandBase {
 	 * @see de.saxsys.mvvmfx.utils.commands.Command#fire()
 	 */
 	@Override
-	public void execute() {
-		if (!isExecuteable()) {
+	public final void execute() {
+		if (!isExecutable()) {
 			throw new RuntimeException("Not executable");
 		} else {
 			running.set(true);

@@ -27,10 +27,10 @@ import eu.lestard.doc.Beta;
  * to hook up multiple command targets to a single root command that itself can be hooked up to a command source such as
  * a button or menu item.The CompositeCommand can hold references to any ICommand object, but typically you will use it
  * in conjunction with DelegateCommands. When the CompositeCommand.Execute method is invoked, it will invoke the Execute
- * method on each of the child commands. When {@link #isExecuteable()} is called to determine whether the command is
- * enabled, it polls its child commands for their result from {@link #isExecuteable()}.
+ * method on each of the child commands. When {@link #isExecutable()} is called to determine whether the command is
+ * enabled, it polls its child commands for their result from {@link #isExecutable()}.
  * 
- * @author sialcasa
+ * @author alexander.casall
  *
  */
 @Beta
@@ -77,7 +77,7 @@ public class CompositeCommand extends CommandBase {
 				BooleanBinding runningBinding = null;
 				
 				for (int i = 0; i < registeredCommands.size(); i++) {
-					ReadOnlyBooleanProperty currentExecutable = registeredCommands.get(i).executeableProperty();
+					ReadOnlyBooleanProperty currentExecutable = registeredCommands.get(i).executableProperty();
 					ReadOnlyBooleanProperty currentRunning = registeredCommands.get(i).runningProperty();
 					
 					if (i == 0) {
@@ -88,7 +88,7 @@ public class CompositeCommand extends CommandBase {
 						runningBinding = runningBinding.or(currentRunning);
 					}
 				}
-				executeable.bind(executableBinding);
+				executable.bind(executableBinding);
 				running.bind(runningBinding);
 			}
 		});
@@ -101,7 +101,7 @@ public class CompositeCommand extends CommandBase {
 	 */
 	@Override
 	public void execute() {
-		if (!isExecuteable()) {
+		if (!isExecutable()) {
 			throw new RuntimeException("Not executable");
 		} else {
 			registeredCommands.forEach(t -> t.execute());

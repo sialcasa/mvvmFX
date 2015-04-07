@@ -37,28 +37,28 @@ public class CompositeCommandTest {
 	public void executeable() throws Exception {
 		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1, delegateCommand2);
 		
-		assertTrue(compositeCommand.isExecuteable());
-		assertTrue(compositeCommand.executeableProperty().get());
+		assertTrue(compositeCommand.isExecutable());
+		assertTrue(compositeCommand.executableProperty().get());
 		
 		condition1.set(false);
 		
-		assertFalse(compositeCommand.isExecuteable());
-		assertFalse(compositeCommand.executeableProperty().get());
+		assertFalse(compositeCommand.isExecutable());
+		assertFalse(compositeCommand.executableProperty().get());
 		
 		condition2.set(false);
 		
-		assertFalse(compositeCommand.isExecuteable());
-		assertFalse(compositeCommand.executeableProperty().get());
+		assertFalse(compositeCommand.isExecutable());
+		assertFalse(compositeCommand.executableProperty().get());
 		
 		condition1.set(true);
 		
-		assertFalse(compositeCommand.isExecuteable());
-		assertFalse(compositeCommand.executeableProperty().get());
+		assertFalse(compositeCommand.isExecutable());
+		assertFalse(compositeCommand.executableProperty().get());
 		
 		condition2.set(true);
 		
-		assertTrue(compositeCommand.isExecuteable());
-		assertTrue(compositeCommand.executeableProperty().get());
+		assertTrue(compositeCommand.isExecutable());
+		assertTrue(compositeCommand.executableProperty().get());
 	}
 	
 	@Test
@@ -66,16 +66,16 @@ public class CompositeCommandTest {
 		
 		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1);
 		
-		assertTrue(compositeCommand.isExecuteable());
-		assertTrue(compositeCommand.executeableProperty().get());
+		assertTrue(compositeCommand.isExecutable());
+		assertTrue(compositeCommand.executableProperty().get());
 		// prepare delegateCommand2
 		condition2.set(false);
 		compositeCommand.register(delegateCommand2);
-		assertFalse(compositeCommand.isExecuteable());
-		assertFalse(compositeCommand.executeableProperty().get());
+		assertFalse(compositeCommand.isExecutable());
+		assertFalse(compositeCommand.executableProperty().get());
 		compositeCommand.unregister(delegateCommand2);
-		assertTrue(compositeCommand.isExecuteable());
-		assertTrue(compositeCommand.executeableProperty().get());
+		assertTrue(compositeCommand.isExecutable());
+		assertTrue(compositeCommand.executableProperty().get());
 	}
 	
 	@Test

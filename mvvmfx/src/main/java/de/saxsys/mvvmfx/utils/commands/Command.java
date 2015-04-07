@@ -15,42 +15,46 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.commands;
 
+import eu.lestard.doc.Beta;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 
 /**
- * The {@link Command} encapsulates logic in the {@link #execute()} method which will called later. This can be used for
- * example to provide an {@link #execute()}-action which should perform on a button click. In addition it is possible to
- * add the an information, whether the {@link Command} is {@link #isExecuteable()}.
+ * The {@link Command} encapsulates logic in the {@link #execute()} method which will be called later. This can be used for
+ * example to provide an {@link #execute()}-action which should perform on a button click. 
+ * <p>
+ * In addition it is possible to
+ * add the information on whether the {@link Command} can be executed at the moment or not ({@link #isExecutable()}).
  * 
  * @author alexander.casall
  *
  */
+@Beta
 public interface Command {
 	
 	/**
-	 * Defines the method to be called when the command is invoked.
+	 * This method will be called when the command is invoked. 
 	 */
 	void execute();
 	
 	
 	
 	/**
-	 * Determines whether the command can execute in its current state.
+	 * Determines whether the command can be executed in it's current state.
 	 * 
-	 * @return whether the {@link Command} can execute
+	 * @return <code>true</code> if the {@link Command} can executed, otherwise <code>false</code>.
 	 */
-	boolean isExecuteable();
+	boolean isExecutable();
 	
 	/**
-	 * @see #isExecuteable()
+	 * @see #isExecutable()
 	 */
-	ReadOnlyBooleanProperty executeableProperty();
+	ReadOnlyBooleanProperty executableProperty();
 	
 	
 	/**
-	 * Signals whether the command is currently executing. It can takes some time.
+	 * Signals whether the command is currently executing. This can be useful especially for commands that are executed asynchronously.
 	 * 
-	 * @return whether the {@link Command} is running
+	 * @return <code>true</code> if the {@link Command} is running, otherwise <code>false</code>.
 	 */
 	boolean isRunning();
 	
