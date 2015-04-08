@@ -51,7 +51,7 @@ public class CachedViewModelCellFactory<V extends View<VM>, VM extends ViewModel
 	
 	private Callback<VM, ViewTuple<V, VM>> loadFactory;
 	
-	private CachedViewModelCellFactory(Callback<VM, ViewTuple<V, VM>> loadFactory) {
+	public CachedViewModelCellFactory(Callback<VM, ViewTuple<V, VM>> loadFactory) {
 		this.loadFactory = loadFactory;
 	}
 	
