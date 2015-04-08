@@ -1,24 +1,18 @@
 package de.saxsys.mvvmfx.contacts.ui.editcontact;
 
-import java.util.ResourceBundle;
-
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.contacts.model.Repository;
+import de.saxsys.mvvmfx.contacts.ui.contactdialog.ContactDialogViewModel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 import javax.inject.Inject;
-
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.contacts.model.Repository;
-import de.saxsys.mvvmfx.contacts.ui.contactdialog.ContactDialogViewModel;
-import de.saxsys.mvvmfx.contacts.ui.master.MasterViewModel;
+import java.util.ResourceBundle;
 
 public class EditContactDialogViewModel implements ViewModel {
 	static final String TITLE_LABEL_KEY = "dialog.editcontact.title";
 	
 	private BooleanProperty dialogOpen = new SimpleBooleanProperty();
-	
-	@Inject
-	MasterViewModel masterViewModel;
 	
 	@Inject
 	Repository repository;
