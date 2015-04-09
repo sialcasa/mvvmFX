@@ -34,6 +34,7 @@ public class ContactFormViewModel implements ViewModel {
 	
 	public void initWithContact(Contact contact) {
 		this.contactWrapper.set(contact);
+		this.contactWrapper.reload();
 	}
 	
 	public Contact getContact() {

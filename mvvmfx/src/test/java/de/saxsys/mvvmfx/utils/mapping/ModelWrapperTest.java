@@ -13,13 +13,11 @@ public class ModelWrapperTest {
         person.setName("horst");
         person.setAge(32);
 
-        ModelWrapper<Person> personWrapper = new ModelWrapper<>();
-        personWrapper.set(person);
-
-
+        ModelWrapper<Person> personWrapper = new ModelWrapper<>(person);
+        
         final ObjectProperty<String> nameProperty = personWrapper.field(Person::getName, Person::setName);
         final ObjectProperty<Integer> ageProperty = personWrapper.field(Person::getAge, Person::setAge);
-
+        
         assertThat(nameProperty.get()).isEqualTo("horst");
         assertThat(ageProperty.get()).isEqualTo(32);
 
@@ -64,6 +62,7 @@ public class ModelWrapperTest {
         otherPerson.setAge(23);
 
         personWrapper.set(otherPerson);
+        personWrapper.reload();
 
         assertThat(nameProperty.get()).isEqualTo("gisela");
         assertThat(ageProperty.get()).isEqualTo(23);
@@ -140,6 +139,7 @@ public class ModelWrapperTest {
         otherPerson.setAge(23);
 
         personWrapper.set(otherPerson);
+        personWrapper.reload();
 
         assertThat(nameProperty.get()).isEqualTo("gisela");
         assertThat(ageProperty.get()).isEqualTo(23);
