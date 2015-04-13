@@ -37,7 +37,7 @@ public class ItemOverviewViewModel implements ViewModel {
 		
 		showAllItems();
 		
-
+		
 		final NotificationCenter notificationCenter = MvvmFX.getNotificationCenter();
 		notificationCenter.subscribe("showAll", (key, payload) -> showAllItems());
 		notificationCenter.subscribe("showActive", (key, payload) -> showActiveItems());
@@ -52,7 +52,7 @@ public class ItemOverviewViewModel implements ViewModel {
 		items.setValue(completedItems);
 	}
 	
-	private void showActiveItems(){
+	private void showActiveItems() {
 		items.setValue(activeItems);
 	}
 	

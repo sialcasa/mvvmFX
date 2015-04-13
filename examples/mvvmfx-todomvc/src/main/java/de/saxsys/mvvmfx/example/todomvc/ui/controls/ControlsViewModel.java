@@ -38,15 +38,15 @@ public class ControlsViewModel implements ViewModel {
 	public StringProperty itemsLeftLabelTextProperty() {
 		return itemsLeftLabelText;
 	}
-
+	
 	public void all() {
 		notificationCenter.publish("showAll");
 	}
-
+	
 	public void active() {
 		notificationCenter.publish("showActive");
 	}
-
+	
 	public void completed() {
 		notificationCenter.publish("showCompleted");
 	}

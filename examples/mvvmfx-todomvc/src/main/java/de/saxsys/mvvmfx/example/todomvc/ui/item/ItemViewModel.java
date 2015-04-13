@@ -23,7 +23,7 @@ public class ItemViewModel implements ViewModel {
 	private StringProperty content = new SimpleStringProperty();
 	
 	private TodoItem item;
-
+	
 	public ItemViewModel(TodoItem item) {
 		this.item = item;
 		content.bindBidirectional(item.textProperty());
@@ -42,11 +42,11 @@ public class ItemViewModel implements ViewModel {
 		return completed;
 	}
 	
-	public boolean isCompleted(){
+	public boolean isCompleted() {
 		return completed.get();
 	}
 	
-	public BooleanProperty editModeProperty(){
+	public BooleanProperty editModeProperty() {
 		return editMode;
 	}
 	

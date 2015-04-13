@@ -9,14 +9,14 @@ import javafx.scene.control.Label;
  * @author manuel.mauky
  */
 public class ControlsView implements FxmlView<ControlsViewModel> {
-
+	
 	@FXML
 	public Label itemsLeftLabel;
 	
 	@InjectViewModel
 	private ControlsViewModel viewModel;
-
-	public void initialize(){
+	
+	public void initialize() {
 		itemsLeftLabel.textProperty().bind(viewModel.itemsLeftLabelTextProperty());
 	}
 	

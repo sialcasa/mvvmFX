@@ -14,7 +14,7 @@ import javafx.scene.layout.HBox;
  * @author manuel.mauky
  */
 public class ItemView implements FxmlView<ItemViewModel> {
-
+	
 	public static final String STRIKETHROUGH_CSS_CLASS = "strikethrough";
 	@FXML
 	public CheckBox completed;
@@ -31,7 +31,7 @@ public class ItemView implements FxmlView<ItemViewModel> {
 	public Button deleteButton;
 	@FXML
 	public HBox root;
-
+	
 	@InjectViewModel
 	private ItemViewModel viewModel;
 	
@@ -62,7 +62,7 @@ public class ItemView implements FxmlView<ItemViewModel> {
 		
 		contentLabel.textProperty().bind(viewModel.contentProperty());
 		contentLabel.setOnMouseClicked(event -> {
-			if(event.getClickCount() > 1){
+			if (event.getClickCount() > 1) {
 				viewModel.editModeProperty().set(true);
 				contentInput.requestFocus();
 			}
@@ -70,9 +70,9 @@ public class ItemView implements FxmlView<ItemViewModel> {
 		
 		
 		viewModel.textStrikeThrough().addListener((obs, oldV, newV) -> {
-			if(newV) {
+			if (newV) {
 				contentLabel.getStyleClass().add(STRIKETHROUGH_CSS_CLASS);
-			}else {
+			} else {
 				contentLabel.getStyleClass().remove(STRIKETHROUGH_CSS_CLASS);
 			}
 		});
