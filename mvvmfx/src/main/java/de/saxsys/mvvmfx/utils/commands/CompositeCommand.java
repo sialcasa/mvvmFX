@@ -26,22 +26,22 @@ import javafx.collections.ObservableList;
 import eu.lestard.doc.Beta;
 
 /**
- * CompositeCommand is an aggregation of other commands - a list of {@link Command} references internally. 
+ * CompositeCommand is an aggregation of other commands - a list of {@link Command} references internally.
  * <p>
- * It allows you to hook up multiple command targets to a single root command that itself can be hooked up to a command source such as
- * a button or menu item. 
+ * It allows you to hook up multiple command targets to a single root command that itself can be hooked up to a command
+ * source such as a button or menu item.
  * <p>
- * The {@link CompositeCommand} can hold references to any {@link Command object} but typically you will use it
- * in conjunction with {@link DelegateCommand}s. 
+ * The {@link CompositeCommand} can hold references to any {@link Command object} but typically you will use it in
+ * conjunction with {@link DelegateCommand}s.
  * 
  * <p>
- * When the {@link CompositeCommand#execute} method is invoked it will invoke the {@link Command#execute}
- * method on each of the child commands. 
+ * When the {@link CompositeCommand#execute} method is invoked it will invoke the {@link Command#execute} method on each
+ * of the child commands.
  * 
  * <p>
- *     
- * When {@link #isExecutable()} is called to determine whether the command is
- * enabled, it polls its child commands for their result from {@link #isExecutable()}.
+ * 
+ * When {@link #isExecutable()} is called to determine whether the command is enabled, it polls its child commands for
+ * their result from {@link #isExecutable()}.
  * 
  * @author alexander.casall
  *

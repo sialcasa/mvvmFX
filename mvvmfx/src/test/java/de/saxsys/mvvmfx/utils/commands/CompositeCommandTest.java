@@ -38,7 +38,7 @@ public class CompositeCommandTest {
 	@Test
 	public void executable() throws Exception {
 		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1, delegateCommand2);
-
+		
 		GCVerifier.forceGC();
 		
 		assertTrue(compositeCommand.isExecutable());
@@ -87,11 +87,11 @@ public class CompositeCommandTest {
 		condition1.setValue(true);
 		assertThat(compositeCommand.isExecutable()).isTrue();
 		assertThat(compositeCommand.executableProperty().get()).isTrue();
-
+		
 		condition2.setValue(false);
 		assertThat(compositeCommand.isExecutable()).isTrue();
 		assertThat(compositeCommand.executableProperty().get()).isTrue();
-
+		
 		compositeCommand.register(delegateCommand2);
 		GCVerifier.forceGC();
 		assertThat(compositeCommand.isExecutable()).isFalse();
