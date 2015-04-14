@@ -78,39 +78,39 @@ public class ContactFormViewModel implements ViewModel {
 	
 	
 	
-	public ObjectProperty<String> firstnameProperty() {
+	public Property<String> firstnameProperty() {
 		return contactWrapper.field("firstname", Contact::getFirstname, Contact::setFirstname);
 	}
 	
-	public ObjectProperty<String> titleProperty() {
+	public Property<String> titleProperty() {
 		return contactWrapper.field("title", Contact::getTitle, Contact::setTitle);
 	}
 	
-	public ObjectProperty<String> lastnameProperty() {
+	public Property<String> lastnameProperty() {
 		return contactWrapper.field("lastname", Contact::getLastname, Contact::setLastname);
 	}
 	
-	public ObjectProperty<String> roleProperty() {
+	public Property<String> roleProperty() {
 		return contactWrapper.field("role", Contact::getRole, Contact::setRole);
 	}
 	
-	public ObjectProperty<String> departmentProperty() {
+	public Property<String> departmentProperty() {
 		return contactWrapper.field("department", Contact::getDepartment, Contact::setDepartment);
 	}
 	
-	public ObjectProperty<LocalDate> birthdayProperty() {
+	public Property<LocalDate> birthdayProperty() {
 		return contactWrapper.field("birthday", Contact::getBirthday, Contact::setBirthday);
 	}
 	
-	public ObjectProperty<String> emailProperty() {
+	public Property<String> emailProperty() {
 		return contactWrapper.field("email", Contact::getEmailAddress, Contact::setEmailAddress);
 	}
 	
-	public ObjectProperty<String> mobileNumberProperty() {
+	public Property<String> mobileNumberProperty() {
 		return contactWrapper.field("mobileNumber", Contact::getMobileNumber, Contact::setMobileNumber);
 	}
 	
-	public ObjectProperty<String> phoneNumberProperty() {
+	public Property<String> phoneNumberProperty() {
 		return contactWrapper.field("phoneNumber", Contact::getPhoneNumber, Contact::setPhoneNumber);
 	}
 }

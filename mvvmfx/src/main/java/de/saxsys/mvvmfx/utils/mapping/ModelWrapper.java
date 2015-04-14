@@ -1,6 +1,7 @@
 package de.saxsys.mvvmfx.utils.mapping;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.WritableValue;
 
@@ -12,12 +13,18 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class ModelWrapper<T> {
-    
+
+    /**
+     * This interface defines the operations that are possible for each field of a wrapped class. 
+     * 
+     * @param <R>
+     * @param <T>
+     */
     private interface PropertyField<R, T> {
         void commit(T wrappedObject);
         void reload(T wrappedObject);
         void resetToDefault();
-        ObjectProperty<R> getProperty();
+        Property<R> getProperty();
     }
     
     private class FxPropertyField<R> implements PropertyField<R, T>{
@@ -52,7 +59,7 @@ public class ModelWrapper<T> {
         }
 
         @Override
-        public ObjectProperty<R> getProperty() {
+        public Property<R> getProperty() {
             return targetProperty;
         }
     }
@@ -94,7 +101,7 @@ public class ModelWrapper<T> {
         }
 
         @Override
-        public ObjectProperty<R> getProperty() {
+        public Property<R> getProperty() {
             return targetProperty;
         }
     }
@@ -138,7 +145,7 @@ public class ModelWrapper<T> {
         }
     }
 
-    private <R> ObjectProperty<R> add(PropertyField<R, T> field) {
+    private <R> Property<R> add(PropertyField<R, T> field) {
         fields.add(field);
         if(wrappedObject != null) {
             field.reload(wrappedObject);
@@ -146,45 +153,45 @@ public class ModelWrapper<T> {
         return field.getProperty();
     }
 
-    public <R> ObjectProperty<R> field(Function<T, WritableValue<R>> accessor) {
+    public <R> Property<R> field(Function<T, WritableValue<R>> accessor) {
         return add(new FxPropertyField<>(accessor));
     }
-    public <R> ObjectProperty<R> field(Function<T, WritableValue<R>> accessor, R defaultValue){
+    public <R> Property<R> field(Function<T, WritableValue<R>> accessor, R defaultValue){
         return add(new FxPropertyField<>(accessor, defaultValue));
     }
 
-    public <R> ObjectProperty<R> field(Function<T, R> getter, BiConsumer<T, R> setter) {
+    public <R> Property<R> field(Function<T, R> getter, BiConsumer<T, R> setter) {
         return add(new BeanPropertyField<>(getter, setter));
     }
 
-    public <R> ObjectProperty<R> field(Function<T, R> getter, BiConsumer<T, R> setter, R defaultValue){
+    public <R> Property<R> field(Function<T, R> getter, BiConsumer<T, R> setter, R defaultValue){
         return add(new BeanPropertyField<>(getter, setter, defaultValue));
     }
     
     @SuppressWarnings("unchecked")
-    private <R> ObjectProperty<R> addIdentified(String fieldName, PropertyField<R, T> field) {
+    private <R> Property<R> addIdentified(String fieldName, PropertyField<R, T> field) {
         if(identifiedFields.containsKey(fieldName)) {
-            final ObjectProperty<?> property = identifiedFields.get(fieldName).getProperty();
-            return (ObjectProperty<R>) property;
+            final Property<?> property = identifiedFields.get(fieldName).getProperty();
+            return (Property<R>) property;
         } else {
             identifiedFields.put(fieldName, field);
             return add(field);
         }
     }
 
-    public <R> ObjectProperty<R> field(String fieldName, Function<T, WritableValue<R>> accessor) {
+    public <R> Property<R> field(String fieldName, Function<T, WritableValue<R>> accessor) {
         return addIdentified(fieldName, new FxPropertyField<>(accessor));
     }
 
-    public <R> ObjectProperty<R> field(String fieldName, Function<T, WritableValue<R>> accessor, R defaultValue) {
+    public <R> Property<R> field(String fieldName, Function<T, WritableValue<R>> accessor, R defaultValue) {
         return addIdentified(fieldName, new FxPropertyField<>(accessor, defaultValue));
     }
 
-    public <R> ObjectProperty<R> field(String fieldName, Function<T, R> getter, BiConsumer<T, R> setter) {
+    public <R> Property<R> field(String fieldName, Function<T, R> getter, BiConsumer<T, R> setter) {
         return addIdentified(fieldName, new BeanPropertyField<>(getter, setter));
     }
 
-    public <R> ObjectProperty<R> field(String fieldName, Function<T, R> getter, BiConsumer<T, R> setter, R defaultValue) {
+    public <R> Property<R> field(String fieldName, Function<T, R> getter, BiConsumer<T, R> setter, R defaultValue) {
         return addIdentified(fieldName, new BeanPropertyField<>(getter, setter, defaultValue));
     }
 

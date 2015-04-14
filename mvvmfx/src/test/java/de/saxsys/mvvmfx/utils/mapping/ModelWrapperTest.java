@@ -1,11 +1,20 @@
 package de.saxsys.mvvmfx.utils.mapping;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.IntegerBinding;
+import javafx.beans.binding.IntegerExpression;
+import javafx.beans.binding.NumberBinding;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleIntegerProperty;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ModelWrapperTest {
+    
 
     @Test
     public void testWithGetterAndSetter(){
@@ -15,15 +24,15 @@ public class ModelWrapperTest {
 
         ModelWrapper<Person> personWrapper = new ModelWrapper<>(person);
         
-        final ObjectProperty<String> nameProperty = personWrapper.field(Person::getName, Person::setName);
-        final ObjectProperty<Integer> ageProperty = personWrapper.field(Person::getAge, Person::setAge);
+        final Property<String> nameProperty = personWrapper.field(Person::getName, Person::setName);
+        final Property<Integer> ageProperty = personWrapper.field(Person::getAge, Person::setAge);
         
-        assertThat(nameProperty.get()).isEqualTo("horst");
-        assertThat(ageProperty.get()).isEqualTo(32);
+        assertThat(nameProperty.getValue()).isEqualTo("horst");
+        assertThat(ageProperty.getValue()).isEqualTo(32);
 
 
-        nameProperty.set("hugo");
-        ageProperty.set(33);
+        nameProperty.setValue("hugo");
+        ageProperty.setValue(33);
 
         // still the old values
         assertThat(person.getName()).isEqualTo("horst");
@@ -38,13 +47,13 @@ public class ModelWrapperTest {
 
 
 
-        nameProperty.set("luise");
-        ageProperty.set(15);
+        nameProperty.setValue("luise");
+        ageProperty.setValue(15);
 
         personWrapper.reset();
 
-        assertThat(nameProperty.get()).isEqualTo(null);
-        assertThat(ageProperty.get()).isEqualTo(null);
+        assertThat(nameProperty.getValue()).isEqualTo(null);
+        assertThat(ageProperty.getValue()).isEqualTo(null);
 
         // the wrapped object has still the values from the last commit.
         assertThat(person.getName()).isEqualTo("hugo");
@@ -53,8 +62,8 @@ public class ModelWrapperTest {
 
         personWrapper.reload();
         // now the properties have the values from the wrapped object
-        assertThat(nameProperty.get()).isEqualTo("hugo");
-        assertThat(ageProperty.get()).isEqualTo(33);
+        assertThat(nameProperty.getValue()).isEqualTo("hugo");
+        assertThat(ageProperty.getValue()).isEqualTo(33);
 
 
         Person otherPerson = new Person();
@@ -64,11 +73,11 @@ public class ModelWrapperTest {
         personWrapper.set(otherPerson);
         personWrapper.reload();
 
-        assertThat(nameProperty.get()).isEqualTo("gisela");
-        assertThat(ageProperty.get()).isEqualTo(23);
+        assertThat(nameProperty.getValue()).isEqualTo("gisela");
+        assertThat(ageProperty.getValue()).isEqualTo(23);
 
-        nameProperty.set("georg");
-        ageProperty.set(24);
+        nameProperty.setValue("georg");
+        ageProperty.setValue(24);
 
         personWrapper.commit();
 
@@ -92,15 +101,15 @@ public class ModelWrapperTest {
         ModelWrapper<PersonFX> personWrapper = new ModelWrapper<>(person);
 
 
-        final ObjectProperty<String> nameProperty = personWrapper.field(PersonFX::nameProperty);
-        final ObjectProperty<Number> ageProperty = personWrapper.field(PersonFX::ageProperty);
+        final Property<String> nameProperty = personWrapper.field(PersonFX::nameProperty);
+        final Property<Number> ageProperty = personWrapper.field(PersonFX::ageProperty);
 
-        assertThat(nameProperty.get()).isEqualTo("horst");
-        assertThat(ageProperty.get()).isEqualTo(32);
+        assertThat(nameProperty.getValue()).isEqualTo("horst");
+        assertThat(ageProperty.getValue()).isEqualTo(32);
 
 
-        nameProperty.set("hugo");
-        ageProperty.set(33);
+        nameProperty.setValue("hugo");
+        ageProperty.setValue(33);
 
         // still the old values
         assertThat(person.getName()).isEqualTo("horst");
@@ -115,13 +124,13 @@ public class ModelWrapperTest {
 
 
 
-        nameProperty.set("luise");
-        ageProperty.set(15);
+        nameProperty.setValue("luise");
+        ageProperty.setValue(15);
 
         personWrapper.reset();
 
-        assertThat(nameProperty.get()).isEqualTo(null);
-        assertThat(ageProperty.get()).isEqualTo(null);
+        assertThat(nameProperty.getValue()).isEqualTo(null);
+        assertThat(ageProperty.getValue()).isEqualTo(null);
 
         // the wrapped object has still the values from the last commit.
         assertThat(person.getName()).isEqualTo("hugo");
@@ -130,8 +139,8 @@ public class ModelWrapperTest {
 
         personWrapper.reload();
         // now the properties have the values from the wrapped object
-        assertThat(nameProperty.get()).isEqualTo("hugo");
-        assertThat(ageProperty.get()).isEqualTo(33);
+        assertThat(nameProperty.getValue()).isEqualTo("hugo");
+        assertThat(ageProperty.getValue()).isEqualTo(33);
 
 
         PersonFX otherPerson = new PersonFX();
@@ -141,11 +150,11 @@ public class ModelWrapperTest {
         personWrapper.set(otherPerson);
         personWrapper.reload();
 
-        assertThat(nameProperty.get()).isEqualTo("gisela");
-        assertThat(ageProperty.get()).isEqualTo(23);
+        assertThat(nameProperty.getValue()).isEqualTo("gisela");
+        assertThat(ageProperty.getValue()).isEqualTo(23);
 
-        nameProperty.set("georg");
-        ageProperty.set(24);
+        nameProperty.setValue("georg");
+        ageProperty.setValue(24);
 
         personWrapper.commit();
 
@@ -166,12 +175,12 @@ public class ModelWrapperTest {
 
         ModelWrapper<Person> personWrapper = new ModelWrapper<>();
 
-        final ObjectProperty<String> nameProperty = personWrapper.field("name", Person::getName, Person::setName);
-        final ObjectProperty<Integer> ageProperty = personWrapper.field("age", Person::getAge, Person::setAge);
+        final Property<String> nameProperty = personWrapper.field("name", Person::getName, Person::setName);
+        final Property<Integer> ageProperty = personWrapper.field("age", Person::getAge, Person::setAge);
 
 
-        final ObjectProperty<String> nameProperty2 = personWrapper.field("name", Person::getName, Person::setName);
-        final ObjectProperty<Integer> ageProperty2 = personWrapper.field("age", Person::getAge, Person::setAge);
+        final Property<String> nameProperty2 = personWrapper.field("name", Person::getName, Person::setName);
+        final Property<Integer> ageProperty2 = personWrapper.field("age", Person::getAge, Person::setAge);
 
 
         assertThat(nameProperty).isSameAs(nameProperty2);
