@@ -1,6 +1,7 @@
 package de.saxsys.mvvmfx.utils.commands;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -13,6 +14,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class CompositeCommandTest {
@@ -142,6 +144,19 @@ public class CompositeCommandTest {
 	}
 	
 	@Test
+	@Ignore("ignore until fixed")
+	public void allCommandsAreUnregistered() throws Exception{
+		
+		// UncaughtExceptionHandler is defined to be able to detect exception from listeners.
+		Thread.currentThread().setUncaughtExceptionHandler((thread, exception) -> fail("Exception was thrown", exception));
+		
+		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1, delegateCommand2);
+		
+		compositeCommand.unregister(delegateCommand1);
+		compositeCommand.unregister(delegateCommand2);
+	}
+	
+	@Test
 	public void longRunningAsyncComposite() throws Exception {
 		
 		BooleanProperty condition = new SimpleBooleanProperty(true);
@@ -186,7 +201,6 @@ public class CompositeCommandTest {
 		try {
 			Thread.sleep(millis);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
