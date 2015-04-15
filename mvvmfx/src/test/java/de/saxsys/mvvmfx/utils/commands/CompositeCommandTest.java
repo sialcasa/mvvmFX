@@ -44,27 +44,22 @@ public class CompositeCommandTest {
 		GCVerifier.forceGC();
 		
 		assertTrue(compositeCommand.isExecutable());
-		assertTrue(compositeCommand.executableProperty().get());
 		
 		condition1.set(false);
 		
 		assertFalse(compositeCommand.isExecutable());
-		assertFalse(compositeCommand.executableProperty().get());
 		
 		condition2.set(false);
 		
 		assertFalse(compositeCommand.isExecutable());
-		assertFalse(compositeCommand.executableProperty().get());
 		
 		condition1.set(true);
 		
 		assertFalse(compositeCommand.isExecutable());
-		assertFalse(compositeCommand.executableProperty().get());
 		
 		condition2.set(true);
 		
 		assertTrue(compositeCommand.isExecutable());
-		assertTrue(compositeCommand.executableProperty().get());
 	}
 	
 	@Test
@@ -74,35 +69,28 @@ public class CompositeCommandTest {
 		
 		
 		assertThat(compositeCommand.isExecutable()).isTrue();
-		assertThat(compositeCommand.executableProperty().get()).isTrue();
 		
 		compositeCommand.register(delegateCommand1);
 		GCVerifier.forceGC();
 		
 		assertThat(compositeCommand.isExecutable()).isTrue();
-		assertThat(compositeCommand.executableProperty().get()).isTrue();
 		
 		condition1.setValue(false);
 		assertThat(compositeCommand.isExecutable()).isFalse();
-		assertThat(compositeCommand.executableProperty().get()).isFalse();
 		
 		condition1.setValue(true);
 		assertThat(compositeCommand.isExecutable()).isTrue();
-		assertThat(compositeCommand.executableProperty().get()).isTrue();
 		
 		condition2.setValue(false);
 		assertThat(compositeCommand.isExecutable()).isTrue();
-		assertThat(compositeCommand.executableProperty().get()).isTrue();
 		
 		compositeCommand.register(delegateCommand2);
 		GCVerifier.forceGC();
 		assertThat(compositeCommand.isExecutable()).isFalse();
-		assertThat(compositeCommand.executableProperty().get()).isFalse();
 		
 		compositeCommand.unregister(delegateCommand2);
 		GCVerifier.forceGC();
 		assertThat(compositeCommand.isExecutable()).isTrue();
-		assertThat(compositeCommand.executableProperty().get()).isTrue();
 	}
 	
 	@Test
@@ -111,15 +99,12 @@ public class CompositeCommandTest {
 		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1);
 		
 		assertTrue(compositeCommand.isExecutable());
-		assertTrue(compositeCommand.executableProperty().get());
 		// prepare delegateCommand2
 		condition2.set(false);
 		compositeCommand.register(delegateCommand2);
 		assertFalse(compositeCommand.isExecutable());
-		assertFalse(compositeCommand.executableProperty().get());
 		compositeCommand.unregister(delegateCommand2);
 		assertTrue(compositeCommand.isExecutable());
-		assertTrue(compositeCommand.executableProperty().get());
 	}
 	
 	@Test
@@ -163,9 +148,7 @@ public class CompositeCommandTest {
 		
 		CompletableFuture<Void> future = new CompletableFuture<>();
 		
-		DelegateCommand delegateCommand1 = new DelegateCommand(() -> {
-			sleep(500);
-		}, condition, true);
+		DelegateCommand delegateCommand1 = new DelegateCommand(() -> sleep(500), condition, true);
 		
 		DelegateCommand delegateCommand2 = new DelegateCommand(() -> {
 			sleep(1000);

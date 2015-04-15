@@ -33,22 +33,22 @@ public abstract class CommandBase implements Command {
 	protected final ReadOnlyBooleanWrapper running = new ReadOnlyBooleanWrapper(false);
 	
 	@Override
-	public final ReadOnlyBooleanProperty executableProperty() {
+	public ReadOnlyBooleanProperty executableProperty() {
 		return this.executable.getReadOnlyProperty();
 	}
 	
 	@Override
-	public final boolean isExecutable() {
+	public boolean isExecutable() {
 		return this.executableProperty().get();
 	}
 	
 	@Override
-	public final ReadOnlyBooleanProperty runningProperty() {
+	public ReadOnlyBooleanProperty runningProperty() {
 		return this.running.getReadOnlyProperty();
 	}
 	
 	@Override
-	public final boolean isRunning() {
+	public boolean isRunning() {
 		return this.running.get();
 	}
 	
