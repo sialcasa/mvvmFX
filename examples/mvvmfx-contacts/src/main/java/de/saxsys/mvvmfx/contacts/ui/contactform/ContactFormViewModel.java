@@ -1,46 +1,27 @@
 package de.saxsys.mvvmfx.contacts.ui.contactform;
 
-import java.time.LocalDate;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.scene.control.Control;
-
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.contacts.model.Contact;
 import de.saxsys.mvvmfx.contacts.model.validation.BirthdayValidator;
 import de.saxsys.mvvmfx.contacts.model.validation.EmailAddressValidator;
 import de.saxsys.mvvmfx.contacts.model.validation.PhoneNumberValidator;
+import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
+import javafx.beans.property.*;
+import javafx.scene.control.Control;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
+import java.time.LocalDate;
 
 public class ContactFormViewModel implements ViewModel {
 	
-	private StringProperty firstname = new SimpleStringProperty();
-	private StringProperty title = new SimpleStringProperty();
-	private StringProperty lastname = new SimpleStringProperty();
-	
-	private StringProperty role = new SimpleStringProperty();
-	private StringProperty department = new SimpleStringProperty();
-	
-	private ObjectProperty<LocalDate> birthday = new SimpleObjectProperty<>();
-	
-	private StringProperty email = new SimpleStringProperty();
-	private StringProperty mobileNumber = new SimpleStringProperty();
-	private StringProperty phoneNumber = new SimpleStringProperty();
-	
-	
-	
+	private ModelWrapper<Contact> contactWrapper = new ModelWrapper<>();
+
 	private ReadOnlyBooleanWrapper valid = new ReadOnlyBooleanWrapper();
 	
 	
 	ValidationSupport validationSupport = new ValidationSupport();
-	private Contact contact;
-	
+
 	public ContactFormViewModel() {
 		valid.bind(validationSupport.invalidProperty().isNull().or(validationSupport.invalidProperty().isEqualTo
 				(false)));
@@ -48,52 +29,23 @@ public class ContactFormViewModel implements ViewModel {
 	}
 	
 	public void resetForm() {
-		firstname.set("");
-		lastname.set("");
-		title.set("");
-		role.set("");
-		department.set("");
-		email.set("");
-		mobileNumber.set("");
-		phoneNumber.set("");
-		
-		birthday.set(null);
+		contactWrapper.reset();
 	}
 	
 	public void initWithContact(Contact contact) {
-		// init the values with the contact.
-		this.contact = contact;
-		
-		firstname.set(contact.getFirstname());
-		lastname.set(contact.getLastname());
-		title.set(contact.getTitle());
-		
-		role.set(contact.getRole());
-		department.set(contact.getDepartment());
-		
-		birthday.set(contact.getBirthday());
-		email.set(contact.getEmailAddress());
-		mobileNumber.set(contact.getMobileNumber());
-		phoneNumber.set(contact.getPhoneNumber());
+		this.contactWrapper.set(contact);
+		this.contactWrapper.reload();
 	}
 	
 	public Contact getContact() {
-		// use existing contact if it was set, otherwise create new instance
-		Contact resultContact = (contact == null) ? new Contact() : contact;
-		
-		resultContact.setFirstname(firstname.get());
-		resultContact.setLastname(lastname.get());
-		resultContact.setTitle(title.get());
-		
-		resultContact.setRole(role.get());
-		resultContact.setDepartment(department.get());
-		
-		resultContact.setBirthday(birthday.get());
-		resultContact.setEmailAddress(email.get());
-		resultContact.setMobileNumber(mobileNumber.get());
-		resultContact.setPhoneNumber(phoneNumber.get());
-		
-		return resultContact;
+
+		if(contactWrapper.get() == null) {
+			contactWrapper.set(new Contact());
+		}
+
+		contactWrapper.commit();
+
+		return contactWrapper.get();
 	}
 	
 	public void initValidationForFirstname(Control input) {
@@ -126,39 +78,39 @@ public class ContactFormViewModel implements ViewModel {
 	
 	
 	
-	public StringProperty firstnameProperty() {
-		return firstname;
+	public Property<String> firstnameProperty() {
+		return contactWrapper.field("firstname", Contact::getFirstname, Contact::setFirstname);
 	}
 	
-	public StringProperty titleProperty() {
-		return title;
+	public Property<String> titleProperty() {
+		return contactWrapper.field("title", Contact::getTitle, Contact::setTitle);
 	}
 	
-	public StringProperty lastnameProperty() {
-		return lastname;
+	public Property<String> lastnameProperty() {
+		return contactWrapper.field("lastname", Contact::getLastname, Contact::setLastname);
 	}
 	
-	public StringProperty roleProperty() {
-		return role;
+	public Property<String> roleProperty() {
+		return contactWrapper.field("role", Contact::getRole, Contact::setRole);
 	}
 	
-	public StringProperty departmentProperty() {
-		return department;
+	public Property<String> departmentProperty() {
+		return contactWrapper.field("department", Contact::getDepartment, Contact::setDepartment);
 	}
 	
-	public ObjectProperty<LocalDate> birthdayProperty() {
-		return birthday;
+	public Property<LocalDate> birthdayProperty() {
+		return contactWrapper.field("birthday", Contact::getBirthday, Contact::setBirthday);
 	}
 	
-	public StringProperty emailProperty() {
-		return email;
+	public Property<String> emailProperty() {
+		return contactWrapper.field("email", Contact::getEmailAddress, Contact::setEmailAddress);
 	}
 	
-	public StringProperty mobileNumberProperty() {
-		return mobileNumber;
+	public Property<String> mobileNumberProperty() {
+		return contactWrapper.field("mobileNumber", Contact::getMobileNumber, Contact::setMobileNumber);
 	}
 	
-	public StringProperty phoneNumberProperty() {
-		return phoneNumber;
+	public Property<String> phoneNumberProperty() {
+		return contactWrapper.field("phoneNumber", Contact::getPhoneNumber, Contact::setPhoneNumber);
 	}
 }
