@@ -1,21 +1,19 @@
 package de.saxsys.mvvmfx.utils.commands;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-
 import de.saxsys.mvvmfx.testingutils.GCVerifier;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
-
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class CompositeCommandTest {
 	
@@ -129,7 +127,6 @@ public class CompositeCommandTest {
 	}
 	
 	@Test
-	@Ignore("ignore until fixed")
 	public void allCommandsAreUnregistered() throws Exception{
 		
 		// UncaughtExceptionHandler is defined to be able to detect exception from listeners.
@@ -159,7 +156,9 @@ public class CompositeCommandTest {
 		}, condition, false);
 		
 		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1, delegateCommand2, delegateCommand3);
-		
+
+		GCVerifier.forceGC();
+
 		assertFalse(compositeCommand.runningProperty().get());
 		assertFalse(delegateCommand1.runningProperty().get());
 		assertFalse(delegateCommand2.runningProperty().get());

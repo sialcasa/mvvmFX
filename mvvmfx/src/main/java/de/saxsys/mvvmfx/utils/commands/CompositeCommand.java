@@ -15,15 +15,12 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.commands;
 
+import eu.lestard.doc.Beta;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import eu.lestard.doc.Beta;
 
 /**
  * CompositeCommand is an aggregation of other commands - a list of {@link Command} references internally.
@@ -86,23 +83,28 @@ public class CompositeCommand extends CommandBase {
 	private void initRegisteredCommandsListener() {
 		this.registeredCommands.addListener((ListChangeListener<Command>) c -> {
 			while (c.next()) {
-				BooleanBinding executableBinding = null;
-				BooleanBinding runningBinding = null;
-				
-				for (int i = 0; i < registeredCommands.size(); i++) {
-					ReadOnlyBooleanProperty currentExecutable = registeredCommands.get(i).executableProperty();
-					ReadOnlyBooleanProperty currentRunning = registeredCommands.get(i).runningProperty();
-					
-					if (i == 0) {
-						executableBinding = currentExecutable.and(currentExecutable);
-						runningBinding = currentRunning.or(currentRunning);
-					} else {
-						executableBinding = executableBinding.and(currentExecutable);
-						runningBinding = runningBinding.or(currentRunning);
+				if(registeredCommands.isEmpty()) {
+					executable.unbind();
+					running.unbind();
+				} else {
+					BooleanBinding executableBinding = null;
+					BooleanBinding runningBinding = null;
+
+					for (int i = 0; i < registeredCommands.size(); i++) {
+						ReadOnlyBooleanProperty currentExecutable = registeredCommands.get(i).executableProperty();
+						ReadOnlyBooleanProperty currentRunning = registeredCommands.get(i).runningProperty();
+
+						if (i == 0) {
+							executableBinding = currentExecutable.and(currentExecutable);
+							runningBinding = currentRunning.or(currentRunning);
+						} else {
+							executableBinding = executableBinding.and(currentExecutable);
+							runningBinding = runningBinding.or(currentRunning);
+						}
 					}
+					executable.bind(executableBinding);
+					running.bind(runningBinding);
 				}
-				executable.bind(executableBinding);
-				running.bind(runningBinding);
 			}
 		});
 	}
