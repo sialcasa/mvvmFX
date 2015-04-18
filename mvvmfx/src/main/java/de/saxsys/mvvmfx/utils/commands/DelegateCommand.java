@@ -99,7 +99,7 @@ public class DelegateCommand extends CommandBase {
 	 * @see de.saxsys.mvvmfx.utils.commands.Command#execute
 	 */
 	@Override
-	public final void execute() {
+	public void execute() {
 		
 		final boolean callerOnUIThread = Platform.isFxApplicationThread();
 		

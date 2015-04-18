@@ -23,17 +23,14 @@ public class DelegateCommandTest {
 		}, condition);
 		
 		assertTrue(delegateCommand.isExecutable());
-		assertTrue(delegateCommand.executableProperty().get());
 		
 		condition.set(false);
 		
 		assertFalse(delegateCommand.isExecutable());
-		assertFalse(delegateCommand.executableProperty().get());
 		
 		condition.set(true);
 		
 		assertTrue(delegateCommand.isExecutable());
-		assertTrue(delegateCommand.executableProperty().get());
 	}
 	
 	@Test
@@ -70,10 +67,12 @@ public class DelegateCommandTest {
 		}, condition);
 		
 		delegateCommand.runningProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-			if (!oldValue && newValue)
+			if (!oldValue && newValue) {
 				run.set(true);
-			if (oldValue && !newValue)
+			}
+			if (oldValue && !newValue) {
 				finished.set(true);
+			}
 		});
 		
 		delegateCommand.execute();

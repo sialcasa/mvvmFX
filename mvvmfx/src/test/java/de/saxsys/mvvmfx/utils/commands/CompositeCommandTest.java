@@ -1,19 +1,19 @@
 package de.saxsys.mvvmfx.utils.commands;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-
 import de.saxsys.mvvmfx.testingutils.GCVerifier;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class CompositeCommandTest {
 	
@@ -42,27 +42,22 @@ public class CompositeCommandTest {
 		GCVerifier.forceGC();
 		
 		assertTrue(compositeCommand.isExecutable());
-		assertTrue(compositeCommand.executableProperty().get());
 		
 		condition1.set(false);
 		
 		assertFalse(compositeCommand.isExecutable());
-		assertFalse(compositeCommand.executableProperty().get());
 		
 		condition2.set(false);
 		
 		assertFalse(compositeCommand.isExecutable());
-		assertFalse(compositeCommand.executableProperty().get());
 		
 		condition1.set(true);
 		
 		assertFalse(compositeCommand.isExecutable());
-		assertFalse(compositeCommand.executableProperty().get());
 		
 		condition2.set(true);
 		
 		assertTrue(compositeCommand.isExecutable());
-		assertTrue(compositeCommand.executableProperty().get());
 	}
 	
 	@Test
@@ -72,35 +67,28 @@ public class CompositeCommandTest {
 		
 		
 		assertThat(compositeCommand.isExecutable()).isTrue();
-		assertThat(compositeCommand.executableProperty().get()).isTrue();
 		
 		compositeCommand.register(delegateCommand1);
 		GCVerifier.forceGC();
 		
 		assertThat(compositeCommand.isExecutable()).isTrue();
-		assertThat(compositeCommand.executableProperty().get()).isTrue();
 		
 		condition1.setValue(false);
 		assertThat(compositeCommand.isExecutable()).isFalse();
-		assertThat(compositeCommand.executableProperty().get()).isFalse();
 		
 		condition1.setValue(true);
 		assertThat(compositeCommand.isExecutable()).isTrue();
-		assertThat(compositeCommand.executableProperty().get()).isTrue();
 		
 		condition2.setValue(false);
 		assertThat(compositeCommand.isExecutable()).isTrue();
-		assertThat(compositeCommand.executableProperty().get()).isTrue();
 		
 		compositeCommand.register(delegateCommand2);
 		GCVerifier.forceGC();
 		assertThat(compositeCommand.isExecutable()).isFalse();
-		assertThat(compositeCommand.executableProperty().get()).isFalse();
 		
 		compositeCommand.unregister(delegateCommand2);
 		GCVerifier.forceGC();
 		assertThat(compositeCommand.isExecutable()).isTrue();
-		assertThat(compositeCommand.executableProperty().get()).isTrue();
 	}
 	
 	@Test
@@ -109,15 +97,12 @@ public class CompositeCommandTest {
 		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1);
 		
 		assertTrue(compositeCommand.isExecutable());
-		assertTrue(compositeCommand.executableProperty().get());
 		// prepare delegateCommand2
 		condition2.set(false);
 		compositeCommand.register(delegateCommand2);
 		assertFalse(compositeCommand.isExecutable());
-		assertFalse(compositeCommand.executableProperty().get());
 		compositeCommand.unregister(delegateCommand2);
 		assertTrue(compositeCommand.isExecutable());
-		assertTrue(compositeCommand.executableProperty().get());
 	}
 	
 	@Test
@@ -142,15 +127,25 @@ public class CompositeCommandTest {
 	}
 	
 	@Test
+	public void allCommandsAreUnregistered() throws Exception{
+		
+		// UncaughtExceptionHandler is defined to be able to detect exception from listeners.
+		Thread.currentThread().setUncaughtExceptionHandler((thread, exception) -> fail("Exception was thrown", exception));
+		
+		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1, delegateCommand2);
+		
+		compositeCommand.unregister(delegateCommand1);
+		compositeCommand.unregister(delegateCommand2);
+	}
+	
+	@Test
 	public void longRunningAsyncComposite() throws Exception {
 		
 		BooleanProperty condition = new SimpleBooleanProperty(true);
 		
 		CompletableFuture<Void> future = new CompletableFuture<>();
 		
-		DelegateCommand delegateCommand1 = new DelegateCommand(() -> {
-			sleep(500);
-		}, condition, true);
+		DelegateCommand delegateCommand1 = new DelegateCommand(() -> sleep(500), condition, true);
 		
 		DelegateCommand delegateCommand2 = new DelegateCommand(() -> {
 			sleep(1000);
@@ -161,7 +156,9 @@ public class CompositeCommandTest {
 		}, condition, false);
 		
 		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1, delegateCommand2, delegateCommand3);
-		
+
+		GCVerifier.forceGC();
+
 		assertFalse(compositeCommand.runningProperty().get());
 		assertFalse(delegateCommand1.runningProperty().get());
 		assertFalse(delegateCommand2.runningProperty().get());
@@ -186,7 +183,6 @@ public class CompositeCommandTest {
 		try {
 			Thread.sleep(millis);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
