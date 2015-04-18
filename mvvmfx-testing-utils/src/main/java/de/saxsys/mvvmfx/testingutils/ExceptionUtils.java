@@ -1,6 +1,6 @@
 package de.saxsys.mvvmfx.testingutils;
 
-public class TestUtils {
+public class ExceptionUtils {
 	
 	/**
 	 * This method returns the root cause of a given Exception.

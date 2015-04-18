@@ -1,8 +1,9 @@
 package de.saxsys.mvvmfx.testingutils;
 
-import static org.assertj.core.api.Assertions.*;
-
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class GCVerifierTest {
 	
@@ -14,7 +15,6 @@ public class GCVerifierTest {
 		GCVerifier verifier = GCVerifier.create(testObject);
 		
 		assertThat(testObject).isNotNull();
-		
 		
 		testObject = null;
 		

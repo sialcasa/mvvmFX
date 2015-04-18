@@ -1,8 +1,8 @@
 package de.saxsys.mvvmfx.testingutils;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.lang.ref.WeakReference;
+
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * This is a small testing helper to verify that a given object is available for Garbage Collection.

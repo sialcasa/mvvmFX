@@ -81,6 +81,8 @@
 		<module>mvvmfx-guice</module>
 		<module>examples</module>
 		<module>mvvmfx-archetype</module>
+		<module>mvvmfx-utils</module>
+		<module>mvvmfx-testing-utils</module>
 	</modules>
 
 	<dependencyManagement>
