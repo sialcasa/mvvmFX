@@ -15,9 +15,7 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.sizebinding;
 
-import static de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder.bindHeight;
-import static de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder.bindSize;
-import static de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder.bindWidth;
+import static de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder.*;
 
 import javafx.scene.image.ImageView;
 

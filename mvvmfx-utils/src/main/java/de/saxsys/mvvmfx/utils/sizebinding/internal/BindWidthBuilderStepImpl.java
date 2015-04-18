@@ -13,68 +13,70 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package de.saxsys.mvvmfx.internal.utils.sizebinding;
+package de.saxsys.mvvmfx.utils.sizebinding.internal;
 
-import de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.control.Control;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 
+import de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder;
+
+
 /**
- * Implementation of the Builder steps to bind the height of a given source component to the target component.
- * 
+ * Implementation of the Builder steps to bind the width of a given source component to the target component.
+ *
  * @author manuel.mauky
  */
-public class BindHeightBuilderStepImpl implements SizeBindingsBuilder.BindHeightBuilderStep,
-		SizeBindingsBuilder.FromBindHeightBuilderStep {
+public class BindWidthBuilderStepImpl implements SizeBindingsBuilder.BindWidthBuilderStep,
+		SizeBindingsBuilder.FromBindWidthBuilderStep {
 	
-	private ReadOnlyDoubleProperty height;
+	private ReadOnlyDoubleProperty width;
 	
 	@Override
 	public void to(Region target) {
-		target.maxHeightProperty().bind(height);
-		target.minHeightProperty().bind(height);
+		target.maxWidthProperty().bind(width);
+		target.minWidthProperty().bind(width);
 	}
 	
 	@Override
 	public void to(Control target) {
-		target.maxHeightProperty().bind(height);
-		target.minHeightProperty().bind(height);
+		target.maxWidthProperty().bind(width);
+		target.minWidthProperty().bind(width);
 	}
 	
 	@Override
 	public void to(Rectangle target) {
-		target.heightProperty().bind(height);
+		target.widthProperty().bind(width);
 	}
 	
 	@Override
 	public void to(ImageView target) {
-		target.fitHeightProperty().bind(height);
+		target.fitWidthProperty().bind(width);
 	}
 	
 	@Override
-	public SizeBindingsBuilder.FromBindHeightBuilderStep from(Region source) {
-		height = source.heightProperty();
+	public SizeBindingsBuilder.FromBindWidthBuilderStep from(Region source) {
+		width = source.widthProperty();
 		return this;
 	}
 	
 	@Override
-	public SizeBindingsBuilder.FromBindHeightBuilderStep from(Control source) {
-		height = source.heightProperty();
+	public SizeBindingsBuilder.FromBindWidthBuilderStep from(Control source) {
+		width = source.widthProperty();
 		return this;
 	}
 	
 	@Override
-	public SizeBindingsBuilder.FromBindHeightBuilderStep from(Rectangle source) {
-		height = source.heightProperty();
+	public SizeBindingsBuilder.FromBindWidthBuilderStep from(Rectangle source) {
+		width = source.widthProperty();
 		return this;
 	}
 	
 	@Override
-	public SizeBindingsBuilder.FromBindHeightBuilderStep from(ImageView source) {
-		height = source.fitHeightProperty();
+	public SizeBindingsBuilder.FromBindWidthBuilderStep from(ImageView source) {
+		width = source.fitWidthProperty();
 		return this;
 	}
 }

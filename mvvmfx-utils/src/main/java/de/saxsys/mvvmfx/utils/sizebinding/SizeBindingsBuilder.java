@@ -15,25 +15,22 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.sizebinding;
 
-import de.saxsys.mvvmfx.internal.utils.sizebinding.BindHeightBuilderStepImpl;
-import de.saxsys.mvvmfx.internal.utils.sizebinding.BindSizeBuilderStepImpl;
-import de.saxsys.mvvmfx.internal.utils.sizebinding.BindWidthBuilderStepImpl;
-import de.saxsys.mvvmfx.internal.utils.sizebinding.UnbindHeightBuilderStepImpl;
-import de.saxsys.mvvmfx.internal.utils.sizebinding.UnbindSizeBuilderStepImpl;
-import de.saxsys.mvvmfx.internal.utils.sizebinding.UnbindWidthBuilderStepImpl;
 import javafx.scene.control.Control;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 
+import de.saxsys.mvvmfx.utils.sizebinding.internal.*;
+
+
 
 /**
  * This class is a helper for binding/unbind the size of two components. It can handle the following component types: <br>
  * <ul>
- * <li>{@link javafx.scene.layout.Region}</li>
- * <li>{@link javafx.scene.control.Control}</li>
- * <li>{@link javafx.scene.shape.Rectangle}</li>
- * <li>{@link javafx.scene.image.ImageView}</li>
+ * <li>{@link Region}</li>
+ * <li>{@link Control}</li>
+ * <li>{@link Rectangle}</li>
+ * <li>{@link ImageView}</li>
  * </ul>
  * 
  * Usage example:

@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package de.saxsys.mvvmfx.internal.utils.sizebinding;
+package de.saxsys.mvvmfx.utils.sizebinding.internal;
 
-import de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder;
 import javafx.scene.control.Control;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
+
+import de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder;
 
 /**
  * Implementation of the Builder steps to unbind the height of a given component.

@@ -15,7 +15,7 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.sizebinding;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.scene.control.Control;

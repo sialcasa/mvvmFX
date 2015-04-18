@@ -15,17 +15,16 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.sizebinding;
 
-import static de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder.bindSize;
-import static de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder.unbindSize;
-
 import javafx.scene.control.Control;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder.bindSize;
+import static de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder.unbindSize;
 
 
 public class UnbindSizeTest extends SizeBindingsBuilderTestBase {

@@ -13,41 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package de.saxsys.mvvmfx.internal.utils.sizebinding;
+package de.saxsys.mvvmfx.utils.sizebinding.internal;
 
-import de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder;
 import javafx.scene.control.Control;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 
+import de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder;
+
 /**
- * Implementation of the Builder steps to unbind the width of a given component.
+ * Implementation of the Builder steps to unbind the size of a given component.
  *
  * @author manuel.mauky
  */
-public class UnbindWidthBuilderStepImpl implements SizeBindingsBuilder.UnbindStep {
-	
+public class UnbindSizeBuilderStepImpl implements SizeBindingsBuilder.UnbindStep {
 	@Override
 	public void of(Region source) {
-		source.maxWidthProperty().unbind();
-		source.minWidthProperty().unbind();
+		new UnbindWidthBuilderStepImpl().of(source);
+		new UnbindHeightBuilderStepImpl().of(source);
 	}
 	
 	@Override
 	public void of(Control source) {
-		source.maxWidthProperty().unbind();
-		source.minWidthProperty().unbind();
-		
+		new UnbindWidthBuilderStepImpl().of(source);
+		new UnbindHeightBuilderStepImpl().of(source);
 	}
 	
 	@Override
 	public void of(Rectangle source) {
-		source.widthProperty().unbind();
+		new UnbindWidthBuilderStepImpl().of(source);
+		new UnbindHeightBuilderStepImpl().of(source);
 	}
 	
 	@Override
 	public void of(ImageView source) {
-		source.fitWidthProperty().unbind();
+		new UnbindWidthBuilderStepImpl().of(source);
+		new UnbindHeightBuilderStepImpl().of(source);
 	}
 }
