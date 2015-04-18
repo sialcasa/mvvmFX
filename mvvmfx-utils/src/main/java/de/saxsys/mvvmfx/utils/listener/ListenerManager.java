@@ -15,18 +15,18 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.listener;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
-import java.util.function.BiConsumer;
-
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.function.BiConsumer;
 
 /**
  * The {@link ListenerManager} is used to be able to clean up listeners when they are not used anymore. A typical use
