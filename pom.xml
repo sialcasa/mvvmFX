@@ -156,6 +156,9 @@
 					<javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
 					<quiet>true</quiet>
 					<additionalparam>-Xdoclint:none</additionalparam>
+					<excludePackageNames>
+						*.internal
+					</excludePackageNames>
 				</configuration>
 				<executions>
 					<execution>

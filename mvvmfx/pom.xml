@@ -29,19 +29,6 @@
 	<name>mvvmFX core</name>
 	<description>This module is the core implementation of the framework</description>
 
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-					<excludePackageNames>
-						de.saxsys.mvvmfx.internal
-					</excludePackageNames>
-				</configuration>
-			</plugin>
-		</plugins>
-
-	</build>
 
 	<dependencies>
 		<dependency>

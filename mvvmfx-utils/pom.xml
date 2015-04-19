@@ -15,20 +15,6 @@
     <name>mvvmFX utils</name>
     <description>This module contains some utils for JavaFX and mvvmFX</description>
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <excludePackageNames>
-                        de.saxsys.mvvmfx.internal
-                    </excludePackageNames>
-                </configuration>
-            </plugin>
-        </plugins>
-
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>de.saxsys</groupId>
