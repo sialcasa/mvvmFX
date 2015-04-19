@@ -12,6 +12,8 @@ permalink: /download/
 - [mvvmfx](http://search.maven.org/#search%7Cga%7C1%7Cmvvmfx)
 - [mvvmfx-cdi](http://search.maven.org/#search%7Cga%7C1%7Cmvvmfx-cdi)
 - [mvvmfx-guice](http://search.maven.org/#search%7Cga%7C1%7Cmvvmfx-guice)
+- [mvvmfx-utils](http://search.maven.org/#search%7Cga%7C1%7Cmvvmfx-utils)
+- [mvvmfx-testing-utils](http://search.maven.org/#search%7Cga%7C1%7Cmvvmfx-testing-utils)
 
 ## Binary distribution
 
@@ -25,3 +27,5 @@ Snapshot releases of **mvvmFX** are published to the [sonatype snapshot reposito
 - [mvvmfx](https://oss.sonatype.org/content/repositories/snapshots/de/saxsys/mvvmfx/)
 - [mvvmfx-cdi](https://oss.sonatype.org/content/repositories/snapshots/de/saxsys/mvvmfx-cdi/)
 - [mvvmfx-guice](https://oss.sonatype.org/content/repositories/snapshots/de/saxsys/mvvmfx-guice/)
+- [mvvmfx-utils](https://oss.sonatype.org/content/repositories/snapshots/de/saxsys/mvvmfx-utils/)
+- [mvvmfx-testing-utils](https://oss.sonatype.org/content/repositories/snapshots/de/saxsys/mvvmfx-testing-utils/)
