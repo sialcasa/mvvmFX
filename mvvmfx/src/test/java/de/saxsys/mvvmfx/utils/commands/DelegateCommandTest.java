@@ -23,14 +23,17 @@ public class DelegateCommandTest {
 		}, condition);
 		
 		assertTrue(delegateCommand.isExecutable());
+		assertFalse(delegateCommand.isNotExecutable());
 		
 		condition.set(false);
 		
 		assertFalse(delegateCommand.isExecutable());
+		assertTrue(delegateCommand.isNotExecutable());
 		
 		condition.set(true);
 		
 		assertTrue(delegateCommand.isExecutable());
+		assertFalse(delegateCommand.isNotExecutable());
 	}
 	
 	@Test
@@ -69,9 +72,11 @@ public class DelegateCommandTest {
 		delegateCommand.runningProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
 			if (!oldValue && newValue) {
 				run.set(true);
+				assertFalse(delegateCommand.notRunningProperty().get());
 			}
 			if (oldValue && !newValue) {
 				finished.set(true);
+				assertTrue(delegateCommand.notRunningProperty().get());
 			}
 		});
 		
@@ -97,12 +102,19 @@ public class DelegateCommandTest {
 		}, condition, true);
 		
 		assertFalse(delegateCommand.runningProperty().get());
+		assertTrue(delegateCommand.notRunningProperty().get());
 		delegateCommand.execute();
+		
 		assertTrue(delegateCommand.runningProperty().get());
+		assertFalse(delegateCommand.notRunningProperty().get());
 		assertFalse(delegateCommand.executableProperty().get());
+		assertTrue(delegateCommand.notExecutableProperty().get());
+		
 		future.get(3, TimeUnit.SECONDS);
 		assertFalse(delegateCommand.runningProperty().get());
+		assertTrue(delegateCommand.notRunningProperty().get());
 		assertTrue(delegateCommand.executableProperty().get());
+		assertFalse(delegateCommand.notExecutableProperty().get());
 	}
 	
 }
