@@ -36,26 +36,53 @@ import de.saxsys.mvvmfx.utils.notifications.NotificationObserver;
  */
 public interface ViewModel {
 	
-	default void publish(ViewModel viewModel, String notificationId, Object... args) {
-		MvvmFX.getNotificationCenter().publish(this, notificationId, args);
-	}
-	
-	default void publish(String notificationId, Object... args) {
+	/**
+	 * Publishes a notification to the subscribers of the notificationId. This notification will be send to the
+	 * UI-Thread.
+	 * 
+	 * @param messageName
+	 *            of the notification
+	 * @param payload
+	 *            to be send
+	 */
+	default void publish(String messageName, Object... payload) {
 		if (!Platform.isFxApplicationThread()) {
-			Platform.runLater(() -> publish(ViewModel.this, notificationId, args));
+			MvvmFX.getNotificationCenter().publish(this, messageName, payload);
 		} else {
-			publish(this, notificationId, args);
+			MvvmFX.getNotificationCenter().publish(this, messageName, payload);
 		}
 	}
 	
-	default void subscribe(String message, NotificationObserver observer) {
-		MvvmFX.getNotificationCenter().subscribe(this, message, observer);
+	/**
+	 * Subscribe to a notification with a given {@link NotificationObserver}.
+	 * 
+	 * @param messageName
+	 *            of the Notification
+	 * @param observer
+	 *            which should execute when the notification occurs
+	 */
+	default void subscribe(String messageName, NotificationObserver observer) {
+		MvvmFX.getNotificationCenter().subscribe(this, messageName, observer);
 	}
 	
-	default void unsubscribe(String message, NotificationObserver observer) {
-		MvvmFX.getNotificationCenter().unsubscribe(this, message, observer);
+	/**
+	 * Remove the observer for a specific notification by a given messageName.
+	 * 
+	 * @param messageName
+	 *            of the notification for that the observer should be removed
+	 * @param observer
+	 *            to remove
+	 */
+	default void unsubscribe(String messageName, NotificationObserver observer) {
+		MvvmFX.getNotificationCenter().unsubscribe(this, messageName, observer);
 	}
 	
+	/**
+	 * Removes the observer for all messages.
+	 * 
+	 * @param observer
+	 *            to be removed
+	 */
 	default void unsubscribe(NotificationObserver observer) {
 		MvvmFX.getNotificationCenter().unsubscribe(this, observer);
 	}

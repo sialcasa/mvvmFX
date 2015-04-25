@@ -56,6 +56,7 @@ public class PersonLoginView implements FxmlView<PersonLoginViewModel>, Initiali
 			alert.setContentText(message);
 			alert.show();
 		});
+		
 	}
 	
 	@FXML
