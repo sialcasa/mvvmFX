@@ -15,6 +15,7 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx;
 
+import javafx.application.Platform;
 import de.saxsys.mvvmfx.internal.viewloader.View;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import de.saxsys.mvvmfx.utils.notifications.NotificationObserver;
@@ -40,7 +41,11 @@ public interface ViewModel {
 	}
 	
 	default void publish(String notificationId, Object... args) {
-		publish(this, notificationId, args);
+		if (!Platform.isFxApplicationThread()) {
+			Platform.runLater(() -> publish(ViewModel.this, notificationId, args));
+		} else {
+			publish(this, notificationId, args);
+		}
 	}
 	
 	default void subscribe(String message, NotificationObserver observer) {
