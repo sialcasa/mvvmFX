@@ -15,6 +15,8 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.notifications;
 
+import de.saxsys.mvvmfx.ViewModel;
+
 
 /**
  * Central component to provide a notification mechanism. You can add observers by using keys to get notifications for
@@ -70,5 +72,18 @@ public interface NotificationCenter {
 	 *            which should be passed
 	 */
 	void publish(String messageName, Object... payload);
+	
+	
+	
+	void publish(ViewModel viewModel, String messageName, Object[] payload);
+	
+	void subscribe(ViewModel view, String messageName,
+			NotificationObserver observer);
+	
+	void unsubscribe(ViewModel view, String messageName,
+			NotificationObserver observer);
+	
+	void unsubscribe(ViewModel view,
+			NotificationObserver observer);
 	
 }

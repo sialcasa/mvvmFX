@@ -17,6 +17,7 @@ package de.saxsys.mvvmfx;
 
 import de.saxsys.mvvmfx.internal.viewloader.View;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
+import de.saxsys.mvvmfx.utils.notifications.NotificationObserver;
 
 /**
  * <p>
@@ -33,4 +34,16 @@ import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
  * 
  */
 public interface ViewModel {
+	
+	default void publish(ViewModel viewModel, String notificationId, Object... args) {
+		MvvmFX.getNotificationCenter().publish(this, notificationId, args);
+	}
+	
+	default void publish(String notificationId, Object... args) {
+		publish(this, notificationId, args);
+	}
+	
+	default void subscribe(String message, NotificationObserver observer) {
+		MvvmFX.getNotificationCenter().subscribe(this, message, observer);
+	}
 }
