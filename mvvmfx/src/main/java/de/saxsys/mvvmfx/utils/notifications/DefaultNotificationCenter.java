@@ -49,7 +49,7 @@ class DefaultNotificationCenter implements NotificationCenter {
 	
 	@Override
 	public void unsubscribe(NotificationObserver observer) {
-		removeAllObserver(observer, globalObservers);
+		removeObserverFromObserverMap(observer, globalObservers);
 	}
 	
 	@Override
@@ -86,11 +86,9 @@ class DefaultNotificationCenter implements NotificationCenter {
 	
 	
 	@Override
-	public void unsubscribe(ViewModel view, NotificationObserver observer) {
-		ObserverMap observerMap = viewModelObservers.get(view);
-		
-		removeAllObserver(observer, observerMap);
-		
+	public void unsubscribe(ViewModel viewModel, NotificationObserver observer) {
+		ObserverMap observerMap = viewModelObservers.get(viewModel);
+		removeObserverFromObserverMap(observer, observerMap);
 	}
 	
 	/*
@@ -117,7 +115,7 @@ class DefaultNotificationCenter implements NotificationCenter {
 	
 	
 	
-	private void removeAllObserver(NotificationObserver observer, ObserverMap observerMap) {
+	private void removeObserverFromObserverMap(NotificationObserver observer, ObserverMap observerMap) {
 		Iterator<String> iterator = observerMap.keySet().iterator();
 		while (iterator.hasNext()) {
 			String key = iterator.next();
@@ -125,7 +123,7 @@ class DefaultNotificationCenter implements NotificationCenter {
 			while (iterator2.hasNext()) {
 				NotificationObserver actualObserver = iterator2.next();
 				if (actualObserver == observer) {
-					observerMap.remove(key);
+					observerMap.get(key).remove(actualObserver);
 					break;
 				}
 			}

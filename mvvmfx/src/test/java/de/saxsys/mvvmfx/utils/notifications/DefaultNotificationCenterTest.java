@@ -16,17 +16,9 @@
 
 package de.saxsys.mvvmfx.utils.notifications;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import de.saxsys.mvvmfx.ViewModel;
 
 public class DefaultNotificationCenterTest {
 	
@@ -68,8 +60,11 @@ public class DefaultNotificationCenterTest {
 		defaultCenter.subscribe(TEST_NOTIFICATION, observer2);
 		defaultCenter.subscribe(TEST_NOTIFICATION, observer3);
 		defaultCenter.unsubscribe(observer1);
+		defaultCenter.unsubscribe(observer2);
 		defaultCenter.publish(TEST_NOTIFICATION);
 		Mockito.verify(observer1, Mockito.never()).receivedNotification(TEST_NOTIFICATION);
+		Mockito.verify(observer2, Mockito.never()).receivedNotification(TEST_NOTIFICATION);
+		Mockito.verify(observer3).receivedNotification(TEST_NOTIFICATION);
 	}
 	
 	@Test
@@ -90,27 +85,6 @@ public class DefaultNotificationCenterTest {
 		defaultCenter.unsubscribe(TEST_NOTIFICATION, observer1);
 		defaultCenter.publish(TEST_NOTIFICATION);
 		Mockito.verify(observer1, Mockito.never()).receivedNotification(TEST_NOTIFICATION);
-	}
-	
-	@Test
-	public void addViewModelObserverToDefaultNotificationCenterAndPostNotificationToView() throws Exception {
-		
-		StringProperty receivedMessageId = new SimpleStringProperty();
-		ObjectProperty<Object[]> receivedPayload = new SimpleObjectProperty<>();
-		
-		ViewModel viewModel = new ViewModel() {
-		};
-		
-		viewModel.subscribe(TEST_NOTIFICATION, (key, payload) -> {
-			receivedPayload.set(payload);
-			receivedMessageId.set(key);
-		});
-		
-		viewModel.publish(TEST_NOTIFICATION, OBJECT_ARRAY_FOR_NOTIFICATION);
-		
-		Assert.assertEquals(TEST_NOTIFICATION, receivedMessageId.get());
-		Assert.assertArrayEquals(OBJECT_ARRAY_FOR_NOTIFICATION, receivedPayload.get());
-		
 	}
 	
 	private class DummyNotificationObserver implements NotificationObserver {

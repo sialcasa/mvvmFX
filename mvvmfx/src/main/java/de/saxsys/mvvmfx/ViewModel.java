@@ -46,4 +46,12 @@ public interface ViewModel {
 	default void subscribe(String message, NotificationObserver observer) {
 		MvvmFX.getNotificationCenter().subscribe(this, message, observer);
 	}
+	
+	default void unsubscribe(String message, NotificationObserver observer) {
+		MvvmFX.getNotificationCenter().unsubscribe(this, message, observer);
+	}
+	
+	default void unsubscribe(NotificationObserver observer) {
+		MvvmFX.getNotificationCenter().unsubscribe(this, observer);
+	}
 }
