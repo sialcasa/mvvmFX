@@ -22,7 +22,15 @@ import de.saxsys.mvvmfx.utils.notifications.NotificationObserver;
 
 /**
  * <p>
- * Marker interface for a View Model. Some additional hints to this layer:
+ * Interface for a View Model.
+ * </p>
+ * <p>
+ * You can use a notification mechanism by using the {@link #publish(String, Object...)} method. In the View you can
+ * subscribe to this notifications by using viewModel.
+ * {@link #subscribe(String messageName, NotificationObserver observer)}.
+ * </p>
+ * <p>
+ * Some additional hints to this layer:
  * </p>
  * 
  * <p>
