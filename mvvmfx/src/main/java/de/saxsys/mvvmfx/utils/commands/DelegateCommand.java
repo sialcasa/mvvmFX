@@ -18,13 +18,14 @@ package de.saxsys.mvvmfx.utils.commands;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.value.ObservableBooleanValue;
+import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import eu.lestard.doc.Beta;
 
 /**
  * A {@link Command} implementation that encapsulates an action ({@link Task<Void>}). It is possible to define that the
  * action should be executed in the background (not on the JavaFX thread) so that long running actions can be
- * implemented that aren't blocking the ui thread.
+ * implemented that aren't blocking the UI-Thread.
  * 
  * @author alexander.casall
  */
@@ -32,6 +33,9 @@ import eu.lestard.doc.Beta;
 public abstract class DelegateCommand extends Task<Void> implements Command {
 	
 	private boolean inBackground = false;
+	protected final ReadOnlyBooleanWrapper executable = new ReadOnlyBooleanWrapper(true);
+	protected ReadOnlyBooleanWrapper notExecutable;
+	protected ReadOnlyBooleanWrapper notRunning;
 	
 	
 	
@@ -95,8 +99,15 @@ public abstract class DelegateCommand extends Task<Void> implements Command {
 		if (executableBinding != null) {
 			executable.bind(runningProperty().not().and(executableBinding));
 		}
+		
 	}
 	
+	/**
+	 * The action which will called if the {@link #execute()} method is called.
+	 * 
+	 * @throws Exception
+	 */
+	protected abstract void action() throws Exception;
 	
 	/**
 	 * @see de.saxsys.mvvmfx.utils.commands.Command#execute
@@ -107,7 +118,12 @@ public abstract class DelegateCommand extends Task<Void> implements Command {
 			throw new RuntimeException("The execute()-method of the command was called while it wasn't executable.");
 		} else {
 			if (inBackground) {
-				new Service(this).start();
+				new Service<Void>() {
+					@Override
+					protected Task<Void> createTask() {
+						return DelegateCommand.this;
+					}
+				}.start();
 			} else {
 				try {
 					this.action();
@@ -118,12 +134,11 @@ public abstract class DelegateCommand extends Task<Void> implements Command {
 		}
 	}
 	
-	protected final ReadOnlyBooleanWrapper executable = new ReadOnlyBooleanWrapper(true);
-	
 	@Override
 	public ReadOnlyBooleanProperty executableProperty() {
 		return this.executable.getReadOnlyProperty();
 	}
+	
 	
 	@Override
 	public boolean isExecutable() {
@@ -136,5 +151,31 @@ public abstract class DelegateCommand extends Task<Void> implements Command {
 		return null;
 	}
 	
-	protected abstract void action() throws Exception;
+	@Override
+	public final ReadOnlyBooleanProperty notExecutableProperty() {
+		if (notExecutable == null) {
+			notExecutable = new ReadOnlyBooleanWrapper();
+			notExecutable.bind(executableProperty().not());
+		}
+		return notExecutable.getReadOnlyProperty();
+	}
+	
+	@Override
+	public final boolean isNotExecutable() {
+		return notExecutableProperty().get();
+	}
+	
+	@Override
+	public final ReadOnlyBooleanProperty notRunningProperty() {
+		if (notRunning == null) {
+			notRunning = new ReadOnlyBooleanWrapper();
+			notRunning.bind(runningProperty().not());
+		}
+		return notRunning.getReadOnlyProperty();
+	}
+	
+	@Override
+	public final boolean isNotRunning() {
+		return notRunningProperty().get();
+	}
 }

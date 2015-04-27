@@ -73,7 +73,12 @@ public class PersonLoginViewModel implements ViewModel {
 	
 	public Command getLoginCommand() {
 		if (loginCommand == null) {
-			loginCommand = new DelegateCommand(() -> performLogin(), createLoginPossibleBinding(), true);
+			loginCommand = new DelegateCommand(createLoginPossibleBinding(), true) {
+				@Override
+				protected void action() throws Exception {
+					performLogin();
+				}
+			};
 		}
 		return loginCommand;
 	}

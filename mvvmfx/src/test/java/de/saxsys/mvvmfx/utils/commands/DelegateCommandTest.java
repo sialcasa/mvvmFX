@@ -9,18 +9,27 @@ import java.util.concurrent.TimeUnit;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import de.saxsys.javafx.test.JfxRunner;
 
 
+@RunWith(JfxRunner.class)
 public class DelegateCommandTest {
 	
 	@Test
 	public void executable() {
 		BooleanProperty condition = new SimpleBooleanProperty(true);
 		
-		DelegateCommand delegateCommand = new DelegateCommand(() -> {
-		}, condition);
+		DelegateCommand delegateCommand = new DelegateCommand(condition) {
+			
+			@Override
+			protected void action() throws Exception {
+			}
+		};
 		
 		assertTrue(delegateCommand.isExecutable());
 		assertFalse(delegateCommand.isNotExecutable());
@@ -41,7 +50,12 @@ public class DelegateCommandTest {
 		BooleanProperty condition = new SimpleBooleanProperty(true);
 		BooleanProperty called = new SimpleBooleanProperty();
 		
-		DelegateCommand delegateCommand = new DelegateCommand(() -> called.set(true), condition);
+		DelegateCommand delegateCommand = new DelegateCommand(condition) {
+			@Override
+			protected void action() throws Exception {
+				called.set(true);
+			}
+		};
 		
 		assertFalse(called.get());
 		delegateCommand.execute();
@@ -52,38 +66,13 @@ public class DelegateCommandTest {
 	public void fireNegative() {
 		BooleanProperty condition = new SimpleBooleanProperty(false);
 		
-		DelegateCommand delegateCommand = new DelegateCommand(() -> {
-		}, condition);
+		DelegateCommand delegateCommand = new DelegateCommand(condition) {
+			@Override
+			protected void action() throws Exception {
+			}
+		};
 		
 		delegateCommand.execute();
-	}
-	
-	
-	@Test
-	public void running() throws Exception {
-		BooleanProperty run = new SimpleBooleanProperty();
-		BooleanProperty finished = new SimpleBooleanProperty();
-		
-		BooleanProperty condition = new SimpleBooleanProperty(true);
-		
-		DelegateCommand delegateCommand = new DelegateCommand(() -> {
-		}, condition);
-		
-		delegateCommand.runningProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-			if (!oldValue && newValue) {
-				run.set(true);
-				assertFalse(delegateCommand.notRunningProperty().get());
-			}
-			if (oldValue && !newValue) {
-				finished.set(true);
-				assertTrue(delegateCommand.notRunningProperty().get());
-			}
-		});
-		
-		delegateCommand.execute();
-		
-		assertTrue(run.get());
-		assertTrue(finished.get());
 	}
 	
 	
@@ -91,30 +80,48 @@ public class DelegateCommandTest {
 	public void longRunningAsync() throws Exception {
 		
 		BooleanProperty condition = new SimpleBooleanProperty(true);
-		CompletableFuture<Void> future = new CompletableFuture<>();
 		
-		DelegateCommand delegateCommand = new DelegateCommand(() -> {
-			try {
-				Thread.sleep(1000);
-				future.complete(null);
-			} catch (Exception e) {
+		CompletableFuture<Void> commandStarted = new CompletableFuture<>();
+		CompletableFuture<Void> commandCompleted = new CompletableFuture<>();
+		
+		DelegateCommand delegateCommand = new DelegateCommand(condition, true) {
+			@Override
+			protected void action() throws Exception {
+				try {
+					Thread.sleep(1000);
+				} catch (Exception e) {
+				}
 			}
-		}, condition, true);
+		};
 		
 		assertFalse(delegateCommand.runningProperty().get());
 		assertTrue(delegateCommand.notRunningProperty().get());
+		
+		delegateCommand.runningProperty().addListener(new ChangeListener<Boolean>() {
+			
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				if (newValue) {
+					assertTrue(delegateCommand.runningProperty().get());
+					assertFalse(delegateCommand.notRunningProperty().get());
+					assertFalse(delegateCommand.executableProperty().get());
+					assertTrue(delegateCommand.notExecutableProperty().get());
+					commandStarted.complete(null);
+				}
+				if (!newValue && oldValue) {
+					assertFalse(delegateCommand.runningProperty().get());
+					assertTrue(delegateCommand.notRunningProperty().get());
+					assertTrue(delegateCommand.executableProperty().get());
+					assertFalse(delegateCommand.notExecutableProperty().get());
+					commandCompleted.complete(null);
+				}
+				
+			}
+		});
+		
 		delegateCommand.execute();
-		
-		assertTrue(delegateCommand.runningProperty().get());
-		assertFalse(delegateCommand.notRunningProperty().get());
-		assertFalse(delegateCommand.executableProperty().get());
-		assertTrue(delegateCommand.notExecutableProperty().get());
-		
-		future.get(3, TimeUnit.SECONDS);
-		assertFalse(delegateCommand.runningProperty().get());
-		assertTrue(delegateCommand.notRunningProperty().get());
-		assertTrue(delegateCommand.executableProperty().get());
-		assertFalse(delegateCommand.notExecutableProperty().get());
+		commandStarted.get(3, TimeUnit.SECONDS);
+		commandCompleted.get(4, TimeUnit.SECONDS);
 	}
 	
 }
