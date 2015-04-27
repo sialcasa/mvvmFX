@@ -32,24 +32,55 @@ public abstract class CommandBase implements Command {
 	protected final ReadOnlyBooleanWrapper executable = new ReadOnlyBooleanWrapper(true);
 	protected final ReadOnlyBooleanWrapper running = new ReadOnlyBooleanWrapper(false);
 	
+	protected ReadOnlyBooleanWrapper notExecutable;
+	protected ReadOnlyBooleanWrapper notRunning;
+	
 	@Override
-	public ReadOnlyBooleanProperty executableProperty() {
-		return this.executable.getReadOnlyProperty();
+	public final ReadOnlyBooleanProperty executableProperty() {
+		return executable.getReadOnlyProperty();
 	}
 	
 	@Override
-	public boolean isExecutable() {
-		return this.executableProperty().get();
+	public final boolean isExecutable() {
+		return executableProperty().get();
 	}
 	
 	@Override
-	public ReadOnlyBooleanProperty runningProperty() {
-		return this.running.getReadOnlyProperty();
+	public final ReadOnlyBooleanProperty notExecutableProperty() {
+		if (notExecutable == null) {
+			notExecutable = new ReadOnlyBooleanWrapper();
+			notExecutable.bind(executableProperty().not());
+		}
+		return notExecutable.getReadOnlyProperty();
 	}
 	
 	@Override
-	public boolean isRunning() {
-		return this.running.get();
+	public final boolean isNotExecutable() {
+		return notExecutableProperty().get();
+	}
+	
+	@Override
+	public final ReadOnlyBooleanProperty runningProperty() {
+		return running.getReadOnlyProperty();
+	}
+	
+	@Override
+	public final boolean isRunning() {
+		return running.get();
+	}
+	
+	@Override
+	public final ReadOnlyBooleanProperty notRunningProperty() {
+		if (notRunning == null) {
+			notRunning = new ReadOnlyBooleanWrapper();
+			notRunning.bind(runningProperty().not());
+		}
+		return notRunning.getReadOnlyProperty();
+	}
+	
+	@Override
+	public final boolean isNotRunning() {
+		return notRunningProperty().get();
 	}
 	
 	@Override
