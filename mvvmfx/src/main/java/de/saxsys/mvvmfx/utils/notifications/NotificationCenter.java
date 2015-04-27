@@ -34,6 +34,11 @@ public interface NotificationCenter {
 	/**
 	 * Add an observer to the NotificationCenter which gets notifications for the given String.
 	 * 
+	 * Please note: It is possible (but yet untypical) to add the same observer for the same message multiple times. 
+	 * In this case the observer will be invoked multiple times too. 
+	 * As this behaviour is unusual, the default notification center will log a warning message when the same observer
+	 * is added multiple times for the same message.
+	 * 
 	 * @param messageName
 	 *            key of the notification to listen
 	 * @param observer

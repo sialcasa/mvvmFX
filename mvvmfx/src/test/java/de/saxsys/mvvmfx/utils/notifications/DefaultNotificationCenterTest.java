@@ -17,6 +17,7 @@
 package de.saxsys.mvvmfx.utils.notifications;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -83,6 +84,27 @@ public class DefaultNotificationCenterTest {
 	public void addAndRemoveObserverForNameToDefaultNotificationCenterAndPostNotification() throws Exception {
 		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
 		defaultCenter.unsubscribe(TEST_NOTIFICATION, observer1);
+		defaultCenter.publish(TEST_NOTIFICATION);
+		Mockito.verify(observer1, Mockito.never()).receivedNotification(TEST_NOTIFICATION);
+	}
+
+	@Test
+	public void subscribeSameObserverMultipleTimes() {
+		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
+		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
+
+		defaultCenter.publish(TEST_NOTIFICATION);
+		Mockito.verify(observer1, Mockito.times(2)).receivedNotification(TEST_NOTIFICATION);
+	}
+
+	@Test
+	public void unsubscribeObserverThatWasSubscribedMultipleTimes() {
+		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
+		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
+		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
+
+		defaultCenter.unsubscribe(observer1);
+		
 		defaultCenter.publish(TEST_NOTIFICATION);
 		Mockito.verify(observer1, Mockito.never()).receivedNotification(TEST_NOTIFICATION);
 	}
