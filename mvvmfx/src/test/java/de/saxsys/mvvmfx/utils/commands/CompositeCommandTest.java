@@ -186,6 +186,13 @@ public class CompositeCommandTest {
 		
 		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1, delegateCommand2, delegateCommand3);
 		
+		// compositeCommand.progressProperty().addListener(new ChangeListener<Number>() {
+		//
+		// @Override
+		// public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+		// }
+		// });
+		
 		GCVerifier.forceGC();
 		
 		compositeCommand.runningProperty().addListener(new ChangeListener<Boolean>() {

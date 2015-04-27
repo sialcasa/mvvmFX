@@ -15,12 +15,14 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.commands;
 
-import eu.lestard.doc.Beta;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import eu.lestard.doc.Beta;
 
 /**
  * CompositeCommand is an aggregation of other commands - a list of {@link Command} references internally.
@@ -47,6 +49,8 @@ import javafx.collections.ObservableList;
 public class CompositeCommand extends CommandBase {
 	
 	private final ObservableList<Command> registeredCommands = FXCollections.observableArrayList();
+	
+	ReadOnlyDoubleWrapper progress = new ReadOnlyDoubleWrapper();
 	
 	/**
 	 * Creates a {@link CompositeCommand} with given commands.
@@ -83,17 +87,21 @@ public class CompositeCommand extends CommandBase {
 	private void initRegisteredCommandsListener() {
 		this.registeredCommands.addListener((ListChangeListener<Command>) c -> {
 			while (c.next()) {
-				if(registeredCommands.isEmpty()) {
+				if (registeredCommands.isEmpty()) {
 					executable.unbind();
 					running.unbind();
+					progress.unbind();
 				} else {
 					BooleanBinding executableBinding = null;
 					BooleanBinding runningBinding = null;
-
+					
+					ReadOnlyBooleanProperty[] allRunnings = new ReadOnlyBooleanProperty[registeredCommands.size()];
+					
+					
 					for (int i = 0; i < registeredCommands.size(); i++) {
 						ReadOnlyBooleanProperty currentExecutable = registeredCommands.get(i).executableProperty();
 						ReadOnlyBooleanProperty currentRunning = registeredCommands.get(i).runningProperty();
-
+						allRunnings[i] = registeredCommands.get(i).runningProperty();
 						if (i == 0) {
 							executableBinding = currentExecutable.and(currentExecutable);
 							runningBinding = currentRunning.or(currentRunning);
@@ -104,18 +112,56 @@ public class CompositeCommand extends CommandBase {
 					}
 					executable.bind(executableBinding);
 					running.bind(runningBinding);
-				}
+					
+					// TODO Improve Implementation
+					// progress.unbind();
+				// progress.bind(Bindings.createDoubleBinding(new Callable<Double>() {
+				// @Override
+				// public Double call() throws Exception {
+				// Stream<ReadOnlyBooleanProperty> filter = FXCollections.observableArrayList(allRunnings)
+				// .stream().filter(
+				// new Predicate<ReadOnlyBooleanProperty>() {
+				// @Override
+				// public boolean test(ReadOnlyBooleanProperty t) {
+				// return t.get();
+				// }
+				// });
+				//
+				// long count = filter.count();
+				// double result = count / (double) allRunnings.length;
+				// double oldValue = progress.get();
+				//
+				// if (result > oldValue) {
+				// return result;
+				// }
+				//
+				// return oldValue;
+				// }
+				// }, allRunnings));
 			}
-		});
+		}
+	})	;
 	}
 	
 	@Override
 	public void execute() {
+		progress.set(0.0);
 		if (!isExecutable()) {
 			throw new RuntimeException("Not executable");
 		} else {
 			registeredCommands.forEach(t -> t.execute());
+			progress.set(1.0);
 		}
+	}
+	
+	@Override
+	public double getProgress() {
+		return progressProperty().get();
+	}
+	
+	@Override
+	public ReadOnlyDoubleProperty progressProperty() {
+		return progress;
 	}
 	
 }
