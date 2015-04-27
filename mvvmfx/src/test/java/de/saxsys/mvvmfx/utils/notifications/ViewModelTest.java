@@ -1,5 +1,7 @@
-package de.saxsys.mvvmfx;
+package de.saxsys.mvvmfx.utils.notifications;
 
+import de.saxsys.mvvmfx.MvvmFX;
+import de.saxsys.mvvmfx.ViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -23,6 +25,15 @@ public class ViewModelTest {
 		observer3 = Mockito.mock(DummyNotificationObserver.class);
 		viewModel = new ViewModel() {
 		};
+	}
+
+
+	@Test
+	public void observerFromOutsideDoesNotReceiveNotifications() {
+		MvvmFX.getNotificationCenter().subscribe(TEST_NOTIFICATION, observer1);
+		viewModel.publish(TEST_NOTIFICATION);
+		
+		Mockito.verify(observer1,  Mockito.never()).receivedNotification(TEST_NOTIFICATION);
 	}
 	
 	@Test

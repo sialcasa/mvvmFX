@@ -116,13 +116,9 @@ class DefaultNotificationCenter implements NotificationCenter {
 	
 	
 	private void removeObserverFromObserverMap(NotificationObserver observer, ObserverMap observerMap) {
-		Iterator<String> iterator = observerMap.keySet().iterator();
-		while (iterator.hasNext()) {
-			String key = iterator.next();
-			Iterator<NotificationObserver> iterator2 = observerMap.get(key).iterator();
-			while (iterator2.hasNext()) {
-				NotificationObserver actualObserver = iterator2.next();
-				if (actualObserver == observer) {
+		for (String key : observerMap.keySet()) {
+			for (NotificationObserver actualObserver : observerMap.get(key)) {
+				if (actualObserver.equals(observer)) {
 					observerMap.get(key).remove(actualObserver);
 					break;
 				}
