@@ -20,8 +20,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import de.saxsys.mvvmfx.ViewModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of {@link NotificationCenter}.
@@ -30,6 +33,8 @@ import de.saxsys.mvvmfx.ViewModel;
  * 
  */
 class DefaultNotificationCenter implements NotificationCenter {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(DefaultNotificationCenter.class);
 	
 	DefaultNotificationCenter() {
 	}
@@ -110,6 +115,11 @@ class DefaultNotificationCenter implements NotificationCenter {
 			observerMap.put(messageName, new ArrayList<NotificationObserver>());
 		}
 		observers = observerMap.get(messageName);
+		
+		if(observers.contains(observer)) {
+			LOG.warn("Subscribe the observer ["+ observer + "] for the message [" + messageName + 
+					"], but the same observer was already added for this message in the past.");	
+		}
 		observers.add(observer);
 	}
 	
@@ -117,12 +127,14 @@ class DefaultNotificationCenter implements NotificationCenter {
 	
 	private void removeObserverFromObserverMap(NotificationObserver observer, ObserverMap observerMap) {
 		for (String key : observerMap.keySet()) {
-			for (NotificationObserver actualObserver : observerMap.get(key)) {
-				if (actualObserver.equals(observer)) {
-					observerMap.get(key).remove(actualObserver);
-					break;
-				}
-			}
+			final List<NotificationObserver> observers = observerMap.get(key);
+			
+			final List<NotificationObserver> observersToBeRemoved = observers
+					.stream()
+					.filter(actualObserver -> actualObserver.equals(observer))
+					.collect(Collectors.toList());
+			
+			observers.removeAll(observersToBeRemoved);
 		}
 	}
 	

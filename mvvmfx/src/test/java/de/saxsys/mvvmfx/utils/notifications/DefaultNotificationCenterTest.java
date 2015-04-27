@@ -89,17 +89,15 @@ public class DefaultNotificationCenterTest {
 	}
 
 	@Test
-	@Ignore("remove when bug is fixed")
 	public void subscribeSameObserverMultipleTimes() {
 		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
 		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
 
 		defaultCenter.publish(TEST_NOTIFICATION);
-		Mockito.verify(observer1, Mockito.times(1)).receivedNotification(TEST_NOTIFICATION);
+		Mockito.verify(observer1, Mockito.times(2)).receivedNotification(TEST_NOTIFICATION);
 	}
 
 	@Test
-	@Ignore("remove when bug is fixed")
 	public void unsubscribeObserverThatWasSubscribedMultipleTimes() {
 		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
 		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
