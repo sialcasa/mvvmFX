@@ -88,6 +88,6 @@ public class PersonLoginViewModel implements ViewModel {
 		Platform.runLater(() -> {
 			loggedInPersonId.set(selectablePersons.getSelectedItem().getId());
 		});
+		publish(PersonLoginViewModelNotifications.OK.getId(), PersonLoginViewModelNotifications.OK.getMessage());
 	}
-	
 }

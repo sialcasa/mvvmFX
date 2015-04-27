@@ -15,6 +15,8 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.notifications;
 
+import de.saxsys.mvvmfx.ViewModel;
+
 
 /**
  * Central component to provide a notification mechanism. You can add observers by using keys to get notifications for
@@ -31,6 +33,11 @@ public interface NotificationCenter {
 	
 	/**
 	 * Add an observer to the NotificationCenter which gets notifications for the given String.
+	 * 
+	 * Please note: It is possible (but yet untypical) to add the same observer for the same message multiple times. 
+	 * In this case the observer will be invoked multiple times too. 
+	 * As this behaviour is unusual, the default notification center will log a warning message when the same observer
+	 * is added multiple times for the same message.
 	 * 
 	 * @param messageName
 	 *            key of the notification to listen
@@ -70,5 +77,48 @@ public interface NotificationCenter {
 	 *            which should be passed
 	 */
 	void publish(String messageName, Object... payload);
+	
+	
+	/**
+	 * Publishes a notification to the {@link ViewModel}-subscribers for the given notificationId.
+	 * 
+	 * @param messageName
+	 *            of the notification
+	 * @param payload
+	 *            to be send
+	 */
+	void publish(ViewModel viewModel, String messageName, Object[] payload);
+	
+	/**
+	 * Subscribe to a {@link ViewModel}-notification with a given {@link NotificationObserver}.
+	 * 
+	 * @param viewModel
+	 * 
+	 * @param messageName
+	 *            of the Notification
+	 * @param observer
+	 *            which should execute when the notification occurs
+	 */
+	void subscribe(ViewModel view, String messageName,
+			NotificationObserver observer);
+	
+	/**
+	 * Removes a {@link NotificationObserver} for a given messageName.
+	 * 
+	 * @param viewModel
+	 * @param messageName
+	 * @param observer
+	 */
+	void unsubscribe(ViewModel viewModel, String messageName,
+			NotificationObserver observer);
+	
+	/**
+	 * Removes a {@link NotificationObserver} for all messageName.
+	 * 
+	 * @param viewModel
+	 * @param observer
+	 */
+	void unsubscribe(ViewModel view,
+			NotificationObserver observer);
 	
 }

@@ -15,8 +15,8 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.commands;
 
-import eu.lestard.doc.Beta;
 import javafx.beans.property.ReadOnlyBooleanProperty;
+import eu.lestard.doc.Beta;
 
 /**
  * The {@link Command} encapsulates logic in the {@link #execute()} method which will be called later. This can be used
@@ -50,6 +50,18 @@ public interface Command {
 	 */
 	ReadOnlyBooleanProperty executableProperty();
 	
+	/**
+	 * Determines whether the command can not execute in it's current state.
+	 * 
+	 * @return <code>true</code> if the {@link Command} can not execute, otherwise <code>false</code>.
+	 */
+	boolean isNotExecutable();
+	
+	/**
+	 * @see #isNotExecutable()
+	 */
+	ReadOnlyBooleanProperty notExecutableProperty();
+	
 	
 	/**
 	 * Signals whether the command is currently executing. This can be useful especially for commands that are executed
@@ -63,5 +75,20 @@ public interface Command {
 	 * @see #isRunning()
 	 */
 	ReadOnlyBooleanProperty runningProperty();
+	
+	/**
+	 * Signals whether the command is currently not executing. This can be useful especially for commands that are
+	 * executed asynchronously.
+	 * 
+	 * @return <code>true</code> if the {@link Command} is not running, otherwise <code>false</code>.
+	 */
+	boolean isNotRunning();
+	
+	/**
+	 * @see #isNotRunning()
+	 */
+	ReadOnlyBooleanProperty notRunningProperty();
+	
+	
 	
 }
