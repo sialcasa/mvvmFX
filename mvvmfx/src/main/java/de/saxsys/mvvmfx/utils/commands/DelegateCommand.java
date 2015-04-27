@@ -30,7 +30,7 @@ import eu.lestard.doc.Beta;
  * @author alexander.casall
  */
 @Beta
-public abstract class DelegateCommand extends Task<Void> implements Command {
+public abstract class DelegateCommand extends Service<Void> implements Command {
 	
 	private boolean inBackground = false;
 	protected final ReadOnlyBooleanWrapper executable = new ReadOnlyBooleanWrapper(true);
@@ -118,12 +118,10 @@ public abstract class DelegateCommand extends Task<Void> implements Command {
 			throw new RuntimeException("The execute()-method of the command was called while it wasn't executable.");
 		} else {
 			if (inBackground) {
-				new Service<Void>() {
-					@Override
-					protected Task<Void> createTask() {
-						return DelegateCommand.this;
-					}
-				}.start();
+				if (!super.isRunning()) {
+					reset();
+					start();
+				}
 			} else {
 				try {
 					this.action();
@@ -135,6 +133,17 @@ public abstract class DelegateCommand extends Task<Void> implements Command {
 	}
 	
 	@Override
+	protected Task<Void> createTask() {
+		return new Task<Void>() {
+			@Override
+			protected Void call() throws Exception {
+				action();
+				return null;
+			}
+		};
+	}
+	
+	@Override
 	public ReadOnlyBooleanProperty executableProperty() {
 		return this.executable.getReadOnlyProperty();
 	}
@@ -143,12 +152,6 @@ public abstract class DelegateCommand extends Task<Void> implements Command {
 	@Override
 	public boolean isExecutable() {
 		return this.executableProperty().get();
-	}
-	
-	@Override
-	protected Void call() throws Exception {
-		action();
-		return null;
 	}
 	
 	@Override
