@@ -60,8 +60,11 @@ public class DefaultNotificationCenterTest {
 		defaultCenter.subscribe(TEST_NOTIFICATION, observer2);
 		defaultCenter.subscribe(TEST_NOTIFICATION, observer3);
 		defaultCenter.unsubscribe(observer1);
+		defaultCenter.unsubscribe(observer2);
 		defaultCenter.publish(TEST_NOTIFICATION);
 		Mockito.verify(observer1, Mockito.never()).receivedNotification(TEST_NOTIFICATION);
+		Mockito.verify(observer2, Mockito.never()).receivedNotification(TEST_NOTIFICATION);
+		Mockito.verify(observer3).receivedNotification(TEST_NOTIFICATION);
 	}
 	
 	@Test

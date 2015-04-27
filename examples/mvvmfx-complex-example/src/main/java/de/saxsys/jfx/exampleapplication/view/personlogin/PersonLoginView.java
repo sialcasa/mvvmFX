@@ -7,10 +7,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressIndicator;
 import de.saxsys.jfx.exampleapplication.viewmodel.personlogin.PersonLoginViewModel;
+import de.saxsys.jfx.exampleapplication.viewmodel.personlogin.PersonLoginViewModelNotifications;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.commands.Command;
@@ -45,6 +48,15 @@ public class PersonLoginView implements FxmlView<PersonLoginViewModel>, Initiali
 		loginButton.disableProperty()
 				.bind(loginCommand.executableProperty().not());
 		loginProgressIndicator.visibleProperty().bind(loginCommand.runningProperty());
+		
+		viewModel.subscribe(PersonLoginViewModelNotifications.OK.getId(), (key, payload) -> {
+			String message = (String) payload[0];
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle(message);
+			alert.setContentText(message);
+			alert.show();
+		});
+		
 	}
 	
 	@FXML

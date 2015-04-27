@@ -20,7 +20,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+
+import de.saxsys.mvvmfx.ViewModel;
 
 /**
  * Default implementation of {@link NotificationCenter}.
@@ -33,51 +34,115 @@ class DefaultNotificationCenter implements NotificationCenter {
 	DefaultNotificationCenter() {
 	}
 	
-	private final Map<String, List<NotificationObserver>> observersForName = new HashMap<String, List<NotificationObserver>>();
+	private final ObserverMap globalObservers = new ObserverMap();
+	private final ViewModelObservers viewModelObservers = new ViewModelObservers();
 	
 	@Override
 	public void subscribe(String messageName, NotificationObserver observer) {
-		List<NotificationObserver> observers = this.observersForName.get(messageName);
-		if (observers == null) {
-			this.observersForName.put(messageName, new ArrayList<NotificationObserver>());
-		}
-		observers = this.observersForName.get(messageName);
-		observers.add(observer);
+		addObserver(messageName, observer, globalObservers);
 	}
 	
 	@Override
 	public void unsubscribe(String messageName, NotificationObserver observer) {
-		List<NotificationObserver> observers = this.observersForName.get(messageName);
-		observers.remove(observer);
-		if (observers.size() == 0) {
-			this.observersForName.remove(messageName);
-		}
+		removeObserversForMessageName(messageName, observer, globalObservers);
 	}
 	
 	@Override
 	public void unsubscribe(NotificationObserver observer) {
-		Iterator<String> iterator = this.observersForName.keySet().iterator();
-		while (iterator.hasNext()) {
-			String key = iterator.next();
-			Iterator<NotificationObserver> iterator2 = this.observersForName.get(key).iterator();
-			while (iterator2.hasNext()) {
-				NotificationObserver actualObserver = iterator2.next();
-				if (actualObserver == observer) {
-					this.observersForName.remove(key);
-					break;
-				}
-			}
-		}
+		removeObserverFromObserverMap(observer, globalObservers);
 	}
 	
 	@Override
 	public void publish(String messageName, Object... payload) {
-		Collection<NotificationObserver> notificationReceivers = observersForName.get(messageName);
+		publish(messageName, payload, globalObservers);
+	}
+	
+	@Override
+	public void publish(ViewModel viewModel, String messageName, Object[] payload) {
+		ObserverMap observerMap = viewModelObservers.get(viewModel);
+		if (observerMap != null) {
+			publish(messageName, payload, observerMap);
+		}
+	}
+	
+	
+	@Override
+	public void subscribe(ViewModel view, String messageName, NotificationObserver observer) {
+		ObserverMap observerMap = viewModelObservers.get(view);
+		if (observerMap == null) {
+			observerMap = new ObserverMap();
+			viewModelObservers.put(view, observerMap);
+		}
+		addObserver(messageName, observer, observerMap);
+	}
+	
+	@Override
+	public void unsubscribe(ViewModel view, String messageName, NotificationObserver observer) {
+		ObserverMap observerMap = viewModelObservers.get(view);
+		if (observerMap != null) {
+			removeObserversForMessageName(messageName, observer, observerMap);
+		}
+	}
+	
+	
+	@Override
+	public void unsubscribe(ViewModel viewModel, NotificationObserver observer) {
+		ObserverMap observerMap = viewModelObservers.get(viewModel);
+		removeObserverFromObserverMap(observer, observerMap);
+	}
+	
+	/*
+	 * Helper
+	 */
+	
+	private void publish(String messageName, Object[] payload, ObserverMap observerMap) {
+		Collection<NotificationObserver> notificationReceivers = observerMap.get(messageName);
 		if (notificationReceivers != null) {
 			for (NotificationObserver observer : notificationReceivers) {
 				observer.receivedNotification(messageName, payload);
 			}
 		}
 	}
+	
+	private void addObserver(String messageName, NotificationObserver observer, ObserverMap observerMap) {
+		List<NotificationObserver> observers = observerMap.get(messageName);
+		if (observers == null) {
+			observerMap.put(messageName, new ArrayList<NotificationObserver>());
+		}
+		observers = observerMap.get(messageName);
+		observers.add(observer);
+	}
+	
+	
+	
+	private void removeObserverFromObserverMap(NotificationObserver observer, ObserverMap observerMap) {
+		for (String key : observerMap.keySet()) {
+			for (NotificationObserver actualObserver : observerMap.get(key)) {
+				if (actualObserver.equals(observer)) {
+					observerMap.get(key).remove(actualObserver);
+					break;
+				}
+			}
+		}
+	}
+	
+	private void removeObserversForMessageName(String messageName, NotificationObserver observer,
+			ObserverMap observerMap) {
+		List<NotificationObserver> observers = observerMap.get(messageName);
+		observers.remove(observer);
+		if (observers.size() == 0) {
+			observerMap.remove(messageName);
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	private class ObserverMap extends HashMap<String, List<NotificationObserver>> {
+	}
+	
+	@SuppressWarnings("serial")
+	private class ViewModelObservers extends HashMap<ViewModel, ObserverMap> {
+	}
+	
+	
 	
 }
