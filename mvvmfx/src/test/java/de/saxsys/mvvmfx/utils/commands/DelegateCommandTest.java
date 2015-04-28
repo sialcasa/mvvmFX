@@ -24,12 +24,11 @@ public class DelegateCommandTest {
 	public void executable() {
 		BooleanProperty condition = new SimpleBooleanProperty(true);
 		
-		DelegateCommand delegateCommand = new DelegateCommand(condition) {
-			
+		DelegateCommand delegateCommand = new DelegateCommand(new Action() {
 			@Override
-			protected void action() throws Exception {
+			protected void action() {
 			}
-		};
+		}, condition);
 		
 		assertTrue(delegateCommand.isExecutable());
 		assertFalse(delegateCommand.isNotExecutable());
@@ -50,12 +49,12 @@ public class DelegateCommandTest {
 		BooleanProperty condition = new SimpleBooleanProperty(true);
 		BooleanProperty called = new SimpleBooleanProperty();
 		
-		DelegateCommand delegateCommand = new DelegateCommand(condition) {
+		DelegateCommand delegateCommand = new DelegateCommand(new Action() {
 			@Override
-			protected void action() throws Exception {
+			protected void action() {
 				called.set(true);
 			}
-		};
+		}, condition);
 		
 		assertFalse(called.get());
 		delegateCommand.execute();
@@ -66,11 +65,11 @@ public class DelegateCommandTest {
 	public void fireNegative() {
 		BooleanProperty condition = new SimpleBooleanProperty(false);
 		
-		DelegateCommand delegateCommand = new DelegateCommand(condition) {
+		DelegateCommand delegateCommand = new DelegateCommand(new Action() {
 			@Override
-			protected void action() throws Exception {
+			protected void action() {
 			}
-		};
+		}, condition);
 		
 		delegateCommand.execute();
 	}
@@ -84,15 +83,12 @@ public class DelegateCommandTest {
 		CompletableFuture<Void> commandStarted = new CompletableFuture<>();
 		CompletableFuture<Void> commandCompleted = new CompletableFuture<>();
 		
-		DelegateCommand delegateCommand = new DelegateCommand(condition, true) {
+		DelegateCommand delegateCommand = new DelegateCommand(new Action() {
 			@Override
 			protected void action() throws Exception {
-				try {
-					Thread.sleep(1000);
-				} catch (Exception e) {
-				}
+				Thread.sleep(1000);
 			}
-		};
+		}, condition, true);
 		
 		assertFalse(delegateCommand.runningProperty().get());
 		assertTrue(delegateCommand.notRunningProperty().get());

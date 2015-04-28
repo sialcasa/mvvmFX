@@ -35,22 +35,22 @@ public class CompositeCommandTest {
 	public void init() {
 		condition1 = new SimpleBooleanProperty(true);
 		called1 = new SimpleBooleanProperty();
-		delegateCommand1 = new DelegateCommand(condition1) {
+		delegateCommand1 = new DelegateCommand(new Action() {
 			
 			@Override
 			protected void action() throws Exception {
 				called1.set(true);
 			}
-		};
+		}, condition1);
 		
 		condition2 = new SimpleBooleanProperty(true);
 		called2 = new SimpleBooleanProperty();
-		delegateCommand2 = new DelegateCommand(condition2) {
+		delegateCommand2 = new DelegateCommand(new Action() {
 			@Override
 			protected void action() throws Exception {
 				called2.set(true);
 			}
-		};
+		}, condition2);
 	}
 	
 	@Test
@@ -161,28 +161,29 @@ public class CompositeCommandTest {
 		CompletableFuture<Void> commandCompleted = new CompletableFuture<>();
 		CompletableFuture<Void> future = new CompletableFuture<>();
 		
-		DelegateCommand delegateCommand1 = new DelegateCommand(condition, true) {
+		DelegateCommand delegateCommand1 = new DelegateCommand(new Action() {
 			
 			@Override
 			protected void action() throws Exception {
 				sleep(500);
 			}
-		};
+		}, condition, true);
 		
-		DelegateCommand delegateCommand2 = new DelegateCommand(condition, true) {
+		DelegateCommand delegateCommand2 = new DelegateCommand(new Action() {
+			
 			@Override
 			protected void action() throws Exception {
 				sleep(1000);
 				future.complete(null);
 			}
-		};
+		}, condition, true);
 		
-		DelegateCommand delegateCommand3 = new DelegateCommand(condition, true) {
+		DelegateCommand delegateCommand3 = new DelegateCommand(new Action() {
 			
 			@Override
 			protected void action() throws Exception {
 			}
-		};
+		}, condition, true);
 		
 		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1, delegateCommand2, delegateCommand3);
 		

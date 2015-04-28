@@ -30,12 +30,14 @@ import eu.lestard.doc.Beta;
  * @author alexander.casall
  */
 @Beta
-public abstract class DelegateCommand extends Service<Void> implements Command {
+public class DelegateCommand extends Service<Void> implements Command {
 	
+	private final Action action;
 	private boolean inBackground = false;
 	protected final ReadOnlyBooleanWrapper executable = new ReadOnlyBooleanWrapper(true);
 	protected ReadOnlyBooleanWrapper notExecutable;
 	protected ReadOnlyBooleanWrapper notRunning;
+	
 	
 	
 	
@@ -46,7 +48,7 @@ public abstract class DelegateCommand extends Service<Void> implements Command {
 	 * @param action
 	 *            which should execute
 	 */
-	public DelegateCommand() {
+	public DelegateCommand(Action action) {
 		this(null, false);
 	}
 	
@@ -63,8 +65,8 @@ public abstract class DelegateCommand extends Service<Void> implements Command {
 	 * @param inBackground
 	 *            defines whether the execution {@link #execute()} is performed in a background thread or not
 	 */
-	public DelegateCommand(boolean inBackground) {
-		this(null, inBackground);
+	public DelegateCommand(Action action, boolean inBackground) {
+		this(action, null, inBackground);
 	}
 	
 	/**
@@ -76,8 +78,8 @@ public abstract class DelegateCommand extends Service<Void> implements Command {
 	 * @param executableBinding
 	 *            which defines whether the {@link Command} can execute
 	 */
-	public DelegateCommand(ObservableBooleanValue executableBinding) {
-		this(executableBinding, false);
+	public DelegateCommand(Action action, ObservableBooleanValue executableBinding) {
+		this(action, executableBinding, false);
 	}
 	
 	/**
@@ -94,20 +96,14 @@ public abstract class DelegateCommand extends Service<Void> implements Command {
 	 * @param inBackground
 	 *            defines whether the execution {@link #execute()} is performed in a background thread or not
 	 */
-	public DelegateCommand(ObservableBooleanValue executableBinding, boolean inBackground) {
+	public DelegateCommand(Action action, ObservableBooleanValue executableBinding, boolean inBackground) {
+		this.action = action;
 		this.inBackground = inBackground;
 		if (executableBinding != null) {
 			executable.bind(runningProperty().not().and(executableBinding));
 		}
 		
 	}
-	
-	/**
-	 * The action which will called if the {@link #execute()} method is called.
-	 * 
-	 * @throws Exception
-	 */
-	protected abstract void action() throws Exception;
 	
 	/**
 	 * @see de.saxsys.mvvmfx.utils.commands.Command#execute
@@ -124,7 +120,7 @@ public abstract class DelegateCommand extends Service<Void> implements Command {
 				}
 			} else {
 				try {
-					this.action();
+					action.action();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -137,7 +133,7 @@ public abstract class DelegateCommand extends Service<Void> implements Command {
 		return new Task<Void>() {
 			@Override
 			protected Void call() throws Exception {
-				action();
+				action.action();
 				return null;
 			}
 		};
