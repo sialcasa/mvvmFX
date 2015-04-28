@@ -12,9 +12,10 @@ import java.util.function.Function;
  */
 @FunctionalInterface
 public interface ObjectGetter<M, T> extends Function<M, T> {
-
+	
 	/**
-	 * @param model the model instance.
+	 * @param model
+	 *            the model instance.
 	 * @return the value of the field.
 	 */
 	@Override

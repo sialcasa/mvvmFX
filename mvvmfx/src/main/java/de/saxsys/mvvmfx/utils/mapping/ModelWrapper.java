@@ -398,11 +398,11 @@ public class ModelWrapper<M> {
 			fields.forEach(field -> field.reload(model));
 		}
 	}
-
-
-
+	
+	
+	
 	/** Field type String **/
-
+	
 	/**
 	 * Add a new field of type String to this instance of the wrapper. This method is used for model elements that are
 	 * following the normal Java-Beans-standard i.e. the model fields are only available via getter and setter methods
@@ -415,10 +415,10 @@ public class ModelWrapper<M> {
 	 *
 	 * <pre>
 	 * ModelWrapper{@code<Person>} personWrapper = new ModelWrapper{@code<>}();
-	 *
+	 * 
 	 * StringProperty wrappedNameProperty = personWrapper.field(person -> person.getName(), (person, value)
 	 * 	 -> person.setName(value), "empty");
-	 *
+	 * 
 	 * // or with a method reference
 	 * StringProperty wrappedNameProperty = personWrapper.field(Person::getName, Person::setName, "empty");
 	 *
@@ -437,10 +437,11 @@ public class ModelWrapper<M> {
 	public StringProperty field(StringGetter<M> getter, StringSetter<M> setter) {
 		return add(new BeanPropertyField<>(getter, setter, SimpleStringProperty::new));
 	}
-
+	
 	/**
 	 * Add a new field of type String to this instance of the wrapper. See {@link #field(StringGetter, StringSetter)}.
-	 * This method additionally has a parameter to define the default value that is used when the {@link #reset()} method is used.
+	 * This method additionally has a parameter to define the default value that is used when the {@link #reset()}
+	 * method is used.
 	 *
 	 *
 	 * @param getter
@@ -457,7 +458,7 @@ public class ModelWrapper<M> {
 	public StringProperty field(StringGetter<M> getter, StringSetter<M> setter, String defaultValue) {
 		return add(new BeanPropertyField<>(getter, setter, defaultValue, SimpleStringProperty::new));
 	}
-
+	
 	/**
 	 * Add a new field of type {@link String} to this instance of the wrapper. This method is used for model elements
 	 * that are following the enhanced JavaFX-Beans-standard i.e. the model fields are available as JavaFX Properties.
@@ -468,9 +469,9 @@ public class ModelWrapper<M> {
 	 *
 	 * <pre>
 	 * ModelWrapper{@code<Person>} personWrapper = new ModelWrapper{@code<>}();
-	 *
+	 * 
 	 * StringProperty wrappedNameProperty = personWrapper.field(person -> person.nameProperty());
-	 *
+	 * 
 	 * // or with a method reference
 	 * StringProperty wrappedNameProperty = personWrapper.field(Person::nameProperty);
 	 *
@@ -485,10 +486,12 @@ public class ModelWrapper<M> {
 	public StringProperty field(StringPropertyAccessor<M> accessor) {
 		return add(new FxPropertyField<>(accessor::apply, SimpleStringProperty::new));
 	}
-
+	
 	/**
-	 *  Add a new field of type String to this instance of the wrapper. See {@link #field(StringGetter, StringSetter)}.
-	 * This method additionally has a parameter to define the default value that is used when the {@link #reset()} method is used.
+	 * Add a new field of type String to this instance of the wrapper. See {@link #field(StringGetter, StringSetter)}.
+	 * This method additionally has a parameter to define the default value that is used when the {@link #reset()}
+	 * method is used.
+	 * 
 	 * @param accessor
 	 *            a function that returns the property for a given model instance. Typically you will use a method
 	 *            reference to the javafx-property accessor method.
@@ -499,10 +502,10 @@ public class ModelWrapper<M> {
 	public StringProperty field(StringPropertyAccessor<M> accessor, String defaultValue) {
 		return add(new FxPropertyField<>(accessor::apply, SimpleStringProperty::new));
 	}
-
-
-
-
+	
+	
+	
+	
 	/**
 	 * Add a new field of type String to this instance of the wrapper. See {@link #field(StringGetter, StringSetter)}.
 	 * This method additionally takes a string identifier as first parameter.
@@ -522,11 +525,12 @@ public class ModelWrapper<M> {
 	public StringProperty field(String identifier, StringGetter<M> getter, StringSetter<M> setter) {
 		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, SimpleStringProperty::new));
 	}
-
+	
 	public StringProperty field(String identifier, StringGetter<M> getter, StringSetter<M> setter, String defaultValue) {
-		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, defaultValue, SimpleStringProperty::new));
+		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, defaultValue,
+				SimpleStringProperty::new));
 	}
-
+	
 	/**
 	 * Add a new field of type String to this instance of the wrapper. See {@link #field(StringPropertyAccessor)}. This
 	 * method additionally takes a string identifier as first parameter.
@@ -544,9 +548,10 @@ public class ModelWrapper<M> {
 	public StringProperty field(String identifier, StringPropertyAccessor<M> accessor) {
 		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleStringProperty::new));
 	}
-
+	
 	public StringProperty field(String identifier, StringPropertyAccessor<M> accessor, String defaultValue) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, defaultValue, SimpleStringProperty::new));
+		return addIdentified(identifier,
+				new FxPropertyField<>(accessor::apply, defaultValue, SimpleStringProperty::new));
 	}
 	
 	/** Field type Boolean **/
@@ -554,6 +559,7 @@ public class ModelWrapper<M> {
 	public BooleanProperty field(BooleanGetter<M> getter, BooleanSetter<M> setter) {
 		return add(new BeanPropertyField<>(getter, setter, SimpleBooleanProperty::new));
 	}
+	
 	public BooleanProperty field(BooleanGetter<M> getter, BooleanSetter<M> setter, boolean defaultValue) {
 		return add(new BeanPropertyField<>(getter, setter, defaultValue, SimpleBooleanProperty::new));
 	}
@@ -561,6 +567,7 @@ public class ModelWrapper<M> {
 	public BooleanProperty field(BooleanPropertyAccessor<M> accessor) {
 		return add(new FxPropertyField<>(accessor, SimpleBooleanProperty::new));
 	}
+	
 	public BooleanProperty field(BooleanPropertyAccessor<M> accessor, boolean defaultValue) {
 		return add(new FxPropertyField<>(accessor, defaultValue, SimpleBooleanProperty::new));
 	}
@@ -568,13 +575,17 @@ public class ModelWrapper<M> {
 	public BooleanProperty field(String identifier, BooleanGetter<M> getter, BooleanSetter<M> setter) {
 		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, SimpleBooleanProperty::new));
 	}
-	public BooleanProperty field(String identifier, BooleanGetter<M> getter, BooleanSetter<M> setter, boolean defaultValue) {
-		return addIdentified(identifier, new BeanPropertyField<>(getter, setter,defaultValue, SimpleBooleanProperty::new));
+	
+	public BooleanProperty field(String identifier, BooleanGetter<M> getter, BooleanSetter<M> setter,
+			boolean defaultValue) {
+		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, defaultValue,
+				SimpleBooleanProperty::new));
 	}
 	
 	public BooleanProperty field(String identifier, BooleanPropertyAccessor<M> accessor) {
 		return addIdentified(identifier, new FxPropertyField<>(accessor, SimpleBooleanProperty::new));
 	}
+	
 	public BooleanProperty field(String identifier, BooleanPropertyAccessor<M> accessor, boolean defaultValue) {
 		return addIdentified(identifier, new FxPropertyField<>(accessor, defaultValue, SimpleBooleanProperty::new));
 	}
@@ -588,14 +599,17 @@ public class ModelWrapper<M> {
 		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
 				SimpleDoubleProperty::new));
 	}
+	
 	public DoubleProperty field(DoubleGetter<M> getter, DoubleSetter<M> setter, double defaultValue) {
-		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.doubleValue()), defaultValue,
+		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
+				defaultValue,
 				SimpleDoubleProperty::new));
 	}
 	
 	public DoubleProperty field(DoublePropertyAccessor<M> accessor) {
 		return add(new FxPropertyField<>(accessor::apply, SimpleDoubleProperty::new));
 	}
+	
 	public DoubleProperty field(DoublePropertyAccessor<M> accessor, double defaultValue) {
 		return add(new FxPropertyField<>(accessor::apply, defaultValue, SimpleDoubleProperty::new));
 	}
@@ -605,17 +619,21 @@ public class ModelWrapper<M> {
 				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
 						SimpleDoubleProperty::new));
 	}
+	
 	public DoubleProperty field(String identifier, DoubleGetter<M> getter, DoubleSetter<M> setter, double defaultValue) {
 		return addIdentified(identifier,
-				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.doubleValue()), defaultValue,
+				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
+						defaultValue,
 						SimpleDoubleProperty::new));
 	}
 	
 	public DoubleProperty field(String identifier, DoublePropertyAccessor<M> accessor) {
 		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleDoubleProperty::new));
 	}
+	
 	public DoubleProperty field(String identifier, DoublePropertyAccessor<M> accessor, double defaultValue) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, defaultValue, SimpleDoubleProperty::new));
+		return addIdentified(identifier,
+				new FxPropertyField<>(accessor::apply, defaultValue, SimpleDoubleProperty::new));
 	}
 	
 	
@@ -627,14 +645,17 @@ public class ModelWrapper<M> {
 		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.floatValue()),
 				SimpleFloatProperty::new));
 	}
+	
 	public FloatProperty field(FloatGetter<M> getter, FloatSetter<M> setter, float defaultValue) {
-		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.floatValue()), defaultValue,
+		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.floatValue()),
+				defaultValue,
 				SimpleFloatProperty::new));
 	}
 	
 	public FloatProperty field(FloatPropertyAccessor<M> accessor) {
 		return add(new FxPropertyField<>(accessor::apply, SimpleFloatProperty::new));
 	}
+	
 	public FloatProperty field(FloatPropertyAccessor<M> accessor, float defaultValue) {
 		return add(new FxPropertyField<>(accessor::apply, defaultValue, SimpleFloatProperty::new));
 	}
@@ -644,16 +665,19 @@ public class ModelWrapper<M> {
 				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.floatValue()),
 						SimpleFloatProperty::new));
 	}
+	
 	public FloatProperty field(String identifier, FloatGetter<M> getter, FloatSetter<M> setter, float defaultValue) {
 		return addIdentified(identifier,
-				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.floatValue()), defaultValue,
+				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.floatValue()),
+						defaultValue,
 						SimpleFloatProperty::new));
 	}
 	
 	public FloatProperty field(String identifier, FloatPropertyAccessor<M> accessor) {
 		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleFloatProperty::new));
 	}
-	public FloatProperty field(String identifier, FloatPropertyAccessor<M> accessor, float defaultValue ) {
+	
+	public FloatProperty field(String identifier, FloatPropertyAccessor<M> accessor, float defaultValue) {
 		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, defaultValue, SimpleFloatProperty::new));
 	}
 	
@@ -665,8 +689,10 @@ public class ModelWrapper<M> {
 		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.intValue()),
 				SimpleIntegerProperty::new));
 	}
+	
 	public IntegerProperty field(IntGetter<M> getter, IntSetter<M> setter, int defaultValue) {
-		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.intValue()), defaultValue,
+		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.intValue()),
+				defaultValue,
 				SimpleIntegerProperty::new));
 	}
 	
@@ -674,6 +700,7 @@ public class ModelWrapper<M> {
 	public IntegerProperty field(IntPropertyAccessor<M> accessor) {
 		return add(new FxPropertyField<>(accessor::apply, SimpleIntegerProperty::new));
 	}
+	
 	public IntegerProperty field(IntPropertyAccessor<M> accessor, int defaultValue) {
 		return add(new FxPropertyField<>(accessor::apply, defaultValue, SimpleIntegerProperty::new));
 	}
@@ -683,18 +710,22 @@ public class ModelWrapper<M> {
 				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.intValue()),
 						SimpleIntegerProperty::new));
 	}
+	
 	public IntegerProperty field(String identifier, IntGetter<M> getter, IntSetter<M> setter, int defaultValue) {
 		return addIdentified(identifier,
-				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.intValue()), defaultValue,
+				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.intValue()),
+						defaultValue,
 						SimpleIntegerProperty::new));
 	}
-
-
+	
+	
 	public IntegerProperty field(String identifier, IntPropertyAccessor<M> accessor) {
 		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleIntegerProperty::new));
 	}
+	
 	public IntegerProperty field(String identifier, IntPropertyAccessor<M> accessor, int defaultValue) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, defaultValue, SimpleIntegerProperty::new));
+		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, defaultValue,
+				SimpleIntegerProperty::new));
 	}
 	
 	
@@ -705,6 +736,7 @@ public class ModelWrapper<M> {
 		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.longValue()),
 				SimpleLongProperty::new));
 	}
+	
 	public LongProperty field(LongGetter<M> getter, LongSetter<M> setter, long defaultValue) {
 		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.longValue()),
 				defaultValue,
@@ -714,6 +746,7 @@ public class ModelWrapper<M> {
 	public LongProperty field(LongPropertyAccessor<M> accessor) {
 		return add(new FxPropertyField<>(accessor::apply, SimpleLongProperty::new));
 	}
+	
 	public LongProperty field(LongPropertyAccessor<M> accessor, long defaultValue) {
 		return add(new FxPropertyField<>(accessor::apply, defaultValue, SimpleLongProperty::new));
 	}
@@ -724,6 +757,7 @@ public class ModelWrapper<M> {
 				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.longValue()),
 						SimpleLongProperty::new));
 	}
+	
 	public LongProperty field(String identifier, LongGetter<M> getter, LongSetter<M> setter, long defaultValue) {
 		return addIdentified(identifier,
 				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.longValue()),
@@ -734,7 +768,7 @@ public class ModelWrapper<M> {
 	public LongProperty field(String identifier, LongPropertyAccessor<M> accessor) {
 		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleLongProperty::new));
 	}
-
+	
 	public LongProperty field(String identifier, LongPropertyAccessor<M> accessor, long defaultValue) {
 		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, defaultValue, SimpleLongProperty::new));
 	}
@@ -747,7 +781,7 @@ public class ModelWrapper<M> {
 	public <T> ObjectProperty<T> field(ObjectGetter<M, T> getter, ObjectSetter<M, T> setter) {
 		return add(new BeanPropertyField<>(getter, setter, SimpleObjectProperty::new));
 	}
-
+	
 	public <T> ObjectProperty<T> field(ObjectGetter<M, T> getter, ObjectSetter<M, T> setter, T defaultValue) {
 		return add(new BeanPropertyField<>(getter, setter, defaultValue, SimpleObjectProperty::new));
 	}
@@ -755,7 +789,7 @@ public class ModelWrapper<M> {
 	public <T> ObjectProperty<T> field(ObjectPropertyAccessor<M, T> accessor) {
 		return add(new FxPropertyField<>(accessor::apply, SimpleObjectProperty::new));
 	}
-
+	
 	public <T> ObjectProperty<T> field(ObjectPropertyAccessor<M, T> accessor, T defaultValue) {
 		return add(new FxPropertyField<>(accessor::apply, defaultValue, SimpleObjectProperty::new));
 	}
@@ -764,17 +798,20 @@ public class ModelWrapper<M> {
 	public <T> ObjectProperty<T> field(String identifier, ObjectGetter<M, T> getter, ObjectSetter<M, T> setter) {
 		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, SimpleObjectProperty::new));
 	}
-
-	public <T> ObjectProperty<T> field(String identifier, ObjectGetter<M, T> getter, ObjectSetter<M, T> setter, T defaultValue) {
-		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, defaultValue, SimpleObjectProperty::new));
+	
+	public <T> ObjectProperty<T> field(String identifier, ObjectGetter<M, T> getter, ObjectSetter<M, T> setter,
+			T defaultValue) {
+		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, defaultValue,
+				SimpleObjectProperty::new));
 	}
 	
 	public <T> ObjectProperty<T> field(String identifier, ObjectPropertyAccessor<M, T> accessor) {
 		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleObjectProperty::new));
 	}
-
+	
 	public <T> ObjectProperty<T> field(String identifier, ObjectPropertyAccessor<M, T> accessor, T defaultValue) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, defaultValue, SimpleObjectProperty::new));
+		return addIdentified(identifier,
+				new FxPropertyField<>(accessor::apply, defaultValue, SimpleObjectProperty::new));
 	}
 	
 	private <T, R extends Property<T>> R add(PropertyField<T, M, R> field) {

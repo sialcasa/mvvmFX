@@ -5,13 +5,14 @@ import javafx.beans.property.FloatProperty;
 import java.util.function.Function;
 
 /**
- * A functional interface to define an accessor method for a property of type {@link Float}. 
+ * A functional interface to define an accessor method for a property of type {@link Float}.
  *
- * @param <M> the generic type of the model.
+ * @param <M>
+ *            the generic type of the model.
  */
 @FunctionalInterface
 public interface FloatPropertyAccessor<M> extends Function<M, FloatProperty> {
-
+	
 	/**
 	 * @param model
 	 *            the model instance.

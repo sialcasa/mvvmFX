@@ -12,11 +12,13 @@ import java.util.function.BiConsumer;
  *            the generic type of the field.
  */
 @FunctionalInterface
-public interface ObjectSetter<M,T> extends BiConsumer<M, T> {
-
+public interface ObjectSetter<M, T> extends BiConsumer<M, T> {
+	
 	/**
-	 * @param model the model instance.
-	 * @param value the new value to be set.
+	 * @param model
+	 *            the model instance.
+	 * @param value
+	 *            the new value to be set.
 	 */
 	@Override
 	void accept(M model, T value);
