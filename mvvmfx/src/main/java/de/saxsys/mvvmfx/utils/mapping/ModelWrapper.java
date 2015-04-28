@@ -1,5 +1,26 @@
 package de.saxsys.mvvmfx.utils.mapping;
 
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.BooleanGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.BooleanPropertyAccessor;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.BooleanSetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.DoubleGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.DoublePropertyAccessor;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.DoubleSetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.FloatGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.FloatPropertyAccessor;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.FloatSetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.IntGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.IntPropertyAccessor;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.IntSetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.LongGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.LongPropertyAccessor;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.LongSetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectPropertyAccessor;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectSetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringPropertyAccessor;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringSetter;
 import eu.lestard.doc.Beta;
 import javafx.beans.property.*;
 
@@ -156,15 +177,15 @@ import java.util.function.Supplier;
  *                 }
  *             }
  * 
- *             public Property{@code<String>} nameProperty(){
+ *             public StringProperty nameProperty(){
  *                 return wrapper.field("name", Person::getName, Person::setName, "");
  *             }
  * 
- *             public Property{@code<String>} familyNameProperty(){
+ *             public StringProperty familyNameProperty(){
  *                 return wrapper.field("familyName", Person::getFamilyName, Person::setFamilyName, "");
  *             }
  * 
- *             public Property{@code<Integer>} ageProperty() {
+ *             public IntegerProperty ageProperty() {
  *                 return wrapper.field("age", Person::getAge, Person::setAge, 0);
  *             }
  *         }
@@ -177,6 +198,10 @@ import java.util.function.Supplier;
  * On the other hand in the example with the {@link ModelWrapper} there is only the definition of the Property accessors
  * in the bottom of the class that is specific to the fields of the Model. For each field we have only one place in the
  * ViewModel that would need an update when the structure of the model changes.
+ * 
+ * 
+ * 
+ * 
  * 
  * 
  * @param <M>
@@ -216,12 +241,12 @@ public class ModelWrapper<M> {
 		public FxPropertyField(Function<M, Property<T>> accessor, Supplier<Property<T>> propertySupplier) {
 			this(accessor, null, propertySupplier);
 		}
-
+		
 		@SuppressWarnings("unchecked")
 		public FxPropertyField(Function<M, Property<T>> accessor, T defaultValue, Supplier<Property<T>> propertySupplier) {
 			this.accessor = accessor;
 			this.defaultValue = defaultValue;
-			this.targetProperty = (R)propertySupplier.get();
+			this.targetProperty = (R) propertySupplier.get();
 		}
 		
 		@Override
@@ -374,409 +399,383 @@ public class ModelWrapper<M> {
 		}
 	}
 
-	public BooleanProperty field(BooleanGetter<M> getter, BooleanSetter<M> setter) {
-		return add(new BeanPropertyField<>(getter, setter, SimpleBooleanProperty::new));
-	}
-
-	public BooleanProperty field(BooleanPropertyAccessor<M> accessor) {
-		return add(new FxPropertyField<>(accessor, SimpleBooleanProperty::new));
-	}
-
-	public BooleanProperty field(String identifier, BooleanGetter<M> getter, BooleanSetter<M> setter) {
-		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, SimpleBooleanProperty::new));
-	}
-
-	public BooleanProperty field(String identifier, BooleanPropertyAccessor<M> accessor) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor, SimpleBooleanProperty::new));
-	}
 
 
-	public DoubleProperty field(DoubleGetter<M> getter, DoubleSetter<M> setter) {
-		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.doubleValue()), SimpleDoubleProperty::new));
-	}
+	/** Field type String **/
 
-	public DoubleProperty field(DoublePropertyAccessor<M> accessor) {
-		return add(new FxPropertyField<>(accessor::apply, SimpleDoubleProperty::new));
-	}
-
-	public DoubleProperty field(String identifier, DoubleGetter<M> getter, DoubleSetter<M> setter) {
-		return addIdentified(identifier, new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.doubleValue()), SimpleDoubleProperty::new));
-	}
-
-	public DoubleProperty field(String identifier, DoublePropertyAccessor<M> accessor) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleDoubleProperty::new));
-	}
-
-
-
-
-
-
-	public FloatProperty field(FloatGetter<M> getter, FloatSetter<M> setter) {
-		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.floatValue()), SimpleFloatProperty::new));
-	}
-
-	public FloatProperty field(FloatPropertyAccessor<M> accessor) {
-		return add(new FxPropertyField<>(accessor::apply, SimpleFloatProperty::new));
-	}
-
-	public FloatProperty field(String identifier, FloatGetter<M> getter, FloatSetter<M> setter) {
-		return addIdentified(identifier, new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.floatValue()), SimpleFloatProperty::new));
-	}
-
-	public FloatProperty field(String identifier, FloatPropertyAccessor<M> accessor) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleFloatProperty::new));
-	}
-
-
-
-
-	public IntegerProperty field(IntGetter<M> getter, IntSetter<M> setter) {
-		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.intValue()), SimpleIntegerProperty::new));
-	}
-
-	public IntegerProperty field(IntPropertyAccessor<M> accessor) {
-		return add(new FxPropertyField<>(accessor::apply, SimpleIntegerProperty::new));
-	}
-
-	public IntegerProperty field(String identifier, IntGetter<M> getter, IntSetter<M> setter) {
-		return addIdentified(identifier, new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.intValue()), SimpleIntegerProperty::new));
-	}
-
-	public IntegerProperty field(String identifier, IntPropertyAccessor<M> accessor) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleIntegerProperty::new));
-	}
-
-
-
-
-	public LongProperty field(LongGetter<M> getter, LongSetter<M> setter) {
-		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.longValue()), SimpleLongProperty::new));
-	}
-
-	public LongProperty field(LongPropertyAccessor<M> accessor) {
-		return add(new FxPropertyField<>(accessor::apply, SimpleLongProperty::new));
-	}
-
-	public LongProperty field(String identifier, LongGetter<M> getter, LongSetter<M> setter) {
-		return addIdentified(identifier, new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.longValue()), SimpleLongProperty::new));
-	}
-
-	public LongProperty field(String identifier, LongPropertyAccessor<M> accessor) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleLongProperty::new));
-	}
-
-
-
-
-
-	public <T> ObjectProperty<T> field(ObjectGetter<M, T> getter, ObjectSetter<M, T> setter) {
-		return add(new BeanPropertyField<>(getter, setter, SimpleObjectProperty::new));
-	}
-
-	public <T> ObjectProperty<T> field(ObjectPropertyAccessor<M, T> accessor) {
-		return add(new FxPropertyField<>(accessor::apply, SimpleObjectProperty::new));
-	}
-
-	public <T> ObjectProperty<T> field(String identifier, ObjectGetter<M, T> getter, ObjectSetter<M, T> setter) {
-		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, SimpleObjectProperty::new));
-	}
-
-	public <T> ObjectProperty<T> field(String identifier, ObjectPropertyAccessor<M, T> accessor) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleObjectProperty::new));
-	}
-
-
-
-
-
+	/**
+	 * Add a new field of type String to this instance of the wrapper. This method is used for model elements that are
+	 * following the normal Java-Beans-standard i.e. the model fields are only available via getter and setter methods
+	 * and not as JavaFX Properties.
+	 *
+	 * <p>
+	 *
+	 * Example:
+	 * <p>
+	 *
+	 * <pre>
+	 * ModelWrapper{@code<Person>} personWrapper = new ModelWrapper{@code<>}();
+	 *
+	 * StringProperty wrappedNameProperty = personWrapper.field(person -> person.getName(), (person, value)
+	 * 	 -> person.setName(value), "empty");
+	 *
+	 * // or with a method reference
+	 * StringProperty wrappedNameProperty = personWrapper.field(Person::getName, Person::setName, "empty");
+	 *
+	 * </pre>
+	 *
+	 *
+	 * @param getter
+	 *            a function that returns the current value of the field for a given model element. Typically you will
+	 *            use a method reference to the getter method of the model element.
+	 * @param setter
+	 *            a function that sets the given value to the given model element. Typically you will use a method
+	 *            reference to the setter method of the model element.
+	 *
+	 * @return The wrapped property instance.
+	 */
 	public StringProperty field(StringGetter<M> getter, StringSetter<M> setter) {
 		return add(new BeanPropertyField<>(getter, setter, SimpleStringProperty::new));
 	}
 
+	/**
+	 * Add a new field of type String to this instance of the wrapper. See {@link #field(StringGetter, StringSetter)}.
+	 * This method additionally has a parameter to define the default value that is used when the {@link #reset()} method is used.
+	 *
+	 *
+	 * @param getter
+	 *            a function that returns the current value of the field for a given model element. Typically you will
+	 *            use a method reference to the getter method of the model element.
+	 * @param setter
+	 *            a function that sets the given value to the given model element. Typically you will use a method
+	 *            reference to the setter method of the model element.
+	 * @param defaultValue
+	 *            the default value that is used when {@link #reset()} is invoked.
+	 *
+	 * @return The wrapped property instance.
+	 */
+	public StringProperty field(StringGetter<M> getter, StringSetter<M> setter, String defaultValue) {
+		return add(new BeanPropertyField<>(getter, setter, defaultValue, SimpleStringProperty::new));
+	}
+
+	/**
+	 * Add a new field of type {@link String} to this instance of the wrapper. This method is used for model elements
+	 * that are following the enhanced JavaFX-Beans-standard i.e. the model fields are available as JavaFX Properties.
+	 * <p>
+	 *
+	 * Example:
+	 * <p>
+	 *
+	 * <pre>
+	 * ModelWrapper{@code<Person>} personWrapper = new ModelWrapper{@code<>}();
+	 *
+	 * StringProperty wrappedNameProperty = personWrapper.field(person -> person.nameProperty());
+	 *
+	 * // or with a method reference
+	 * StringProperty wrappedNameProperty = personWrapper.field(Person::nameProperty);
+	 *
+	 * </pre>
+	 *
+	 * @param accessor
+	 *            a function that returns the property for a given model instance. Typically you will use a method
+	 *            reference to the javafx-property accessor method.
+	 *
+	 * @return The wrapped property instance.
+	 */
 	public StringProperty field(StringPropertyAccessor<M> accessor) {
 		return add(new FxPropertyField<>(accessor::apply, SimpleStringProperty::new));
 	}
 
+	/**
+	 *  Add a new field of type String to this instance of the wrapper. See {@link #field(StringGetter, StringSetter)}.
+	 * This method additionally has a parameter to define the default value that is used when the {@link #reset()} method is used.
+	 * @param accessor
+	 *            a function that returns the property for a given model instance. Typically you will use a method
+	 *            reference to the javafx-property accessor method.
+	 * @param defaultValue
+	 *            the default value that is used when {@link #reset()} is invoked.
+	 * @return The wrapped property instance.
+	 */
+	public StringProperty field(StringPropertyAccessor<M> accessor, String defaultValue) {
+		return add(new FxPropertyField<>(accessor::apply, SimpleStringProperty::new));
+	}
+
+
+
+
+	/**
+	 * Add a new field of type String to this instance of the wrapper. See {@link #field(StringGetter, StringSetter)}.
+	 * This method additionally takes a string identifier as first parameter.
+	 *
+	 * This identifier is used to return the same property instance even when the method is invoked multiple times.
+	 *
+	 * @param identifier
+	 *            an identifier for the field.
+	 * @param getter
+	 *            a function that returns the current value of the field for a given model element. Typically you will
+	 *            use a method reference to the getter method of the model element.
+	 * @param setter
+	 *            a function that sets the given value to the given model element. Typically you will use a method
+	 *            reference to the setter method of the model element.
+	 * @return The wrapped property instance.
+	 */
 	public StringProperty field(String identifier, StringGetter<M> getter, StringSetter<M> setter) {
 		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, SimpleStringProperty::new));
 	}
 
+	public StringProperty field(String identifier, StringGetter<M> getter, StringSetter<M> setter, String defaultValue) {
+		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, defaultValue, SimpleStringProperty::new));
+	}
+
+	/**
+	 * Add a new field of type String to this instance of the wrapper. See {@link #field(StringPropertyAccessor)}. This
+	 * method additionally takes a string identifier as first parameter.
+	 *
+	 * This identifier is used to return the same property instance even when the method is invoked multiple times.
+	 *
+	 * @param identifier
+	 *            an identifier for the field.
+	 *
+	 * @param accessor
+	 *            a function that returns the property for a given model instance. Typically you will use a method
+	 *            reference to the javafx-property accessor method.
+	 * @return The wrapped property instance.
+	 */
 	public StringProperty field(String identifier, StringPropertyAccessor<M> accessor) {
 		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleStringProperty::new));
 	}
 
+	public StringProperty field(String identifier, StringPropertyAccessor<M> accessor, String defaultValue) {
+		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, defaultValue, SimpleStringProperty::new));
+	}
+	
+	/** Field type Boolean **/
+	
+	public BooleanProperty field(BooleanGetter<M> getter, BooleanSetter<M> setter) {
+		return add(new BeanPropertyField<>(getter, setter, SimpleBooleanProperty::new));
+	}
+	public BooleanProperty field(BooleanGetter<M> getter, BooleanSetter<M> setter, boolean defaultValue) {
+		return add(new BeanPropertyField<>(getter, setter, defaultValue, SimpleBooleanProperty::new));
+	}
+	
+	public BooleanProperty field(BooleanPropertyAccessor<M> accessor) {
+		return add(new FxPropertyField<>(accessor, SimpleBooleanProperty::new));
+	}
+	public BooleanProperty field(BooleanPropertyAccessor<M> accessor, boolean defaultValue) {
+		return add(new FxPropertyField<>(accessor, defaultValue, SimpleBooleanProperty::new));
+	}
+	
+	public BooleanProperty field(String identifier, BooleanGetter<M> getter, BooleanSetter<M> setter) {
+		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, SimpleBooleanProperty::new));
+	}
+	public BooleanProperty field(String identifier, BooleanGetter<M> getter, BooleanSetter<M> setter, boolean defaultValue) {
+		return addIdentified(identifier, new BeanPropertyField<>(getter, setter,defaultValue, SimpleBooleanProperty::new));
+	}
+	
+	public BooleanProperty field(String identifier, BooleanPropertyAccessor<M> accessor) {
+		return addIdentified(identifier, new FxPropertyField<>(accessor, SimpleBooleanProperty::new));
+	}
+	public BooleanProperty field(String identifier, BooleanPropertyAccessor<M> accessor, boolean defaultValue) {
+		return addIdentified(identifier, new FxPropertyField<>(accessor, defaultValue, SimpleBooleanProperty::new));
+	}
+	
+	
+	
+	/** Field type Double **/
+	
+	
+	public DoubleProperty field(DoubleGetter<M> getter, DoubleSetter<M> setter) {
+		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
+				SimpleDoubleProperty::new));
+	}
+	public DoubleProperty field(DoubleGetter<M> getter, DoubleSetter<M> setter, double defaultValue) {
+		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.doubleValue()), defaultValue,
+				SimpleDoubleProperty::new));
+	}
+	
+	public DoubleProperty field(DoublePropertyAccessor<M> accessor) {
+		return add(new FxPropertyField<>(accessor::apply, SimpleDoubleProperty::new));
+	}
+	public DoubleProperty field(DoublePropertyAccessor<M> accessor, double defaultValue) {
+		return add(new FxPropertyField<>(accessor::apply, defaultValue, SimpleDoubleProperty::new));
+	}
+	
+	public DoubleProperty field(String identifier, DoubleGetter<M> getter, DoubleSetter<M> setter) {
+		return addIdentified(identifier,
+				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
+						SimpleDoubleProperty::new));
+	}
+	public DoubleProperty field(String identifier, DoubleGetter<M> getter, DoubleSetter<M> setter, double defaultValue) {
+		return addIdentified(identifier,
+				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.doubleValue()), defaultValue,
+						SimpleDoubleProperty::new));
+	}
+	
+	public DoubleProperty field(String identifier, DoublePropertyAccessor<M> accessor) {
+		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleDoubleProperty::new));
+	}
+	public DoubleProperty field(String identifier, DoublePropertyAccessor<M> accessor, double defaultValue) {
+		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, defaultValue, SimpleDoubleProperty::new));
+	}
+	
+	
+	
+	
+	/** Field type Float **/
+	
+	public FloatProperty field(FloatGetter<M> getter, FloatSetter<M> setter) {
+		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.floatValue()),
+				SimpleFloatProperty::new));
+	}
+	public FloatProperty field(FloatGetter<M> getter, FloatSetter<M> setter, float defaultValue) {
+		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.floatValue()), defaultValue,
+				SimpleFloatProperty::new));
+	}
+	
+	public FloatProperty field(FloatPropertyAccessor<M> accessor) {
+		return add(new FxPropertyField<>(accessor::apply, SimpleFloatProperty::new));
+	}
+	public FloatProperty field(FloatPropertyAccessor<M> accessor, float defaultValue) {
+		return add(new FxPropertyField<>(accessor::apply, defaultValue, SimpleFloatProperty::new));
+	}
+	
+	public FloatProperty field(String identifier, FloatGetter<M> getter, FloatSetter<M> setter) {
+		return addIdentified(identifier,
+				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.floatValue()),
+						SimpleFloatProperty::new));
+	}
+	public FloatProperty field(String identifier, FloatGetter<M> getter, FloatSetter<M> setter, float defaultValue) {
+		return addIdentified(identifier,
+				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.floatValue()), defaultValue,
+						SimpleFloatProperty::new));
+	}
+	
+	public FloatProperty field(String identifier, FloatPropertyAccessor<M> accessor) {
+		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleFloatProperty::new));
+	}
+	public FloatProperty field(String identifier, FloatPropertyAccessor<M> accessor, float defaultValue ) {
+		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, defaultValue, SimpleFloatProperty::new));
+	}
+	
+	
+	/** Field type Integer **/
+	
+	
+	public IntegerProperty field(IntGetter<M> getter, IntSetter<M> setter) {
+		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.intValue()),
+				SimpleIntegerProperty::new));
+	}
+	public IntegerProperty field(IntGetter<M> getter, IntSetter<M> setter, int defaultValue) {
+		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.intValue()), defaultValue,
+				SimpleIntegerProperty::new));
+	}
+	
+	
+	public IntegerProperty field(IntPropertyAccessor<M> accessor) {
+		return add(new FxPropertyField<>(accessor::apply, SimpleIntegerProperty::new));
+	}
+	public IntegerProperty field(IntPropertyAccessor<M> accessor, int defaultValue) {
+		return add(new FxPropertyField<>(accessor::apply, defaultValue, SimpleIntegerProperty::new));
+	}
+	
+	public IntegerProperty field(String identifier, IntGetter<M> getter, IntSetter<M> setter) {
+		return addIdentified(identifier,
+				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.intValue()),
+						SimpleIntegerProperty::new));
+	}
+	public IntegerProperty field(String identifier, IntGetter<M> getter, IntSetter<M> setter, int defaultValue) {
+		return addIdentified(identifier,
+				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.intValue()), defaultValue,
+						SimpleIntegerProperty::new));
+	}
 
-//
-//	/**
-//	 * Add a new field to this instance of the wrapper. This method is used for model elements that are following the
-//	 * enhanced JavaFX-Beans-standard i.e. the model fields are available as JavaFX Properties.
-//	 * <p>
-//	 * Example:
-//	 * <p>
-//	 *
-//	 * <pre>
-//	 *     ModelWrapper{@code<Person>} personWrapper = new ModelWrapper{@code<>}();
-//	 *
-//	 *     Property{@code<String>} wrappedNameProperty = personWrapper.field(person -> person.nameProperty());
-//	 *
-//	 *     // or with a method reference
-//	 *     Property{@code<String>} wrappedNameProperty = personWrapper.field(Person::nameProperty);
-//	 *
-//	 * </pre>
-//	 *
-//	 *
-//	 * @param accessor
-//	 *            a function that returns the property for a given model instance. Typically you will use a method
-//	 *            reference to the javafx-property accessor method.
-//	 *
-//	 * @param <T>
-//	 *            the type of the field.
-//	 *
-//	 * @return The wrapped property instance.
-//	 */
-//	public <T> Property<T> field(Function<M, WritableValue<T>> accessor) {
-//		return add(new FxPropertyField<>(accessor));
-//	}
-//
-//	/**
-//	 * Add a new field to this instance of the wrapper. This method is used for model elements that are following the
-//	 * enhanced JavaFX-Beans-standard i.e. the model fields are available as JavaFX Properties.
-//	 * <p>
-//	 * Additionally you can define a default value that is used as when {@link #reset()} is invoked.
-//	 *
-//	 * <p>
-//	 *
-//	 * Example:
-//	 * <p>
-//	 *
-//	 * <pre>
-//	 *     ModelWrapper{@code<Person>} personWrapper = new ModelWrapper{@code<>}();
-//	 *
-//	 *     Property{@code<String>} wrappedNameProperty = personWrapper.field(person -> person.nameProperty(), "empty");
-//	 *
-//	 *     // or with a method reference
-//	 *     Property{@code<String>} wrappedNameProperty = personWrapper.field(Person::nameProperty, "empty");
-//	 *
-//	 * </pre>
-//	 *
-//	 *
-//	 * @param accessor
-//	 *            a function that returns the property for a given model instance. Typically you will use a method
-//	 *            reference to the javafx-property accessor method.
-//	 * @param defaultValue
-//	 *            the default value for the field.
-//	 * @param <T>
-//	 *            the type of the field.
-//	 *
-//	 * @return The wrapped property instance.
-//	 */
-//	public <T> Property<T> field(Function<M, WritableValue<T>> accessor, T defaultValue) {
-//		return add(new FxPropertyField<>(accessor, defaultValue));
-//	}
-//
-//	/**
-//	 * Add a new field to this instance of the wrapper. This method is used for model elements that are following the
-//	 * normal Java-Beans-standard i.e. the model fields are only available via getter and setter methods and not as
-//	 * JavaFX Properties.
-//	 *
-//	 * <p>
-//	 *
-//	 * Example:
-//	 * <p>
-//	 *
-//	 * <pre>
-//	 *     ModelWrapper{@code<Person>} personWrapper = new ModelWrapper{@code<>}();
-//	 *
-//	 *     Property{@code<String>} wrappedNameProperty = personWrapper.field(person -> person.getName(), (person, value) -> person.setName(value), "empty");
-//	 *
-//	 *     // or with a method reference
-//	 *     Property{@code<String>} wrappedNameProperty = personWrapper.field(Person::getName, Person::setName, "empty");
-//	 *
-//	 * </pre>
-//	 *
-//	 *
-//	 * @param getter
-//	 *            a function that returns the current value of the field for a given model element. Typically you will
-//	 *            use a method reference to the getter method of the model element.
-//	 * @param setter
-//	 *            a function that sets the given value to the given model element. Typically you will use a method
-//	 *            reference to the setter method of the model element.
-//	 * @param <T>
-//	 *            the type of the field.
-//	 *
-//	 * @return The wrapped property instance.
-//	 */
-//	public <T> Property<T> field(Function<M, T> getter, BiConsumer<M, T> setter) {
-//		return add(new BeanPropertyField<>(getter, setter));
-//	}
-//
-//
-//
-//
-//
-//	/**
-//	 * Add a new field to this instance of the wrapper. This method is used for model elements that are following the
-//	 * normal Java-Beans-standard i.e. the model fields are only available via getter and setter methods and not as
-//	 * JavaFX Properties.
-//	 * <p>
-//	 * Additionally you can define a default value that is used as when {@link #reset()} is invoked.
-//	 *
-//	 * <p>
-//	 *
-//	 * Example:
-//	 * <p>
-//	 *
-//	 * <pre>
-//	 *     ModelWrapper{@code<Person>} personWrapper = new ModelWrapper{@code<>}();
-//	 *
-//	 *     Property{@code<String>} wrappedNameProperty = personWrapper.field(person -> person.getName(), (person, value) -> person.setName(value), "empty");
-//	 *
-//	 *     // or with a method reference
-//	 *     Property{@code<String>} wrappedNameProperty = personWrapper.field(Person::getName, Person::setName, "empty");
-//	 *
-//	 * </pre>
-//	 *
-//	 *
-//	 * @param getter
-//	 *            a function that returns the current value of the field for a given model element. Typically you will
-//	 *            use a method reference to the getter method of the model element.
-//	 * @param setter
-//	 *            a function that sets the given value to the given model element. Typically you will use a method
-//	 *            reference to the setter method of the model element.
-//	 * @param defaultValue
-//	 *            the default value for the field.
-//	 * @param <T>
-//	 *            the type of the field.
-//	 *
-//	 * @return The wrapped property instance.
-//	 */
-//	public <T> Property<T> field(Function<M, T> getter, BiConsumer<M, T> setter, T defaultValue) {
-//		return add(new BeanPropertyField<>(getter, setter, defaultValue));
-//	}
-//
-//
-//	/**
-//	 * Add a new field to this instance of the wrapper that is identified by the given string. This method is basically
-//	 * the same as {@link #field(Function)} with one difference: This method can be invoked multiply times but will only
-//	 * create a single field instance for every given string identifier. This means that the returned property will be
-//	 * the <b>same</b> instance for each call with the same identifier.
-//	 * <p>
-//	 * This behaviour can be useful when you don't keep a reference to the returned property but directly call this
-//	 * method in a property accessor method in your viewModel. This way only a single field wrapping will be defined
-//	 * even when the accessor method is called multiple times. See the following example of a typical use case:
-//	 * <p>
-//	 *
-//	 * <pre>
-//	 *
-//	 *     public class PersonViewModel extends ViewModel {
-//	 *
-//	 *         // you only need a reference to the model wrapper itself but no additional references to each wrapped property.
-//	 *         private ModelWrapper{@code<Person>} wrapper = new ModelWrapper{@code<>}();
-//	 *
-//	 *
-//	 *         // This method will be used from the view.
-//	 *         // The view can call this method multiple times but will always get the same property instance.
-//	 *         public Property{@code<String>} nameProperty() {
-//	 *              return wrapper.field("name", Person::nameProperty);
-//	 *         }
-//	 *     }
-//	 * </pre>
-//	 *
-//	 *
-//	 * @param fieldName
-//	 *            the identifier for this field. Typically you will use the name of the field in the model.
-//	 * @param accessor
-//	 *            a function that returns the property for a given model instance. Typically you will use a method
-//	 *            reference to the javafx-property accessor method.
-//	 * @param <T>
-//	 *            the type of the field.
-//	 * @return The wrapped property instance.
-//	 */
-//	public <T> Property<T> field(String fieldName, Function<M, WritableValue<T>> accessor) {
-//		return addIdentified(fieldName, new FxPropertyField<>(accessor));
-//	}
-//
-//	/**
-//	 * See {@link #field(String, Function)}. The difference is that this method accepts an additional parameter to
-//	 * define the default value that will be used when {@link #reset()} is invoked.
-//	 *
-//	 * @param fieldName
-//	 *            the identifier for this field. Typically you will use the name of the field in the model.
-//	 * @param accessor
-//	 *            a function that returns the property for a given model instance. Typically you will use a method
-//	 *            reference to the javafx-property accessor method.
-//	 * @param <T>
-//	 *            the type of the field.
-//	 * @return The wrapped property instance.
-//	 */
-//	public <T> Property<T> field(String fieldName, Function<M, WritableValue<T>> accessor, T defaultValue) {
-//		return addIdentified(fieldName, new FxPropertyField<>(accessor, defaultValue));
-//	}
-//
-//	/**
-//	 * Add a new field to this instance of the wrapper that is identified by the given string. This method is basically
-//	 * the same as {@link #field(Function, BiConsumer)} with one difference: This method can be invoked multiply times
-//	 * but will only create a single field instance for every given string identifier. This means that the returned
-//	 * property will be the <b>same</b> instance for each call with the same identifier.
-//	 * <p>
-//	 * This behaviour can be useful when you don't keep a reference to the returned property but directly call this
-//	 * method in a property accessor method in your viewModel. This way only a single field wrapping will be defined
-//	 * even when the accessor method is called multiple times. See the following example of a typical use case:
-//	 * <p>
-//	 *
-//	 * <pre>
-//	 *
-//	 *     public class PersonViewModel extends ViewModel {
-//	 *
-//	 *         // you only need a reference to the model wrapper itself but no additional references to each wrapped property.
-//	 *         private ModelWrapper{@code<Person>} wrapper = new ModelWrapper{@code<>}();
-//	 *
-//	 *
-//	 *         // This method will be used from the view.
-//	 *         // The view can call this method multiple times but will always get the same property instance.
-//	 *         public Property{@code<String>} nameProperty() {
-//	 *              return wrapper.field("name", Person::getName, Person::setName);
-//	 *         }
-//	 *     }
-//	 * </pre>
-//	 *
-//	 *
-//	 * @param fieldName
-//	 *            the identifier for this field. Typically you will use the name of the field in the model.
-//	 * @param getter
-//	 *            a function that returns the current value of the field for a given model element. Typically you will
-//	 *            use a method reference to the getter method of the model element.
-//	 * @param setter
-//	 *            a function that sets the given value to the given model element. Typically you will use a method
-//	 *            reference to the setter method of the model element.
-//	 * @param <T>
-//	 *            the type of the field.
-//	 * @return The wrapped property instance.
-//	 */
-//	public <T> Property<T> field(String fieldName, Function<M, T> getter, BiConsumer<M, T> setter) {
-//		return addIdentified(fieldName, new BeanPropertyField<>(getter, setter));
-//	}
-//
-//	/**
-//	 * See {@link #field(String, Function, BiConsumer)}. The difference is that this method accepts an additional
-//	 * parameter to define the default value that will be used when {@link #reset()} is invoked.
-//	 *
-//	 * @param fieldName
-//	 *            the identifier for this field. Typically you will use the name of the field in the model.
-//	 * @param getter
-//	 *            a function that returns the current value of the field for a given model element. Typically you will
-//	 *            use a method reference to the getter method of the model element.
-//	 * @param setter
-//	 *            a function that sets the given value to the given model element. Typically you will use a method
-//	 *            reference to the setter method of the model element.
-//	 * @param <T>
-//	 *            the type of the field.
-//	 * @return The wrapped property instance.
-//	 */
-//	public <T> Property<T> field(String fieldName, Function<M, T> getter, BiConsumer<M, T> setter, T defaultValue) {
-//		return addIdentified(fieldName, new BeanPropertyField<>(getter, setter, defaultValue));
-//	}
+
+	public IntegerProperty field(String identifier, IntPropertyAccessor<M> accessor) {
+		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleIntegerProperty::new));
+	}
+	public IntegerProperty field(String identifier, IntPropertyAccessor<M> accessor, int defaultValue) {
+		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, defaultValue, SimpleIntegerProperty::new));
+	}
+	
+	
+	
+	/** Field type Long **/
+	
+	public LongProperty field(LongGetter<M> getter, LongSetter<M> setter) {
+		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.longValue()),
+				SimpleLongProperty::new));
+	}
+	public LongProperty field(LongGetter<M> getter, LongSetter<M> setter, long defaultValue) {
+		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.longValue()),
+				defaultValue,
+				SimpleLongProperty::new));
+	}
+	
+	public LongProperty field(LongPropertyAccessor<M> accessor) {
+		return add(new FxPropertyField<>(accessor::apply, SimpleLongProperty::new));
+	}
+	public LongProperty field(LongPropertyAccessor<M> accessor, long defaultValue) {
+		return add(new FxPropertyField<>(accessor::apply, defaultValue, SimpleLongProperty::new));
+	}
+	
+	
+	public LongProperty field(String identifier, LongGetter<M> getter, LongSetter<M> setter) {
+		return addIdentified(identifier,
+				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.longValue()),
+						SimpleLongProperty::new));
+	}
+	public LongProperty field(String identifier, LongGetter<M> getter, LongSetter<M> setter, long defaultValue) {
+		return addIdentified(identifier,
+				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.longValue()),
+						defaultValue,
+						SimpleLongProperty::new));
+	}
+	
+	public LongProperty field(String identifier, LongPropertyAccessor<M> accessor) {
+		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleLongProperty::new));
+	}
+
+	public LongProperty field(String identifier, LongPropertyAccessor<M> accessor, long defaultValue) {
+		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, defaultValue, SimpleLongProperty::new));
+	}
+	
+	
+	
+	/** Field type generic **/
+	
+	
+	public <T> ObjectProperty<T> field(ObjectGetter<M, T> getter, ObjectSetter<M, T> setter) {
+		return add(new BeanPropertyField<>(getter, setter, SimpleObjectProperty::new));
+	}
+
+	public <T> ObjectProperty<T> field(ObjectGetter<M, T> getter, ObjectSetter<M, T> setter, T defaultValue) {
+		return add(new BeanPropertyField<>(getter, setter, defaultValue, SimpleObjectProperty::new));
+	}
+	
+	public <T> ObjectProperty<T> field(ObjectPropertyAccessor<M, T> accessor) {
+		return add(new FxPropertyField<>(accessor::apply, SimpleObjectProperty::new));
+	}
+
+	public <T> ObjectProperty<T> field(ObjectPropertyAccessor<M, T> accessor, T defaultValue) {
+		return add(new FxPropertyField<>(accessor::apply, defaultValue, SimpleObjectProperty::new));
+	}
+	
+	
+	public <T> ObjectProperty<T> field(String identifier, ObjectGetter<M, T> getter, ObjectSetter<M, T> setter) {
+		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, SimpleObjectProperty::new));
+	}
+
+	public <T> ObjectProperty<T> field(String identifier, ObjectGetter<M, T> getter, ObjectSetter<M, T> setter, T defaultValue) {
+		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, defaultValue, SimpleObjectProperty::new));
+	}
+	
+	public <T> ObjectProperty<T> field(String identifier, ObjectPropertyAccessor<M, T> accessor) {
+		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleObjectProperty::new));
+	}
+
+	public <T> ObjectProperty<T> field(String identifier, ObjectPropertyAccessor<M, T> accessor, T defaultValue) {
+		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, defaultValue, SimpleObjectProperty::new));
+	}
 	
 	private <T, R extends Property<T>> R add(PropertyField<T, M, R> field) {
 		fields.add(field);
