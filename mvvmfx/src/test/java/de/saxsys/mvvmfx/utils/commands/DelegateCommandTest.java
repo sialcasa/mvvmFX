@@ -178,7 +178,7 @@ public class DelegateCommandTest {
 		
 		stepFour.get(1, TimeUnit.SECONDS);
 		Platform.runLater(() ->
-				assertThat(command.getProgress()).isEqualTo(10, offset(0.1)));
+				assertThat(command.getProgress()).isEqualTo(1, offset(0.1)));
 		
 		// sleep to prevent the Junit thread from exiting 
 		// before eventual assertion errors from the JavaFX Thread are detected
