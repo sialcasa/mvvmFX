@@ -4,6 +4,7 @@ import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.books.backend.Book;
 import de.saxsys.mvvmfx.examples.books.backend.Error;
 import de.saxsys.mvvmfx.examples.books.backend.LibraryService;
+import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import eu.lestard.advanced_bindings.api.ObjectBindings;
@@ -32,12 +33,17 @@ public class MainViewModel implements ViewModel {
 	
 	private StringProperty error = new SimpleStringProperty();
 
-	private Command seachCommand;
+	private Command searchCommand;
 	
 	public MainViewModel(LibraryService libraryService) {
 		this.libraryService = libraryService;
 
-		seachCommand = new DelegateCommand(this::search);
+		searchCommand = new DelegateCommand(() -> new Action() {
+			@Override
+			protected void action() throws Exception {
+				search();
+			}
+		});
 		
 		bookTitle.bind(ObjectBindings.map(selectedBook, bookItem -> bookItem.getBook().getTitle()));
 		bookAuthor.bind(ObjectBindings.map(selectedBook, bookItem -> bookItem.getBook().getAuthor()));
@@ -45,7 +51,7 @@ public class MainViewModel implements ViewModel {
 	}
 	
 	public Command getSearchCommand() {
-		return seachCommand;
+		return searchCommand;
 	}
 
 	void search() {

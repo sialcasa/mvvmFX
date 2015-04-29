@@ -15,12 +15,15 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.commands;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import eu.lestard.doc.Beta;
+
+import java.util.function.Supplier;
 
 /**
  * A {@link Command} implementation that encapsulates an action ({@link Task<Void>}). It is possible to define that the
@@ -32,7 +35,7 @@ import eu.lestard.doc.Beta;
 @Beta
 public class DelegateCommand extends Service<Void> implements Command {
 	
-	private final Action action;
+	private final Supplier<Action> actionSupplier;
 	private boolean inBackground = false;
 	protected final ReadOnlyBooleanWrapper executable = new ReadOnlyBooleanWrapper(true);
 	protected ReadOnlyBooleanWrapper notExecutable;
@@ -45,11 +48,11 @@ public class DelegateCommand extends Service<Void> implements Command {
 	 * Creates a command without a condition about the executability. The command will perform in the thread which
 	 * executes the {@link Command}.
 	 * 
-	 * @param action
-	 *            which should execute
+	 * @param actionSupplier
+	 *            a function that returns a new Action which should be executed
 	 */
-	public DelegateCommand(Action action) {
-		this(null, false);
+	public DelegateCommand(final Supplier<Action> actionSupplier) {
+		this(actionSupplier, false);
 	}
 	
 	/**
@@ -57,29 +60,29 @@ public class DelegateCommand extends Service<Void> implements Command {
 	 * <code>inBackground</code> parameter to run the {@link Command} in a background thread.
 	 * 
 	 * <b>IF YOU USE THE BACKGROUND THREAD: </b> Your provided action will perform in a background thread. If you
-	 * manipulate data in your action, which will be propagated to the UI, use {@link Platform#runLater(Task<Void>)} for
+	 * manipulate data in your action, which will be propagated to the UI, use {@link Platform#runLater(Runnable)} for
 	 * this manipulation, otherwise you get an Exception.
-	 * 
-	 * @param action
-	 *            which should execute
+	 *
+	 * @param actionSupplier
+	 *            a function that returns a new Action which should be executed
 	 * @param inBackground
 	 *            defines whether the execution {@link #execute()} is performed in a background thread or not
 	 */
-	public DelegateCommand(Action action, boolean inBackground) {
-		this(action, null, inBackground);
+	public DelegateCommand(final Supplier<Action> actionSupplier, boolean inBackground) {
+		this(actionSupplier, null, inBackground);
 	}
 	
 	/**
 	 * Creates a command with a condition about the executability by using the #executableBinding parameter. The command
 	 * will perform in the thread which executes the {@link Command}.
-	 * 
-	 * @param action
-	 *            which should execute
+	 *
+	 * @param actionSupplier
+	 *            a function that returns a new Action which should be executed
 	 * @param executableBinding
 	 *            which defines whether the {@link Command} can execute
 	 */
-	public DelegateCommand(Action action, ObservableBooleanValue executableBinding) {
-		this(action, executableBinding, false);
+	public DelegateCommand(final Supplier<Action> actionSupplier, ObservableBooleanValue executableBinding) {
+		this(actionSupplier, executableBinding, false);
 	}
 	
 	/**
@@ -87,17 +90,17 @@ public class DelegateCommand extends Service<Void> implements Command {
 	 * <code>true</code> to the #inBackground parameter to run the {@link Command} in a background thread.
 	 * 
 	 * <b>IF YOU USE THE BACKGROUND THREAD: </b> don't forget to return to the UI-thread by using {@link
-	 * Platform#runLater(Task<Void>)}, otherwise you get an Exception.
-	 * 
-	 * @param action
-	 *            which should execute
+	 * Platform#runLater(Runnable)}, otherwise you get an Exception.
+	 *
+	 * @param actionSupplier
+	 *            a function that returns a new Action which should be executed
 	 * @param executableBinding
 	 *            which defines whether the {@link Command} can execute
 	 * @param inBackground
 	 *            defines whether the execution {@link #execute()} is performed in a background thread or not
 	 */
-	public DelegateCommand(Action action, ObservableBooleanValue executableBinding, boolean inBackground) {
-		this.action = action;
+	public DelegateCommand(final Supplier<Action> actionSupplier, ObservableBooleanValue executableBinding, boolean inBackground) {
+		this.actionSupplier = actionSupplier;
 		this.inBackground = inBackground;
 		if (executableBinding != null) {
 			executable.bind(runningProperty().not().and(executableBinding));
@@ -120,7 +123,7 @@ public class DelegateCommand extends Service<Void> implements Command {
 				}
 			} else {
 				try {
-					action.action();
+					actionSupplier.get().action();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -130,13 +133,7 @@ public class DelegateCommand extends Service<Void> implements Command {
 	
 	@Override
 	protected Task<Void> createTask() {
-		return new Task<Void>() {
-			@Override
-			protected Void call() throws Exception {
-				action.action();
-				return null;
-			}
-		};
+		return actionSupplier.get();
 	}
 	
 	@Override

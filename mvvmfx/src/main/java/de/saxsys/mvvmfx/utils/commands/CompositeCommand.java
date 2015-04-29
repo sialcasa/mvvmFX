@@ -15,14 +15,21 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.commands;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.DoubleExpression;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
+import javafx.beans.value.ObservableDoubleValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import eu.lestard.doc.Beta;
+
+import java.util.concurrent.Callable;
+import java.util.function.Function;
 
 /**
  * CompositeCommand is an aggregation of other commands - a list of {@link Command} references internally.
@@ -92,67 +99,57 @@ public class CompositeCommand extends CommandBase {
 					running.unbind();
 					progress.unbind();
 				} else {
-					BooleanBinding executableBinding = null;
-					BooleanBinding runningBinding = null;
-					
-					ReadOnlyBooleanProperty[] allRunnings = new ReadOnlyBooleanProperty[registeredCommands.size()];
-					
-					
-					for (int i = 0; i < registeredCommands.size(); i++) {
-						ReadOnlyBooleanProperty currentExecutable = registeredCommands.get(i).executableProperty();
-						ReadOnlyBooleanProperty currentRunning = registeredCommands.get(i).runningProperty();
-						allRunnings[i] = registeredCommands.get(i).runningProperty();
-						if (i == 0) {
-							executableBinding = currentExecutable.and(currentExecutable);
-							runningBinding = currentRunning.or(currentRunning);
-						} else {
-							executableBinding = executableBinding.and(currentExecutable);
-							runningBinding = runningBinding.or(currentRunning);
-						}
+					BooleanBinding executableBinding = constantOf(true);
+					BooleanBinding runningBinding = constantOf(false);
+
+					for (Command registeredCommand : registeredCommands) {
+						ReadOnlyBooleanProperty currentExecutable = registeredCommand.executableProperty();
+						ReadOnlyBooleanProperty currentRunning = registeredCommand.runningProperty();
+						executableBinding = executableBinding.and(currentExecutable);
+						runningBinding = runningBinding.or(currentRunning);
 					}
 					executable.bind(executableBinding);
 					running.bind(runningBinding);
-					
-					// TODO Improve Implementation
-					// progress.unbind();
-				// progress.bind(Bindings.createDoubleBinding(new Callable<Double>() {
-				// @Override
-				// public Double call() throws Exception {
-				// Stream<ReadOnlyBooleanProperty> filter = FXCollections.observableArrayList(allRunnings)
-				// .stream().filter(
-				// new Predicate<ReadOnlyBooleanProperty>() {
-				// @Override
-				// public boolean test(ReadOnlyBooleanProperty t) {
-				// return t.get();
-				// }
-				// });
-				//
-				// long count = filter.count();
-				// double result = count / (double) allRunnings.length;
-				// double oldValue = progress.get();
-				//
-				// if (result > oldValue) {
-				// return result;
-				// }
-				//
-				// return oldValue;
-				// }
-				// }, allRunnings));
+
+					initProgressBinding();
+				}
 			}
+		});
+	}
+	
+	private void initProgressBinding() {
+		DoubleExpression tmp = constantOf(0);
+
+		for (Command command : registeredCommands) {
+			final ReadOnlyDoubleProperty progressProperty = command.progressProperty();
+
+			/**
+			 * When the progress of a command is "undefined", the progress property has a value of -1.
+			 * But in our use case we like to have a value of 0 in this case. 
+			 * Therefore we create a custom binding here.
+			 */
+			final DoubleBinding normalizedProgress = Bindings
+					.createDoubleBinding(() -> (progressProperty.get() == -1) ? 0.0 : progressProperty.get(),
+							progressProperty);
+
+			tmp = tmp.add(normalizedProgress);
 		}
-	})	;
+		
+		int divisor = registeredCommands.isEmpty() ? 1 : registeredCommands.size();
+		progress.bind(Bindings.divide(tmp, divisor));
 	}
 	
 	@Override
 	public void execute() {
-		progress.set(0.0);
 		if (!isExecutable()) {
 			throw new RuntimeException("Not executable");
 		} else {
-			registeredCommands.forEach(t -> t.execute());
-			progress.set(1.0);
+			if (!registeredCommands.isEmpty()) {
+				registeredCommands.forEach(t -> t.execute());
+			}
 		}
 	}
+	
 	
 	@Override
 	public double getProgress() {
@@ -162,6 +159,24 @@ public class CompositeCommand extends CommandBase {
 	@Override
 	public ReadOnlyDoubleProperty progressProperty() {
 		return progress;
+	}
+	
+	private BooleanBinding constantOf(boolean defaultValue) {
+		return new BooleanBinding() {
+			@Override
+			protected boolean computeValue() {
+				return defaultValue;
+			}
+		};
+	}
+	
+	private DoubleBinding constantOf(double defaultValue) {
+		return new DoubleBinding() {
+			@Override
+			protected double computeValue() {
+				return defaultValue;
+			}
+		};
 	}
 	
 }

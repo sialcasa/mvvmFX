@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import com.cedarsoft.test.utils.CatchAllExceptionsRule;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -15,6 +16,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -23,7 +25,12 @@ import de.saxsys.mvvmfx.testingutils.GCVerifier;
 
 @RunWith(JfxRunner.class)
 public class CompositeCommandTest {
-	
+
+	// Rule to get exceptions from the JavaFX Thread into the JUnit thread
+	@Rule
+	public CatchAllExceptionsRule catchAllExceptionsRule = new CatchAllExceptionsRule();
+
+
 	private BooleanProperty condition1;
 	private BooleanProperty called1;
 	private DelegateCommand delegateCommand1;
@@ -35,7 +42,7 @@ public class CompositeCommandTest {
 	public void init() {
 		condition1 = new SimpleBooleanProperty(true);
 		called1 = new SimpleBooleanProperty();
-		delegateCommand1 = new DelegateCommand(new Action() {
+		delegateCommand1 = new DelegateCommand(() -> new Action() {
 			
 			@Override
 			protected void action() throws Exception {
@@ -45,7 +52,7 @@ public class CompositeCommandTest {
 		
 		condition2 = new SimpleBooleanProperty(true);
 		called2 = new SimpleBooleanProperty();
-		delegateCommand2 = new DelegateCommand(new Action() {
+		delegateCommand2 = new DelegateCommand(() -> new Action() {
 			@Override
 			protected void action() throws Exception {
 				called2.set(true);
@@ -142,11 +149,6 @@ public class CompositeCommandTest {
 	
 	@Test
 	public void allCommandsAreUnregistered() throws Exception {
-		
-		// UncaughtExceptionHandler is defined to be able to detect exception from listeners.
-		Thread.currentThread().setUncaughtExceptionHandler(
-				(thread, exception) -> fail("Exception was thrown", exception));
-		
 		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1, delegateCommand2);
 		
 		compositeCommand.unregister(delegateCommand1);
@@ -161,7 +163,7 @@ public class CompositeCommandTest {
 		CompletableFuture<Void> commandCompleted = new CompletableFuture<>();
 		CompletableFuture<Void> future = new CompletableFuture<>();
 		
-		DelegateCommand delegateCommand1 = new DelegateCommand(new Action() {
+		DelegateCommand delegateCommand1 = new DelegateCommand(() -> new Action() {
 			
 			@Override
 			protected void action() throws Exception {
@@ -169,7 +171,7 @@ public class CompositeCommandTest {
 			}
 		}, condition, true);
 		
-		DelegateCommand delegateCommand2 = new DelegateCommand(new Action() {
+		DelegateCommand delegateCommand2 = new DelegateCommand(() -> new Action() {
 			
 			@Override
 			protected void action() throws Exception {
@@ -178,7 +180,7 @@ public class CompositeCommandTest {
 			}
 		}, condition, true);
 		
-		DelegateCommand delegateCommand3 = new DelegateCommand(new Action() {
+		DelegateCommand delegateCommand3 = new DelegateCommand(() -> new Action() {
 			
 			@Override
 			protected void action() throws Exception {
@@ -187,12 +189,12 @@ public class CompositeCommandTest {
 		
 		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1, delegateCommand2, delegateCommand3);
 		
-		// compositeCommand.progressProperty().addListener(new ChangeListener<Number>() {
-		//
-		// @Override
-		// public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-		// }
-		// });
+		 compositeCommand.progressProperty().addListener(new ChangeListener<Number>() {
+		
+		 @Override
+		 public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+		 }
+		 });
 		
 		GCVerifier.forceGC();
 		
@@ -239,6 +241,7 @@ public class CompositeCommandTest {
 		future.get(3, TimeUnit.SECONDS);
 		commandCompleted.get(4, TimeUnit.SECONDS);
 	}
+	
 	
 	private void sleep(long millis) {
 		try {
