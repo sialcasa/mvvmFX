@@ -30,7 +30,7 @@ public class MasterTableViewModelTest {
 		
 		MasterTableViewModel tableViewModel = new MasterTableViewModel(contact);
 		
-		assertThat(tableViewModel.getAge()).isEqualTo(22);
+		assertThat(tableViewModel.ageProperty().get()).isEqualTo(22);
 	}
 	
 }
