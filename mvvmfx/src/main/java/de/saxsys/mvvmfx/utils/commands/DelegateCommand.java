@@ -15,6 +15,8 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.commands;
 
+import java.util.function.Supplier;
+
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
@@ -23,12 +25,12 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import eu.lestard.doc.Beta;
 
-import java.util.function.Supplier;
-
 /**
- * A {@link Command} implementation that encapsulates an action ({@link Task<Void>}). It is possible to define that the
- * action should be executed in the background (not on the JavaFX thread) so that long running actions can be
- * implemented that aren't blocking the UI-Thread.
+ * A {@link Command} implementation of a {@link Service<Void>} that encapsulates an {@link Action} ({@link Task<Void>})
+ * which can be called from the UI - for example after a button click. If the {@link Action} is a long running
+ * operation, which would block your UI, you can pass a parameter to perform the {@link Action} in a background thread.
+ * You can bind to the {@link #isRunning()} property while the action is executing. This can be used for a loading
+ * indication in the UI.
  * 
  * @author alexander.casall
  */
@@ -45,8 +47,7 @@ public class DelegateCommand extends Service<Void> implements Command {
 	
 	
 	/**
-	 * Creates a command without a condition about the executability. The command will perform in the thread which
-	 * executes the {@link Command}.
+	 * Creates a command without a condition about the executability.
 	 * 
 	 * @param actionSupplier
 	 *            a function that returns a new Action which should be executed
@@ -61,7 +62,7 @@ public class DelegateCommand extends Service<Void> implements Command {
 	 * 
 	 * <b>IF YOU USE THE BACKGROUND THREAD: </b> Your provided action will perform in a background thread. If you
 	 * manipulate data in your action, which will be propagated to the UI, use {@link Platform#runLater(Runnable)} for
-	 * this manipulation, otherwise you get an Exception.
+	 * this manipulation, otherwise you get an Exception by JavaFX.
 	 *
 	 * @param actionSupplier
 	 *            a function that returns a new Action which should be executed
@@ -73,8 +74,7 @@ public class DelegateCommand extends Service<Void> implements Command {
 	}
 	
 	/**
-	 * Creates a command with a condition about the executability by using the #executableBinding parameter. The command
-	 * will perform in the thread which executes the {@link Command}.
+	 * Creates a command with a condition about the executability by using the #executableBinding parameter.
 	 *
 	 * @param actionSupplier
 	 *            a function that returns a new Action which should be executed
@@ -89,8 +89,8 @@ public class DelegateCommand extends Service<Void> implements Command {
 	 * Creates a command with a condition about the executability by using the #executableBinding parameter. Pass a
 	 * <code>true</code> to the #inBackground parameter to run the {@link Command} in a background thread.
 	 * 
-	 * <b>IF YOU USE THE BACKGROUND THREAD: </b> don't forget to return to the UI-thread by using {@link
-	 * Platform#runLater(Runnable)}, otherwise you get an Exception.
+	 * <b>IF YOU USE THE BACKGROUND THREAD: </b> don't forget to return to the UI-thread by using
+	 * {@link Platform#runLater(Runnable)}, otherwise you get an Exception.
 	 *
 	 * @param actionSupplier
 	 *            a function that returns a new Action which should be executed
@@ -99,7 +99,8 @@ public class DelegateCommand extends Service<Void> implements Command {
 	 * @param inBackground
 	 *            defines whether the execution {@link #execute()} is performed in a background thread or not
 	 */
-	public DelegateCommand(final Supplier<Action> actionSupplier, ObservableBooleanValue executableBinding, boolean inBackground) {
+	public DelegateCommand(final Supplier<Action> actionSupplier, ObservableBooleanValue executableBinding,
+			boolean inBackground) {
 		this.actionSupplier = actionSupplier;
 		this.inBackground = inBackground;
 		if (executableBinding != null) {
