@@ -83,6 +83,13 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.cedarsoft.commons</groupId>
+			<artifactId>test-utils</artifactId>
+			<version>6.1.1</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 

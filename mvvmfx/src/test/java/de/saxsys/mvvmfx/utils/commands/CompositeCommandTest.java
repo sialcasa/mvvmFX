@@ -8,17 +8,29 @@ import static org.junit.Assert.assertTrue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import com.cedarsoft.test.utils.CatchAllExceptionsRule;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.mvvmfx.testingutils.GCVerifier;
 
+@RunWith(JfxRunner.class)
 public class CompositeCommandTest {
-	
+
+	// Rule to get exceptions from the JavaFX Thread into the JUnit thread
+	@Rule
+	public CatchAllExceptionsRule catchAllExceptionsRule = new CatchAllExceptionsRule();
+
+
 	private BooleanProperty condition1;
 	private BooleanProperty called1;
 	private DelegateCommand delegateCommand1;
@@ -30,11 +42,22 @@ public class CompositeCommandTest {
 	public void init() {
 		condition1 = new SimpleBooleanProperty(true);
 		called1 = new SimpleBooleanProperty();
-		delegateCommand1 = new DelegateCommand(() -> called1.set(true), condition1);
+		delegateCommand1 = new DelegateCommand(() -> new Action() {
+			
+			@Override
+			protected void action() throws Exception {
+				called1.set(true);
+			}
+		}, condition1);
 		
 		condition2 = new SimpleBooleanProperty(true);
 		called2 = new SimpleBooleanProperty();
-		delegateCommand2 = new DelegateCommand(() -> called2.set(true), condition2);
+		delegateCommand2 = new DelegateCommand(() -> new Action() {
+			@Override
+			protected void action() throws Exception {
+				called2.set(true);
+			}
+		}, condition2);
 	}
 	
 	@Test
@@ -125,37 +148,7 @@ public class CompositeCommandTest {
 	}
 	
 	@Test
-	public void running() throws Exception {
-		BooleanProperty run = new SimpleBooleanProperty();
-		BooleanProperty finished = new SimpleBooleanProperty();
-		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1, delegateCommand2);
-		
-		// We have to check the running Property with this mechanism, because it is processed synchronously and we can't
-		// hook between the state changes.
-		compositeCommand.runningProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-			if (!oldValue && newValue) {
-				run.set(true);
-				assertTrue(compositeCommand.runningProperty().get());
-			}
-			if (oldValue && !newValue) {
-				finished.set(true);
-				assertFalse(compositeCommand.runningProperty().get());
-			}
-		});
-		
-		compositeCommand.execute();
-		
-		assertTrue(run.get());
-		assertTrue(finished.get());
-	}
-	
-	@Test
 	public void allCommandsAreUnregistered() throws Exception {
-		
-		// UncaughtExceptionHandler is defined to be able to detect exception from listeners.
-		Thread.currentThread().setUncaughtExceptionHandler(
-				(thread, exception) -> fail("Exception was thrown", exception));
-		
 		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1, delegateCommand2);
 		
 		compositeCommand.unregister(delegateCommand1);
@@ -166,54 +159,89 @@ public class CompositeCommandTest {
 	public void longRunningAsyncComposite() throws Exception {
 		
 		BooleanProperty condition = new SimpleBooleanProperty(true);
-		
+		CompletableFuture<Void> commandStarted = new CompletableFuture<>();
+		CompletableFuture<Void> commandCompleted = new CompletableFuture<>();
 		CompletableFuture<Void> future = new CompletableFuture<>();
 		
-		DelegateCommand delegateCommand1 = new DelegateCommand(() -> sleep(500), condition, true);
-		
-		DelegateCommand delegateCommand2 = new DelegateCommand(() -> {
-			sleep(1000);
-			future.complete(null);
+		DelegateCommand delegateCommand1 = new DelegateCommand(() -> new Action() {
+			
+			@Override
+			protected void action() throws Exception {
+				sleep(500);
+			}
 		}, condition, true);
 		
-		DelegateCommand delegateCommand3 = new DelegateCommand(() -> {
-		}, condition, false);
+		DelegateCommand delegateCommand2 = new DelegateCommand(() -> new Action() {
+			
+			@Override
+			protected void action() throws Exception {
+				sleep(1000);
+				future.complete(null);
+			}
+		}, condition, true);
+		
+		DelegateCommand delegateCommand3 = new DelegateCommand(() -> new Action() {
+			
+			@Override
+			protected void action() throws Exception {
+			}
+		}, condition, true);
 		
 		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1, delegateCommand2, delegateCommand3);
 		
+		 compositeCommand.progressProperty().addListener(new ChangeListener<Number>() {
+		
+		 @Override
+		 public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+		 }
+		 });
+		
 		GCVerifier.forceGC();
 		
-		assertFalse(compositeCommand.runningProperty().get());
-		assertFalse(delegateCommand1.runningProperty().get());
-		assertFalse(delegateCommand2.runningProperty().get());
-		assertFalse(delegateCommand3.runningProperty().get());
-		assertTrue(compositeCommand.notRunningProperty().get());
-		assertTrue(delegateCommand1.notRunningProperty().get());
-		assertTrue(delegateCommand2.notRunningProperty().get());
-		assertTrue(delegateCommand3.notRunningProperty().get());
+		compositeCommand.runningProperty().addListener(new ChangeListener<Boolean>() {
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				if (newValue && !oldValue) {
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							assertTrue(compositeCommand.runningProperty().get());
+							assertTrue(delegateCommand1.runningProperty().get());
+							assertTrue(delegateCommand2.runningProperty().get());
+							assertTrue(delegateCommand3.runningProperty().get());
+							assertFalse(compositeCommand.notRunningProperty().get());
+							assertFalse(delegateCommand1.notRunningProperty().get());
+							assertFalse(delegateCommand2.notRunningProperty().get());
+							assertFalse(delegateCommand3.notRunningProperty().get());
+							commandCompleted.complete(null);
+						}
+					});
+				}
+				if (oldValue && !newValue) {
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							assertFalse(compositeCommand.runningProperty().get());
+							assertFalse(delegateCommand1.runningProperty().get());
+							assertFalse(delegateCommand2.runningProperty().get());
+							assertFalse(delegateCommand3.runningProperty().get());
+							assertTrue(compositeCommand.notRunningProperty().get());
+							assertTrue(delegateCommand1.notRunningProperty().get());
+							assertTrue(delegateCommand2.notRunningProperty().get());
+							assertTrue(delegateCommand3.notRunningProperty().get());
+							commandStarted.complete(null);
+						}
+					});
+				}
+			}
+		});
 		
 		compositeCommand.execute();
-		
-		assertTrue(compositeCommand.runningProperty().get());
-		assertTrue(delegateCommand1.runningProperty().get());
-		assertTrue(delegateCommand2.runningProperty().get());
-		assertFalse(delegateCommand3.runningProperty().get());
-		assertFalse(compositeCommand.notRunningProperty().get());
-		assertFalse(delegateCommand1.notRunningProperty().get());
-		assertFalse(delegateCommand2.notRunningProperty().get());
-		assertTrue(delegateCommand3.notRunningProperty().get());
-		
+		commandStarted.get(3, TimeUnit.SECONDS);
 		future.get(3, TimeUnit.SECONDS);
-		
-		assertFalse(compositeCommand.runningProperty().get());
-		assertFalse(delegateCommand1.runningProperty().get());
-		assertFalse(delegateCommand2.runningProperty().get());
-		assertFalse(delegateCommand3.runningProperty().get());
-		assertTrue(compositeCommand.notRunningProperty().get());
-		assertTrue(delegateCommand1.notRunningProperty().get());
-		assertTrue(delegateCommand2.notRunningProperty().get());
-		assertTrue(delegateCommand3.notRunningProperty().get());
+		commandCompleted.get(4, TimeUnit.SECONDS);
 	}
+	
 	
 	private void sleep(long millis) {
 		try {

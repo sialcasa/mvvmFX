@@ -16,6 +16,7 @@
 package de.saxsys.mvvmfx.utils.commands;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import eu.lestard.doc.Beta;
 
 /**
@@ -88,6 +89,18 @@ public interface Command {
 	 * @see #isNotRunning()
 	 */
 	ReadOnlyBooleanProperty notRunningProperty();
+	
+	/**
+	 * Gets a double between 0.0 and 1.0 which represents the progress.
+	 * 
+	 * @return progress
+	 */
+	double getProgress();
+	
+	/**
+	 * @see #getProgress()
+	 */
+	ReadOnlyDoubleProperty progressProperty();
 	
 	
 	

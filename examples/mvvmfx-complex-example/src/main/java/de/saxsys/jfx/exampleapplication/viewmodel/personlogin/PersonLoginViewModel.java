@@ -1,5 +1,6 @@
 package de.saxsys.jfx.exampleapplication.viewmodel.personlogin;
 
+import de.saxsys.mvvmfx.utils.commands.Action;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ReadOnlyIntegerProperty;
@@ -73,7 +74,12 @@ public class PersonLoginViewModel implements ViewModel {
 	
 	public Command getLoginCommand() {
 		if (loginCommand == null) {
-			loginCommand = new DelegateCommand(() -> performLogin(), createLoginPossibleBinding(), true);
+			loginCommand = new DelegateCommand(()-> new Action() {
+				@Override
+				protected void action() throws Exception {
+					performLogin();
+				}
+			}, createLoginPossibleBinding(), true);
 		}
 		return loginCommand;
 	}
