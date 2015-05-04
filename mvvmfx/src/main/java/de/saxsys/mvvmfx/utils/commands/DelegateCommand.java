@@ -15,32 +15,45 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.commands;
 
+import java.util.function.Supplier;
+
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.value.ObservableBooleanValue;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import eu.lestard.doc.Beta;
 
 /**
- * A {@link Command} implementation that encapsulates an action ({@link Runnable}). It is possible to define that the
- * action should be executed in the background (not on the JavaFX thread) so that long running actions can be
- * implemented that aren't blocking the ui thread.
+ * A {@link Command} implementation of a {@link Service<Void>} that encapsulates an {@link Action} ({@link Task<Void>})
+ * which can be called from the UI - for example after a button click. If the {@link Action} is a long running
+ * operation, which would block your UI, you can pass a parameter to perform the {@link Action} in a background thread.
+ * You can bind to the {@link #isRunning()} property while the action is executing. This can be used for a loading
+ * indication in the UI.
  * 
  * @author alexander.casall
  */
 @Beta
-public class DelegateCommand extends CommandBase {
+public class DelegateCommand extends Service<Void> implements Command {
 	
-	private final Runnable action;
+	private final Supplier<Action> actionSupplier;
 	private boolean inBackground = false;
+	protected final ReadOnlyBooleanWrapper executable = new ReadOnlyBooleanWrapper(true);
+	protected ReadOnlyBooleanWrapper notExecutable;
+	protected ReadOnlyBooleanWrapper notRunning;
+	
+	
+	
 	
 	/**
-	 * Creates a command without a condition about the executability. The command will perform in the thread which
-	 * executes the {@link Command}.
+	 * Creates a command without a condition about the executability.
 	 * 
-	 * @param action
-	 *            which should execute
+	 * @param actionSupplier
+	 *            a function that returns a new Action which should be executed
 	 */
-	public DelegateCommand(Runnable action) {
-		this(action, null, false);
+	public DelegateCommand(final Supplier<Action> actionSupplier) {
+		this(actionSupplier, false);
 	}
 	
 	/**
@@ -49,28 +62,27 @@ public class DelegateCommand extends CommandBase {
 	 * 
 	 * <b>IF YOU USE THE BACKGROUND THREAD: </b> Your provided action will perform in a background thread. If you
 	 * manipulate data in your action, which will be propagated to the UI, use {@link Platform#runLater(Runnable)} for
-	 * this manipulation, otherwise you get an Exception.
-	 * 
-	 * @param action
-	 *            which should execute
+	 * this manipulation, otherwise you get an Exception by JavaFX.
+	 *
+	 * @param actionSupplier
+	 *            a function that returns a new Action which should be executed
 	 * @param inBackground
 	 *            defines whether the execution {@link #execute()} is performed in a background thread or not
 	 */
-	public DelegateCommand(Runnable action, boolean inBackground) {
-		this(action, null, inBackground);
+	public DelegateCommand(final Supplier<Action> actionSupplier, boolean inBackground) {
+		this(actionSupplier, null, inBackground);
 	}
 	
 	/**
-	 * Creates a command with a condition about the executability by using the #executableBinding parameter. The command
-	 * will perform in the thread which executes the {@link Command}.
-	 * 
-	 * @param action
-	 *            which should execute
+	 * Creates a command with a condition about the executability by using the #executableBinding parameter.
+	 *
+	 * @param actionSupplier
+	 *            a function that returns a new Action which should be executed
 	 * @param executableBinding
 	 *            which defines whether the {@link Command} can execute
 	 */
-	public DelegateCommand(Runnable action, ObservableBooleanValue executableBinding) {
-		this(action, executableBinding, false);
+	public DelegateCommand(final Supplier<Action> actionSupplier, ObservableBooleanValue executableBinding) {
+		this(actionSupplier, executableBinding, false);
 	}
 	
 	/**
@@ -79,20 +91,22 @@ public class DelegateCommand extends CommandBase {
 	 * 
 	 * <b>IF YOU USE THE BACKGROUND THREAD: </b> don't forget to return to the UI-thread by using
 	 * {@link Platform#runLater(Runnable)}, otherwise you get an Exception.
-	 * 
-	 * @param action
-	 *            which should execute
+	 *
+	 * @param actionSupplier
+	 *            a function that returns a new Action which should be executed
 	 * @param executableBinding
 	 *            which defines whether the {@link Command} can execute
 	 * @param inBackground
 	 *            defines whether the execution {@link #execute()} is performed in a background thread or not
 	 */
-	public DelegateCommand(Runnable action, ObservableBooleanValue executableBinding, boolean inBackground) {
-		this.action = action;
+	public DelegateCommand(final Supplier<Action> actionSupplier, ObservableBooleanValue executableBinding,
+			boolean inBackground) {
+		this.actionSupplier = actionSupplier;
 		this.inBackground = inBackground;
 		if (executableBinding != null) {
 			executable.bind(runningProperty().not().and(executableBinding));
 		}
+		
 	}
 	
 	/**
@@ -100,27 +114,65 @@ public class DelegateCommand extends CommandBase {
 	 */
 	@Override
 	public void execute() {
-		
-		final boolean callerOnUIThread = Platform.isFxApplicationThread();
-		
 		if (!isExecutable()) {
 			throw new RuntimeException("The execute()-method of the command was called while it wasn't executable.");
 		} else {
-			running.set(true);
 			if (inBackground) {
-				new Thread(() -> {
-					action.run();
-					if (callerOnUIThread) {
-						Platform.runLater(() -> running.set(false));
-					} else {
-						running.set(false);
-					}
-				}).start();
+				if (!super.isRunning()) {
+					reset();
+					start();
+				}
 			} else {
-				action.run();
-				running.set(false);
+				try {
+					actionSupplier.get().action();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
 	
+	@Override
+	protected Task<Void> createTask() {
+		return actionSupplier.get();
+	}
+	
+	@Override
+	public ReadOnlyBooleanProperty executableProperty() {
+		return this.executable.getReadOnlyProperty();
+	}
+	
+	
+	@Override
+	public boolean isExecutable() {
+		return this.executableProperty().get();
+	}
+	
+	@Override
+	public final ReadOnlyBooleanProperty notExecutableProperty() {
+		if (notExecutable == null) {
+			notExecutable = new ReadOnlyBooleanWrapper();
+			notExecutable.bind(executableProperty().not());
+		}
+		return notExecutable.getReadOnlyProperty();
+	}
+	
+	@Override
+	public final boolean isNotExecutable() {
+		return notExecutableProperty().get();
+	}
+	
+	@Override
+	public final ReadOnlyBooleanProperty notRunningProperty() {
+		if (notRunning == null) {
+			notRunning = new ReadOnlyBooleanWrapper();
+			notRunning.bind(runningProperty().not());
+		}
+		return notRunning.getReadOnlyProperty();
+	}
+	
+	@Override
+	public final boolean isNotRunning() {
+		return notRunningProperty().get();
+	}
 }
