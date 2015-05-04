@@ -5,11 +5,4 @@ _site
 *.iml
 .idea
 
-mvvmfx
-mvvmfx-cdi
-mvvmfx-archetype
-mvvmfx-guice
-mvvmfx-testing-utils
-mvvmfx-utils
-examples
 target
