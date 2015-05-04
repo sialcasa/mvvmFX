@@ -26,7 +26,7 @@
 	<groupId>de.saxsys</groupId>
 	<artifactId>mvvmfx-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<name>mvvmFX parent</name>
 	<description>Application Framework for MVVM with JavaFX.</description>
 	<url>http://www.saxsys.de</url>
@@ -40,6 +40,7 @@
 		<developer>
 			<email>manuel.mauky@saxsys.de</email>
 			<name>Manuel Mauky</name>
+			<url>http://www.lestard.eu</url>
 		</developer>
 	</developers>
 
@@ -56,7 +57,7 @@
 		</license>
 	</licenses>
 	<issueManagement>
-		<url>https://github.com/sialcasa/jfx-mvvm/issues</url>
+		<url>https://github.com/sialcasa/mvvmFX/issues</url>
 		<system>GitHub Issues</system>
 	</issueManagement>
 
@@ -80,6 +81,8 @@
 		<module>mvvmfx-guice</module>
 		<module>examples</module>
 		<module>mvvmfx-archetype</module>
+		<module>mvvmfx-utils</module>
+		<module>mvvmfx-testing-utils</module>
 	</modules>
 
 	<dependencyManagement>
@@ -100,6 +103,18 @@
 				<version>0.4.0</version>
 			</dependency>
 
+			<dependency>
+				<groupId>eu.lestard</groupId>
+				<artifactId>advanced-bindings</artifactId>
+				<version>0.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>eu.lestard</groupId>
+				<artifactId>doc-annotations</artifactId>
+				<version>0.1</version>
+			</dependency>
+
 			<!-- Testing Frameworks -->
 			<dependency>
 				<groupId>junit</groupId>
@@ -111,11 +126,22 @@
 				<artifactId>mockito-all</artifactId>
 				<version>1.10.19</version>
 			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>1.10.19</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.assertj</groupId>
 				<artifactId>assertj-core</artifactId>
 				<version>1.7.1</version>
+			</dependency>
+			<dependency>
+				<groupId>eu.lestard</groupId>
+				<artifactId>assertj-javafx</artifactId>
+				<version>0.3.0</version>
+				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -130,6 +156,9 @@
 					<javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
 					<quiet>true</quiet>
 					<additionalparam>-Xdoclint:none</additionalparam>
+					<excludePackageNames>
+						*.internal
+					</excludePackageNames>
 				</configuration>
 				<executions>
 					<execution>

@@ -1,19 +1,17 @@
 package de.saxsys.mvvmfx.examples.synchronize;
 
-import de.saxsys.synchronizefx.SynchronizeFxBuilder;
-import de.saxsys.synchronizefx.core.clientserver.ServerCallback;
-import de.saxsys.synchronizefx.core.clientserver.SynchronizeFxServer;
-import de.saxsys.synchronizefx.core.exceptions.SynchronizeFXException;
-
 import java.util.Scanner;
+
+import de.saxsys.synchronizefx.SynchronizeFxBuilder;
+import de.saxsys.synchronizefx.core.clientserver.SynchronizeFxServer;
 
 public class ServerApp {
 	
-	public static void main(String...args){
+	public static void main(String... args) {
 		System.out.println("Starting server");
 		
 		SliderViewModel centralViewModel = new SliderViewModel();
-
+		
 		final SynchronizeFxServer syncFxServer =
 				SynchronizeFxBuilder.create().server().model(centralViewModel).callback(
 						exception -> System.out.println("Server Error:" + exception.getLocalizedMessage())).build();

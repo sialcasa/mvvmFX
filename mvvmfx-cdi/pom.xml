@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx-parent</artifactId>
-		<version>1.0.0</version>
+		<version>1.1.0</version>
 	</parent>
 
 	<artifactId>mvvmfx-cdi</artifactId>
@@ -70,6 +70,12 @@
 		</dependency>
 
 		<!-- Testing Frameworks -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.1.2</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>

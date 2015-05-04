@@ -26,7 +26,7 @@ public class DetailViewModelTest {
 	private ObjectProperty<Contact> selectedContact = new SimpleObjectProperty<>();
 	private Contact luke;
 	private Contact obi;
-
+	
 	private Repository repository;
 	
 	@Before
@@ -37,7 +37,7 @@ public class DetailViewModelTest {
 		
 		viewModel = new DetailViewModel();
 		viewModel.masterViewModel = masterViewModelMock;
-
+		
 		repository = mock(Repository.class);
 		viewModel.repository = repository;
 		
@@ -46,21 +46,21 @@ public class DetailViewModelTest {
 		luke = new Contact();
 		obi = new Contact();
 	}
-
-
+	
+	
 	@Test
-	public void testRemoveAction(){
+	public void testRemoveAction() {
 		selectedContact.set(null);
 		assertThat(viewModel.removeButtonDisabledProperty()).isTrue();
-
-
+		
+		
 		selectedContact.set(luke);
 		assertThat(viewModel.removeButtonDisabledProperty()).isFalse();
-
-
-
+		
+		
+		
 		viewModel.removeAction();
-
+		
 		verify(repository).delete(luke);
 	}
 	

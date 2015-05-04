@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelWithResourceBundle;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.VBox;
 
@@ -95,6 +96,23 @@ public class FluentViewLoader_JavaView_Test {
 		assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
 		assertThat(viewTuple.getCodeBehind()).isNotNull();
 		assertThat(viewTuple.getViewModel()).isNotNull();
+	}
+	
+	@Test
+	public void test_initializeOfViewModel() {
+		// given
+		TestViewModelWithResourceBundle.wasInitialized = false;
+		TestViewModelWithResourceBundle.resourceBundleWasAvailableAtInitialize = false;
+		
+		class TestView extends VBox implements JavaView<TestViewModelWithResourceBundle> {
+		}
+		
+		// when
+		FluentViewLoader.javaView(TestView.class).resourceBundle(resourceBundle).load();
+		
+		// then
+		assertThat(TestViewModelWithResourceBundle.wasInitialized).isTrue();
+		assertThat(TestViewModelWithResourceBundle.resourceBundleWasAvailableAtInitialize).isTrue();
 	}
 	
 	
@@ -200,35 +218,36 @@ public class FluentViewLoader_JavaView_Test {
 			assertThat(e).isInstanceOf(RuntimeException.class).hasMessageContaining("<2> viewModel fields");
 		}
 	}
-
-
-
+	
+	
+	
 	/**
 	 * When the ViewModel isn't injected in the view it should still be available in the ViewTuple.
 	 */
 	@Test
-	public void testViewModelIsAvailableInViewTupleEvenIfItIsntInjectedInTheView(){
+	public void testViewModelIsAvailableInViewTupleEvenIfItIsntInjectedInTheView() {
 		
-		class TestView extends VBox implements JavaView<TestViewModel>{
+		class TestView extends VBox implements JavaView<TestViewModel> {
 		}
-
+		
 		ViewTuple<TestView, TestViewModel> viewTuple = FluentViewLoader
 				.javaView(TestView.class).load();
-
+		
 		assertThat(viewTuple.getViewModel()).isNotNull();
 	}
 	
 	
 	@Test
-	public void testUseExistingViewModel(){
-		class TestView extends VBox implements JavaView<TestViewModel>{
+	public void testUseExistingViewModel() {
+		class TestView extends VBox implements JavaView<TestViewModel> {
 			@InjectViewModel
 			public TestViewModel viewModel;
 		}
 		
 		TestViewModel viewModel = new TestViewModel();
-
-		ViewTuple<TestView, TestViewModel> viewTuple = FluentViewLoader.javaView(TestView.class).viewModel(viewModel).load();
+		
+		ViewTuple<TestView, TestViewModel> viewTuple = FluentViewLoader.javaView(TestView.class).viewModel(viewModel)
+				.load();
 		
 		assertThat(viewTuple.getCodeBehind().viewModel).isEqualTo(viewModel);
 		assertThat(viewTuple.getViewModel()).isEqualTo(viewModel);

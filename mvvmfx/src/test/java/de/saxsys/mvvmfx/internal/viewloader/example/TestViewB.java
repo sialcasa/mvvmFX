@@ -10,7 +10,7 @@ public class TestViewB implements FxmlView<TestViewModelB> {
 	
 	public boolean initializeWasCalled = false;
 	
-	public void initialize(){
+	public void initialize() {
 		initializeWasCalled = true;
 	}
 }

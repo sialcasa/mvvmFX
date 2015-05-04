@@ -1,5 +1,6 @@
 package de.saxsys.mvvmfx.guice.it;
 
+import com.google.inject.Module;
 import de.saxsys.mvvmfx.guice.internal.GuiceInjector;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -10,15 +11,16 @@ import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.guice.MvvmfxGuiceApplication;
 
 import javax.inject.Inject;
+import java.util.List;
 
 
 public class MyApp extends MvvmfxGuiceApplication {
-
-
+	
+	
 	static boolean wasInitCalled = false;
 	static boolean wasStopCalled = false;
 	
-	public static void main(String...args){
+	public static void main(String... args) {
 		launch(args);
 	}
 	
@@ -31,13 +33,16 @@ public class MyApp extends MvvmfxGuiceApplication {
 	 * Application class on our own. This is done by the framework.
 	 */
 	static Stage stage;
-
+	
 	static Application.Parameters parameters;
-
+	
+	@Inject
+	private MyService myService;
+	
 	@Inject
 	private GuiceInjector guiceInjector;
-
-	//This is needed to be able to access the initialized guice injector from the outside
+	
+	// This is needed to be able to access the initialized guice injector from the outside
 	static GuiceInjector staticInjector;
 	
 	@Override
@@ -51,12 +56,18 @@ public class MyApp extends MvvmfxGuiceApplication {
 		// we can't shutdown the application in the test case so we need to do it here.
 		Platform.exit();
 	}
-
+	
+	
+	@Override
+	public void initGuiceModules(List<Module> modules) throws Exception {
+		modules.add(new MyModule());
+	}
+	
 	@Override
 	public void initMvvmfx() throws Exception {
 		wasInitCalled = true;
 	}
-
+	
 	@Override
 	public void stopMvvmfx() throws Exception {
 		wasStopCalled = true;

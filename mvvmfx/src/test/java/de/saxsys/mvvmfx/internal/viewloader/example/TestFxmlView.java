@@ -17,10 +17,16 @@ public class TestFxmlView implements FxmlView<TestViewModel>, Initializable {
 	public URL url;
 	public ResourceBundle resourceBundle;
 	
+	public static int instanceCounter = 0;
+	
 	@InjectViewModel
 	private TestViewModel viewModel;
 	
 	public boolean viewModelWasNull = true;
+	
+	public TestFxmlView() {
+		instanceCounter++;
+	}
 	
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -30,7 +36,7 @@ public class TestFxmlView implements FxmlView<TestViewModel>, Initializable {
 		viewModelWasNull = viewModel == null;
 	}
 	
-	public TestViewModel getViewModel(){
+	public TestViewModel getViewModel() {
 		return viewModel;
 	}
 	

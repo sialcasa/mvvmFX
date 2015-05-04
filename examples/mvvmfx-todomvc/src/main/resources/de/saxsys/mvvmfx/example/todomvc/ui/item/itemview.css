@@ -1,0 +1,30 @@
+
+
+
+.strikethrough .text {
+    -fx-strikethrough: true;
+}
+
+.close_icon {
+    -fx-fill:  #cc9a9a;
+}
+
+.close_icon:hover {
+    -fx-fill:  #af5b5e;
+}
+
+.content_box .button {
+    -fx-background-color: none;
+}
+
+.item_root {
+    -fx-padding: 0.5em;
+}
+
+.check-box {
+    -fx-padding: 0em 1em 0em 0em;
+}
+
+.label {
+    -fx-font-size: 1.2em;
+}

@@ -38,7 +38,7 @@ public interface NotificationCenter {
 	 *            which listens for the notification
 	 */
 	void subscribe(String messageName,
-				   NotificationObserver observer);
+			NotificationObserver observer);
 	
 	/**
 	 * Removes an observer from the NotificationCenter.
@@ -49,7 +49,7 @@ public interface NotificationCenter {
 	 *            which listens for the notification
 	 */
 	void unsubscribe(String messageName,
-					 NotificationObserver observer);
+			NotificationObserver observer);
 	
 	/**
 	 * Remove all registrations of an NotificationObserver.

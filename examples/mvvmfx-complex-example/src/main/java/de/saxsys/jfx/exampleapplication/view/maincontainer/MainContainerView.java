@@ -58,10 +58,10 @@ public class MainContainerView implements FxmlView<MainContainerViewModel>, Init
 		// Listen for close notifications
 		notificationCenter.subscribe("hidePersonWelcome",
 				(key, payload) -> {
-                    int personIdToHide = (int) payload[0];
-                    viewModel.displayedPersonsProperty().remove(
-                            new Integer(personIdToHide));
-                });
+					int personIdToHide = (int) payload[0];
+					viewModel.displayedPersonsProperty().remove(
+							new Integer(personIdToHide));
+				});
 		
 		// When the login button of the loginView, the pickedPersonProperty is
 		// going to have the index of the selected person
@@ -74,24 +74,24 @@ public class MainContainerView implements FxmlView<MainContainerViewModel>, Init
 						viewModel.displayedPersonsProperty().add(id);
 					}
 				});
-
-      // Configure List with views
-      final ViewListCellFactory<Integer> cellFactory = element -> {
-          if (!viewMap.containsKey(element)) {
-              ViewTuple<PersonWelcomeView, PersonWelcomeViewModel> loadedViewTuple
-                  = FluentViewLoader.fxmlView(PersonWelcomeView.class).load();
-
-              PersonWelcomeView codeBehind = loadedViewTuple.getCodeBehind();
-
-              codeBehind.getViewModel()
-                  .setPersonId(element);
-
-              viewMap.put(element, loadedViewTuple);
-          }
-
-          return viewMap.get(element);
-      };
-      personWelcomeListView.setCellFactory(cellFactory);
+		
+		// Configure List with views
+		final ViewListCellFactory<Integer> cellFactory = element -> {
+			if (!viewMap.containsKey(element)) {
+				ViewTuple<PersonWelcomeView, PersonWelcomeViewModel> loadedViewTuple
+				= FluentViewLoader.fxmlView(PersonWelcomeView.class).load();
+				
+				PersonWelcomeView codeBehind = loadedViewTuple.getCodeBehind();
+				
+				codeBehind.getViewModel()
+						.setPersonId(element);
+				
+				viewMap.put(element, loadedViewTuple);
+			}
+			
+			return viewMap.get(element);
+		};
+		personWelcomeListView.setCellFactory(cellFactory);
 		
 		// Bind list
 		personWelcomeListView.itemsProperty().bind(

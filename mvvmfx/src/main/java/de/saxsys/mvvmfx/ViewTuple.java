@@ -67,8 +67,8 @@ public class ViewTuple<ViewType extends View<? extends ViewModelType>, ViewModel
 	 * </p>
 	 * 
 	 * <p>
-	 * When the view is implemented in pure java ({@link JavaView}) the instance returned by this method will typically be the same
-	 * instance that is returned by {@link #getView()}.
+	 * When the view is implemented in pure java ({@link JavaView}) the instance returned by this method will typically
+	 * be the same instance that is returned by {@link #getView()}.
 	 * </p>
 	 * 
 	 * @return the code behind of the View.

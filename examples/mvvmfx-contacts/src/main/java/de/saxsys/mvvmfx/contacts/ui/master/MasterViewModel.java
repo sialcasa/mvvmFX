@@ -61,10 +61,10 @@ public class MasterViewModel implements ViewModel {
 	
 	private void updateContactList() {
 		LOG.debug("update contact list");
-
-
+		
+		
 		// when there is a selected row, persist the id of this row, otherwise use null
-		final String selectedContactId = (selectedTableRow.get() == null)? null : selectedTableRow.get().getId();
+		final String selectedContactId = (selectedTableRow.get() == null) ? null : selectedTableRow.get().getId();
 		
 		
 		Set<Contact> allContacts = repository.findAll();
@@ -72,13 +72,13 @@ public class MasterViewModel implements ViewModel {
 		contacts.clear();
 		allContacts.forEach(contact -> contacts.add(new MasterTableViewModel(contact)));
 		
-		if(selectedContactId != null){
+		if (selectedContactId != null) {
 			Optional<MasterTableViewModel> selectedRow = contacts.stream()
 					.filter(row -> row.getId().equals(selectedContactId)).findFirst();
 			
-			if(selectedRow.isPresent()){
+			if (selectedRow.isPresent()) {
 				onSelect.ifPresent(consumer -> consumer.accept(selectedRow.get()));
-			}else{
+			} else {
 				onSelect.ifPresent(consumer -> consumer.accept(null));
 			}
 		}
@@ -89,7 +89,7 @@ public class MasterViewModel implements ViewModel {
 	}
 	
 	
-	public void setOnSelect(Consumer<MasterTableViewModel> consumer){
+	public void setOnSelect(Consumer<MasterTableViewModel> consumer) {
 		onSelect = Optional.of(consumer);
 	}
 	

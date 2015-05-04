@@ -1,0 +1,8 @@
+
+.add_item_root {    
+    -fx-padding: 1em;
+}
+
+.check-box {
+    -fx-padding: 0.1em 1em 0.1em 0.1em;
+}

@@ -12,13 +12,13 @@ import de.saxsys.mvvmfx.FxmlView;
 public class MyView implements FxmlView<MyViewModel> {
 	@Inject
 	Stage primaryStage;
-
+	
 	@Inject
 	Application.Parameters parameters;
-
+	
 	@Inject
 	NotificationCenter notificationCenter;
-
+	
 	@Inject
 	HostServices hostServices;
 	

@@ -24,7 +24,7 @@ public class Repository {
 		persons.add(new Person("Anna", "Schulze", Gender.FEMALE));
 		persons.add(new Person("Andy", "Mueller", Gender.NOT_SPECIFIED));
 	}
-
+	
 	/**
 	 * @return available {@link Person}s
 	 */

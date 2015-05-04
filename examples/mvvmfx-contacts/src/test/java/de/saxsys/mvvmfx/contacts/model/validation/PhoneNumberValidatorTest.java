@@ -15,14 +15,14 @@ public class PhoneNumberValidatorTest {
 	private PhoneNumberValidator validator;
 	
 	@Before
-	public void setup(){
+	public void setup() {
 		validator = new PhoneNumberValidator("Error Message");
 	}
 	
 	@Test
-	public void testPhoneNumber(){
+	public void testPhoneNumber() {
 		TextField phoneNumberInput = new TextField();
-
+		
 		assertThat(validator.apply(phoneNumberInput, "")).isNull();
 		ValidationResult apply = validator.apply(phoneNumberInput, "012345678");
 		
@@ -34,7 +34,7 @@ public class PhoneNumberValidatorTest {
 		assertThat(validator.apply(phoneNumberInput, "  ")).isNull();
 		
 		assertThat(validator.apply(phoneNumberInput, "abc")).isNotNull();
-
+		
 		
 	}
 }

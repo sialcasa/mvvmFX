@@ -26,6 +26,7 @@ import de.saxsys.mvvmfx.internal.viewloader.View;
  * The implementing class will typically extend from one of JavaFX`s controls or containers etc. For Example:
  * </p>
  * <br>
+ * 
  * <pre>
  * public class MyCoolView extends VBox implements JavaView{@code <MyCoolViewModel>} {
  *     ...
@@ -33,7 +34,7 @@ import de.saxsys.mvvmfx.internal.viewloader.View;
  *     public MyCoolView(){
  *         getChildren().add(new Label("Hello World"));
  *     }
- * }    
+ * }
  * </pre>
  * 
  * 

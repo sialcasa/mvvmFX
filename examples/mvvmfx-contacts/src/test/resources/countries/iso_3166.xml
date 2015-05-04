@@ -4,21 +4,21 @@
 		<!ELEMENT iso_3166_entries (iso_3166_entry+, iso_3166_3_entry*)>
 		<!ELEMENT iso_3166_entry EMPTY>
 		<!ATTLIST iso_3166_entry
-				alpha_2_code		CDATA	#REQUIRED
-				alpha_3_code		CDATA	#REQUIRED
-				numeric_code		CDATA	#REQUIRED
-				common_name		CDATA	#IMPLIED
-				name			CDATA	#REQUIRED
-				official_name		CDATA	#IMPLIED
+				alpha_2_code        CDATA    #REQUIRED
+				alpha_3_code        CDATA    #REQUIRED
+				numeric_code        CDATA    #REQUIRED
+				common_name        CDATA    #IMPLIED
+				name            CDATA    #REQUIRED
+				official_name        CDATA    #IMPLIED
 				>
 		<!ELEMENT iso_3166_3_entry EMPTY>
 		<!ATTLIST iso_3166_3_entry
-				alpha_4_code		CDATA	#REQUIRED
-				alpha_3_code		CDATA	#REQUIRED
-				numeric_code		CDATA	#IMPLIED
-				date_withdrawn		CDATA	#IMPLIED
-				names			CDATA	#REQUIRED
-				comment			CDATA	#IMPLIED
+				alpha_4_code        CDATA    #REQUIRED
+				alpha_3_code        CDATA    #REQUIRED
+				numeric_code        CDATA    #IMPLIED
+				date_withdrawn        CDATA    #IMPLIED
+				names            CDATA    #REQUIRED
+				comment            CDATA    #IMPLIED
 				>
 		]>
 
@@ -28,17 +28,17 @@
 			alpha_3_code="AUT"
 			numeric_code="040"
 			name="Austria"
-			official_name="Republic of Austria" />
+			official_name="Republic of Austria"/>
 	<iso_3166_entry
 			alpha_2_code="DE"
 			alpha_3_code="DEU"
 			numeric_code="276"
 			name="Germany"
-			official_name="Federal Republic of Germany" />
+			official_name="Federal Republic of Germany"/>
 	<iso_3166_entry
 			alpha_2_code="CH"
 			alpha_3_code="CHE"
 			numeric_code="756"
 			name="Switzerland"
-			official_name="Swiss Confederation" />
+			official_name="Swiss Confederation"/>
 </iso_3166_entries>

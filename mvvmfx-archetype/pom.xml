@@ -5,22 +5,22 @@
 	<parent>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx-parent</artifactId>
-		<version>1.0.0</version>
+		<version>1.1.0</version>
 	</parent>
 
 
 	<artifactId>mvvmfx-archetype</artifactId>
 	<packaging>maven-archetype</packaging>
 	<name>mvvmFX Archetype</name>
-	
+
 	<description>
 		An maven archetype to create an example application with mvvmFX
 	</description>
-	
+
 	<properties>
 		<version.mvvmfx>${parent.version}</version.mvvmfx>
 	</properties>
-	
+
 
 	<build>
 		<extensions>
@@ -48,7 +48,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		
+
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -64,9 +64,9 @@
 					<exclude>archetype-resources/pom.xml</exclude>
 				</excludes>
 			</resource>
-			
+
 		</resources>
 
 	</build>
-	
+
 </project>

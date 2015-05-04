@@ -19,68 +19,68 @@ import java.util.stream.Collectors;
 
 @Singleton
 public class MainViewModel implements ViewModel {
-
-    private final LibraryService libraryService;
-    private StringProperty searchString = new SimpleStringProperty("");
-
-    private StringProperty bookTitle = new SimpleStringProperty();
-    private StringProperty bookAuthor = new SimpleStringProperty();
-    private StringProperty bookDescription = new SimpleStringProperty();
-
-    private ObservableList<BookViewModel> books = FXCollections.observableArrayList();
-
-    private ObjectProperty<BookViewModel> selectedBook = new SimpleObjectProperty<>();
-
-    private StringProperty error = new SimpleStringProperty();
-
-    public MainViewModel(LibraryService libraryService){
-        this.libraryService = libraryService;
-
-        bookTitle.bind(ObjectBindings.map(selectedBook, BookViewModel::getTitle));
-        bookAuthor.bind(ObjectBindings.map(selectedBook, BookViewModel::getAuthor));
-        bookDescription.bind(ObjectBindings.map(selectedBook, BookViewModel::getDescription));
-    }
-
-
-    public void search(){
-        Consumer<Error> errorHandler = err -> error.set(err.getMessage());
-
-        final List<Book> result = libraryService.search(searchString.get(), errorHandler);
-
-        books.clear();
-        books.addAll(result
-            .stream()
-            .map(bookWithoutDescription -> libraryService.showDetails(bookWithoutDescription, errorHandler))
-            .map(BookViewModel::new)
-            .collect(Collectors.toList()));
-    }
-
-
-    public StringProperty searchStringProperty() {
-        return searchString;
-    }
-
-    public StringProperty bookTitleProperty() {
-        return bookTitle;
-    }
-
-    public StringProperty bookAuthorProperty() {
-        return bookAuthor;
-    }
-
-    public StringProperty bookDescriptionProperty() {
-        return bookDescription;
-    }
-
-    public ObservableList<BookViewModel> booksProperty(){
-        return books;
-    }
-
-    public ObjectProperty<BookViewModel> selectedBookProperty(){
-        return selectedBook;
-    }
-
-    public StringProperty errorProperty(){
-        return error;
-    }
+	
+	private final LibraryService libraryService;
+	private StringProperty searchString = new SimpleStringProperty("");
+	
+	private StringProperty bookTitle = new SimpleStringProperty();
+	private StringProperty bookAuthor = new SimpleStringProperty();
+	private StringProperty bookDescription = new SimpleStringProperty();
+	
+	private ObservableList<BookListItemViewModel> books = FXCollections.observableArrayList();
+	
+	private ObjectProperty<BookListItemViewModel> selectedBook = new SimpleObjectProperty<>();
+	
+	private StringProperty error = new SimpleStringProperty();
+	
+	public MainViewModel(LibraryService libraryService) {
+		this.libraryService = libraryService;
+		
+		bookTitle.bind(ObjectBindings.map(selectedBook, bookItem -> bookItem.getBook().getTitle()));
+		bookAuthor.bind(ObjectBindings.map(selectedBook, bookItem -> bookItem.getBook().getAuthor()));
+		bookDescription.bind(ObjectBindings.map(selectedBook, bookItem -> bookItem.getBook().getDesc()));
+	}
+	
+	
+	public void search() {
+		Consumer<Error> errorHandler = err -> error.set(err.getMessage());
+		
+		final List<Book> result = libraryService.search(searchString.get(), errorHandler);
+		
+		books.clear();
+		books.addAll(result
+				.stream()
+				.map(bookWithoutDescription -> libraryService.showDetails(bookWithoutDescription, errorHandler))
+				.map(BookListItemViewModel::new)
+				.collect(Collectors.toList()));
+	}
+	
+	
+	public StringProperty searchStringProperty() {
+		return searchString;
+	}
+	
+	public StringProperty bookTitleProperty() {
+		return bookTitle;
+	}
+	
+	public StringProperty bookAuthorProperty() {
+		return bookAuthor;
+	}
+	
+	public StringProperty bookDescriptionProperty() {
+		return bookDescription;
+	}
+	
+	public ObservableList<BookListItemViewModel> booksProperty() {
+		return books;
+	}
+	
+	public ObjectProperty<BookListItemViewModel> selectedBookProperty() {
+		return selectedBook;
+	}
+	
+	public StringProperty errorProperty() {
+		return error;
+	}
 }
