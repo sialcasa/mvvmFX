@@ -18,7 +18,7 @@
 	</description>
 
 	<properties>
-		<version.mvvmfx>${parent.version}</version.mvvmfx>
+		<version.mvvmfx>${project.parent.version}</version.mvvmfx>
 	</properties>
 
 
@@ -43,6 +43,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
 				<configuration>
 					<escapeString>\</escapeString>
 				</configuration>
