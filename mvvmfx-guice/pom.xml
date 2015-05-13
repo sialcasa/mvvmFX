@@ -54,7 +54,6 @@
 		<dependency>
 			<groupId>com.cathive.fx</groupId>
 			<artifactId>fx-guice</artifactId>
-			<version>8.0.0</version>
 		</dependency>
 
 
