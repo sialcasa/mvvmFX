@@ -15,11 +15,14 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx;
 
+import de.saxsys.mvvmfx.internal.viewloader.ResourceBundleManager;
 import javafx.util.Callback;
 
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenterFactory;
 import de.saxsys.mvvmfx.internal.viewloader.DependencyInjector;
+
+import java.util.ResourceBundle;
 
 /**
  * This class is a facade that is used by the user to access classes and services from the framework.
@@ -45,5 +48,9 @@ public class MvvmFX {
 	 */
 	public static void setCustomDependencyInjector(final Callback<Class<?>, Object> injector) {
 		DependencyInjector.getInstance().setCustomInjector(injector);
+	}
+
+	public static void setGlobalResourceBundle(ResourceBundle resourceBundle) {
+		ResourceBundleManager.getInstance().setGlobalResourceBundle(resourceBundle);
 	}
 }

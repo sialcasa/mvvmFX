@@ -4,6 +4,7 @@ import java.util.ResourceBundle;
 
 import de.saxsys.mvvmfx.internal.viewloader.FxmlViewLoader;
 import de.saxsys.mvvmfx.internal.viewloader.JavaViewLoader;
+import de.saxsys.mvvmfx.internal.viewloader.ResourceBundleManager;
 
 /**
  * Fluent API for loading Views. <br>
@@ -94,7 +95,7 @@ public class FluentViewLoader {
 		public ViewTuple<ViewType, ViewModelType> load() {
 			JavaViewLoader javaViewLoader = new JavaViewLoader();
 			
-			return javaViewLoader.loadJavaViewTuple(viewType, resourceBundle, viewModel);
+			return javaViewLoader.loadJavaViewTuple(viewType, ResourceBundleManager.getInstance().mergeWithGlobal(resourceBundle), viewModel);
 		}
 	}
 	
@@ -181,7 +182,7 @@ public class FluentViewLoader {
 		public ViewTuple<ViewType, ViewModelType> load() {
 			FxmlViewLoader fxmlViewLoader = new FxmlViewLoader();
 			
-			return fxmlViewLoader.loadFxmlViewTuple(viewType, resourceBundle, codeBehind, root, viewModel);
+			return fxmlViewLoader.loadFxmlViewTuple(viewType,  ResourceBundleManager.getInstance().mergeWithGlobal(resourceBundle), codeBehind, root, viewModel);
 		}
 	}
 	

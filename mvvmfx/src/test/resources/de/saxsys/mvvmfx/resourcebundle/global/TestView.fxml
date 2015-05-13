@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<VBox fx:controller="de.saxsys.mvvmfx.resourcebundle.global.TestView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="global_label" text="%global_label" />
+      <Label fx:id="other_label" layoutX="10.0" layoutY="10.0" text="%other_label" />
+      <Label fx:id="label" layoutX="10.0" layoutY="27.0" text="%label" />
+   </children>
+</VBox>
