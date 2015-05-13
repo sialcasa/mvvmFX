@@ -5,7 +5,7 @@
     <parent>
         <artifactId>mvvmfx-parent</artifactId>
         <groupId>de.saxsys</groupId>
-        <version>1.2.1</version>
+        <version>1.3.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -33,6 +33,7 @@
         <dependency>
             <groupId>de.saxsys</groupId>
             <artifactId>jfx-testrunner</artifactId>
+            <version>1.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
