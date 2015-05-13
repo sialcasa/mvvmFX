@@ -1,4 +1,4 @@
-package de.saxsys.mvvmfx.resourcebundle;
+package de.saxsys.mvvmfx.resourcebundle.included;
 
 import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.mvvmfx.FluentViewLoader;
