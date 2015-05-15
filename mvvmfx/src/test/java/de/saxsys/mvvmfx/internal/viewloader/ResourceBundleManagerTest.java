@@ -101,7 +101,8 @@ public class ResourceBundleManagerTest {
 	public void bothBundlesAreNull() {
 		final ResourceBundle merged = manager.mergeWithGlobal(null);
 		
-		assertThat(merged).isNull();
+		assertThat(merged).isNotNull();
+		assertThat(merged.keySet()).isEmpty();
 	}
 	
 

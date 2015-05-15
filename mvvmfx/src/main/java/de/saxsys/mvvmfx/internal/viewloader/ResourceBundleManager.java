@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ListResourceBundle;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -51,13 +52,13 @@ public class ResourceBundleManager {
 	public ResourceBundle mergeWithGlobal(ResourceBundle resourceBundle) {
 		if (globalResourceBundle == null) {
 			if (resourceBundle == null) {
-				return null;
+				return createEmptyBundle();
 			} else {
-				return resourceBundle;
+				return new ResourceBundleWrapper(resourceBundle);
 			}
 		} else {
 			if (resourceBundle == null) {
-				return globalResourceBundle;
+				return new ResourceBundleWrapper(globalResourceBundle);
 			} else {
 				return merge(resourceBundle, globalResourceBundle);
 			}
@@ -120,5 +121,51 @@ public class ResourceBundleManager {
 			return iterator.next();
 		}
 	}
+
+	/**
+	 * This wrapper is needed due to a bug in FXMLLoader (https://javafx-jira.kenai.com/browse/RT-33764).
+	 * 
+	 * With this class we make sure that there is a classLoader defined for this class.
+	 */
+	private static class ResourceBundleWrapper extends ResourceBundle {
+		private final ResourceBundle bundle;
+
+		ResourceBundleWrapper(ResourceBundle bundle) {
+			this.bundle = bundle;
+		}
+
+		@Override
+		protected Object handleGetObject(String key) {
+			return bundle.getObject(key);
+		}
+
+		@Override
+		public Enumeration<String> getKeys() {
+			return bundle.getKeys();
+		}
+
+		@Override
+		public boolean containsKey(String key) {
+			return bundle.containsKey(key);
+		}
+
+		@Override
+		public Locale getLocale() {
+			return bundle.getLocale();
+		}
+
+		@Override
+		public Set<String> keySet() {
+			return bundle.keySet();
+		}
+	}
 	
+	private ResourceBundle createEmptyBundle() {
+		return new ListResourceBundle() {
+			@Override
+			protected Object[][] getContents() {
+				return new Object[0][];
+			}
+		};
+	}
 }

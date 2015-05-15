@@ -1,5 +1,6 @@
 package de.saxsys.mvvmfx.contacts;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import de.saxsys.mvvmfx.MvvmFX;
@@ -27,6 +28,9 @@ public class App extends MvvmfxCdiApplication {
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
 	
 	public static void main(String... args) {
+
+		Locale.setDefault(Locale.ENGLISH);
+		
 		launch(args);
 	}
 	

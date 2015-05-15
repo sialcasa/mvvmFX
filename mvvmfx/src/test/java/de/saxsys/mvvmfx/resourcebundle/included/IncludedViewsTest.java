@@ -2,9 +2,10 @@ package de.saxsys.mvvmfx.resourcebundle.included;
 
 import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.ViewTuple;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -22,16 +23,22 @@ public class IncludedViewsTest {
 	
 	
 	private ResourceBundle root;
-	private ResourceBundle sub;
+	private ResourceBundle included;
 	
 	@Before
 	public void setup(){
+		MvvmFX.setGlobalResourceBundle(null);
 		root = ResourceBundle.getBundle(this.getClass().getPackage().getName() + ".root");
-		sub = ResourceBundle.getBundle(this.getClass().getPackage().getName() + ".sub");
+		included = ResourceBundle.getBundle(this.getClass().getPackage().getName() + ".included");
 	}
-	
+
+	@After
+	public void tearDown() {
+		MvvmFX.setGlobalResourceBundle(null);
+	}
+
+
 	@Test
-	@Ignore("ignore until fixed")
 	public void testWithRootBundle(){
 
 		final ViewTuple<RootView, RootViewModel> viewTuple = FluentViewLoader.fxmlView(RootView.class).resourceBundle(root)
@@ -44,11 +51,44 @@ public class IncludedViewsTest {
 		assertThat(includedView).isNotNull();
 		
 		
-		assertThat(includedView.label.getText()).isEqualTo("sub");
+		assertThat(includedView.label.getText()).isEqualTo("included");
 	}
 	
 	@Test
-	@Ignore("ignore until fixed")
+	public void testWithGlobalBundle() {
+		MvvmFX.setGlobalResourceBundle(root);
+
+		final ViewTuple<RootView, RootViewModel> viewTuple = FluentViewLoader.fxmlView(RootView.class).load();
+
+		final RootView rootView = viewTuple.getCodeBehind();
+
+		final IncludedView includedView = rootView.includedViewController;
+
+		assertThat(includedView).isNotNull();
+
+
+		assertThat(includedView.label.getText()).isEqualTo("included");
+	}
+	
+	@Test
+	public void testWithGlobalAndRoot() {
+		MvvmFX.setGlobalResourceBundle(root);
+
+		final ViewTuple<RootView, RootViewModel> viewTuple = FluentViewLoader.fxmlView(RootView.class)
+				.resourceBundle(root)
+				.load();
+
+		final RootView rootView = viewTuple.getCodeBehind();
+
+		final IncludedView includedView = rootView.includedViewController;
+
+		assertThat(includedView).isNotNull();
+
+
+		assertThat(includedView.label.getText()).isEqualTo("included");
+	}
+	
+	@Test
 	public void testWithoutRootBundle() {
 
 		final ViewTuple<RootView, RootViewModel> viewTuple = FluentViewLoader.fxmlView(RootView.class).load();
@@ -60,7 +100,7 @@ public class IncludedViewsTest {
 		assertThat(includedView).isNotNull();
 
 
-		assertThat(includedView.label.getText()).isEqualTo("sub");
+		assertThat(includedView.label.getText()).isEqualTo("included");
 	}
 	
 }

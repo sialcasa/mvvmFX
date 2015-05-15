@@ -7,7 +7,7 @@
 <VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	  fx:controller="de.saxsys.mvvmfx.contacts.ui.main.MainView">
 	<children>
-		<fx:include source="../menu/MenuView.fxml"/>
+		<fx:include source="../menu/MenuView.fxml" resources="menu"/>
 		<fx:include source="../toolbar/ToolbarView.fxml"/>
 		<SplitPane dividerPositions="0.7" VBox.vgrow="ALWAYS">
 			<items>

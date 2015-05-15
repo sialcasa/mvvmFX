@@ -4,6 +4,7 @@ import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.ViewTuple;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,8 +27,14 @@ public class GlobalResourceBundleTest {
 	
 	@Before
 	public void setup(){
+		MvvmFX.setGlobalResourceBundle(null);
 		global = ResourceBundle.getBundle(this.getClass().getPackage().getName() + ".global");
 		other = ResourceBundle.getBundle(this.getClass().getPackage().getName() + ".other");
+	}
+	
+	@After
+	public void tearDown() {
+		MvvmFX.setGlobalResourceBundle(null);
 	}
 	
 	@Test
