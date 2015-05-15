@@ -1,4 +1,4 @@
-package de.saxsys.mvvmfx.resourcebundle;
+package de.saxsys.mvvmfx.resourcebundle.included;
 
 import de.saxsys.mvvmfx.FxmlView;
 import javafx.fxml.FXML;
