@@ -6,6 +6,6 @@
 
 <VBox fx:controller="de.saxsys.mvvmfx.resourcebundle.included.RootView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-		<fx:include fx:id="includedView" source="IncludedView.fxml" resources="sub"/>
+		<fx:include fx:id="includedView" source="IncludedView.fxml" resources="de.saxsys.mvvmfx.resourcebundle.included.included"/>
 	</children>
 </VBox>
