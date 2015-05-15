@@ -1,6 +1,8 @@
 package de.saxsys.mvvmfx.contacts;
 
 import java.util.ResourceBundle;
+
+import de.saxsys.mvvmfx.MvvmFX;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -46,11 +48,11 @@ public class App extends MvvmfxCdiApplication {
 	@Override
 	public void startMvvmfx(Stage stage) throws Exception {
 		LOG.info("Starting the Application");
+		MvvmFX.setGlobalResourceBundle(resourceBundle);
 		
 		stage.setTitle(resourceBundle.getString("window.title"));
 		
-		ViewTuple<MainView, MainViewModel> main = FluentViewLoader.fxmlView(MainView.class)
-				.resourceBundle(resourceBundle).load();
+		ViewTuple<MainView, MainViewModel> main = FluentViewLoader.fxmlView(MainView.class).load();
 		
 		
 		Scene rootScene = new Scene(main.getView());
