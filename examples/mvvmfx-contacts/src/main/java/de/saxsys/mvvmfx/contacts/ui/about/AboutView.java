@@ -1,7 +1,5 @@
 package de.saxsys.mvvmfx.contacts.ui.about;
 
-import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Hyperlink;
@@ -16,7 +14,6 @@ import org.controlsfx.control.HyperlinkLabel;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.contacts.events.OpenAboutDialogEvent;
 import de.saxsys.mvvmfx.contacts.util.DialogHelper;
 
@@ -35,10 +32,10 @@ public class AboutView implements FxmlView<AboutViewModel> {
 	private Parent root;
 	
 	@Inject
-	AboutView(ResourceBundle defaultResourceBundle) {
-		ViewTuple<AboutView, AboutViewModel> viewTuple = FluentViewLoader.fxmlView(AboutView.class).codeBehind(this)
-				.resourceBundle(defaultResourceBundle).load();
-		root = viewTuple.getView();
+	AboutView() {
+		root = FluentViewLoader.fxmlView(AboutView.class)
+				.codeBehind(this)
+				.load().getView();
 	}
 	
 	public void initialize() {
