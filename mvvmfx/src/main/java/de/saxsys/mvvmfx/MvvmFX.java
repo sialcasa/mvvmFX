@@ -50,6 +50,18 @@ public class MvvmFX {
 		DependencyInjector.getInstance().setCustomInjector(injector);
 	}
 
+	/**
+	 * This method is used to set a global {@link ResourceBundle} for the application.
+	 * 
+	 * This resource bundle is automatically loaded for all views. If there is an resourceBundle provided
+	 * while loading the view (via {@link FluentViewLoader.FxmlViewStep#resourceBundle(ResourceBundle)} or 
+	 * {@link FluentViewLoader.JavaViewStep#resourceBundle(ResourceBundle)}) both resourceBundles will be merged.
+	 * <p>
+	 * The global resourceBundle set by this method will have a lower priority then the ones provided while loading. 
+	 * If there are keys available in both resourceBundles, the values of the global resourceBundle will be overwritten.
+	 * 
+	 * @param resourceBundle the resourceBundle
+	 */
 	public static void setGlobalResourceBundle(ResourceBundle resourceBundle) {
 		ResourceBundleManager.getInstance().setGlobalResourceBundle(resourceBundle);
 	}

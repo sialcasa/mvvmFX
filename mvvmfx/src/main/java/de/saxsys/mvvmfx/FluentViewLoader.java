@@ -61,8 +61,15 @@ public class FluentViewLoader {
 		JavaViewStep(Class<? extends ViewType> viewType) {
 			this.viewType = viewType;
 		}
-		
+
 		/**
+		 * Provide a {@link ResourceBundle} that is used while loading this view. 
+		 * Note: It is possible to provide a global application-wide resourceBundle via {@link MvvmFX#setGlobalResourceBundle(ResourceBundle)} method.
+		 *
+		 * If there is a global resourceBundle set it will be merged with the resourceBundle provided by this builder method.
+		 * The resourceBundle provided by this method will have a higher priority then the global one which means that if there 
+		 * are duplicate keys, the values of the global resourceBundle will be overwritten and the values of this resourceBundle will be used.
+		 *
 		 * @param resourceBundle
 		 *            the resource bundle that is used while loading the view.
 		 * @return this instance of the builder step.
@@ -122,6 +129,13 @@ public class FluentViewLoader {
 		}
 		
 		/**
+		 * Provide a {@link ResourceBundle} that is used while loading this view. 
+		 * Note: It is possible to provide a global application-wide resourceBundle via {@link MvvmFX#setGlobalResourceBundle(ResourceBundle)} method.
+		 * 
+		 * If there is a global resourceBundle set it will be merged with the resourceBundle provided by this builder method.
+		 * The resourceBundle provided by this method will have a higher priority then the global one which means that if there 
+		 * are duplicate keys, the values of the global resourceBundle will be overwritten and the values of this resourceBundle will be used.
+		 *
 		 * @param resourceBundle
 		 *            the resource bundle that is used while loading the view.
 		 * @return this instance of the builder step.

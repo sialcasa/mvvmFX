@@ -1,5 +1,6 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
+import eu.lestard.doc.Internal;
 import sun.util.ResourceBundleEnumeration;
 
 import java.util.Enumeration;
@@ -15,6 +16,7 @@ import java.util.Set;
 /**
  * @author manuel.mauky
  */
+@Internal
 public class ResourceBundleManager {
 	
 	private static final ResourceBundleManager SINGLETON = new ResourceBundleManager();
@@ -44,7 +46,7 @@ public class ResourceBundleManager {
 	 * 
 	 * @param resourceBundle
 	 *            a resourceBundle that will be merged.
-	 * @return the merged resourceBundle.
+	 * @return the merged resourceBundle or null, if there is no global resource bundle and not given resource bundle.
 	 */
 	public ResourceBundle mergeWithGlobal(ResourceBundle resourceBundle) {
 		if (globalResourceBundle == null) {
@@ -60,18 +62,7 @@ public class ResourceBundleManager {
 				return merge(resourceBundle, globalResourceBundle);
 			}
 		}
-	}
-	
-	
-	private ResourceBundle createEmptyBundle() {
-		return new ListResourceBundle() {
-			@Override
-			protected Object[][] getContents() {
-				return new Object[0][];
-			}
-		};
-	}
-	
+	}	
 	
 	private ResourceBundle merge(ResourceBundle highPriority, ResourceBundle lowPriority) {
 		return new MergedResourceBundle(highPriority, lowPriority);
