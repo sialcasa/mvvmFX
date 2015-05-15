@@ -15,6 +15,6 @@ public class ResourceProvider {
 	 * Due to the @Produces annotation this resource bundle can be injected in all views.
 	 */
 	@Produces
-	private ResourceBundle defaultResourceBundle = ResourceBundle.getBundle("default", Locale.ENGLISH);
+	private ResourceBundle defaultResourceBundle = ResourceBundle.getBundle("default");
 	
 }
