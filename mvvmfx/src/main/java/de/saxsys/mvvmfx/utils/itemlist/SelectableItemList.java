@@ -19,8 +19,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
@@ -88,41 +86,34 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	// When the index property changed we have to change the selected item too
 	// When the selected item changed we want to set the index property too
 	private void createIndexEvents() {
-		selectionModel.selectedIndexProperty().addListener(
-				new ChangeListener<Number>() {
-					@Override
-					public void changed(ObservableValue<? extends Number> bean,
-							Number oldVal, Number newVal) {
-						int index = newVal.intValue();
-						ListType item = index == -1 ? null : modelListProperty()
-								.get(index);
-						selectedItem.set(item);
-					}
-				});
+		selectionModel
+                .selectedIndexProperty()
+				.addListener((bean, oldVal, newVal) -> {
+                    int index = newVal.intValue();
+                    ListType item = index == -1 ? null : modelListProperty()
+                            .get(index);
+                    selectedItem.set(item);
+                });
 		
-		selectedItem.addListener(new ChangeListener<ListType>() {
-			@Override
-			public void changed(ObservableValue<? extends ListType> arg0,
-					ListType oldVal, ListType newVal) {
-				
-				// Item null
-				if (newVal == null) {
-					selectionModel.select(-1);
-					selectedItem.set(null);
-					
-				} else {
-					int index = modelListProperty().get().indexOf(newVal);
-					// Item not found
-					if (index != -1) {
-						selectionModel.select(index);
-					} else {
-						// If item not found - Rollback
-						selectedItem.set(oldVal);
-					}
-				}
-				
-			}
-		});
+		selectedItem.addListener((observable, oldVal, newVal) -> {
+
+            // Item null
+            if (newVal == null) {
+                selectionModel.select(-1);
+                selectedItem.set(null);
+
+            } else {
+                int index = modelListProperty().get().indexOf(newVal);
+                // Item not found
+                if (index != -1) {
+                    selectionModel.select(index);
+                } else {
+                    // If item not found - Rollback
+                    selectedItem.set(oldVal);
+                }
+            }
+
+        });
 	}
 	
 	/**

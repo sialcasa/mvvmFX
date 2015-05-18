@@ -47,9 +47,8 @@ abstract class ViewListCell<T> extends ListCell<T> implements
 			setText(null);
 			Node currentNode = getGraphic();
 			Parent view = map(item).getView();
-			Node newNode = (Node) view;
-			if (currentNode == null || !currentNode.equals(newNode)) {
-				setGraphic(newNode);
+			if (currentNode == null || !currentNode.equals(view)) {
+				setGraphic(view);
 			}
 		}
 	}
