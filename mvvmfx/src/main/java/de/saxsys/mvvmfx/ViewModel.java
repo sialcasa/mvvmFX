@@ -54,15 +54,16 @@ public interface ViewModel {
 	 *            to be send
 	 */
 	default void publish(String messageName, Object... payload) {
-		if (!Platform.isFxApplicationThread()) {
+		if (Platform.isFxApplicationThread()) {
 			MvvmFX.getNotificationCenter().publish(this, messageName, payload);
 		} else {
-			MvvmFX.getNotificationCenter().publish(this, messageName, payload);
+			Platform.runLater(() -> MvvmFX.getNotificationCenter().publish(this, messageName, payload));
 		}
 	}
 	
 	/**
-	 * Subscribe to a notification with a given {@link NotificationObserver}.
+	 * Subscribe to a notification with a given {@link NotificationObserver}. 
+	 * The observer will be invoked on the UI thread.
 	 * 
 	 * @param messageName
 	 *            of the Notification

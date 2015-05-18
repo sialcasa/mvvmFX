@@ -38,24 +38,16 @@ public class ContactDialogView implements FxmlView<ContactDialogViewModel> {
 	private Pagination formPagination;
 	
 	
-	private ResourceBundle defaultResourceBundle;
-	
 	@InjectViewModel
 	private ContactDialogViewModel viewModel;
 	
-	@Inject
-	public ContactDialogView(ResourceBundle defaultResourceBundle) {
-		this.defaultResourceBundle = defaultResourceBundle;
-	}
 	
 	public void initialize() {
 		ViewTuple<ContactFormView, ContactFormViewModel> contactFormTuple = FluentViewLoader
-				.fxmlView(ContactFormView.class)
-				.resourceBundle(defaultResourceBundle).load();
+				.fxmlView(ContactFormView.class).load();
 		
 		ViewTuple<AddressFormView, AddressFormViewModel> addressFormTuple = FluentViewLoader
-				.fxmlView(AddressFormView.class)
-				.resourceBundle(defaultResourceBundle).load();
+				.fxmlView(AddressFormView.class).load();
 		
 		viewModel.setContactFormViewModel(contactFormTuple.getViewModel());
 		viewModel.setAddressFormViewModel(addressFormTuple.getViewModel());
