@@ -179,5 +179,171 @@ public class ModelWrapperTest {
 		assertThat(nameProperty).isSameAs(nameProperty2);
 		assertThat(ageProperty).isSameAs(ageProperty2);
 	}
+
+
+	@Test
+	public void testDirtyFlag() {
+		Person person = new Person();
+		person.setName("horst");
+		person.setAge(32);
+
+		ModelWrapper<Person> personWrapper = new ModelWrapper<>(person);
+
+        assertThat(personWrapper.isDirty()).isFalse();
+
+        final StringProperty name = personWrapper.field(Person::getName, Person::setName);
+        final IntegerProperty age = personWrapper.field(Person::getAge, Person::setAge);
+
+        name.set("hugo");
+
+        assertThat(personWrapper.isDirty()).isTrue();
+
+        personWrapper.commit();
+        assertThat(personWrapper.isDirty()).isFalse();
+
+        age.set(33);
+        assertThat(personWrapper.isDirty()).isTrue();
+
+        age.set(32);
+        assertThat(personWrapper.isDirty()).isTrue(); // dirty is still true
+
+        personWrapper.reload();
+        assertThat(personWrapper.isDirty()).isFalse();
+
+
+        name.set("hans");
+        assertThat(personWrapper.isDirty()).isTrue();
+
+        personWrapper.reset();
+        assertThat(personWrapper.isDirty()).isTrue();
+
+
+        personWrapper.reload();
+        assertThat(personWrapper.isDirty()).isFalse();
+
+    }
+
+    @Test
+    public void testDirtyFlagWithFxProperties() {
+        PersonFX person = new PersonFX();
+        person.setName("horst");
+        person.setAge(32);
+
+        ModelWrapper<PersonFX> personWrapper = new ModelWrapper<>(person);
+
+        assertThat(personWrapper.isDirty()).isFalse();
+
+        final StringProperty name = personWrapper.field(PersonFX::nameProperty);
+        final IntegerProperty age = personWrapper.field(PersonFX::ageProperty);
+
+        name.set("hugo");
+
+        assertThat(personWrapper.isDirty()).isTrue();
+
+        personWrapper.commit();
+        assertThat(personWrapper.isDirty()).isFalse();
+
+        age.set(33);
+        assertThat(personWrapper.isDirty()).isTrue();
+
+        age.set(32);
+        assertThat(personWrapper.isDirty()).isTrue(); // dirty is still true
+
+        personWrapper.reload();
+        assertThat(personWrapper.isDirty()).isFalse();
+
+
+        name.set("hans");
+        assertThat(personWrapper.isDirty()).isTrue();
+
+        personWrapper.reset();
+        assertThat(personWrapper.isDirty()).isTrue();
+
+
+        personWrapper.reload();
+        assertThat(personWrapper.isDirty()).isFalse();
+
+    }
+
+    @Test
+    public void testDifferentFlag() {
+        Person person = new Person();
+        person.setName("horst");
+        person.setAge(32);
+
+        ModelWrapper<Person> personWrapper = new ModelWrapper<>(person);
+
+        assertThat(personWrapper.isDifferent()).isFalse();
+
+        final StringProperty name = personWrapper.field(Person::getName, Person::setName);
+        final IntegerProperty age = personWrapper.field(Person::getAge, Person::setAge);
+
+
+        name.set("hugo");
+        assertThat(personWrapper.isDifferent()).isTrue();
+
+        personWrapper.commit();
+        assertThat(personWrapper.isDifferent()).isFalse();
+
+
+        age.set(33);
+        assertThat(personWrapper.isDifferent()).isTrue();
+
+        age.set(32);
+        assertThat(personWrapper.isDifferent()).isFalse();
+
+
+        name.setValue("hans");
+        assertThat(personWrapper.isDifferent()).isTrue();
+
+        personWrapper.reload();
+        assertThat(personWrapper.isDifferent()).isFalse();
+
+
+        personWrapper.reset();
+        assertThat(personWrapper.isDifferent()).isTrue();
+    }
+
+	@Test
+	public void testDifferentFlagWithFxProperties() {
+        PersonFX person = new PersonFX();
+        person.setName("horst");
+        person.setAge(32);
+
+        ModelWrapper<PersonFX> personWrapper = new ModelWrapper<>(person);
+
+        assertThat(personWrapper.isDifferent()).isFalse();
+
+        final StringProperty name = personWrapper.field(PersonFX::nameProperty);
+        final IntegerProperty age = personWrapper.field(PersonFX::ageProperty);
+
+
+        name.set("hugo");
+        assertThat(personWrapper.isDifferent()).isTrue();
+
+        personWrapper.commit();
+        assertThat(personWrapper.isDifferent()).isFalse();
+
+
+        age.set(33);
+        assertThat(personWrapper.isDifferent()).isTrue();
+
+        age.set(32);
+        assertThat(personWrapper.isDifferent()).isFalse();
+
+
+        name.setValue("hans");
+        assertThat(personWrapper.isDifferent()).isTrue();
+
+        personWrapper.reload();
+        assertThat(personWrapper.isDifferent()).isFalse();
+
+
+        personWrapper.reset();
+        assertThat(personWrapper.isDifferent()).isTrue();
+	}
+
+
+
 	
 }
