@@ -4,11 +4,11 @@ import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.books.backend.Book;
 import de.saxsys.mvvmfx.examples.books.backend.Error;
 import de.saxsys.mvvmfx.examples.books.backend.LibraryService;
+import de.saxsys.mvvmfx.utils.commands.Action;
+import de.saxsys.mvvmfx.utils.commands.Command;
+import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import eu.lestard.advanced_bindings.api.ObjectBindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -32,17 +32,29 @@ public class MainViewModel implements ViewModel {
 	private ObjectProperty<BookListItemViewModel> selectedBook = new SimpleObjectProperty<>();
 	
 	private StringProperty error = new SimpleStringProperty();
+
+	private Command searchCommand;
 	
 	public MainViewModel(LibraryService libraryService) {
 		this.libraryService = libraryService;
+
+		searchCommand = new DelegateCommand(() -> new Action() {
+			@Override
+			protected void action() throws Exception {
+				search();
+			}
+		});
 		
 		bookTitle.bind(ObjectBindings.map(selectedBook, bookItem -> bookItem.getBook().getTitle()));
 		bookAuthor.bind(ObjectBindings.map(selectedBook, bookItem -> bookItem.getBook().getAuthor()));
 		bookDescription.bind(ObjectBindings.map(selectedBook, bookItem -> bookItem.getBook().getDesc()));
 	}
 	
-	
-	public void search() {
+	public Command getSearchCommand() {
+		return searchCommand;
+	}
+
+	void search() {
 		Consumer<Error> errorHandler = err -> error.set(err.getMessage());
 		
 		final List<Book> result = libraryService.search(searchString.get(), errorHandler);

@@ -47,17 +47,17 @@ public class ContactFormView implements FxmlView<ContactFormViewModel> {
 		
 		// init the validation. The logic for the actual validation is hidden in the viewModel.
 
-		Validator.connectToView(emailInput, viewModel.emailValidator());
-		Validator.connectToView(firstnameInput, viewModel.firstNameValidator());
-		Validator.connectToView(lastnameInput, viewModel.lastNameValidator());
+//		Validator.connectToView(emailInput, viewModel.emailValidator());
+//		Validator.connectToView(firstnameInput, viewModel.firstNameValidator());
+//		Validator.connectToView(lastnameInput, viewModel.lastNameValidator());
 		
-//		viewModel.initValidationForFirstname(firstnameInput);
-//		viewModel.initValidationForLastname(lastnameInput);
-//		viewModel.initValidationForBirthday(birthdayInput);
-//		
-//		viewModel.initValidationForEmail(emailInput);
-//		viewModel.initValidationForPhoneNumber(phoneNumberInput);
-//		viewModel.initValidationForMobileNumber(mobileNumberInput);
+		viewModel.initValidationForFirstname(firstnameInput);
+		viewModel.initValidationForLastname(lastnameInput);
+		viewModel.initValidationForBirthday(birthdayInput);
+		
+		viewModel.initValidationForEmail(emailInput);
+		viewModel.initValidationForPhoneNumber(phoneNumberInput);
+		viewModel.initValidationForMobileNumber(mobileNumberInput);
 	}
 	
 	public ContactFormViewModel getViewModel() {

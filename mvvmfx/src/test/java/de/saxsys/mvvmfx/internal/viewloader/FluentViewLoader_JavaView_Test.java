@@ -1,6 +1,9 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
-import static org.assertj.core.api.Assertions.*;
+
+import static de.saxsys.mvvmfx.internal.viewloader.ResourceBundleAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
@@ -365,7 +368,7 @@ public class FluentViewLoader_JavaView_Test {
 		TestView loadedView = FluentViewLoader.javaView(TestView.class).resourceBundle(resourceBundle).load()
 				.getCodeBehind();
 		
-		assertThat(loadedView.resources).isEqualTo(resourceBundle);
+		assertThat(loadedView.resources).hasSameContent(resourceBundle);
 	}
 	
 	
@@ -421,7 +424,9 @@ public class FluentViewLoader_JavaView_Test {
 		TestView loadedView = FluentViewLoader.javaView(TestView.class).resourceBundle(resourceBundle).load()
 				.getCodeBehind();
 		
-		assertThat(loadedView.resources).isEqualTo(resourceBundle);
+		assertThat(loadedView.resources).isInstanceOf(ResourceBundle.class);
+		ResourceBundle resourceBundle = (ResourceBundle)loadedView.resources;
+		assertThat(resourceBundle).isNotNull().hasSameContent(resourceBundle);
 	}
 	
 	/**
@@ -455,7 +460,7 @@ public class FluentViewLoader_JavaView_Test {
 		TestView loadedView = FluentViewLoader.javaView(TestView.class).resourceBundle(resourceBundle).load()
 				.getCodeBehind();
 		
-		assertThat(loadedView.resourceBundle).isEqualTo(resourceBundle);
+		assertThat(loadedView.resourceBundle).hasSameContent(resourceBundle);
 	}
 	
 	/**

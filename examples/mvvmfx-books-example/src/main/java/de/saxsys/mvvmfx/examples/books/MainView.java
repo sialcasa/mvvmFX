@@ -1,5 +1,6 @@
 package de.saxsys.mvvmfx.examples.books;
 
+import de.saxsys.mvvmfx.utils.viewlist.CachedViewModelCellFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -47,15 +48,19 @@ public class MainView implements FxmlView<MainViewModel> {
 		
 		
 		final ViewListCellFactory<BookListItemViewModel> cellFactory =
-				viewModel -> FluentViewLoader.fxmlView(BookListItemView.class).viewModel(viewModel).load();
+				new CachedViewModelCellFactory<>(viewModel -> FluentViewLoader.fxmlView(BookListItemView.class)
+						.viewModel(viewModel).load());
 		
 		bookList.setCellFactory(cellFactory);
 		
 		viewModel.selectedBookProperty().bind(bookList.getSelectionModel().selectedItemProperty());
 		errorLabel.textProperty().bind(viewModel.errorProperty());
+
+		searchButton.disableProperty().bind(viewModel.getSearchCommand().executableProperty().not());
+
 	}
 	
 	public void searchButtonPressed() {
-		viewModel.search();
+		viewModel.getSearchCommand().execute();
 	}
 }

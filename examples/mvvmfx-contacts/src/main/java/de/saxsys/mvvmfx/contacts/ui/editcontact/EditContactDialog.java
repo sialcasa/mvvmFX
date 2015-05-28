@@ -34,11 +34,12 @@ public class EditContactDialog implements FxmlView<EditContactDialogViewModel> {
 	private EditContactDialogViewModel viewModel;
 	
 	@Inject
-	EditContactDialog(ResourceBundle defaultResourceBundle) {
-		ViewTuple<EditContactDialog, EditContactDialogViewModel> viewTuple = FluentViewLoader.fxmlView(EditContactDialog.class)
-				.codeBehind(this).resourceBundle(defaultResourceBundle).load();
-		
-		root = viewTuple.getView();
+	EditContactDialog() {
+		root = FluentViewLoader
+				.fxmlView(EditContactDialog.class)
+				.codeBehind(this)
+				.load()
+				.getView();
 	}
 	
 	public void initialize() {

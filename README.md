@@ -2,9 +2,9 @@
 
 __mvvm(fx)__ is an application framework which provides you necessary components to implement the [MVVM](../../wiki/MVVM "MVVM") pattern with JavaFX.
 
-__MVVM__ is the enhanced version of the [Presentation Model](http://martinfowler.com/eaaDev/PresentationModel.html "Presentation Model") pattern and was created by Microsoft engineers for [WPF](http://msdn.microsoft.com/en-us/library/ms754130.aspx "WPF") . JavaFX and WPF does have similarities like Databinding and descriptive UI declaration (FXML/XAML). Because of this fact we aptopt best practices of the development with the Microsoft technology.
+__MVVM__ is the enhanced version of the [Presentation Model](http://martinfowler.com/eaaDev/PresentationModel.html "Presentation Model") pattern and was created by Microsoft engineers for [WPF](http://msdn.microsoft.com/en-us/library/ms754130.aspx "WPF") . JavaFX and WPF does have similarities like Databinding and descriptive UI declaration (FXML/XAML). Because of this fact we adopt best practices of the development with the Microsoft technology.
 
-[![Build Status](https://travis-ci.org/sialcasa/mvvmFX.svg?branch=develop)](https://travis-ci.org/sialcasa/mvvmFX)
+[![Build Status](https://api.travis-ci.org/sialcasa/mvvmFX.svg?branch=develop)](https://travis-ci.org/sialcasa/mvvmFX)
 
 ###[Howto](../../wiki "Howto")###
 
@@ -15,7 +15,7 @@ __MVVM__ is the enhanced version of the [Presentation Model](http://martinfowler
 <dependency>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx</artifactId>
-		<version>1.0.0</version>
+		<version>1.2.1</version>
 </dependency>
 ```
 
@@ -24,7 +24,7 @@ __MVVM__ is the enhanced version of the [Presentation Model](http://martinfowler
 <dependency>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx</artifactId>
-		<version>1.1.0-SNAPSHOT</version>
+		<version>1.3.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -36,7 +36,9 @@ If you need help you can use the forums on [Google Groups](https://groups.google
 ### Links
 
 - [Project Page](http://sialcasa.github.io/mvvmFX/)
-- [javadoc mvvmfx core](http://sialcasa.github.io/mvvmFX/javadoc/1.0.0/mvvmfx/)
-- [javadoc mvvmfx-cdi](http://sialcasa.github.io/mvvmFX/javadoc/1.0.0/mvvmfx-cdi/)
-- [javadoc mvvmfx-guice](http://sialcasa.github.io/mvvmFX/javadoc/1.0.0/mvvmfx-guice/)
+- [javadoc mvvmfx core](http://sialcasa.github.io/mvvmFX/javadoc/1.2.0/mvvmfx/)
+- [javadoc mvvmfx-cdi](http://sialcasa.github.io/mvvmFX/javadoc/1.2.0/mvvmfx-cdi/)
+- [javadoc mvvmfx-guice](http://sialcasa.github.io/mvvmFX/javadoc/1.2.0/mvvmfx-guice/)
+- [javadoc mvvmfx-utils](http://sialcasa.github.io/mvvmFX/javadoc/1.2.0/mvvmfx-utils/)
+- [javadoc mvvmfx-testing-utils](http://sialcasa.github.io/mvvmFX/javadoc/1.2.0/mvvmfx-testing-utils/)
 

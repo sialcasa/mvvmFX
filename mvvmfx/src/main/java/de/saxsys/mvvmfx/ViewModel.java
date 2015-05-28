@@ -15,12 +15,22 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx;
 
+import javafx.application.Platform;
 import de.saxsys.mvvmfx.internal.viewloader.View;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
+import de.saxsys.mvvmfx.utils.notifications.NotificationObserver;
 
 /**
  * <p>
- * Marker interface for a View Model. Some additional hints to this layer:
+ * Interface for a View Model.
+ * </p>
+ * <p>
+ * You can use a notification mechanism by using the {@link #publish(String, Object...)} method. In the View you can
+ * subscribe to this notifications by using viewModel.
+ * {@link #subscribe(String messageName, NotificationObserver observer)}.
+ * </p>
+ * <p>
+ * Some additional hints to this layer:
  * </p>
  * 
  * <p>
@@ -33,4 +43,56 @@ import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
  * 
  */
 public interface ViewModel {
+	
+	/**
+	 * Publishes a notification to the subscribers of the notificationId. This notification will be send to the
+	 * UI-Thread.
+	 * 
+	 * @param messageName
+	 *            of the notification
+	 * @param payload
+	 *            to be send
+	 */
+	default void publish(String messageName, Object... payload) {
+		if (Platform.isFxApplicationThread()) {
+			MvvmFX.getNotificationCenter().publish(this, messageName, payload);
+		} else {
+			Platform.runLater(() -> MvvmFX.getNotificationCenter().publish(this, messageName, payload));
+		}
+	}
+	
+	/**
+	 * Subscribe to a notification with a given {@link NotificationObserver}. 
+	 * The observer will be invoked on the UI thread.
+	 * 
+	 * @param messageName
+	 *            of the Notification
+	 * @param observer
+	 *            which should execute when the notification occurs
+	 */
+	default void subscribe(String messageName, NotificationObserver observer) {
+		MvvmFX.getNotificationCenter().subscribe(this, messageName, observer);
+	}
+	
+	/**
+	 * Remove the observer for a specific notification by a given messageName.
+	 * 
+	 * @param messageName
+	 *            of the notification for that the observer should be removed
+	 * @param observer
+	 *            to remove
+	 */
+	default void unsubscribe(String messageName, NotificationObserver observer) {
+		MvvmFX.getNotificationCenter().unsubscribe(this, messageName, observer);
+	}
+	
+	/**
+	 * Removes the observer for all messages.
+	 * 
+	 * @param observer
+	 *            to be removed
+	 */
+	default void unsubscribe(NotificationObserver observer) {
+		MvvmFX.getNotificationCenter().unsubscribe(this, observer);
+	}
 }
