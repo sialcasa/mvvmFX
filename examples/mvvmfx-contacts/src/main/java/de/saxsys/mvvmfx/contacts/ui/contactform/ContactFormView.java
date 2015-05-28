@@ -1,6 +1,7 @@
 package de.saxsys.mvvmfx.contacts.ui.contactform;
 
 import de.saxsys.mvvmfx.utils.validation.Validator;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualization;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
@@ -8,6 +9,8 @@ import javafx.scene.control.TextField;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import org.controlsfx.validation.ValidationSupport;
+
+import javax.inject.Inject;
 
 public class ContactFormView implements FxmlView<ContactFormViewModel> {
 	
@@ -30,6 +33,8 @@ public class ContactFormView implements FxmlView<ContactFormViewModel> {
 	@FXML
 	public DatePicker birthdayInput;
 	
+	@Inject
+	private ValidationVisualization validationVisualization;
 	
 	@InjectViewModel
 	private ContactFormViewModel viewModel;
@@ -45,19 +50,9 @@ public class ContactFormView implements FxmlView<ContactFormViewModel> {
 		emailInput.textProperty().bindBidirectional(viewModel.emailProperty());
 		birthdayInput.valueProperty().bindBidirectional(viewModel.birthdayProperty());
 		
-		// init the validation. The logic for the actual validation is hidden in the viewModel.
-
-//		Validator.connectToView(emailInput, viewModel.emailValidator());
-//		Validator.connectToView(firstnameInput, viewModel.firstNameValidator());
-//		Validator.connectToView(lastnameInput, viewModel.lastNameValidator());
-		
-		viewModel.initValidationForFirstname(firstnameInput);
-		viewModel.initValidationForLastname(lastnameInput);
-		viewModel.initValidationForBirthday(birthdayInput);
-		
-		viewModel.initValidationForEmail(emailInput);
-		viewModel.initValidationForPhoneNumber(phoneNumberInput);
-		viewModel.initValidationForMobileNumber(mobileNumberInput);
+		validationVisualization.visualize(viewModel.firstnameValidation(), firstnameInput);
+		validationVisualization.visualize(viewModel.lastnameValidation(), lastnameInput);
+		validationVisualization.visualize(viewModel.birthdayValidation(), birthdayInput);
 	}
 	
 	public ContactFormViewModel getViewModel() {

@@ -1,34 +1,50 @@
 package de.saxsys.mvvmfx.utils.validation;
 
-import java.util.Optional;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.scene.control.Control;
+
 
 /**
  * @author manuel.mauky
  */
 public class ValidationResult {
 	
-	private String message;
-	
-	private ValidationResult(String message){
-		this.message = message;
-	}
+	private ListProperty<ValidationMessage> messages = new SimpleListProperty<>(FXCollections.observableArrayList());
+	private FilteredList<ValidationMessage> errorMessages = new FilteredList<>(messages, message -> message.getSeverity().equals(Severity.ERROR));
+	private FilteredList<ValidationMessage> warningMessages = new FilteredList<>(messages, message -> message.getSeverity().equals(Severity.WARNING));
+	private FilteredList<ValidationMessage> infoMessages = new FilteredList<>(messages, message -> message.getSeverity().equals(Severity.INFO));
 	
 	private ValidationResult(){
 	}
+	
+	public ObservableList<ValidationMessage> getMessages() {
+		return messages;
+	}
 
-	public static ValidationResult error(String message) {
-		return new ValidationResult(message);
+	public ObservableList<ValidationMessage> getErrorMessages() {
+		return errorMessages;
+	}
+
+	public ObservableList<ValidationMessage> getWarningMessages() {
+		return warningMessages;	
 	}
 	
-	public static ValidationResult ok(){
-		return new ValidationResult();
+	public ObservableList<ValidationMessage> getInfoMessages() {
+		return infoMessages;
 	}
 	
-	public boolean isValid(){
-		return message == null;
+	/**
+	 * @return <code>true</code> if there are no validation messages present.
+	 */
+	public ReadOnlyBooleanProperty validProperty() {
+		return messages.emptyProperty();
 	}
 	
-	public Optional<String> getMessage(){
-		return Optional.ofNullable(message);
-	}
 }

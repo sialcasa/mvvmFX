@@ -6,26 +6,34 @@ import de.saxsys.mvvmfx.contacts.model.validation.BirthdayValidator;
 import de.saxsys.mvvmfx.contacts.model.validation.EmailAddressValidator;
 import de.saxsys.mvvmfx.contacts.model.validation.PhoneNumberValidator;
 import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import de.saxsys.mvvmfx.utils.validation.ValidationResult;
+import de.saxsys.mvvmfx.utils.validation.Validator;
 import javafx.beans.property.*;
 import javafx.scene.control.Control;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
 
 import java.time.LocalDate;
+import java.util.function.Function;
 
 public class ContactFormViewModel implements ViewModel {
 	
 	private ModelWrapper<Contact> contactWrapper = new ModelWrapper<>();
-
-	private ReadOnlyBooleanWrapper valid = new ReadOnlyBooleanWrapper();
 	
-	
-	ValidationSupport validationSupport = new ValidationSupport();
+	private Validator<String> firstnameValidator = new Validator<>(firstnameProperty());
+	private Validator<String> lastnameValidator = new Validator<>(firstnameProperty());
+	private Validator<LocalDate> birthdayValidator= new Validator<>(birthdayProperty());
 
 	public ContactFormViewModel() {
-		valid.bind(validationSupport.invalidProperty().isNull().or(validationSupport.invalidProperty().isEqualTo
-				(false)));
+		final Function<String, ValidationMessage> notEmptyValidator = input -> {
+			if (input == null || input.trim().isEmpty()) {
+				return ValidationMessage.error("The input may not be empty");
+			}
+
+			return null;
+		};
 		
+		firstnameValidator.addRule(notEmptyValidator);
+		lastnameValidator.addRule(notEmptyValidator);
 	}
 	
 	public void resetForm() {
@@ -48,35 +56,17 @@ public class ContactFormViewModel implements ViewModel {
 		return contactWrapper.get();
 	}
 	
-	public void initValidationForFirstname(Control input) {
-		validationSupport.registerValidator(input, Validator.createEmptyValidator("Firstname may not be empty!"));
+	public ValidationResult firstnameValidation() {
+		return firstnameValidator.getValidationResult();
 	}
 	
-	public void initValidationForLastname(Control input) {
-		validationSupport.registerValidator(input, Validator.createEmptyValidator("Lastname may not be empty!"));
+	public ValidationResult lastnameValidation() {
+		return lastnameValidator.getValidationResult();
 	}
 	
-	public void initValidationForBirthday(Control input) {
-		validationSupport.registerValidator(input, false, new BirthdayValidator());
+	public ValidationResult birthdayValidation() {
+		return birthdayValidator.getValidationResult();
 	}
-	
-	public void initValidationForEmail(Control input) {
-		validationSupport.registerValidator(input, true, new EmailAddressValidator());
-	}
-	
-	public void initValidationForPhoneNumber(Control input) {
-		validationSupport.registerValidator(input, false, new PhoneNumberValidator("The phone number is invalid!"));
-	}
-	
-	public void initValidationForMobileNumber(Control input) {
-		validationSupport.registerValidator(input, false, new PhoneNumberValidator("The mobile number is invalid!"));
-	}
-	
-	public ReadOnlyBooleanProperty validProperty() {
-		return valid.getReadOnlyProperty();
-	}
-	
-	
 	
 	public StringProperty firstnameProperty() {
 		return contactWrapper.field("firstname", Contact::getFirstname, Contact::setFirstname);

@@ -12,27 +12,17 @@ import java.util.function.Function;
 
 public class Validator<T> {
 	
-	public static void connectToView(Control control, ObservableValue<ValidationResult> validationResultObservable) {
+	public Validator(ObservableValue<T> source) {
+		
+	}
+	
+	public void addRule(Function<T, ValidationMessage> rule){
 		
 	}
 	
 	
-	private ReadOnlyBooleanWrapper validationResult = new ReadOnlyBooleanWrapper();
-	
-	
-	public Validator(ObservableValue<T> source, Function<T, ValidationResult> validatorFunction) {
-		
-	}
-	
-	public ObservableValue<ValidationResult> validationResultProperty(){
+	public ValidationResult getValidationResult(){
 		return null;
 	}
-
 	
-	public final ReadOnlyBooleanProperty validProperty() {
-		return null;
-	}
-	public final ReadOnlyStringProperty errorMessageProperty() {
-		return null;
-	}
 }
