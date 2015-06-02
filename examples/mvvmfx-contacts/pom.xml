@@ -113,6 +113,13 @@
 			<version>4.0.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
+
+        <dependency>
+            <groupId>de.saxsys</groupId>
+            <artifactId>mvvmfx-testing-utils</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
 </project>

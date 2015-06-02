@@ -2,44 +2,43 @@ package de.saxsys.mvvmfx.contacts.ui.contactform;
 
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.contacts.model.Contact;
-import de.saxsys.mvvmfx.contacts.model.validation.BirthdayValidator;
-import de.saxsys.mvvmfx.contacts.model.validation.EmailAddressValidator;
-import de.saxsys.mvvmfx.contacts.model.validation.PhoneNumberValidator;
 import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
+import de.saxsys.mvvmfx.utils.validation.Rules;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationResult;
 import de.saxsys.mvvmfx.utils.validation.Validator;
-import javafx.beans.property.*;
-import javafx.scene.control.Control;
+import javafx.beans.binding.BooleanExpression;
+import javafx.beans.property.Property;
+import javafx.beans.property.StringProperty;
 
 import java.time.LocalDate;
-import java.util.function.Function;
+import java.util.regex.Pattern;
 
 public class ContactFormViewModel implements ViewModel {
+    private static final Pattern SIMPLE_EMAIL_PATTERN = Pattern
+            .compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
 	
 	private ModelWrapper<Contact> contactWrapper = new ModelWrapper<>();
 	
-	private Validator<String> firstnameValidator = new Validator<>(firstnameProperty());
-	private Validator<String> lastnameValidator = new Validator<>(firstnameProperty());
-	private Validator<LocalDate> birthdayValidator= new Validator<>(birthdayProperty());
+	private Validator firstnameValidator = new Validator();
+	private Validator lastnameValidator = new Validator();
+	private Validator emailValidator = new Validator();
+	private Validator birthdayValidator= new Validator();
 
 	public ContactFormViewModel() {
-		final Function<String, ValidationMessage> notEmptyValidator = input -> {
-			if (input == null || input.trim().isEmpty()) {
-				return ValidationMessage.error("The input may not be empty");
-			}
 
-			return null;
-		};
-		
-		firstnameValidator.addRule(notEmptyValidator);
-		lastnameValidator.addRule(notEmptyValidator);
+        firstnameValidator.addRule(firstnameProperty().isEmpty(), ValidationMessage.error("Firstname nicht leer."));
+        lastnameValidator.addRule(lastnameProperty().isEmpty(), ValidationMessage.error("Lastname nicht leer."));
+
+        emailValidator.addRule(emailProperty().isEmpty(), ValidationMessage.error("Email may not be empty"));
+        emailValidator.addRule(Rules.matches(emailProperty(), SIMPLE_EMAIL_PATTERN), ValidationMessage.error("Wrong email format"));
 	}
 	
 	public void resetForm() {
 		contactWrapper.reset();
+
 	}
-	
+
 	public void initWithContact(Contact contact) {
 		this.contactWrapper.set(contact);
 		this.contactWrapper.reload();
@@ -67,7 +66,11 @@ public class ContactFormViewModel implements ViewModel {
 	public ValidationResult birthdayValidation() {
 		return birthdayValidator.getValidationResult();
 	}
-	
+
+    public ValidationResult emailValidation() {
+        return emailValidator.getValidationResult();
+    }
+
 	public StringProperty firstnameProperty() {
 		return contactWrapper.field("firstname", Contact::getFirstname, Contact::setFirstname);
 	}
@@ -103,4 +106,8 @@ public class ContactFormViewModel implements ViewModel {
 	public StringProperty phoneNumberProperty() {
 		return contactWrapper.field("phoneNumber", Contact::getPhoneNumber, Contact::setPhoneNumber);
 	}
+
+    public BooleanExpression validProperty() {
+        return firstnameValidator.getValidationResult().validProperty().and(lastnameValidator.getValidationResult().validProperty());
+    }
 }

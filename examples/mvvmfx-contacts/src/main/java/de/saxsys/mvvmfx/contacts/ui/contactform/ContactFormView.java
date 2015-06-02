@@ -1,16 +1,12 @@
 package de.saxsys.mvvmfx.contacts.ui.contactform;
 
-import de.saxsys.mvvmfx.utils.validation.Validator;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualization;
 import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualization;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
-import org.controlsfx.validation.ValidationSupport;
-
-import javax.inject.Inject;
 
 public class ContactFormView implements FxmlView<ContactFormViewModel> {
 	
@@ -33,8 +29,7 @@ public class ContactFormView implements FxmlView<ContactFormViewModel> {
 	@FXML
 	public DatePicker birthdayInput;
 	
-	@Inject
-	private ValidationVisualization validationVisualization;
+	private ValidationVisualization validationVisualization = new ControlsFxVisualization();
 	
 	@InjectViewModel
 	private ContactFormViewModel viewModel;
@@ -49,10 +44,12 @@ public class ContactFormView implements FxmlView<ContactFormViewModel> {
 		phoneNumberInput.textProperty().bindBidirectional(viewModel.phoneNumberProperty());
 		emailInput.textProperty().bindBidirectional(viewModel.emailProperty());
 		birthdayInput.valueProperty().bindBidirectional(viewModel.birthdayProperty());
-		
+
+
 		validationVisualization.visualize(viewModel.firstnameValidation(), firstnameInput);
 		validationVisualization.visualize(viewModel.lastnameValidation(), lastnameInput);
 		validationVisualization.visualize(viewModel.birthdayValidation(), birthdayInput);
+		validationVisualization.visualize(viewModel.emailValidation(), emailInput);
 	}
 	
 	public ContactFormViewModel getViewModel() {

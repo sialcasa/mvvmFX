@@ -44,6 +44,12 @@
 			<artifactId>doc-annotations</artifactId>
 		</dependency>
 
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.20.8</version>
+        </dependency>
+
 		<!-- Testing Frameworks -->
 
 		<dependency>

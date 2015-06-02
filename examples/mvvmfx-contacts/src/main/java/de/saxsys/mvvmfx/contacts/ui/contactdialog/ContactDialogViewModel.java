@@ -1,15 +1,10 @@
 package de.saxsys.mvvmfx.contacts.ui.contactdialog;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ObservableBooleanValue;
+
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.contacts.ui.addressform.AddressFormViewModel;
 import de.saxsys.mvvmfx.contacts.ui.contactform.ContactFormViewModel;
@@ -36,7 +31,7 @@ public class ContactDialogViewModel implements ViewModel {
 		// as soon as both viewModels are set we add a binding that is true only when both viewModels are valid.
 		viewModelsInitialized.addListener((obs, oldV, newV) -> {
 			if (newV) {
-				valid.bind(contactFormViewModel.get().validProperty().and(addressFormViewModel.get().validProperty()));
+				valid.bind(Bindings.and(contactFormViewModel.get().validProperty(), addressFormViewModel.get().validProperty()));
 			} else {
 				valid.unbind();
 			}
@@ -96,7 +91,7 @@ public class ContactDialogViewModel implements ViewModel {
 	
 	
 	public ObservableBooleanValue okButtonDisabledProperty() {
-		return contactFormViewModel.get().validProperty().and(addressFormViewModel.get().validProperty()).not();
+		return Bindings.and(contactFormViewModel.get().validProperty(), addressFormViewModel.get().validProperty()).not();
 	}
 	
 	public ObservableBooleanValue okButtonVisibleProperty() {

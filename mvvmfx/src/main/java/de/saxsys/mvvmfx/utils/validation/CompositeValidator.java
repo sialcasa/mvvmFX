@@ -1,15 +1,18 @@
 package de.saxsys.mvvmfx.utils.validation;
 
 import javafx.beans.binding.BooleanExpression;
-import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.ObservableList;
 
 /**
  * @author manuel.mauky
  */
 public class CompositeValidator {
-	
-	public void registerValidator(Validator validator){
+
+    public void registerValidator(Validator validator) {
+
+    }
+
+	public void registerValidator(Validator... validator){
 		
 	}
 	

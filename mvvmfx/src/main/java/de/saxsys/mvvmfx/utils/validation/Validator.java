@@ -1,28 +1,42 @@
 package de.saxsys.mvvmfx.utils.validation;
 
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
-import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.value.ObservableBooleanValue;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.control.Control;
 
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Validator<T> {
+
+    private List<ObservableBooleanValue> rules = new ArrayList<>();
+
+    private ValidationResult result = new ValidationResult();
+
+    public Validator() {
+    }
 	
-	public Validator(ObservableValue<T> source) {
-		
+	public void addRule(ObservableBooleanValue rule, ValidationMessage message) {
+        rules.add(rule);
+
+        rule.addListener((observable, oldValue, newValue) -> {
+            validateRule(newValue, message);
+        });
+
+        validateRule(rule.get(), message);
 	}
-	
-	public void addRule(Function<T, ValidationMessage> rule){
-		
-	}
+
+    private void validateRule(boolean value, ValidationMessage message) {
+        System.out.println("validating rule:" + value);
+        if(value) {
+            result.addMessage(message);
+        } else {
+            result.removeMessage(message);
+        }
+    }
 	
 	
 	public ValidationResult getValidationResult(){
-		return null;
+		return result;
 	}
-	
+
 }
