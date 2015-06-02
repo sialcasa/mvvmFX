@@ -26,11 +26,10 @@ public class ContactFormViewModel implements ViewModel {
 	private Validator birthdayValidator= new Validator();
 
 	public ContactFormViewModel() {
+		firstnameValidator.addRule(Rules.notEmpty(firstnameProperty()), ValidationMessage.error("Firstname nicht leer."));
+        lastnameValidator.addRule(Rules.notEmpty(lastnameProperty()), ValidationMessage.error("Lastname nicht leer."));
 
-        firstnameValidator.addRule(firstnameProperty().isEmpty(), ValidationMessage.error("Firstname nicht leer."));
-        lastnameValidator.addRule(lastnameProperty().isEmpty(), ValidationMessage.error("Lastname nicht leer."));
-
-        emailValidator.addRule(emailProperty().isEmpty(), ValidationMessage.error("Email may not be empty"));
+        emailValidator.addRule(Rules.notEmpty(emailProperty()), ValidationMessage.error("Email may not be empty"));
         emailValidator.addRule(Rules.matches(emailProperty(), SIMPLE_EMAIL_PATTERN), ValidationMessage.error("Wrong email format"));
 	}
 	
@@ -108,6 +107,7 @@ public class ContactFormViewModel implements ViewModel {
 	}
 
     public BooleanExpression validProperty() {
-        return firstnameValidator.getValidationResult().validProperty().and(lastnameValidator.getValidationResult().validProperty());
+        return firstnameValidator.getValidationResult().validProperty().and(
+				lastnameValidator.getValidationResult().validProperty());
     }
 }
