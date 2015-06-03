@@ -30,7 +30,7 @@ public class ContactFormViewModel implements ViewModel {
         lastnameValidator.addRule(Rules.notEmpty(lastnameProperty()), ValidationMessage.error("Lastname nicht leer."));
 
         emailValidator.addRule(Rules.notEmpty(emailProperty()), ValidationMessage.error("Email may not be empty"));
-        emailValidator.addRule(Rules.matches(emailProperty(), SIMPLE_EMAIL_PATTERN), ValidationMessage.error("Wrong email format"));
+        emailValidator.addRule(Rules.matches(emailProperty(), SIMPLE_EMAIL_PATTERN), ValidationMessage.warning("Maybe a wrong email format"));
 	}
 	
 	public void resetForm() {
