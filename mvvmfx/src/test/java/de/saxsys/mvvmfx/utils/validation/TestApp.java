@@ -2,8 +2,6 @@ package de.saxsys.mvvmfx.utils.validation;/**
  * @author manuel.mauky
  */
 
-import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualization;
-import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualization;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -11,6 +9,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualization;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualization;
 
 public class TestApp extends Application {
 
@@ -44,7 +45,7 @@ public class TestApp extends Application {
 	}
 	
 	private void initValidation() {
-		
+
 		
 		validator = new Validator();
 		validator.addRule(Rules.notEmpty(input.textProperty()), ValidationMessage.error("may not be empty"));
@@ -52,7 +53,7 @@ public class TestApp extends Application {
 //				ValidationMessage.error("Length must be greater than 5"));
 		
 		
-		validationVisualization.visualize(validator.getValidationResult(), input);
+		validationVisualization.visualize(validator.getValidationResult(), input, true);
 
 		
 	}
