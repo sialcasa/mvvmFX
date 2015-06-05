@@ -1,6 +1,7 @@
 package de.saxsys.mvvmfx.utils.validation;
 
 import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 
 public class Validator<T> {
 
-    private List<ObservableBooleanValue> rules = new ArrayList<>();
+    private List<ObservableValue<Boolean>> rules = new ArrayList<>();
 
     private ValidationResult result = new ValidationResult();
 
@@ -31,14 +32,14 @@ public class Validator<T> {
      * @param rule
      * @param message
      */
-	public void addRule(ObservableBooleanValue rule, ValidationMessage message) {
+	public void addRule(ObservableValue<Boolean> rule, ValidationMessage message) {
         rules.add(rule);
 
         rule.addListener((observable, oldValue, newValue) -> {
             validateRule(newValue, message);
         });
 
-        validateRule(rule.get(), message);
+        validateRule(rule.getValue(), message);
 	}
 
     private void validateRule(boolean isValid, ValidationMessage message) {

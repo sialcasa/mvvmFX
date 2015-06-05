@@ -42,6 +42,10 @@ public class ValidationResult {
 	public ReadOnlyBooleanProperty validProperty() {
 		return messages.emptyProperty();
 	}
+	
+	public boolean isValid() {
+		return validProperty().get();
+	}
 
 
     void removeMessage(ValidationMessage message) {

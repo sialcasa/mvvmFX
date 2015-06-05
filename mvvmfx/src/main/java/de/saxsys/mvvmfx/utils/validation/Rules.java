@@ -15,23 +15,19 @@ public class Rules {
 		return Bindings.createBooleanBinding(() -> predicate.test(source.getValue()), source);
 	}
     
-    public static ObservableBooleanValue notEmpty(ObservableStringValue source) {
+    public static ObservableBooleanValue notEmpty(ObservableValue<String> source) {
         return Bindings.createBooleanBinding(() -> {
-            final String s = source.get();
+            final String s = source.getValue();
             
             return s != null && !s.trim().isEmpty();
         }, source);
     }
 
-    public static ObservableBooleanValue matches(ObservableStringValue source, Pattern pattern) {
+    public static ObservableBooleanValue matches(ObservableValue<String> source, Pattern pattern) {
         return Bindings.createBooleanBinding(() -> {
-            final String s = source.get();
-            if(s == null) {
-                return false;
-            } else {
-                return pattern.matcher(s).matches();
-            }
-        }, source);
+			final String s = source.getValue();
+			return s != null && pattern.matcher(s).matches();
+		}, source);
     }
 
 }

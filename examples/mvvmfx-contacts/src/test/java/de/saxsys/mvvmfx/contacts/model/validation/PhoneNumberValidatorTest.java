@@ -1,40 +1,48 @@
 package de.saxsys.mvvmfx.contacts.model.validation;
 
-import de.saxsys.javafx.test.JfxRunner;
-import javafx.scene.control.TextField;
-import org.controlsfx.validation.ValidationResult;
+import static org.assertj.core.api.Assertions.*;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import de.saxsys.mvvmfx.utils.validation.ValidationResult;
+import de.saxsys.mvvmfx.utils.validation.Validator;
 
-@RunWith(JfxRunner.class)
 public class PhoneNumberValidatorTest {
 	
-	private PhoneNumberValidator validator;
+	private ValidationResult result;
+	private StringProperty value = new SimpleStringProperty();
+	
 	
 	@Before
 	public void setup() {
-		validator = new PhoneNumberValidator("Error Message");
+		Validator validator = new PhoneValidator(value, "error message");
+		
+		result = validator.getValidationResult();
 	}
+	
 	
 	@Test
 	public void testPhoneNumber() {
-		TextField phoneNumberInput = new TextField();
+		// phone number is not mandatory
+		value.set("");
+		assertThat(result.isValid()).isTrue(); 
+		value.set(null);
+		assertThat(result.isValid()).isTrue(); 
+		value.set("   ");
+		assertThat(result.isValid()).isTrue(); 
+
+
+		value.set("012345678");
+		assertThat(result.isValid()).isTrue();
 		
-		assertThat(validator.apply(phoneNumberInput, "")).isNull();
-		ValidationResult apply = validator.apply(phoneNumberInput, "012345678");
+		value.set("+49 1234 324541");
+		assertThat(result.isValid()).isTrue();
 		
-		assertThat(validator.apply(phoneNumberInput, "012345678")).isNull();
-		assertThat(validator.apply(phoneNumberInput, "+49 1234 324541")).isNull();
-		
-		assertThat(validator.apply(phoneNumberInput, null)).isNull(); // empty phonenumber is ok
-		assertThat(validator.apply(phoneNumberInput, "")).isNull();
-		assertThat(validator.apply(phoneNumberInput, "  ")).isNull();
-		
-		assertThat(validator.apply(phoneNumberInput, "abc")).isNotNull();
-		
-		
+		value.set("abc");
+		assertThat(result.isValid()).isFalse();
 	}
 }

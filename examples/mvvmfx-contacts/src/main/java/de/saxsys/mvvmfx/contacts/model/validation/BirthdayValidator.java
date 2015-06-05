@@ -1,26 +1,24 @@
 package de.saxsys.mvvmfx.contacts.model.validation;
 
 import de.saxsys.mvvmfx.contacts.util.CentralClock;
-import javafx.scene.control.Control;
-import org.controlsfx.validation.ValidationResult;
-import org.controlsfx.validation.Validator;
+import de.saxsys.mvvmfx.utils.validation.Rules;
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import de.saxsys.mvvmfx.utils.validation.Validator;
+import javafx.beans.value.ObservableValue;
 
 import java.time.LocalDate;
+import java.util.function.Predicate;
 
 /**
- * A validator that verifies that a given date (the birthday) is not in the future.
+ * @author manuel.mauky
  */
-public class BirthdayValidator implements Validator<LocalDate> {
-	@Override
-	public ValidationResult apply(Control control, LocalDate newValue) {
-		if (newValue != null) {
-			LocalDate now = LocalDate.now(CentralClock.getClock());
-			
-			if (newValue.isAfter(now)) {
-				return ValidationResult.fromError(control, "The birthday can't be set in the future");
-			}
-		}
-		
-		return null;
+public class BirthdayValidator extends Validator<LocalDate> {
+	
+	private static final Predicate<LocalDate> birthdayPredicate = date ->
+				date == null || date.isBefore(LocalDate.now(CentralClock.getClock()));
+	
+	public BirthdayValidator(ObservableValue<LocalDate> date) {
+		addRule(Rules.fromPredicate(date, birthdayPredicate), ValidationMessage.error("Birthday can't be set in the future"));
 	}
+
 }

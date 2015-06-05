@@ -49,6 +49,8 @@ public class ContactFormView implements FxmlView<ContactFormViewModel> {
 		validationVisualization.visualize(viewModel.lastnameValidation(), lastnameInput, true);
 		validationVisualization.visualize(viewModel.birthdayValidation(), birthdayInput);
 		validationVisualization.visualize(viewModel.emailValidation(), emailInput, true);
+		validationVisualization.visualize(viewModel.phoneValidation(), phoneNumberInput);
+		validationVisualization.visualize(viewModel.mobileValidation(), mobileNumberInput);
 	}
 	
 	public ContactFormViewModel getViewModel() {

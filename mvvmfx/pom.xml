@@ -47,7 +47,8 @@
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>8.20.8</version>
+            <version>8.40.9</version>
+			<scope>provided</scope>
         </dependency>
 
 		<!-- Testing Frameworks -->

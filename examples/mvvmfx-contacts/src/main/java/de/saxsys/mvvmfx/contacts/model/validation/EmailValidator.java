@@ -1,0 +1,22 @@
+package de.saxsys.mvvmfx.contacts.model.validation;
+
+import de.saxsys.mvvmfx.utils.validation.Rules;
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import de.saxsys.mvvmfx.utils.validation.Validator;
+import javafx.beans.value.ObservableValue;
+
+import java.util.regex.Pattern;
+
+/**
+ * @author manuel.mauky
+ */
+public class EmailValidator extends Validator<String> {
+	private static final Pattern SIMPLE_EMAIL_PATTERN = Pattern
+			.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
+	
+	public EmailValidator(ObservableValue<String> source) {
+		addRule(Rules.notEmpty(source), ValidationMessage.error("Email may not be empty"));
+		addRule(Rules.matches(source, SIMPLE_EMAIL_PATTERN),
+				ValidationMessage.warning("Maybe a wrong email format"));
+	}
+}

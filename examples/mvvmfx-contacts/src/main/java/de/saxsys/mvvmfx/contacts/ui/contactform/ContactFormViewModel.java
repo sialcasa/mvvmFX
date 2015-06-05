@@ -2,7 +2,9 @@ package de.saxsys.mvvmfx.contacts.ui.contactform;
 
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.contacts.model.Contact;
-import de.saxsys.mvvmfx.contacts.util.CentralClock;
+import de.saxsys.mvvmfx.contacts.model.validation.BirthdayValidator;
+import de.saxsys.mvvmfx.contacts.model.validation.EmailValidator;
+import de.saxsys.mvvmfx.contacts.model.validation.PhoneValidator;
 import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
 import de.saxsys.mvvmfx.utils.validation.Rules;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
@@ -13,38 +15,22 @@ import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
 
 import java.time.LocalDate;
-import java.util.Objects;
-import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 public class ContactFormViewModel implements ViewModel {
-    private static final Pattern SIMPLE_EMAIL_PATTERN = Pattern
-            .compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
-	
 	private ModelWrapper<Contact> contactWrapper = new ModelWrapper<>();
 	
 	private Validator firstnameValidator = new Validator();
 	private Validator lastnameValidator = new Validator();
-	private Validator emailValidator = new Validator();
-	private Validator birthdayValidator= new Validator();
+	private Validator emailValidator = new EmailValidator(emailProperty());
+	private Validator birthdayValidator = new BirthdayValidator(birthdayProperty());
+	
+	private Validator phoneValidator = new PhoneValidator(phoneNumberProperty(), "The phone number is invalid!");
+	private Validator mobileValidator = new PhoneValidator(mobileNumberProperty(), "The mobile number is invalid!");
 
 	public ContactFormViewModel() {
 		firstnameValidator.addRule(Rules.notEmpty(firstnameProperty()), ValidationMessage.error("Firstname nicht leer."));
         lastnameValidator.addRule(Rules.notEmpty(lastnameProperty()), ValidationMessage.error("Lastname nicht leer."));
-
-        emailValidator.addRule(Rules.notEmpty(emailProperty()), ValidationMessage.error("Email may not be empty"));
-        emailValidator.addRule(Rules.matches(emailProperty(), SIMPLE_EMAIL_PATTERN),
-				ValidationMessage.warning("Maybe a wrong email format"));
-
-
-		// it's ok if birthday is null. But if it isn't it has to be in the future.
-		final Predicate<LocalDate> birthdayPredicate = date ->
-				date == null || date.isBefore(LocalDate.now(CentralClock.getClock()));
-
-
-		birthdayValidator.addRule(Rules.fromPredicate(birthdayProperty(), birthdayPredicate), 
-				ValidationMessage.error("Birthday can't be set in the future"));
-		
 	}
 	
 	public void resetForm() {
@@ -84,6 +70,14 @@ public class ContactFormViewModel implements ViewModel {
         return emailValidator.getValidationResult();
     }
 
+	public ValidationResult phoneValidation() {
+		return phoneValidator.getValidationResult();
+	}
+	
+	public ValidationResult mobileValidation() {
+		return mobileValidator.getValidationResult();
+	}
+	
 	public StringProperty firstnameProperty() {
 		return contactWrapper.field("firstname", Contact::getFirstname, Contact::setFirstname);
 	}
