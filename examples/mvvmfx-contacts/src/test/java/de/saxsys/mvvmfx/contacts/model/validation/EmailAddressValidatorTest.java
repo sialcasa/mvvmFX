@@ -2,6 +2,7 @@ package de.saxsys.mvvmfx.contacts.model.validation;
 
 import static org.assertj.core.api.Assertions.*;
 
+import de.saxsys.mvvmfx.utils.validation.Validator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -9,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.saxsys.mvvmfx.utils.validation.ValidationResult;
-import de.saxsys.mvvmfx.utils.validation.Validator;
+import de.saxsys.mvvmfx.utils.validation.RuleBasedValidator;
 
 public class EmailAddressValidatorTest {
 	
@@ -21,7 +22,7 @@ public class EmailAddressValidatorTest {
 	public void setup() {
 		Validator validator = new EmailValidator(value);
 		
-		result = validator.getValidationResult();
+		result = validator.getResult();
 	}
 	
 	@Test

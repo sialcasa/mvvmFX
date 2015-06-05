@@ -6,36 +6,45 @@ import de.saxsys.mvvmfx.contacts.model.validation.BirthdayValidator;
 import de.saxsys.mvvmfx.contacts.model.validation.EmailValidator;
 import de.saxsys.mvvmfx.contacts.model.validation.PhoneValidator;
 import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
+import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.Rules;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationResult;
-import de.saxsys.mvvmfx.utils.validation.Validator;
+import de.saxsys.mvvmfx.utils.validation.RuleBasedValidator;
 import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
 
 import java.time.LocalDate;
-import java.util.regex.Pattern;
 
 public class ContactFormViewModel implements ViewModel {
 	private ModelWrapper<Contact> contactWrapper = new ModelWrapper<>();
 	
-	private Validator firstnameValidator = new Validator();
-	private Validator lastnameValidator = new Validator();
-	private Validator emailValidator = new EmailValidator(emailProperty());
-	private Validator birthdayValidator = new BirthdayValidator(birthdayProperty());
+	private RuleBasedValidator firstnameValidator = new RuleBasedValidator();
+	private RuleBasedValidator lastnameValidator = new RuleBasedValidator();
+	private RuleBasedValidator emailValidator = new EmailValidator(emailProperty());
+	private RuleBasedValidator birthdayValidator = new BirthdayValidator(birthdayProperty());
 	
-	private Validator phoneValidator = new PhoneValidator(phoneNumberProperty(), "The phone number is invalid!");
-	private Validator mobileValidator = new PhoneValidator(mobileNumberProperty(), "The mobile number is invalid!");
+	private RuleBasedValidator phoneValidator = new PhoneValidator(phoneNumberProperty(), "The phone number is invalid!");
+	private RuleBasedValidator mobileValidator = new PhoneValidator(mobileNumberProperty(), "The mobile number is invalid!");
 
+	private CompositeValidator formValidator = new CompositeValidator();
+	
 	public ContactFormViewModel() {
 		firstnameValidator.addRule(Rules.notEmpty(firstnameProperty()), ValidationMessage.error("Firstname nicht leer."));
         lastnameValidator.addRule(Rules.notEmpty(lastnameProperty()), ValidationMessage.error("Lastname nicht leer."));
+		
+		formValidator.registerValidator(
+				firstnameValidator,
+				lastnameValidator,
+				emailValidator,
+				birthdayValidator,
+				phoneValidator,
+				mobileValidator);
 	}
 	
 	public void resetForm() {
 		contactWrapper.reset();
-
 	}
 
 	public void initWithContact(Contact contact) {
@@ -55,27 +64,27 @@ public class ContactFormViewModel implements ViewModel {
 	}
 	
 	public ValidationResult firstnameValidation() {
-		return firstnameValidator.getValidationResult();
+		return firstnameValidator.getResult();
 	}
 	
 	public ValidationResult lastnameValidation() {
-		return lastnameValidator.getValidationResult();
+		return lastnameValidator.getResult();
 	}
 	
 	public ValidationResult birthdayValidation() {
-		return birthdayValidator.getValidationResult();
+		return birthdayValidator.getResult();
 	}
 
     public ValidationResult emailValidation() {
-        return emailValidator.getValidationResult();
+        return emailValidator.getResult();
     }
 
 	public ValidationResult phoneValidation() {
-		return phoneValidator.getValidationResult();
+		return phoneValidator.getResult();
 	}
 	
 	public ValidationResult mobileValidation() {
-		return mobileValidator.getValidationResult();
+		return mobileValidator.getResult();
 	}
 	
 	public StringProperty firstnameProperty() {
@@ -115,7 +124,6 @@ public class ContactFormViewModel implements ViewModel {
 	}
 
     public BooleanExpression validProperty() {
-        return firstnameValidator.getValidationResult().validProperty().and(
-				lastnameValidator.getValidationResult().validProperty());
+        return formValidator.getResult().validProperty();
     }
 }

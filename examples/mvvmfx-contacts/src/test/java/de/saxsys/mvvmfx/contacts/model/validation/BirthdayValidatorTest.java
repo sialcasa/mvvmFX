@@ -8,6 +8,7 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+import de.saxsys.mvvmfx.utils.validation.Validator;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
@@ -16,7 +17,7 @@ import org.junit.Test;
 
 import de.saxsys.mvvmfx.contacts.util.CentralClock;
 import de.saxsys.mvvmfx.utils.validation.ValidationResult;
-import de.saxsys.mvvmfx.utils.validation.Validator;
+import de.saxsys.mvvmfx.utils.validation.RuleBasedValidator;
 
 
 public class BirthdayValidatorTest {
@@ -34,7 +35,7 @@ public class BirthdayValidatorTest {
 		
 		Validator validator = new BirthdayValidator(value);
 		
-		result = validator.getValidationResult();
+		result = validator.getResult();
 	}
 	
 	

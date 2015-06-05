@@ -1,10 +1,9 @@
 package de.saxsys.mvvmfx.contacts.model.validation;
 
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
-import de.saxsys.mvvmfx.utils.validation.Validator;
+import de.saxsys.mvvmfx.utils.validation.RuleBasedValidator;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 
 import java.util.regex.Pattern;
@@ -12,7 +11,7 @@ import java.util.regex.Pattern;
 /**
  * @author manuel.mauky
  */
-public class PhoneValidator extends Validator<String>{
+public class PhoneValidator extends RuleBasedValidator {
 
 	private static final Pattern SIMPLE_PHONE_PATTERN = Pattern.compile("\\+?[0-9\\s]{3,20}");
 	

@@ -8,6 +8,8 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 
+import java.util.Collection;
+
 
 /**
  * @author manuel.mauky
@@ -23,6 +25,19 @@ public class ValidationResult {
     void addMessage(ValidationMessage message) {
         messages.add(message);
 	}
+	
+	void addMessage(Collection<ValidationMessage> messages) {
+		this.messages.addAll(messages);
+	}
+
+	void removeMessage(ValidationMessage message) {
+		messages.remove(message);
+	}
+	
+	void removeMessage(Collection<? extends ValidationMessage> messages) {
+		this.messages.removeAll(messages);	
+	}
+	
 	
 	public ObservableList<ValidationMessage> getMessages() {
 		return unmodifiableMessages;
@@ -48,7 +63,4 @@ public class ValidationResult {
 	}
 
 
-    void removeMessage(ValidationMessage message) {
-        messages.removeAll(message);
-    }
 }

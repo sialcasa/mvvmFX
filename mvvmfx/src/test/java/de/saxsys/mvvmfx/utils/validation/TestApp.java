@@ -16,7 +16,7 @@ import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualization;
 public class TestApp extends Application {
 
 	private TextField input;
-	private Validator validator;
+	private RuleBasedValidator validator;
 	private ValidationVisualization validationVisualization = new ControlsFxVisualization();
 
 
@@ -47,13 +47,13 @@ public class TestApp extends Application {
 	private void initValidation() {
 
 		
-		validator = new Validator();
+		validator = new RuleBasedValidator();
 		validator.addRule(Rules.notEmpty(input.textProperty()), ValidationMessage.error("may not be empty"));
 //		validator.addRule(input.textProperty().length().lessThan(5),
 //				ValidationMessage.error("Length must be greater than 5"));
 		
 		
-		validationVisualization.visualize(validator.getValidationResult(), input, true);
+		validationVisualization.visualize(validator.getResult(), input, true);
 
 		
 	}
