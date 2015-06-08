@@ -53,7 +53,7 @@ public class TestApp extends Application {
 //				ValidationMessage.error("Length must be greater than 5"));
 		
 		
-		validationVisualization.visualize(validator.getResult(), input, true);
+		validationVisualization.initVisualization(validator.getResult(), input, true);
 
 		
 	}

@@ -8,10 +8,10 @@ import javafx.scene.control.Control;
  */
 public interface ValidationVisualization {
 	
-	default void visualize(ValidationResult result, Control control) {
-		visualize(result, control, false);
+	default void initVisualization(ValidationResult result, Control control) {
+		initVisualization(result, control, false);
 	}
 	
-	void visualize(ValidationResult result, Control control, boolean mandatory);
+	void initVisualization(ValidationResult result, Control control, boolean mandatory);
 	
 }

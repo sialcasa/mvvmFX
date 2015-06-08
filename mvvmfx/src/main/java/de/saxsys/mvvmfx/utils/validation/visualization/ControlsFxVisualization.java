@@ -1,22 +1,28 @@
 package de.saxsys.mvvmfx.utils.validation.visualization;
 
-import de.saxsys.mvvmfx.utils.validation.Severity;
-import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
-import de.saxsys.mvvmfx.utils.validation.ValidationResult;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import java.util.Optional;
+
 import javafx.scene.control.Control;
+
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.decoration.GraphicValidationDecoration;
 import org.controlsfx.validation.decoration.ValidationDecoration;
 
-import java.util.List;
-import java.util.Optional;
+import de.saxsys.mvvmfx.utils.validation.Severity;
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 
 /**
+ * An implementation of {@link ValidationVisualization} that uses the third-party library <a href="http://fxexperience.com/controlsfx/">ControlsFX</a>
+ * to visualize validation messages. 
+ * 
+ * <strong>Please Note:</strong> The library ControlsFX is not delivered with the mvvmFX library. If you like to use this visualization you have to add 
+ * the ControlsFX library to your classpath, otherwise you will get {@link NoClassDefFoundError}s and {@link ClassNotFoundException}s. 
+ * If you are using a build management system like <i>maven</i> or <i>gradle</i> you simply have to add the library as dependency. 
+ * 
+ * 
  * @author manuel.mauky
  */
-public class ControlsFxVisualization implements ValidationVisualization{
+public class ControlsFxVisualization extends ValidationVisualizationBase {
 
     private ValidationDecoration decoration = new GraphicValidationDecoration();
 
@@ -31,56 +37,34 @@ public class ControlsFxVisualization implements ValidationVisualization{
 	
 
 	@Override
-	public void visualize(final ValidationResult result, final Control control, boolean mandatory) {
-		if(mandatory) {
-			ValidationSupport.setRequired(control, true);
+	void applyRequiredVisualization(Control control, boolean required) {
+		ValidationSupport.setRequired(control, required);
+		if(required) {
 			decoration.applyRequiredDecoration(control);
 		}
-		
-        applyDecoration(control, result.getMessages(), mandatory);
-        result.getMessages().addListener((ListChangeListener<ValidationMessage>) c -> {
-			while(c.next()) {
-                applyDecoration(control, c.getList(), mandatory);
-            }
-		});
 	}
 
-    private void applyDecoration(Control control, List<? extends ValidationMessage> list, boolean mandatory) {
-		Optional<? extends ValidationMessage> messageToShow = getHighestMessage(list);
-		
-		if(messageToShow.isPresent()) {
-			final ValidationMessage message = messageToShow.get();
-			
+	@Override
+	void applyVisualization(Control control, Optional<ValidationMessage> messageOptional, boolean required) {
+
+		if(messageOptional.isPresent()) {
+			final ValidationMessage message = messageOptional.get();
+
 			decoration.removeDecorations(control);
-			
+
 			if(Severity.ERROR.equals(message.getSeverity())) {
 				decoration.applyValidationDecoration(org.controlsfx.validation.ValidationMessage.error(control, message.getMessage()));
 			} else if(Severity.WARNING.equals(message.getSeverity())) {
 				decoration.applyValidationDecoration(org.controlsfx.validation.ValidationMessage.warning(control, message.getMessage()));
 			}
-			
+
 		} else {
 			decoration.removeDecorations(control);
 		}
 
-		if(mandatory) {
+		if(required) {
 			decoration.applyRequiredDecoration(control);
 		}
-    }
-	
-	private Optional<? extends ValidationMessage> getHighestMessage(List<? extends ValidationMessage> allMessages) {
-		final Optional<? extends ValidationMessage> errorMessageOptional = allMessages.stream()
-				.filter(message -> message.getSeverity().equals(Severity.ERROR))
-				.findFirst();
-		
-		if(errorMessageOptional.isPresent()) {
-			return errorMessageOptional;
-		} else {
-			return allMessages.stream()
-					.filter(message -> message.getSeverity().equals(Severity.WARNING))
-					.findFirst();
-		}
 	}
-
 
 }
