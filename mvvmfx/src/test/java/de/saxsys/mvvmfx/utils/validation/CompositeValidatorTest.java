@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class CompositeValidatorTest {
 	
-	private ValidationStatus result;
+	private ValidationStatus status;
 	
 	private BooleanProperty valid1 = new SimpleBooleanProperty();
 	private BooleanProperty valid2 = new SimpleBooleanProperty();
@@ -33,7 +33,7 @@ public class CompositeValidatorTest {
 		
 		
 		compositeValidator = new CompositeValidator();
-		result = compositeValidator.getValidationStatus();
+		status = compositeValidator.getValidationStatus();
 	}
 	
 	@Test
@@ -43,32 +43,32 @@ public class CompositeValidatorTest {
 		valid1.set(true);
 		valid2.set(true);
 		
-		assertThat(result.isValid()).isTrue();
+		assertThat(status.isValid()).isTrue();
 		
 		valid1.setValue(false);
 		
-		assertThat(result.isValid()).isFalse();
-		assertThat(asStrings(result.getErrorMessages())).containsOnly("error1");
-		assertThat(asStrings(result.getWarningMessages())).isEmpty();
-		assertThat(asStrings(result.getMessages())).containsOnly("error1");
+		assertThat(status.isValid()).isFalse();
+		assertThat(asStrings(status.getErrorMessages())).containsOnly("error1");
+		assertThat(asStrings(status.getWarningMessages())).isEmpty();
+		assertThat(asStrings(status.getMessages())).containsOnly("error1");
 		
 		valid2.setValue(false);
-		assertThat(result.isValid()).isFalse();
-		assertThat(asStrings(result.getErrorMessages())).containsOnly("error1");
-		assertThat(asStrings(result.getWarningMessages())).containsOnly("warning2");
-		assertThat(asStrings(result.getMessages())).containsOnly("error1", "warning2");
+		assertThat(status.isValid()).isFalse();
+		assertThat(asStrings(status.getErrorMessages())).containsOnly("error1");
+		assertThat(asStrings(status.getWarningMessages())).containsOnly("warning2");
+		assertThat(asStrings(status.getMessages())).containsOnly("error1", "warning2");
 		
 		valid1.setValue(true);
-		assertThat(result.isValid()).isFalse();
-		assertThat(asStrings(result.getErrorMessages())).isEmpty();
-		assertThat(asStrings(result.getWarningMessages())).containsOnly("warning2");
-		assertThat(asStrings(result.getMessages())).containsOnly("warning2");
+		assertThat(status.isValid()).isFalse();
+		assertThat(asStrings(status.getErrorMessages())).isEmpty();
+		assertThat(asStrings(status.getWarningMessages())).containsOnly("warning2");
+		assertThat(asStrings(status.getMessages())).containsOnly("warning2");
 
 		valid2.setValue(true);
-		assertThat(result.isValid()).isTrue();
-		assertThat(asStrings(result.getErrorMessages())).isEmpty();
-		assertThat(asStrings(result.getWarningMessages())).isEmpty();
-		assertThat(asStrings(result.getMessages())).isEmpty();
+		assertThat(status.isValid()).isTrue();
+		assertThat(asStrings(status.getErrorMessages())).isEmpty();
+		assertThat(asStrings(status.getWarningMessages())).isEmpty();
+		assertThat(asStrings(status.getMessages())).isEmpty();
 
 	}
 	
@@ -77,16 +77,16 @@ public class CompositeValidatorTest {
 		valid1.set(false);
 		valid2.set(true);
 		
-		assertThat(result.isValid()).isTrue(); // no validator is registered at the moment
+		assertThat(status.isValid()).isTrue(); // no validator is registered at the moment
 		
 		compositeValidator.registerValidator(validator2);
-		assertThat(result.isValid()).isTrue(); // validator2 is valid
+		assertThat(status.isValid()).isTrue(); // validator2 is valid
 		
 		compositeValidator.registerValidator(validator1);
-		assertThat(result.isValid()).isFalse();
+		assertThat(status.isValid()).isFalse();
 		
 		compositeValidator.unregisterValidator(validator1);
-		assertThat(result.isValid()).isTrue();
+		assertThat(status.isValid()).isTrue();
 	}
 	
 	
