@@ -48,7 +48,7 @@ public class TestApp extends Application {
 
 		
 		validator = new ObservableRuleBasedValidator();
-		validator.addRule(Rules.notEmpty(input.textProperty()), ValidationMessage.error("may not be empty"));
+		validator.addRule(ObservableRules.notEmpty(input.textProperty()), ValidationMessage.error("may not be empty"));
 //		validator.addRule(input.textProperty().length().lessThan(5),
 //				ValidationMessage.error("Length must be greater than 5"));
 		

@@ -12,14 +12,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author manuel.mauky
  */
-public class RulesTest {
+public class ObservableRulesTest {
 	
 	
 	@Test
 	public void testNotNullOrEmpty() {
 		StringProperty value = new SimpleStringProperty();
 
-		final ObservableBooleanValue rule = Rules.notEmpty(value);
+		final ObservableBooleanValue rule = ObservableRules.notEmpty(value);
 		
 		assertThat(rule.get()).isFalse();
 
@@ -47,7 +47,7 @@ public class RulesTest {
 	public void testMatches() {
 		StringProperty value = new SimpleStringProperty();
 
-		final ObservableBooleanValue rule = Rules.matches(value, Pattern.compile("[0-9]"));
+		final ObservableBooleanValue rule = ObservableRules.matches(value, Pattern.compile("[0-9]"));
 		
 		assertThat(rule.get()).isFalse();
 		
