@@ -18,23 +18,23 @@ public class ObservableRulesTest {
 	@Test
 	public void testNotNullOrEmpty() {
 		StringProperty value = new SimpleStringProperty();
-
+		
 		final ObservableBooleanValue rule = ObservableRules.notEmpty(value);
 		
 		assertThat(rule.get()).isFalse();
-
+		
 		value.set("test");
 		assertThat(rule.get()).isTrue();
-
+		
 		value.set("");
 		assertThat(rule.get()).isFalse();
-
+		
 		value.set("   dds ");
 		assertThat(rule.get()).isTrue();
-
+		
 		value.set("    ");
 		assertThat(rule.get()).isFalse();
-
+		
 		value.set("1");
 		assertThat(rule.get()).isTrue();
 		
@@ -46,23 +46,23 @@ public class ObservableRulesTest {
 	@Test
 	public void testMatches() {
 		StringProperty value = new SimpleStringProperty();
-
+		
 		final ObservableBooleanValue rule = ObservableRules.matches(value, Pattern.compile("[0-9]"));
 		
 		assertThat(rule.get()).isFalse();
 		
 		value.set("1");
-
+		
 		assertThat(rule.get()).isTrue();
 		
 		value.set("55");
 		assertThat(rule.get()).isFalse();
-
+		
 		value.set("5");
 		assertThat(rule.get()).isTrue();
-
+		
 		value.set(null);
 		assertThat(rule.get()).isFalse();
-
+		
 	}
 }

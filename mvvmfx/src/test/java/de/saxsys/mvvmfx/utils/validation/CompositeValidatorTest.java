@@ -63,13 +63,13 @@ public class CompositeValidatorTest {
 		assertThat(asStrings(status.getErrorMessages())).isEmpty();
 		assertThat(asStrings(status.getWarningMessages())).containsOnly("warning2");
 		assertThat(asStrings(status.getMessages())).containsOnly("warning2");
-
+		
 		valid2.setValue(true);
 		assertThat(status.isValid()).isTrue();
 		assertThat(asStrings(status.getErrorMessages())).isEmpty();
 		assertThat(asStrings(status.getWarningMessages())).isEmpty();
 		assertThat(asStrings(status.getMessages())).isEmpty();
-
+		
 	}
 	
 	@Test

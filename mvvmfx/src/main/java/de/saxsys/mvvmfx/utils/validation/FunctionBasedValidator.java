@@ -18,14 +18,15 @@ import java.util.function.Predicate;
  * in the {@link ValidationStatus} of this validator.
  * <p>
  * The variant with Function is used for use cases where different messages should be shown under specific conditions.
- * Instead of only returning <code>true</code> or <code>false</code> the function has to return a {@link ValidationMessage} for
- * a given input value if it is invalid. The returned message will then be present in the validation status. If the
- * input value is valid and therefore no validation message should be shown, the function has to return
- * <code>null</code> instead.
+ * Instead of only returning <code>true</code> or <code>false</code> the function has to return a
+ * {@link ValidationMessage} for a given input value if it is invalid. The returned message will then be present in the
+ * validation status. If the input value is valid and therefore no validation message should be shown, the function has
+ * to return <code>null</code> instead.
  *
  * <p>
  * <br>
- * For more complex validation logic like cross field validation you can use the {@link ObservableRuleBasedValidator} as an alternative.
+ * For more complex validation logic like cross field validation you can use the {@link ObservableRuleBasedValidator} as
+ * an alternative.
  *
  * @param <T>
  *            the generic value of the source observable.
@@ -61,12 +62,12 @@ public class FunctionBasedValidator<T> implements Validator {
 	}
 	
 	/**
-	 * Creates a validator that uses a {@link Predicate} for validation. The predicate has to return
-     * <code>true</code> if the input value is valid. Otherwise <code>false</code>.
-     * <p>
-     * When the predicate returns <code>false</code>, the given validation message will be used.
+	 * Creates a validator that uses a {@link Predicate} for validation. The predicate has to return <code>true</code>
+	 * if the input value is valid. Otherwise <code>false</code>.
+	 * <p>
+	 * When the predicate returns <code>false</code>, the given validation message will be used.
 	 *
-     * @param source
+	 * @param source
 	 *            the observable value that will be validated.
 	 * @param predicate
 	 *            the validation predicate.

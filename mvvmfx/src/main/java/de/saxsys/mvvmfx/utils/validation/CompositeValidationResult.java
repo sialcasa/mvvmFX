@@ -20,10 +20,10 @@ class CompositeValidationResult extends ValidationStatus {
 	
 	public CompositeValidationResult() {
 		subResults.addListener((ListChangeListener<ValidationStatus>) c -> {
-			while(c.next()) {
+			while (c.next()) {
 				c.getAddedSubList().forEach(result -> {
 					CompositeValidationResult.this.addMessage(result.getMessages());
-
+					
 					final ListChangeListener<ValidationMessage> changeListener = change -> {
 						while (change.next()) {
 							change.getAddedSubList().forEach(CompositeValidationResult.this::addMessage);
@@ -49,7 +49,7 @@ class CompositeValidationResult extends ValidationStatus {
 		subResults.addAll(results);
 	}
 	
-	void removeResults(ValidationStatus...results) {
+	void removeResults(ValidationStatus... results) {
 		subResults.removeAll(results);
 	}
 	

@@ -6,8 +6,7 @@ import java.util.stream.Stream;
 /**
  * This {@link Validator} implementation is used to compose multiple other validators.
  * <p>
- * The {@link ValidationStatus} of this validator will contain all messages of all registered
- * validators.
+ * The {@link ValidationStatus} of this validator will contain all messages of all registered validators.
  *
  *
  * @author manuel.mauky
@@ -35,7 +34,7 @@ public class CompositeValidator implements Validator {
 				.map(Validator::getValidationStatus)
 				.collect(Collectors.toList()));
 	}
-
+	
 	@Override
 	public ValidationStatus getValidationStatus() {
 		return result;
