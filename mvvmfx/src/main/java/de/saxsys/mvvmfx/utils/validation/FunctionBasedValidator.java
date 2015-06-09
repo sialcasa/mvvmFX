@@ -1,8 +1,5 @@
-package de.saxsys.mvvmfx.utils.validation.validators;
+package de.saxsys.mvvmfx.utils.validation;
 
-import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
-import de.saxsys.mvvmfx.utils.validation.Validator;
 import javafx.beans.value.ObservableValue;
 
 import java.util.Optional;

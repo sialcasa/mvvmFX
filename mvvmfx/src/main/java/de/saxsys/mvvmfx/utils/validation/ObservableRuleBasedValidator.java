@@ -1,8 +1,5 @@
-package de.saxsys.mvvmfx.utils.validation.validators;
+package de.saxsys.mvvmfx.utils.validation;
 
-import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
-import de.saxsys.mvvmfx.utils.validation.Validator;
 import javafx.beans.value.ObservableValue;
 
 import java.util.ArrayList;
@@ -46,7 +43,7 @@ public class ObservableRuleBasedValidator implements Validator{
      * the rule is violated. In this case the given message object will be added to the status
      * of this validator.
      * 
-     * There are some predefined rules for common use cases in the {@link ObservableRules} class that can be used.
+     * There are some predefined rules for common use cases in the {@link Rules} class that can be used. 
      * 
      * @param rule
      * @param message

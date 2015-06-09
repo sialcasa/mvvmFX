@@ -1,7 +1,7 @@
 package de.saxsys.mvvmfx.contacts.ui.validators;
 
 import de.saxsys.mvvmfx.contacts.util.CentralClock;
-import de.saxsys.mvvmfx.utils.validation.validators.FunctionBasedValidator;
+import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import javafx.beans.value.ObservableValue;
 
