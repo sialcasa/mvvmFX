@@ -110,7 +110,7 @@
 		<dependency>
 			<groupId>org.testfx</groupId>
 			<artifactId>testfx-core</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>4.0.1-alpha</version>
 			<scope>test</scope>
 		</dependency>
 
