@@ -39,7 +39,11 @@ public class ValidationResult {
 	void removeMessage(Collection<? extends ValidationMessage> messages) {
 		this.messages.removeAll(messages);	
 	}
-	
+
+    void clearMessages() {
+        messages.clear();
+    }
+
 	
 	public ObservableList<ValidationMessage> getMessages() {
 		return unmodifiableMessages;

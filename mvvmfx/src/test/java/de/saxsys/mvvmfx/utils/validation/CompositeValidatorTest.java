@@ -20,15 +20,15 @@ public class CompositeValidatorTest {
 	private BooleanProperty valid1 = new SimpleBooleanProperty();
 	private BooleanProperty valid2 = new SimpleBooleanProperty();
 	private CompositeValidator compositeValidator;
-	private	RuleBasedValidator validator1;
-	private	RuleBasedValidator validator2;
+	private ObservableRuleBasedValidator validator1;
+	private ObservableRuleBasedValidator validator2;
 	
 	@Before
 	public void setup() {
-		validator1 = new RuleBasedValidator();
+		validator1 = new ObservableRuleBasedValidator();
 		validator1.addRule(valid1, ValidationMessage.error("error1"));
 		
-		validator2 = new RuleBasedValidator();
+		validator2 = new ObservableRuleBasedValidator();
 		validator2.addRule(valid2, ValidationMessage.warning("warning2"));
 		
 		

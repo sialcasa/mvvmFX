@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.saxsys.mvvmfx.utils.validation.ValidationResult;
-import de.saxsys.mvvmfx.utils.validation.RuleBasedValidator;
 
 public class EmailAddressValidatorTest {
 	

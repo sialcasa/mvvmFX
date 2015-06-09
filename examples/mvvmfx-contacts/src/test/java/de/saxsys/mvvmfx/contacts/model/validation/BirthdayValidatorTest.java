@@ -17,7 +17,6 @@ import org.junit.Test;
 
 import de.saxsys.mvvmfx.contacts.util.CentralClock;
 import de.saxsys.mvvmfx.utils.validation.ValidationResult;
-import de.saxsys.mvvmfx.utils.validation.RuleBasedValidator;
 
 
 public class BirthdayValidatorTest {

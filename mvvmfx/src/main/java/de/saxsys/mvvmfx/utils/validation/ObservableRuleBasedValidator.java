@@ -1,13 +1,32 @@
 package de.saxsys.mvvmfx.utils.validation;
 
-import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableValue;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class RuleBasedValidator implements Validator{
+/**
+ * This {@link Validator} implementation uses observable boolean values as rules. In comparison to the {@link FunctionBasedValidator}
+ * with this implementation more complex validation logic can be implemented.
+ * <p>
+ * It is useful for use cases where:
+ * <p>
+ * <ul>
+ *     <li>the validation logic is already available as observable boolean</li>
+ *     <li>you need to define more multiple rules</li>
+ *     <li>you need to define complex rules that f.e. are considering multiple fields (cross-field-validation)</li>
+ * </ul>
+ *
+ * You can add multiple rules via the {@link #addRule(ObservableValue, ValidationMessage)} method.
+ * Each rule is an observable boolean value. If the rule evaluates to <code>true</code> it is considered to be "valid" and
+ * no message will be present in the {@link ValidationResult} ({@link #getResult()}).
+ * If the rule evaluates to <code>false</code> it is considered to be "invalid".
+ * In this case the given {@link ValidationMessage} will be present.
+ * <p>
+ * If multiple rules are violated, each message will be present.
+ */
+public class ObservableRuleBasedValidator implements Validator{
 
     private List<ObservableValue<Boolean>> rules = new ArrayList<>();
 
