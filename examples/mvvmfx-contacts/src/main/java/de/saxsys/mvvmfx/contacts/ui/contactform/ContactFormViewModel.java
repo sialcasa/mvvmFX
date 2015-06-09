@@ -2,9 +2,9 @@ package de.saxsys.mvvmfx.contacts.ui.contactform;
 
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.contacts.model.Contact;
-import de.saxsys.mvvmfx.contacts.model.validation.BirthdayValidator;
-import de.saxsys.mvvmfx.contacts.model.validation.EmailValidator;
-import de.saxsys.mvvmfx.contacts.model.validation.PhoneValidator;
+import de.saxsys.mvvmfx.contacts.ui.validators.BirthdayValidator;
+import de.saxsys.mvvmfx.contacts.ui.validators.EmailValidator;
+import de.saxsys.mvvmfx.contacts.ui.validators.PhoneValidator;
 import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.BooleanExpression;

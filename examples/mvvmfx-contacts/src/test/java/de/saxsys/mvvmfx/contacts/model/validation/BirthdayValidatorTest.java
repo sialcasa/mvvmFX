@@ -8,6 +8,7 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+import de.saxsys.mvvmfx.contacts.ui.validators.BirthdayValidator;
 import de.saxsys.mvvmfx.utils.validation.Validator;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

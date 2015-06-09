@@ -41,17 +41,17 @@ public class ContactFormViewModelTest {
         GCVerifier.forceGC();
 
 
-        assertThat(viewModel.emailValidation().getErrorMessages()).hasSize(2);
+        assertThat(viewModel.emailValidation().getMessages()).hasSize(2);
         assertThat(viewModel.emailValidation().validProperty()).isFalse();
 
         viewModel.emailProperty().set("Something");
 
-        assertThat(viewModel.emailValidation().getErrorMessages()).hasSize(1);
+        assertThat(viewModel.emailValidation().getMessages()).hasSize(1);
         assertThat(viewModel.emailValidation().validProperty()).isFalse();
 
         viewModel.emailProperty().set("test@example.org");
 
-        assertThat(viewModel.emailValidation().getErrorMessages()).isEmpty();
+        assertThat(viewModel.emailValidation().getMessages()).isEmpty();
         assertThat(viewModel.emailValidation().validProperty()).isTrue();
     }
 

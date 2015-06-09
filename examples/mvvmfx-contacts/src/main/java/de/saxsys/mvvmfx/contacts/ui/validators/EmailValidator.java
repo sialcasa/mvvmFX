@@ -1,4 +1,4 @@
-package de.saxsys.mvvmfx.contacts.model.validation;
+package de.saxsys.mvvmfx.contacts.ui.validators;
 
 import de.saxsys.mvvmfx.utils.validation.Rules;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;

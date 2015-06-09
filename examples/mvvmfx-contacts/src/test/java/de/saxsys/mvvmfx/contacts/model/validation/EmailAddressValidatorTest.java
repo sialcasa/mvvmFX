@@ -2,6 +2,7 @@ package de.saxsys.mvvmfx.contacts.model.validation;
 
 import static org.assertj.core.api.Assertions.*;
 
+import de.saxsys.mvvmfx.contacts.ui.validators.EmailValidator;
 import de.saxsys.mvvmfx.utils.validation.Validator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
