@@ -1,6 +1,6 @@
 package de.saxsys.mvvmfx.contacts.model.validation;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -8,43 +8,45 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import javafx.scene.control.DatePicker;
+import de.saxsys.mvvmfx.contacts.ui.validators.BirthdayValidator;
+import de.saxsys.mvvmfx.utils.validation.Validator;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
-import org.controlsfx.validation.ValidationResult;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.mvvmfx.contacts.util.CentralClock;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 
-@RunWith(JfxRunner.class)
+
 public class BirthdayValidatorTest {
 	
-	private BirthdayValidator validator;
-	private DatePicker datePicker;
+	private ValidationStatus result;
+	private ObjectProperty<LocalDate> value = new SimpleObjectProperty<>();
+	
 	
 	@Before
 	public void setup() {
 		ZonedDateTime now = ZonedDateTime
 				.of(LocalDate.of(2014, Month.JANUARY, 1), LocalTime.of(0, 0), ZoneId.systemDefault());
-		
+
 		CentralClock.setFixedClock(now);
 		
-		validator = new BirthdayValidator();
-		datePicker = new DatePicker();
+		Validator validator = new BirthdayValidator(value);
+		
+		result = validator.getValidationStatus();
 	}
+	
 	
 	@Test
 	public void testBirthdayInThePast() {
-		
 		LocalDate now = LocalDate.now(CentralClock.getClock());
-		
 		LocalDate birthday = now.minusYears(20);
 		
-		ValidationResult result = validator.apply(datePicker, birthday);
+		value.set(birthday);
 		
-		assertThat(result).isNull();
+		assertThat(result.isValid()).isTrue();
 	}
 	
 	@Test
@@ -54,9 +56,8 @@ public class BirthdayValidatorTest {
 		
 		LocalDate birthday = now.plusDays(1);
 		
-		ValidationResult result = validator.apply(datePicker, birthday);
-		
-		assertThat(result).isNotNull();
-		assertThat(result.getErrors()).hasSize(1);
+		value.set(birthday);
+		assertThat(result.isValid()).isFalse();
+		assertThat(result.getErrorMessages()).hasSize(1);
 	}
 }

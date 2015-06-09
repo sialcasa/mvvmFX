@@ -1,11 +1,12 @@
 package de.saxsys.mvvmfx.contacts.ui.contactform;
 
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
 
 public class ContactFormView implements FxmlView<ContactFormViewModel> {
 	
@@ -28,10 +29,10 @@ public class ContactFormView implements FxmlView<ContactFormViewModel> {
 	@FXML
 	public DatePicker birthdayInput;
 	
+	private ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
 	
 	@InjectViewModel
 	private ContactFormViewModel viewModel;
-	
 	
 	public void initialize() {
 		firstnameInput.textProperty().bindBidirectional(viewModel.firstnameProperty());
@@ -43,15 +44,13 @@ public class ContactFormView implements FxmlView<ContactFormViewModel> {
 		phoneNumberInput.textProperty().bindBidirectional(viewModel.phoneNumberProperty());
 		emailInput.textProperty().bindBidirectional(viewModel.emailProperty());
 		birthdayInput.valueProperty().bindBidirectional(viewModel.birthdayProperty());
-		
-		// init the validation. The logic for the actual validation is hidden in the viewModel.
-		viewModel.initValidationForFirstname(firstnameInput);
-		viewModel.initValidationForLastname(lastnameInput);
-		viewModel.initValidationForBirthday(birthdayInput);
-		
-		viewModel.initValidationForEmail(emailInput);
-		viewModel.initValidationForPhoneNumber(phoneNumberInput);
-		viewModel.initValidationForMobileNumber(mobileNumberInput);
+
+		validationVisualizer.initVisualization(viewModel.firstnameValidation(), firstnameInput, true);
+		validationVisualizer.initVisualization(viewModel.lastnameValidation(), lastnameInput, true);
+		validationVisualizer.initVisualization(viewModel.birthdayValidation(), birthdayInput);
+		validationVisualizer.initVisualization(viewModel.emailValidation(), emailInput, true);
+		validationVisualizer.initVisualization(viewModel.phoneValidation(), phoneNumberInput);
+		validationVisualizer.initVisualization(viewModel.mobileValidation(), mobileNumberInput);
 	}
 	
 	public ContactFormViewModel getViewModel() {

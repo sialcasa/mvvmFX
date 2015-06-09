@@ -1,13 +1,15 @@
 package de.saxsys.mvvmfx.contacts;
 
-import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.matcher.control.TableViewMatchers.hasTableCell;
-
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
 
+import static org.testfx.api.FxAssert.verifyThat;
+import static org.testfx.matcher.control.TableViewMatchers.hasTableCell;
+
+@Ignore
 public class AppTestFxIT extends FxRobot {
 	
 	@Before
