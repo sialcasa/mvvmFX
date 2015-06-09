@@ -13,7 +13,7 @@ import java.util.function.Predicate;
  * <p>
  * There are two "flavours" of using this validator: Using a {@link Predicate} or a {@link Function} for validation.
  * <p>
- * The variant with Predicate is used for simple use cases where you provide a predicate function that simply tells the
+ * The variant with Predicate is used for simple use cases where you provide a predicate that simply tells the
  * validator, if the given value is valid or not. If it is invalid, the given {@link ValidationMessage} will be present
  * in the {@link ValidationStatus} of this validator.
  * <p>
@@ -25,7 +25,7 @@ import java.util.function.Predicate;
  *
  * <p>
  * <br>
- * For more complex validation logic like cross field validation you can use the {@link ObservableRuleBasedValidator}.
+ * For more complex validation logic like cross field validation you can use the {@link ObservableRuleBasedValidator} as an alternative.
  *
  * @param <T>
  *            the generic value of the source observable.
@@ -63,10 +63,10 @@ public class FunctionBasedValidator<T> implements Validator {
 	/**
 	 * Creates a validator that uses a {@link Predicate} for validation. The predicate has to return
      * <code>true</code> if the input value is valid. Otherwise <code>false</code>.
-     *
+     * <p>
      * When the predicate returns <code>false</code>, the given validation message will be used.
 	 *
-     *  @param source
+     * @param source
 	 *            the observable value that will be validated.
 	 * @param predicate
 	 *            the validation predicate.

@@ -5,14 +5,14 @@ import javafx.scene.control.Control;
 
 /**
  * Common interface for all implementations of validation visualizers.
- *
+ *<p>
  * A single instance of a visualizer is connected to a single {@link ValidationStatus} that it visualizes.
  * When the state of the {@link ValidationStatus} changes the visualizer has to react to these changes
  * and update it's decoration accordingly.
- *
+ *<p>
  * Besides showing validation messages the job of the visualizer is to mark an input control as mandatory.
  * Note that this mark is only a visual effect and has no effect to the actual validation logic.
- *
+ *<p>
  *
  * Instead of directly implementing this interface implementors of custom visualizers should consider to extend from
  * the base class {@link ValidationVisualizerBase}. This base class handles the live cycle

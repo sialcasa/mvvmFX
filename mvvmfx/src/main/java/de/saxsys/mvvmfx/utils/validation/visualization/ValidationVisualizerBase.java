@@ -11,10 +11,10 @@ import java.util.Optional;
 
 /**
  * A base class for implementations of {@link ValidationVisualizer}s.
- * 
+ * <p>
  * Implementors using this base class only need to implement logic on how to visualize a single {@link ValidationMessage} (see {@link #applyVisualization(Control, Optional, boolean)})
  * and the required flag (see {@link #applyRequiredVisualization(Control, boolean)}). 
- * 
+ * <p>
  * This base class takes care for the handling of the {@link ValidationStatus} and the reaction to it's changing message lists.
  * 
  * @author manuel.mauky
@@ -39,7 +39,7 @@ public abstract class ValidationVisualizerBase implements ValidationVisualizer {
 
 	/**
 	 * Apply a visualization to the given control that indicates that it is a mandatory field. 
-	 * 
+	 * <p>
 	 * This method is called when the validator is initialized.
 	 * 
 	 * @param control the controls that has to be decorated.
@@ -49,13 +49,13 @@ public abstract class ValidationVisualizerBase implements ValidationVisualizer {
 
 	/**
 	 * Apply a visualization to the given control that shows a validation message. 
-	 * 
+	 * <p>
 	 * This method will be called every time the validation state changes. 
 	 * If the given {@link Optional} for the {@link ValidationMessage} is empty, no validation rule is violated at the moment
 	 * and therefore no error/warning should be shown.
-	 * 
+	 * <p>
 	 * A visualizer can handle the {@link Severity} that is provided in the visualization message ({@link ValidationMessage#getSeverity()}).
-	 * 
+	 * <p>
 	 * The given boolean parameter indicates whether this controls is mandatory or not. It can be used if a violation for a mandatory
 	 * field should be visualized differently than a non-mandatory field.
 	 * 

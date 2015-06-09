@@ -11,13 +11,13 @@ import java.util.List;
  * with this implementation more complex validation logic can be implemented.
  * <p>
  * It is useful for use cases where:
- * <p>
+ *
  * <ul>
  *     <li>the validation logic is already available as observable boolean</li>
  *     <li>you need to define more multiple rules</li>
  *     <li>you need to define complex rules that f.e. are considering multiple fields (cross-field-validation)</li>
  * </ul>
- *
+ * <p>
  * You can add multiple rules via the {@link #addRule(ObservableValue, ValidationMessage)} method.
  * Each rule is an observable boolean value. If the rule evaluates to <code>true</code> it is considered to be "valid" and
  * no message will be present in the {@link ValidationStatus} ({@link #getValidationStatus()}).
@@ -34,15 +34,15 @@ public class ObservableRuleBasedValidator implements Validator{
 
     /**
      * Add a rule for this validator. 
-     * 
+     * <p>
      * The rule defines a condition that has to be fulfilled. 
-     * 
+     * <p>
      * A rule is defined by an observable boolean value. 
      * If the rule has a value of <code>true</code> the rule is "fulfilled". 
      * If the rule has a value of <code>false</code>
      * the rule is violated. In this case the given message object will be added to the status
      * of this validator.
-     * 
+     * <p>
      * There are some predefined rules for common use cases in the {@link ObservableRules} class that can be used.
      * 
      * @param rule

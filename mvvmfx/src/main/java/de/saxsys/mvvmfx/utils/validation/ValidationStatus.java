@@ -13,7 +13,7 @@ import java.util.Optional;
 
 /**
  * This class represents the state of a {@link Validator}.
- *
+ * <p>
  * This class is reactive, which means that it's values will represent the current validation status.
  * When the validation status changes the observable lists for the messages will be updated automatically.
  *
