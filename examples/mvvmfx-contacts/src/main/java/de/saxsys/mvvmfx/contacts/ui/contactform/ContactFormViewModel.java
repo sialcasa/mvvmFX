@@ -7,6 +7,8 @@ import de.saxsys.mvvmfx.contacts.ui.validators.EmailValidator;
 import de.saxsys.mvvmfx.contacts.ui.validators.PhoneValidator;
 import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
 import de.saxsys.mvvmfx.utils.validation.*;
+import de.saxsys.mvvmfx.utils.validation.validators.CompositeValidator;
+import de.saxsys.mvvmfx.utils.validation.validators.FunctionBasedValidator;
 import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;

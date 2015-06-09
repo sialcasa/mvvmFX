@@ -1,4 +1,7 @@
-package de.saxsys.mvvmfx.utils.validation;
+package de.saxsys.mvvmfx.utils.validation.validators;
+
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import de.saxsys.mvvmfx.utils.validation.Validator;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

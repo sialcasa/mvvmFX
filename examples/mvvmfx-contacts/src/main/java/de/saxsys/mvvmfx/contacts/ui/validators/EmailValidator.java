@@ -1,8 +1,8 @@
 package de.saxsys.mvvmfx.contacts.ui.validators;
 
-import de.saxsys.mvvmfx.utils.validation.Rules;
+import de.saxsys.mvvmfx.utils.validation.validators.ObservableRules;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
-import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
+import de.saxsys.mvvmfx.utils.validation.validators.ObservableRuleBasedValidator;
 import javafx.beans.value.ObservableValue;
 
 import java.util.regex.Pattern;
@@ -15,8 +15,8 @@ public class EmailValidator extends ObservableRuleBasedValidator {
 			.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
 	
 	public EmailValidator(ObservableValue<String> source) {
-		addRule(Rules.notEmpty(source), ValidationMessage.error("Email may not be empty"));
-		addRule(Rules.matches(source, SIMPLE_EMAIL_PATTERN),
+		addRule(ObservableRules.notEmpty(source), ValidationMessage.error("Email may not be empty"));
+		addRule(ObservableRules.matches(source, SIMPLE_EMAIL_PATTERN),
 				ValidationMessage.warning("Maybe a wrong email format"));
 	}
 }

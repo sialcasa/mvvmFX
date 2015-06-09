@@ -1,4 +1,4 @@
-package de.saxsys.mvvmfx.utils.validation;
+package de.saxsys.mvvmfx.utils.validation.validators;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableBooleanValue;
@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 /**
  * A collection of observable boolean constructors that can be used as rules for the {@link ObservableRuleBasedValidator}.
  */
-public class Rules {
+public class ObservableRules {
 
 	
 	public static <T> ObservableBooleanValue fromPredicate(ObservableValue<T> source, Predicate<T> predicate) {

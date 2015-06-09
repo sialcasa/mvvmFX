@@ -1,5 +1,7 @@
-package de.saxsys.mvvmfx.utils.validation;
+package de.saxsys.mvvmfx.utils.validation.validators;
 
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;

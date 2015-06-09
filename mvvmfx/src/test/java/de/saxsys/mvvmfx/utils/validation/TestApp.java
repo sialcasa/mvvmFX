@@ -2,6 +2,8 @@ package de.saxsys.mvvmfx.utils.validation;/**
  * @author manuel.mauky
  */
 
+import de.saxsys.mvvmfx.utils.validation.validators.ObservableRuleBasedValidator;
+import de.saxsys.mvvmfx.utils.validation.validators.ObservableRules;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -48,7 +50,7 @@ public class TestApp extends Application {
 
 		
 		validator = new ObservableRuleBasedValidator();
-		validator.addRule(Rules.notEmpty(input.textProperty()), ValidationMessage.error("may not be empty"));
+		validator.addRule(ObservableRules.notEmpty(input.textProperty()), ValidationMessage.error("may not be empty"));
 //		validator.addRule(input.textProperty().length().lessThan(5),
 //				ValidationMessage.error("Length must be greater than 5"));
 		

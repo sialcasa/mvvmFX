@@ -1,5 +1,8 @@
-package de.saxsys.mvvmfx.utils.validation;
+package de.saxsys.mvvmfx.utils.validation.validators;
 
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import de.saxsys.mvvmfx.utils.validation.validators.ObservableRuleBasedValidator;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.junit.Before;

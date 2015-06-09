@@ -1,5 +1,9 @@
-package de.saxsys.mvvmfx.utils.validation;
+package de.saxsys.mvvmfx.utils.validation.validators;
 
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import de.saxsys.mvvmfx.utils.validation.Validator;
+import de.saxsys.mvvmfx.utils.validation.validators.FunctionBasedValidator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.junit.Test;
