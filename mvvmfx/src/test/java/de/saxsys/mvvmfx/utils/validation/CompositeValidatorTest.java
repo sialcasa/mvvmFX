@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class CompositeValidatorTest {
 	
-	private ValidationResult result;
+	private ValidationStatus result;
 	
 	private BooleanProperty valid1 = new SimpleBooleanProperty();
 	private BooleanProperty valid2 = new SimpleBooleanProperty();
@@ -33,7 +33,7 @@ public class CompositeValidatorTest {
 		
 		
 		compositeValidator = new CompositeValidator();
-		result = compositeValidator.getResult();
+		result = compositeValidator.getValidationStatus();
 	}
 	
 	@Test

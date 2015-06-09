@@ -5,7 +5,6 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,14 +12,14 @@ import java.util.Map;
 /**
  * @author manuel.mauky
  */
-public class CompositeValidationResult extends ValidationResult {
+class CompositeValidationResult extends ValidationStatus {
 	
-	private ListProperty<ValidationResult> subResults = new SimpleListProperty<>(FXCollections.observableArrayList());
+	private ListProperty<ValidationStatus> subResults = new SimpleListProperty<>(FXCollections.observableArrayList());
 	
-	private Map<ValidationResult, ListChangeListener<ValidationMessage>> changeListeners = new HashMap<>();
+	private Map<ValidationStatus, ListChangeListener<ValidationMessage>> changeListeners = new HashMap<>();
 	
 	public CompositeValidationResult() {
-		subResults.addListener((ListChangeListener<ValidationResult>) c -> {
+		subResults.addListener((ListChangeListener<ValidationStatus>) c -> {
 			while(c.next()) {
 				c.getAddedSubList().forEach(result -> {
 					CompositeValidationResult.this.addMessage(result.getMessages());
@@ -42,19 +41,19 @@ public class CompositeValidationResult extends ValidationResult {
 		});
 	}
 	
-	void addResults(ValidationResult... results) {
+	void addResults(ValidationStatus... results) {
 		subResults.addAll(results);
 	}
 	
-	void addResults(List<ValidationResult> results) {
+	void addResults(List<ValidationStatus> results) {
 		subResults.addAll(results);
 	}
 	
-	void removeResults(ValidationResult...results) {
+	void removeResults(ValidationStatus...results) {
 		subResults.removeAll(results);
 	}
 	
-	void removeResults(List<ValidationResult> results) {
+	void removeResults(List<ValidationStatus> results) {
 		subResults.removeAll(results);
 	}
 	

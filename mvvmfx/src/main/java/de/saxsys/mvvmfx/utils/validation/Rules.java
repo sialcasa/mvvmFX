@@ -1,13 +1,15 @@
 package de.saxsys.mvvmfx.utils.validation;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableValue;
+
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.value.ObservableBooleanValue;
-import javafx.beans.value.ObservableStringValue;
-import javafx.beans.value.ObservableValue;
-
+/**
+ * A collection of observable boolean constructors that can be used as rules for the {@link ObservableRuleBasedValidator}.
+ */
 public class Rules {
 
 	

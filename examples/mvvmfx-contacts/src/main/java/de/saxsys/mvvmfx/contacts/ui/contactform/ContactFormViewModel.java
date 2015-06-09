@@ -16,13 +16,13 @@ import java.time.LocalDate;
 public class ContactFormViewModel implements ViewModel {
 	private ModelWrapper<Contact> contactWrapper = new ModelWrapper<>();
 	
-	private FunctionBasedValidator<String> firstnameValidator;
-	private FunctionBasedValidator<String> lastnameValidator;
-	private ObservableRuleBasedValidator emailValidator = new EmailValidator(emailProperty());
-	private ObservableRuleBasedValidator birthdayValidator = new BirthdayValidator(birthdayProperty());
+	private Validator firstnameValidator;
+	private Validator lastnameValidator;
+	private Validator emailValidator = new EmailValidator(emailProperty());
+	private Validator birthdayValidator = new BirthdayValidator(birthdayProperty());
 	
-	private ObservableRuleBasedValidator phoneValidator = new PhoneValidator(phoneNumberProperty(), "The phone number is invalid!");
-	private ObservableRuleBasedValidator mobileValidator = new PhoneValidator(mobileNumberProperty(), "The mobile number is invalid!");
+	private Validator phoneValidator = new PhoneValidator(phoneNumberProperty(), "The phone number is invalid!");
+	private Validator mobileValidator = new PhoneValidator(mobileNumberProperty(), "The mobile number is invalid!");
 
 	private CompositeValidator formValidator = new CompositeValidator();
 	
@@ -73,28 +73,28 @@ public class ContactFormViewModel implements ViewModel {
 		return contactWrapper.get();
 	}
 	
-	public ValidationResult firstnameValidation() {
-		return firstnameValidator.getResult();
+	public ValidationStatus firstnameValidation() {
+		return firstnameValidator.getValidationStatus();
 	}
 	
-	public ValidationResult lastnameValidation() {
-		return lastnameValidator.getResult();
+	public ValidationStatus lastnameValidation() {
+		return lastnameValidator.getValidationStatus();
 	}
 	
-	public ValidationResult birthdayValidation() {
-		return birthdayValidator.getResult();
+	public ValidationStatus birthdayValidation() {
+		return birthdayValidator.getValidationStatus();
 	}
 
-    public ValidationResult emailValidation() {
-        return emailValidator.getResult();
+    public ValidationStatus emailValidation() {
+        return emailValidator.getValidationStatus();
     }
 
-	public ValidationResult phoneValidation() {
-		return phoneValidator.getResult();
+	public ValidationStatus phoneValidation() {
+		return phoneValidator.getValidationStatus();
 	}
 	
-	public ValidationResult mobileValidation() {
-		return mobileValidator.getResult();
+	public ValidationStatus mobileValidation() {
+		return mobileValidator.getValidationStatus();
 	}
 	
 	public StringProperty firstnameProperty() {
@@ -134,6 +134,6 @@ public class ContactFormViewModel implements ViewModel {
 	}
 
     public BooleanExpression validProperty() {
-        return formValidator.getResult().validProperty();
+        return formValidator.getValidationStatus().validProperty();
     }
 }

@@ -20,7 +20,7 @@ import java.util.List;
  *
  * You can add multiple rules via the {@link #addRule(ObservableValue, ValidationMessage)} method.
  * Each rule is an observable boolean value. If the rule evaluates to <code>true</code> it is considered to be "valid" and
- * no message will be present in the {@link ValidationResult} ({@link #getResult()}).
+ * no message will be present in the {@link ValidationStatus} ({@link #getValidationStatus()}).
  * If the rule evaluates to <code>false</code> it is considered to be "invalid".
  * In this case the given {@link ValidationMessage} will be present.
  * <p>
@@ -30,7 +30,7 @@ public class ObservableRuleBasedValidator implements Validator{
 
     private List<ObservableValue<Boolean>> rules = new ArrayList<>();
 
-    private ValidationResult result = new ValidationResult();
+    private ValidationStatus result = new ValidationStatus();
 
     /**
      * Add a rule for this validator. 
@@ -40,7 +40,7 @@ public class ObservableRuleBasedValidator implements Validator{
      * A rule is defined by an observable boolean value. 
      * If the rule has a value of <code>true</code> the rule is "fulfilled". 
      * If the rule has a value of <code>false</code>
-     * the rule is violated. In this case the given message object will be added to the result
+     * the rule is violated. In this case the given message object will be added to the status
      * of this validator.
      * 
      * There are some predefined rules for common use cases in the {@link Rules} class that can be used. 
@@ -66,13 +66,8 @@ public class ObservableRuleBasedValidator implements Validator{
         }
     }
 
-    /**
-     * Returns the {@link ValidationResult} of this Validator. 
-     * The properties of the validation result will
-     * be updated automatically during the validation performed by this validator.
-     */
 	@Override
-	public ValidationResult getResult(){
+	public ValidationStatus getValidationStatus(){
 		return result;
 	}
 

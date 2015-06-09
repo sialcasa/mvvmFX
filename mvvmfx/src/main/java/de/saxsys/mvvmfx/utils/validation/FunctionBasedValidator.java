@@ -15,11 +15,11 @@ import java.util.function.Predicate;
  * <p>
  * The variant with Predicate is used for simple use cases where you provide a predicate function that simply tells the
  * validator, if the given value is valid or not. If it is invalid, the given {@link ValidationMessage} will be present
- * in the {@link ValidationResult} of this validator.
+ * in the {@link ValidationStatus} of this validator.
  * <p>
  * The variant with Function is used for use cases where different messages should be shown under specific conditions.
- * Instead of only returning <code>true</code> or <code>false</code> the function has to return a ValidationMessage for
- * a given input value if it is invalid. The returned message will then be present in the validation result. If the
+ * Instead of only returning <code>true</code> or <code>false</code> the function has to return a {@link ValidationMessage} for
+ * a given input value if it is invalid. The returned message will then be present in the validation status. If the
  * input value is valid and therefore no validation message should be shown, the function has to return
  * <code>null</code> instead.
  *
@@ -32,7 +32,7 @@ import java.util.function.Predicate;
  */
 public class FunctionBasedValidator<T> implements Validator {
 	
-	private ValidationResult result = new ValidationResult();
+	private ValidationStatus result = new ValidationStatus();
 	
 	private Function<T, Optional<ValidationMessage>> validateFunction;
 	
@@ -88,7 +88,7 @@ public class FunctionBasedValidator<T> implements Validator {
 	}
 	
 	@Override
-	public ValidationResult getResult() {
+	public ValidationStatus getValidationStatus() {
 		return result;
 	}
 }

@@ -9,11 +9,11 @@ import javafx.beans.property.StringProperty;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.saxsys.mvvmfx.utils.validation.ValidationResult;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 
 public class PhoneNumberValidatorTest {
 	
-	private ValidationResult result;
+	private ValidationStatus result;
 	private StringProperty value = new SimpleStringProperty();
 	
 	
@@ -21,7 +21,7 @@ public class PhoneNumberValidatorTest {
 	public void setup() {
 		Validator validator = new PhoneValidator(value, "error message");
 		
-		result = validator.getResult();
+		result = validator.getValidationStatus();
 	}
 	
 	

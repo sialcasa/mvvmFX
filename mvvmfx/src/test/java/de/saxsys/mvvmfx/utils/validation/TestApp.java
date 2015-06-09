@@ -10,14 +10,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualization;
-import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualization;
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 
 public class TestApp extends Application {
 
 	private TextField input;
 	private ObservableRuleBasedValidator validator;
-	private ValidationVisualization validationVisualization = new ControlsFxVisualization();
+	private ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
 
 
 	public static void main(String[] args) {
@@ -53,7 +53,7 @@ public class TestApp extends Application {
 //				ValidationMessage.error("Length must be greater than 5"));
 		
 		
-		validationVisualization.initVisualization(validator.getResult(), input, true);
+		validationVisualizer.initVisualization(validator.getValidationStatus(), input, true);
 
 		
 	}

@@ -1,6 +1,9 @@
 package de.saxsys.mvvmfx.utils.validation;
 
 /**
+ * This class represents a single validation message for an error or a warning.
+ * It consists of a string message and a {@link Severity}.
+ *
  * @author manuel.mauky
  */
 public class ValidationMessage {

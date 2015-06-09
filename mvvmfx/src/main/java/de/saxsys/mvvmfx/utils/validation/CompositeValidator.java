@@ -3,16 +3,16 @@ package de.saxsys.mvvmfx.utils.validation;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
-
 /**
+ * This {@link Validator} implementation is used to compose multiple other validators.
+ *
+ * The {@link ValidationStatus} of this validator will contain all messages of all registered
+ * validators.
+ *
+ *
  * @author manuel.mauky
  */
 public class CompositeValidator implements Validator {
-	
-	private ListProperty<ValidationResult> results = new SimpleListProperty<>(FXCollections.observableArrayList());
 	
 	private CompositeValidationResult result = new CompositeValidationResult();
 	
@@ -26,21 +26,18 @@ public class CompositeValidator implements Validator {
 	
 	public void registerValidator(Validator... validators) {
 		result.addResults(Stream.of(validators)
-				.map(Validator::getResult)
+				.map(Validator::getValidationStatus)
 				.collect(Collectors.toList()));
 	}
 	
 	public void unregisterValidator(Validator... validators) {
 		result.removeResults(Stream.of(validators)
-				.map(Validator::getResult)
+				.map(Validator::getValidationStatus)
 				.collect(Collectors.toList()));
 	}
-	
-	
-	
-	
+
 	@Override
-	public ValidationResult getResult() {
+	public ValidationStatus getValidationStatus() {
 		return result;
 	}
 }

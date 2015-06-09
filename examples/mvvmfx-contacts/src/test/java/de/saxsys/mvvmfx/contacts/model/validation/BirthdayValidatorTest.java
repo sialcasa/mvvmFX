@@ -16,12 +16,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.saxsys.mvvmfx.contacts.util.CentralClock;
-import de.saxsys.mvvmfx.utils.validation.ValidationResult;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 
 
 public class BirthdayValidatorTest {
 	
-	private ValidationResult result;
+	private ValidationStatus result;
 	private ObjectProperty<LocalDate> value = new SimpleObjectProperty<>();
 	
 	
@@ -34,7 +34,7 @@ public class BirthdayValidatorTest {
 		
 		Validator validator = new BirthdayValidator(value);
 		
-		result = validator.getResult();
+		result = validator.getValidationStatus();
 	}
 	
 	
