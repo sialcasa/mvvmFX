@@ -883,7 +883,7 @@ public class ModelWrapper<M> {
 	}
 
     /**
-     * This boolean flag indicates wether there is a difference of the data between
+     * This boolean flag indicates whether there is a difference of the data between
      * the wrapped model object and the properties provided by this wrapper.
      * <p>
      * Note the difference to {@link #dirtyProperty()}:
@@ -914,7 +914,7 @@ public class ModelWrapper<M> {
 	}
 
     /**
-     * This boolean flag indicates wether there was a change at least one wrapped property.
+     * This boolean flag indicates whether there was a change to at least one wrapped property.
      * <p>
      * Note the difference to {@link #differentProperty()}:
      * This property will turn to <code>true</code> when the value of one of the wrapped properties is
