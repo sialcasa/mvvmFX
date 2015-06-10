@@ -19,17 +19,17 @@ public class CompositeValidator implements Validator {
 	}
 	
 	public CompositeValidator(Validator... validators) {
-		registerValidator(validators);
+		addValidators(validators);
 	}
 	
 	
-	public void registerValidator(Validator... validators) {
+	public void addValidators(Validator... validators) {
 		result.addResults(Stream.of(validators)
 				.map(Validator::getValidationStatus)
 				.collect(Collectors.toList()));
 	}
 	
-	public void unregisterValidator(Validator... validators) {
+	public void removeValidators(Validator... validators) {
 		result.removeResults(Stream.of(validators)
 				.map(Validator::getValidationStatus)
 				.collect(Collectors.toList()));
