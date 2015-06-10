@@ -38,7 +38,7 @@ public class CompositeValidatorTest {
 	
 	@Test
 	public void testValidation() {
-		compositeValidator.registerValidator(validator1, validator2);
+		compositeValidator.addValidators(validator1, validator2);
 		
 		valid1.set(true);
 		valid2.set(true);
@@ -79,13 +79,13 @@ public class CompositeValidatorTest {
 		
 		assertThat(status.isValid()).isTrue(); // no validator is registered at the moment
 		
-		compositeValidator.registerValidator(validator2);
+		compositeValidator.addValidators(validator2);
 		assertThat(status.isValid()).isTrue(); // validator2 is valid
 		
-		compositeValidator.registerValidator(validator1);
+		compositeValidator.addValidators(validator1);
 		assertThat(status.isValid()).isFalse();
 		
-		compositeValidator.unregisterValidator(validator1);
+		compositeValidator.removeValidators(validator1);
 		assertThat(status.isValid()).isTrue();
 	}
 	

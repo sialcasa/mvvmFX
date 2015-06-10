@@ -44,7 +44,7 @@ public class ContactFormViewModel implements ViewModel {
         });
 
 
-		formValidator.registerValidator(
+		formValidator.addValidators(
 				firstnameValidator,
 				lastnameValidator,
 				emailValidator,
