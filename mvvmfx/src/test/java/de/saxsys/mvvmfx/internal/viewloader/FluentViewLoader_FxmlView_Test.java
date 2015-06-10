@@ -32,6 +32,7 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static de.saxsys.mvvmfx.internal.viewloader.ResourceBundleAssert.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
@@ -66,7 +67,7 @@ public class FluentViewLoader_FxmlView_Test {
 		
 		final TestFxmlView codeBehind = viewTuple.getCodeBehind();
 		assertThat(codeBehind.getViewModel()).isNotNull();
-		assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
+		assertThat(codeBehind.resourceBundle).hasSameContent(resourceBundle);
 		
 		assertThat(codeBehind.viewModelWasNull).isFalse();
 		

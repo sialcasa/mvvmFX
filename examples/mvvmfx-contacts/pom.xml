@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>mvvmfx-examples</artifactId>
 		<groupId>de.saxsys</groupId>
-		<version>1.2.1</version>
+		<version>1.3.0</version>
 	</parent>
 	<artifactId>mvvmfx-contacts</artifactId>
 
@@ -40,6 +40,12 @@
 			<artifactId>mvvmfx-cdi</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.jboss</groupId>
+			<artifactId>jandex</artifactId>
+			<version>1.2.4.Final</version>
+		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
@@ -48,7 +54,7 @@
 		<dependency>
 			<groupId>org.controlsfx</groupId>
 			<artifactId>controlsfx</artifactId>
-			<version>8.0.6</version>
+			<version>8.40.9</version>
 		</dependency>
 
 		<dependency>
@@ -104,9 +110,16 @@
 		<dependency>
 			<groupId>org.testfx</groupId>
 			<artifactId>testfx-core</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>4.0.1-alpha</version>
 			<scope>test</scope>
 		</dependency>
+
+        <dependency>
+            <groupId>de.saxsys</groupId>
+            <artifactId>mvvmfx-testing-utils</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
 </project>

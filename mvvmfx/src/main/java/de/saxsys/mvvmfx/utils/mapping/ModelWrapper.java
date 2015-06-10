@@ -24,10 +24,7 @@ import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringSetter;
 import eu.lestard.doc.Beta;
 import javafx.beans.property.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -209,7 +206,11 @@ import java.util.function.Supplier;
  */
 @Beta
 public class ModelWrapper<M> {
-	
+
+	private ReadOnlyBooleanWrapper dirtyFlag = new ReadOnlyBooleanWrapper();
+	private ReadOnlyBooleanWrapper diffFlag = new ReadOnlyBooleanWrapper();
+
+
 	/**
 	 * This interface defines the operations that are possible for each field of a wrapped class.
 	 * 
@@ -224,6 +225,8 @@ public class ModelWrapper<M> {
 		void resetToDefault();
 		
 		R getProperty();
+
+        boolean isDifferent(M wrappedObject);
 	}
 	
 	/**
@@ -247,6 +250,8 @@ public class ModelWrapper<M> {
 			this.accessor = accessor;
 			this.defaultValue = defaultValue;
 			this.targetProperty = (R) propertySupplier.get();
+
+            this.targetProperty.addListener((observable, oldValue, newValue) -> propertyWasChanged());
 		}
 		
 		@Override
@@ -268,7 +273,15 @@ public class ModelWrapper<M> {
 		public R getProperty() {
 			return targetProperty;
 		}
-	}
+
+        @Override
+        public boolean isDifferent(M wrappedObject) {
+            final T modelValue = accessor.apply(wrappedObject).getValue();
+            final T wrapperValue = targetProperty.getValue();
+
+            return !Objects.equals(modelValue, wrapperValue);
+        }
+    }
 	
 	/**
 	 * An implementation of {@link PropertyField} that is used when the fields of the model class are <b>not</b> JavaFX
@@ -295,6 +308,8 @@ public class ModelWrapper<M> {
 			this.getter = getter;
 			this.setter = setter;
 			this.targetProperty = propertySupplier.get();
+
+            this.targetProperty.addListener((observable, oldValue, newValue) -> propertyWasChanged());
 		}
 		
 		@Override
@@ -316,7 +331,15 @@ public class ModelWrapper<M> {
 		public R getProperty() {
 			return targetProperty;
 		}
-	}
+
+        @Override
+        public boolean isDifferent(M wrappedObject) {
+            final T modelValue = getter.apply(wrappedObject);
+            final T wrapperValue = targetProperty.getValue();
+
+            return !Objects.equals(modelValue, wrapperValue);
+        }
+    }
 	
 	
 	private Set<PropertyField<?, M, ?>> fields = new HashSet<>();
@@ -369,6 +392,8 @@ public class ModelWrapper<M> {
 	 */
 	public void reset() {
 		fields.forEach(field -> field.resetToDefault());
+
+        calculateDifferenceFlag();
 	}
 	
 	/**
@@ -382,6 +407,10 @@ public class ModelWrapper<M> {
 	public void commit() {
 		if (model != null) {
 			fields.forEach(field -> field.commit(model));
+
+            dirtyFlag.set(false);
+
+            calculateDifferenceFlag();
 		}
 	}
 	
@@ -396,8 +425,28 @@ public class ModelWrapper<M> {
 	public void reload() {
 		if (model != null) {
 			fields.forEach(field -> field.reload(model));
+
+            dirtyFlag.set(false);
+            calculateDifferenceFlag();
 		}
 	}
+
+
+
+    private void propertyWasChanged(){
+        dirtyFlag.set(true);
+        calculateDifferenceFlag();
+    }
+
+    private void calculateDifferenceFlag(){
+        if(model != null) {
+            final Optional<PropertyField<?, M, ?>> optional = fields.stream()
+                    .filter(field -> field.isDifferent(model))
+                    .findAny();
+
+            diffFlag.set(optional.isPresent());
+        }
+    }
 	
 	
 	
@@ -832,5 +881,63 @@ public class ModelWrapper<M> {
 			return add(field);
 		}
 	}
-	
+
+    /**
+     * This boolean flag indicates whether there is a difference of the data between
+     * the wrapped model object and the properties provided by this wrapper.
+     * <p>
+     * Note the difference to {@link #dirtyProperty()}:
+     * This property will be <code>true</code> if the data of the wrapped model is different to
+     * the properties of this wrapper. If you change the data back to the initial state so that the data
+     * is equal again, this property will change back to <code>false</code> while the {@link #dirtyProperty()}
+     * will still be <code>true</code>.
+     *
+     * Simply speaking: This property indicates whether there is a difference in data between the model and the wrapper.
+     * The {@link #dirtyProperty()} indicates whether there was a change done.
+     *
+     *
+     * Note: Only those changes are observed that are done through the wrapped property fields of this wrapper.
+     * If you change the data of the model instance directly, this property won't turn to <code>true</code>.
+     *
+     *
+     * @return a reay-only property indicating a difference between model and wrapper.
+     */
+	public ReadOnlyBooleanProperty differentProperty() {
+		return diffFlag.getReadOnlyProperty();
+	}
+
+    /**
+     * See {@link #differentProperty()}.
+     */
+	public boolean isDifferent() {
+		return diffFlag.get();
+	}
+
+    /**
+     * This boolean flag indicates whether there was a change to at least one wrapped property.
+     * <p>
+     * Note the difference to {@link #differentProperty()}:
+     * This property will turn to <code>true</code> when the value of one of the wrapped properties is
+     * changed. It will only change back to <code>false</code> when either the {@link #commit()} or {@link #reload()}
+     *  method is called.
+     * This property will stay <code>true</code> even if afterwards another change is done so that the
+     * data is equal again. In this case the {@link #differentProperty()} will switch back to <code>false</code>.
+     *
+     * Simply speaking: This property indicates whether there was a change done to the wrapped properties or not.
+     * The {@link #differentProperty()} indicates whether there is a difference in data at the moment.
+     *
+     * @return a read only boolean property indicating if there was a change done.
+     */
+	public ReadOnlyBooleanProperty dirtyProperty() {
+		return dirtyFlag.getReadOnlyProperty();
+	}
+
+    /**
+     * See {@link #dirtyProperty()}.
+     */
+	public boolean isDirty() {
+		return dirtyFlag.get();
+	}
+
+
 }

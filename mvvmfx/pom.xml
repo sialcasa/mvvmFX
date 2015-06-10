@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx-parent</artifactId>
-		<version>1.2.1</version>
+		<version>1.3.0</version>
 	</parent>
 
 	<artifactId>mvvmfx</artifactId>
@@ -43,6 +43,13 @@
 			<groupId>eu.lestard</groupId>
 			<artifactId>doc-annotations</artifactId>
 		</dependency>
+
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.40.9</version>
+			<scope>provided</scope>
+        </dependency>
 
 		<!-- Testing Frameworks -->
 
