@@ -44,7 +44,7 @@ public class ContactFormView implements FxmlView<ContactFormViewModel> {
 		phoneNumberInput.textProperty().bindBidirectional(viewModel.phoneNumberProperty());
 		emailInput.textProperty().bindBidirectional(viewModel.emailProperty());
 		birthdayInput.valueProperty().bindBidirectional(viewModel.birthdayProperty());
-
+		
 		validationVisualizer.initVisualization(viewModel.firstnameValidation(), firstnameInput, true);
 		validationVisualizer.initVisualization(viewModel.lastnameValidation(), lastnameInput, true);
 		validationVisualizer.initVisualization(viewModel.birthdayValidation(), birthdayInput);

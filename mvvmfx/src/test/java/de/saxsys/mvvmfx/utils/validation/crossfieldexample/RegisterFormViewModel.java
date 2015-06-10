@@ -17,7 +17,7 @@ public class RegisterFormViewModel implements ViewModel {
 	
 	private StringProperty password = new SimpleStringProperty();
 	private StringProperty passwordRepeat = new SimpleStringProperty();
-
+	
 	
 	private ObservableRuleBasedValidator passwordValidator = new ObservableRuleBasedValidator();
 	
@@ -30,33 +30,33 @@ public class RegisterFormViewModel implements ViewModel {
 		passwordValidator.addRule(rule2, ValidationMessage.error("Please enter the password a second time"));
 		passwordValidator.addRule(rule3, ValidationMessage.error("Both passwords need to be the same"));
 	}
-
+	
 	public ValidationStatus getValidation() {
 		return passwordValidator.getValidationStatus();
 	}
-
+	
 	public String getPassword() {
 		return password.get();
 	}
-
+	
 	public StringProperty passwordProperty() {
 		return password;
 	}
-
+	
 	public void setPassword(String password) {
 		this.password.set(password);
 	}
-
+	
 	public String getPasswordRepeat() {
 		return passwordRepeat.get();
 	}
-
+	
 	public StringProperty passwordRepeatProperty() {
 		return passwordRepeat;
 	}
-
+	
 	public void setPasswordRepeat(String passwordRepeat) {
 		this.passwordRepeat.set(passwordRepeat);
 	}
-
+	
 }

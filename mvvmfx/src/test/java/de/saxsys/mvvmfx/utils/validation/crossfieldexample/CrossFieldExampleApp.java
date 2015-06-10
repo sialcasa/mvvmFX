@@ -14,7 +14,7 @@ import javafx.stage.Stage;
  * @author manuel.mauky
  */
 public class CrossFieldExampleApp extends Application {
-
+	
 	public static void main(String... args) {
 		launch(args);
 	}

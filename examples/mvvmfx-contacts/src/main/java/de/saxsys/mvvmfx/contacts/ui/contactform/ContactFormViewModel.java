@@ -23,27 +23,27 @@ public class ContactFormViewModel implements ViewModel {
 	
 	private Validator phoneValidator = new PhoneValidator(phoneNumberProperty(), "The phone number is invalid!");
 	private Validator mobileValidator = new PhoneValidator(mobileNumberProperty(), "The mobile number is invalid!");
-
+	
 	private CompositeValidator formValidator = new CompositeValidator();
 	
 	public ContactFormViewModel() {
-        firstnameValidator = new FunctionBasedValidator<>(
-                firstnameProperty(),
-                firstName -> firstName != null && !firstName.trim().isEmpty(),
-                ValidationMessage.error("Firstname may not be empty"));
-
-
-        lastnameValidator = new FunctionBasedValidator<>(lastnameProperty(), lastName -> {
-            if(lastName == null || lastName.isEmpty()) {
-                return ValidationMessage.error("Lastname may not be empty");
-            } else if(lastName.trim().isEmpty()) {
-                return ValidationMessage.error("Lastname may not only contain whitespaces");
-            }
-
-            return null;
-        });
-
-
+		firstnameValidator = new FunctionBasedValidator<>(
+				firstnameProperty(),
+				firstName -> firstName != null && !firstName.trim().isEmpty(),
+				ValidationMessage.error("Firstname may not be empty"));
+		
+		
+		lastnameValidator = new FunctionBasedValidator<>(lastnameProperty(), lastName -> {
+			if (lastName == null || lastName.isEmpty()) {
+				return ValidationMessage.error("Lastname may not be empty");
+			} else if (lastName.trim().isEmpty()) {
+				return ValidationMessage.error("Lastname may not only contain whitespaces");
+			}
+			
+			return null;
+		});
+		
+		
 		formValidator.addValidators(
 				firstnameValidator,
 				lastnameValidator,
@@ -56,20 +56,20 @@ public class ContactFormViewModel implements ViewModel {
 	public void resetForm() {
 		contactWrapper.reset();
 	}
-
+	
 	public void initWithContact(Contact contact) {
 		this.contactWrapper.set(contact);
 		this.contactWrapper.reload();
 	}
 	
 	public Contact getContact() {
-
-		if(contactWrapper.get() == null) {
+		
+		if (contactWrapper.get() == null) {
 			contactWrapper.set(new Contact());
 		}
-
+		
 		contactWrapper.commit();
-
+		
 		return contactWrapper.get();
 	}
 	
@@ -84,11 +84,11 @@ public class ContactFormViewModel implements ViewModel {
 	public ValidationStatus birthdayValidation() {
 		return birthdayValidator.getValidationStatus();
 	}
-
-    public ValidationStatus emailValidation() {
-        return emailValidator.getValidationStatus();
-    }
-
+	
+	public ValidationStatus emailValidation() {
+		return emailValidator.getValidationStatus();
+	}
+	
 	public ValidationStatus phoneValidation() {
 		return phoneValidator.getValidationStatus();
 	}
@@ -132,8 +132,8 @@ public class ContactFormViewModel implements ViewModel {
 	public StringProperty phoneNumberProperty() {
 		return contactWrapper.field("phoneNumber", Contact::getPhoneNumber, Contact::setPhoneNumber);
 	}
-
-    public BooleanExpression validProperty() {
-        return formValidator.getValidationStatus().validProperty();
-    }
+	
+	public BooleanExpression validProperty() {
+		return formValidator.getValidationStatus().validProperty();
+	}
 }

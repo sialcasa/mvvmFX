@@ -15,7 +15,7 @@ import javafx.scene.control.PasswordField;
  * @author manuel.mauky
  */
 public class RegisterFormView implements FxmlView<RegisterFormViewModel> {
-
+	
 	@FXML
 	public PasswordField pwInput;
 	@FXML
@@ -24,10 +24,10 @@ public class RegisterFormView implements FxmlView<RegisterFormViewModel> {
 	public Label message;
 	@FXML
 	public Button okButton;
-
+	
 	@InjectViewModel
 	private RegisterFormViewModel viewModel;
-
+	
 	
 	public void initialize() {
 		
