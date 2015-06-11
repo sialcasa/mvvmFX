@@ -33,7 +33,7 @@ import java.util.function.Predicate;
  */
 public class FunctionBasedValidator<T> implements Validator {
 	
-	private ValidationStatus result = new ValidationStatus();
+	private ValidationStatus validationStatus = new ValidationStatus();
 	
 	private Function<T, Optional<ValidationMessage>> validateFunction;
 	
@@ -83,13 +83,13 @@ public class FunctionBasedValidator<T> implements Validator {
 	}
 	
 	private void validate(T newValue) {
-		result.clearMessages();
+		validationStatus.clearMessages();
 		Optional<ValidationMessage> message = validateFunction.apply(newValue);
-		message.ifPresent(result::addMessage);
+		message.ifPresent(validationStatus::addMessage);
 	}
 	
 	@Override
 	public ValidationStatus getValidationStatus() {
-		return result;
+		return validationStatus;
 	}
 }
