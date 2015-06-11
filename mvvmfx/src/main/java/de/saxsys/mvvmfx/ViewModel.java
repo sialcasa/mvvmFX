@@ -45,7 +45,7 @@ import de.saxsys.mvvmfx.utils.notifications.NotificationObserver;
 public interface ViewModel {
 	
 	/**
-	 * Publishes a notification to the subscribers of the notificationId. This notification will be send to the
+	 * Publishes a notification to the subscribers of the messageName. This notification will be send to the
 	 * UI-Thread.
 	 * 
 	 * @param messageName
