@@ -13,7 +13,7 @@ import java.util.stream.Stream;
  */
 public class CompositeValidator implements Validator {
 	
-	private CompositeValidationResult result = new CompositeValidationResult();
+	private CompositeValidationResult validationStatus = new CompositeValidationResult();
 	
 	public CompositeValidator() {
 	}
@@ -24,19 +24,19 @@ public class CompositeValidator implements Validator {
 	
 	
 	public void addValidators(Validator... validators) {
-		result.addResults(Stream.of(validators)
+		validationStatus.addResults(Stream.of(validators)
 				.map(Validator::getValidationStatus)
 				.collect(Collectors.toList()));
 	}
 	
 	public void removeValidators(Validator... validators) {
-		result.removeResults(Stream.of(validators)
+		validationStatus.removeResults(Stream.of(validators)
 				.map(Validator::getValidationStatus)
 				.collect(Collectors.toList()));
 	}
 	
 	@Override
 	public ValidationStatus getValidationStatus() {
-		return result;
+		return validationStatus;
 	}
 }

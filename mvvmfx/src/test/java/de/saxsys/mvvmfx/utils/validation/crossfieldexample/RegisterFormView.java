@@ -44,9 +44,9 @@ public class RegisterFormView implements FxmlView<RegisterFormViewModel> {
 	}
 	
 	private void updateMessage() {
-		Platform.runLater(() -> message.setText(
+		message.setText(
 				viewModel.getValidation().getHighestMessage().map(ValidationMessage::getMessage)
-						.orElse("everythink ok")));
+						.orElse("everythink ok"));
 	}
 	
 	public void ok() {
