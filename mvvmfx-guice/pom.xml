@@ -46,7 +46,6 @@
 		<dependency>
 			<groupId>de.saxsys</groupId>
 			<artifactId>mvvmfx</artifactId>
-			<version>${project.parent.version}</version>
 			<scope>provided</scope>
 		</dependency>
 

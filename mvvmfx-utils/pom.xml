@@ -19,7 +19,6 @@
         <dependency>
             <groupId>de.saxsys</groupId>
             <artifactId>mvvmfx-testing-utils</artifactId>
-            <version>${project.parent.version}</version>
         </dependency>
 
 
