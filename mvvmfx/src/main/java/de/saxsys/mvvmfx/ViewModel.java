@@ -15,6 +15,7 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx;
 
+import de.saxsys.mvvmfx.utils.notifications.NotificationTestHelper;
 import javafx.application.Platform;
 import de.saxsys.mvvmfx.internal.viewloader.View;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
@@ -45,8 +46,16 @@ import de.saxsys.mvvmfx.utils.notifications.NotificationObserver;
 public interface ViewModel {
 	
 	/**
-	 * Publishes a notification to the subscribers of the notificationId. This notification will be send to the
-	 * UI-Thread.
+	 * Publishes a notification to the subscribers of the messageName. This notification will be send to the
+	 * UI-Thread. 
+	 * <p>
+	 *     
+	 * This notification mechanism uses the {@link NotificationCenter} internally with the difference that messages send
+	 * by this method aren't globally available. Instead they can only be received by this viewModels {@link #subscribe(String, NotificationObserver)}
+	 * method or when using this viewModel instance as argument to the {@link NotificationCenter#subscribe(ViewModel, String, NotificationObserver)} method.
+	 * <p>
+	 *     
+	 * See {@link NotificationTestHelper} for a utility that's purpose is to simplify unit tests with notifications.
 	 * 
 	 * @param messageName
 	 *            of the notification

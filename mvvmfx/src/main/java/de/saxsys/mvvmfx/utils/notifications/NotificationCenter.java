@@ -24,6 +24,11 @@ import de.saxsys.mvvmfx.ViewModel;
  * 
  * {@code Object[]} with a notification.
  * 
+ * <p>
+ *    
+ * There is a util {@link NotificationTestHelper} that's purpose is to simplify testing of notifications in Unit-Tests.
+ * 
+ * 
  * @author sialcasa
  * 
  */
@@ -99,7 +104,7 @@ public interface NotificationCenter {
 	 * @param observer
 	 *            which should execute when the notification occurs
 	 */
-	void subscribe(ViewModel view, String messageName,
+	void subscribe(ViewModel viewModel, String messageName,
 			NotificationObserver observer);
 	
 	/**
@@ -118,7 +123,7 @@ public interface NotificationCenter {
 	 * @param viewModel
 	 * @param observer
 	 */
-	void unsubscribe(ViewModel view,
+	void unsubscribe(ViewModel viewModel,
 			NotificationObserver observer);
 	
 }

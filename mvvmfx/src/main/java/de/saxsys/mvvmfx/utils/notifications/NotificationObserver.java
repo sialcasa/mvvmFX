@@ -31,5 +31,5 @@ public interface NotificationObserver {
 	 * @param payload
 	 *            which are passed
 	 */
-	public void receivedNotification(String key, Object... payload);
+	void receivedNotification(String key, Object... payload);
 }
