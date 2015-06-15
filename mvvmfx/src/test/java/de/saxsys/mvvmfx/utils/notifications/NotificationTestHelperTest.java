@@ -1,18 +1,11 @@
 package de.saxsys.mvvmfx.utils.notifications;
 
-import de.saxsys.javafx.test.JfxRunner;
-import de.saxsys.mvvmfx.ViewModel;
+import static org.assertj.core.api.Assertions.*;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import de.saxsys.mvvmfx.ViewModel;
 
 /**
  * @author manuel.mauky
@@ -35,7 +28,7 @@ public class NotificationTestHelperTest {
 		
 		viewModel.publish("test");
 		
-		assertThat(helper.numberOfCalls()).isEqualTo(1);
+		assertThat(helper.numberOfReceivedNotifications()).isEqualTo(1);
 	}
 	
 	@Test
@@ -49,6 +42,60 @@ public class NotificationTestHelperTest {
 			viewModel.publish("test");
 		}
 		
-		assertThat(helper.numberOfCalls()).isEqualTo(n);
+		assertThat(helper.numberOfReceivedNotifications()).isEqualTo(n);
+	}
+	
+	@Test
+	public void globalNotificationCenter() {
+		NotificationTestHelper helper = new NotificationTestHelper();
+		
+		NotificationCenter notificationCenter = new DefaultNotificationCenter();
+		
+		notificationCenter.subscribe("OK", helper);
+		
+		
+		notificationCenter.publish("OK");
+		
+		
+		assertThat(helper.numberOfReceivedNotifications()).isEqualTo(1);
+	}
+
+	@Test
+	public void publishOnOtherThread(){
+		NotificationTestHelper helper = new NotificationTestHelper(50l);
+
+		NotificationCenter notificationCenter = new DefaultNotificationCenter();
+
+		notificationCenter.subscribe("OK", helper);
+
+
+		Runnable r = () -> notificationCenter.publish("OK");
+
+		new Thread(r).start();
+
+		assertThat(helper.numberOfReceivedNotifications()).isEqualTo(1);
+	}
+	
+	@Test
+	public void timeout() {
+		NotificationTestHelper helper = new NotificationTestHelper(150l);
+
+		NotificationCenter notificationCenter = new DefaultNotificationCenter();
+
+		notificationCenter.subscribe("OK", helper);
+
+
+		Runnable r = () -> {
+			try {
+				Thread.sleep(100l);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			notificationCenter.publish("OK");
+		};
+
+		new Thread(r).start();
+
+		assertThat(helper.numberOfReceivedNotifications()).isEqualTo(1);
 	}
 }
