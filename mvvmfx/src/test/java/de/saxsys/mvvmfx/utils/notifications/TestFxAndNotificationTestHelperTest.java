@@ -2,10 +2,13 @@ package de.saxsys.mvvmfx.utils.notifications;
 
 import static org.assertj.core.api.Assertions.*;
 
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import org.junit.After;
 import org.junit.Test;
+import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
@@ -28,11 +31,18 @@ public class TestFxAndNotificationTestHelperTest extends ApplicationTest {
 		
 		stage.setScene(new Scene(viewTuple.getView()));
 		stage.show();
+		
+		Platform.setImplicitExit(true);
+	}
+	
+	@After
+	public void tearDown() throws Exception{
+		FxToolkit.setupStage(Stage::close);
 	}
 	
 	@Test
 	public void test() {
-		
+	
 		NotificationTestHelper helper = new NotificationTestHelper();
 		viewModel.subscribe("OK", helper);
 		
