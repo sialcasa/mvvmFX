@@ -17,10 +17,6 @@
 		An maven archetype to create an example application with mvvmFX
 	</description>
 
-	<properties>
-		<version.mvvmfx>${project.parent.version}</version.mvvmfx>
-	</properties>
-
 
 	<build>
 		<extensions>
