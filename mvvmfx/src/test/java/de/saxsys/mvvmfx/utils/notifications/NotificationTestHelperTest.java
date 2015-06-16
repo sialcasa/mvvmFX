@@ -16,13 +16,14 @@ public class NotificationTestHelperTest {
 	}
 	
 	private MyViewModel viewModel;
-
+	
 	@Before
 	public void setUp() throws Exception {
 		viewModel = new MyViewModel();
 	}
+	
 	@Test
-	public void singlePublish () {
+	public void singlePublish() {
 		NotificationTestHelper helper = new NotificationTestHelper();
 		viewModel.subscribe("test", helper);
 		
@@ -35,10 +36,10 @@ public class NotificationTestHelperTest {
 	public void multiplePublish() {
 		NotificationTestHelper helper = new NotificationTestHelper();
 		viewModel.subscribe("test", helper);
-
+		
 		int n = 10;
-
-		for(int i=0 ; i<n; i++) {
+		
+		for (int i = 0; i < n; i++) {
 			viewModel.publish("test");
 		}
 		
@@ -59,32 +60,32 @@ public class NotificationTestHelperTest {
 		
 		assertThat(helper.numberOfReceivedNotifications()).isEqualTo(1);
 	}
-
+	
 	@Test
-	public void publishOnOtherThread(){
+	public void publishOnOtherThread() {
 		NotificationTestHelper helper = new NotificationTestHelper(50l);
-
+		
 		NotificationCenter notificationCenter = new DefaultNotificationCenter();
-
+		
 		notificationCenter.subscribe("OK", helper);
-
-
+		
+		
 		Runnable r = () -> notificationCenter.publish("OK");
-
+		
 		new Thread(r).start();
-
+		
 		assertThat(helper.numberOfReceivedNotifications()).isEqualTo(1);
 	}
 	
 	@Test
 	public void timeout() {
-		NotificationTestHelper helper = new NotificationTestHelper(150l);
-
+		NotificationTestHelper helper = new NotificationTestHelper(300l);
+		
 		NotificationCenter notificationCenter = new DefaultNotificationCenter();
-
+		
 		notificationCenter.subscribe("OK", helper);
-
-
+		
+		
 		Runnable r = () -> {
 			try {
 				Thread.sleep(100l);
@@ -93,9 +94,9 @@ public class NotificationTestHelperTest {
 			}
 			notificationCenter.publish("OK");
 		};
-
+		
 		new Thread(r).start();
-
+		
 		assertThat(helper.numberOfReceivedNotifications()).isEqualTo(1);
 	}
 }
