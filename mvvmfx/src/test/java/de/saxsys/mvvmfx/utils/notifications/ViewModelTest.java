@@ -41,7 +41,15 @@ public class ViewModelTest {
 	
 	@Test
 	public void observerIsCalledFromUiThread() throws InterruptedException, ExecutionException, TimeoutException {
-
+		// Check that there is a UI-Thread available. This JUnit-Test isn't running on the UI-Thread but there needs to
+		// be a UI-Thread available in the background.
+		CompletableFuture<Void> uiThreadIsAvailable = new CompletableFuture<>();
+		Platform.runLater(() -> uiThreadIsAvailable.complete(null));  // This would throw an IllegalStateException if no
+																		// UI-Thread is available.
+		uiThreadIsAvailable.get(1l, TimeUnit.SECONDS);
+		
+		
+		
 		CompletableFuture<Boolean> future = new CompletableFuture<>();
 		
 		// The test doesn't run on the FX thread.
@@ -49,9 +57,9 @@ public class ViewModelTest {
 		
 		viewModel.subscribe(TEST_NOTIFICATION, (key, payload) -> {
 			// the notification is executed on the FX thread.
-			future.complete(Platform.isFxApplicationThread());
-		});
-
+				future.complete(Platform.isFxApplicationThread());
+			});
+		
 		viewModel.publish(TEST_NOTIFICATION);
 		
 		
@@ -59,22 +67,22 @@ public class ViewModelTest {
 		
 		assertThat(wasCalledOnUiThread).isTrue();
 	}
-
-
+	
+	
 	@Test
 	public void observerFromOutsideDoesNotReceiveNotifications() {
 		MvvmFX.getNotificationCenter().subscribe(TEST_NOTIFICATION, observer1);
 		viewModel.publish(TEST_NOTIFICATION);
-
+		
 		waitForUiThread();
-		Mockito.verify(observer1,  Mockito.never()).receivedNotification(TEST_NOTIFICATION);
+		Mockito.verify(observer1, Mockito.never()).receivedNotification(TEST_NOTIFICATION);
 	}
 	
 	@Test
 	public void addObserverAndPublish() throws Exception {
 		viewModel.subscribe(TEST_NOTIFICATION, observer1);
 		viewModel.publish(TEST_NOTIFICATION, OBJECT_ARRAY_FOR_NOTIFICATION);
-
+		
 		waitForUiThread();
 		Mockito.verify(observer1).receivedNotification(TEST_NOTIFICATION, OBJECT_ARRAY_FOR_NOTIFICATION);
 	}
@@ -84,14 +92,14 @@ public class ViewModelTest {
 		viewModel.subscribe(TEST_NOTIFICATION, observer1);
 		viewModel.unsubscribe(observer1);
 		viewModel.publish(TEST_NOTIFICATION);
-
+		
 		waitForUiThread();
 		Mockito.verify(observer1, Mockito.never()).receivedNotification(TEST_NOTIFICATION);
 		
 		viewModel.subscribe(TEST_NOTIFICATION, observer1);
 		viewModel.unsubscribe(TEST_NOTIFICATION, observer1);
 		viewModel.publish(TEST_NOTIFICATION);
-
+		
 		waitForUiThread();
 		Mockito.verify(observer1, Mockito.never()).receivedNotification(TEST_NOTIFICATION);
 	}
@@ -102,7 +110,7 @@ public class ViewModelTest {
 		viewModel.subscribe(TEST_NOTIFICATION, observer2);
 		viewModel.subscribe(TEST_NOTIFICATION, observer3);
 		viewModel.publish(TEST_NOTIFICATION, OBJECT_ARRAY_FOR_NOTIFICATION);
-
+		
 		waitForUiThread();
 		
 		Mockito.verify(observer1).receivedNotification(TEST_NOTIFICATION, OBJECT_ARRAY_FOR_NOTIFICATION);
@@ -118,7 +126,7 @@ public class ViewModelTest {
 		viewModel.subscribe(TEST_NOTIFICATION, observer3);
 		viewModel.unsubscribe(observer1);
 		viewModel.publish(TEST_NOTIFICATION, OBJECT_ARRAY_FOR_NOTIFICATION);
-
+		
 		waitForUiThread();
 		
 		Mockito.verify(observer1, Mockito.never()).receivedNotification(TEST_NOTIFICATION,
@@ -128,9 +136,10 @@ public class ViewModelTest {
 		Mockito.verify(observer3).receivedNotification(TEST_NOTIFICATION,
 				OBJECT_ARRAY_FOR_NOTIFICATION);
 	}
-
+	
 	/**
-	 *	This method is used to wait until the UI thread has done all work that was queued via {@link Platform#runLater(Runnable)}.
+	 * This method is used to wait until the UI thread has done all work that was queued via
+	 * {@link Platform#runLater(Runnable)}.
 	 */
 	private void waitForUiThread() {
 		CompletableFuture<Void> future = new CompletableFuture<>();
@@ -141,7 +150,7 @@ public class ViewModelTest {
 			throw new IllegalStateException(e);
 		}
 	}
-
+	
 	private class DummyNotificationObserver implements NotificationObserver {
 		@Override
 		public void receivedNotification(String key, Object... payload) {

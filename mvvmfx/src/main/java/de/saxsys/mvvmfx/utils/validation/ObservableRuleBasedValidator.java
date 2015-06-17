@@ -30,7 +30,7 @@ public class ObservableRuleBasedValidator implements Validator {
 	
 	private List<ObservableValue<Boolean>> rules = new ArrayList<>();
 	
-	private ValidationStatus result = new ValidationStatus();
+	private ValidationStatus validationStatus = new ValidationStatus();
 	
 	/**
 	 * Add a rule for this validator.
@@ -58,15 +58,15 @@ public class ObservableRuleBasedValidator implements Validator {
 	
 	private void validateRule(boolean isValid, ValidationMessage message) {
 		if (isValid) {
-			result.removeMessage(message);
+			validationStatus.removeMessage(message);
 		} else {
-			result.addMessage(message);
+			validationStatus.addMessage(message);
 		}
 	}
 	
 	@Override
 	public ValidationStatus getValidationStatus() {
-		return result;
+		return validationStatus;
 	}
 	
 }

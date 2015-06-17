@@ -189,57 +189,43 @@ public class CompositeCommandTest {
 		
 		CompositeCommand compositeCommand = new CompositeCommand(delegateCommand1, delegateCommand2, delegateCommand3);
 		
-		 compositeCommand.progressProperty().addListener(new ChangeListener<Number>() {
-		
-		 @Override
-		 public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-		 }
-		 });
-		
 		GCVerifier.forceGC();
 		
-		compositeCommand.runningProperty().addListener(new ChangeListener<Boolean>() {
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				if (newValue && !oldValue) {
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							assertTrue(compositeCommand.runningProperty().get());
-							assertTrue(delegateCommand1.runningProperty().get());
-							assertTrue(delegateCommand2.runningProperty().get());
-							assertTrue(delegateCommand3.runningProperty().get());
-							assertFalse(compositeCommand.notRunningProperty().get());
-							assertFalse(delegateCommand1.notRunningProperty().get());
-							assertFalse(delegateCommand2.notRunningProperty().get());
-							assertFalse(delegateCommand3.notRunningProperty().get());
-							commandCompleted.complete(null);
-						}
-					});
-				}
-				if (oldValue && !newValue) {
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							assertFalse(compositeCommand.runningProperty().get());
-							assertFalse(delegateCommand1.runningProperty().get());
-							assertFalse(delegateCommand2.runningProperty().get());
-							assertFalse(delegateCommand3.runningProperty().get());
-							assertTrue(compositeCommand.notRunningProperty().get());
-							assertTrue(delegateCommand1.notRunningProperty().get());
-							assertTrue(delegateCommand2.notRunningProperty().get());
-							assertTrue(delegateCommand3.notRunningProperty().get());
-							commandStarted.complete(null);
-						}
-					});
-				}
+		compositeCommand.runningProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue && !oldValue) {  // command is now running, wasn't running before
+				Platform.runLater(() -> {
+					assertTrue(compositeCommand.runningProperty().get());
+					assertTrue(delegateCommand1.runningProperty().get());
+					assertTrue(delegateCommand2.runningProperty().get());
+					assertTrue(delegateCommand3.runningProperty().get());
+					assertFalse(compositeCommand.notRunningProperty().get());
+					assertFalse(delegateCommand1.notRunningProperty().get());
+					assertFalse(delegateCommand2.notRunningProperty().get());
+					assertFalse(delegateCommand3.notRunningProperty().get());
+					
+					commandStarted.complete(null);
+				});
+			}
+			if (oldValue && !newValue) { // command was running, isn't running now
+				Platform.runLater(() -> {
+					assertFalse(compositeCommand.runningProperty().get());
+					assertFalse(delegateCommand1.runningProperty().get());
+					assertFalse(delegateCommand2.runningProperty().get());
+					assertFalse(delegateCommand3.runningProperty().get());
+					assertTrue(compositeCommand.notRunningProperty().get());
+					assertTrue(delegateCommand1.notRunningProperty().get());
+					assertTrue(delegateCommand2.notRunningProperty().get());
+					assertTrue(delegateCommand3.notRunningProperty().get());
+					
+					commandCompleted.complete(null);
+				});
 			}
 		});
 		
 		compositeCommand.execute();
-		commandStarted.get(3, TimeUnit.SECONDS);
-		future.get(3, TimeUnit.SECONDS);
-		commandCompleted.get(4, TimeUnit.SECONDS);
+		commandStarted.get(5, TimeUnit.SECONDS);
+		future.get(5, TimeUnit.SECONDS);
+		commandCompleted.get(5, TimeUnit.SECONDS);
 	}
 	
 	
