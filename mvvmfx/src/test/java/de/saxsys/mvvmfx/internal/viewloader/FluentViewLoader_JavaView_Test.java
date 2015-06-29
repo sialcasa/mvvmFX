@@ -1,6 +1,9 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
-import static org.assertj.core.api.Assertions.*;
+
+import static de.saxsys.mvvmfx.internal.viewloader.ResourceBundleAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
@@ -99,7 +102,7 @@ public class FluentViewLoader_JavaView_Test {
 	}
 	
 	@Test
-	public void test_initializeOfViewModel(){
+	public void test_initializeOfViewModel() {
 		// given
 		TestViewModelWithResourceBundle.wasInitialized = false;
 		TestViewModelWithResourceBundle.resourceBundleWasAvailableAtInitialize = false;
@@ -218,35 +221,36 @@ public class FluentViewLoader_JavaView_Test {
 			assertThat(e).isInstanceOf(RuntimeException.class).hasMessageContaining("<2> viewModel fields");
 		}
 	}
-
-
-
+	
+	
+	
 	/**
 	 * When the ViewModel isn't injected in the view it should still be available in the ViewTuple.
 	 */
 	@Test
-	public void testViewModelIsAvailableInViewTupleEvenIfItIsntInjectedInTheView(){
+	public void testViewModelIsAvailableInViewTupleEvenIfItIsntInjectedInTheView() {
 		
-		class TestView extends VBox implements JavaView<TestViewModel>{
+		class TestView extends VBox implements JavaView<TestViewModel> {
 		}
-
+		
 		ViewTuple<TestView, TestViewModel> viewTuple = FluentViewLoader
 				.javaView(TestView.class).load();
-
+		
 		assertThat(viewTuple.getViewModel()).isNotNull();
 	}
 	
 	
 	@Test
-	public void testUseExistingViewModel(){
-		class TestView extends VBox implements JavaView<TestViewModel>{
+	public void testUseExistingViewModel() {
+		class TestView extends VBox implements JavaView<TestViewModel> {
 			@InjectViewModel
 			public TestViewModel viewModel;
 		}
 		
 		TestViewModel viewModel = new TestViewModel();
-
-		ViewTuple<TestView, TestViewModel> viewTuple = FluentViewLoader.javaView(TestView.class).viewModel(viewModel).load();
+		
+		ViewTuple<TestView, TestViewModel> viewTuple = FluentViewLoader.javaView(TestView.class).viewModel(viewModel)
+				.load();
 		
 		assertThat(viewTuple.getCodeBehind().viewModel).isEqualTo(viewModel);
 		assertThat(viewTuple.getViewModel()).isEqualTo(viewModel);
@@ -364,7 +368,7 @@ public class FluentViewLoader_JavaView_Test {
 		TestView loadedView = FluentViewLoader.javaView(TestView.class).resourceBundle(resourceBundle).load()
 				.getCodeBehind();
 		
-		assertThat(loadedView.resources).isEqualTo(resourceBundle);
+		assertThat(loadedView.resources).hasSameContent(resourceBundle);
 	}
 	
 	
@@ -420,7 +424,9 @@ public class FluentViewLoader_JavaView_Test {
 		TestView loadedView = FluentViewLoader.javaView(TestView.class).resourceBundle(resourceBundle).load()
 				.getCodeBehind();
 		
-		assertThat(loadedView.resources).isEqualTo(resourceBundle);
+		assertThat(loadedView.resources).isInstanceOf(ResourceBundle.class);
+		ResourceBundle resourceBundle = (ResourceBundle)loadedView.resources;
+		assertThat(resourceBundle).isNotNull().hasSameContent(resourceBundle);
 	}
 	
 	/**
@@ -454,7 +460,7 @@ public class FluentViewLoader_JavaView_Test {
 		TestView loadedView = FluentViewLoader.javaView(TestView.class).resourceBundle(resourceBundle).load()
 				.getCodeBehind();
 		
-		assertThat(loadedView.resourceBundle).isEqualTo(resourceBundle);
+		assertThat(loadedView.resourceBundle).hasSameContent(resourceBundle);
 	}
 	
 	/**

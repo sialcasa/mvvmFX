@@ -21,7 +21,8 @@ public class Starter extends Application {
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Hello World Application");
 		
-		ViewTuple<HelloWorldView, HelloWorldViewModel> viewTuple = FluentViewLoader.javaView(HelloWorldView.class).load();
+		ViewTuple<HelloWorldView, HelloWorldViewModel> viewTuple = FluentViewLoader.javaView(HelloWorldView.class)
+				.load();
 		
 		Parent root = viewTuple.getView();
 		stage.setScene(new Scene(root));

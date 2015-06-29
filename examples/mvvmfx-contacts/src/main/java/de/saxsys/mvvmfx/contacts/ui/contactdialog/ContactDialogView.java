@@ -37,30 +37,23 @@ public class ContactDialogView implements FxmlView<ContactDialogViewModel> {
 	@FXML
 	private Pagination formPagination;
 	
-
-	private ResourceBundle defaultResourceBundle;
 	
 	@InjectViewModel
 	private ContactDialogViewModel viewModel;
 	
-	@Inject
-	public ContactDialogView(ResourceBundle defaultResourceBundle){
-		this.defaultResourceBundle = defaultResourceBundle;
-	}
 	
-	public void initialize(){
+	public void initialize() {
 		ViewTuple<ContactFormView, ContactFormViewModel> contactFormTuple = FluentViewLoader
-				.fxmlView(ContactFormView.class)
-				.resourceBundle(defaultResourceBundle).load();
-
-		ViewTuple<AddressFormView, AddressFormViewModel> addressFormTuple = FluentViewLoader.fxmlView(AddressFormView.class)
-				.resourceBundle(defaultResourceBundle).load();
-
+				.fxmlView(ContactFormView.class).load();
+		
+		ViewTuple<AddressFormView, AddressFormViewModel> addressFormTuple = FluentViewLoader
+				.fxmlView(AddressFormView.class).load();
+		
 		viewModel.setContactFormViewModel(contactFormTuple.getViewModel());
 		viewModel.setAddressFormViewModel(addressFormTuple.getViewModel());
-
+		
 		formPagination.getStyleClass().add("invisible-pagination-control");
-
+		
 		formPagination.setPageFactory(index -> {
 			if (index == 0) {
 				return contactFormTuple.getView();
@@ -68,21 +61,21 @@ public class ContactDialogView implements FxmlView<ContactDialogViewModel> {
 				return addressFormTuple.getView();
 			}
 		});
-
+		
 		formPagination.currentPageIndexProperty().bindBidirectional(viewModel.dialogPageProperty());
-
+		
 		AwesomeDude.setIcon(okButton, AwesomeIcon.CHECK);
 		AwesomeDude.setIcon(nextButton, AwesomeIcon.CHEVRON_RIGHT, ContentDisplay.RIGHT);
 		AwesomeDude.setIcon(previousButton, AwesomeIcon.CHEVRON_LEFT);
-
+		
 		okButton.disableProperty().bind(viewModel.okButtonDisabledProperty());
 		okButton.visibleProperty().bind(viewModel.okButtonVisibleProperty());
 		okButton.managedProperty().bind(viewModel.okButtonVisibleProperty());
-
+		
 		nextButton.disableProperty().bind(viewModel.nextButtonDisabledProperty());
 		nextButton.visibleProperty().bind(viewModel.nextButtonVisibleProperty());
 		nextButton.managedProperty().bind(viewModel.nextButtonVisibleProperty());
-
+		
 		previousButton.disableProperty().bind(viewModel.previousButtonDisabledProperty());
 		previousButton.visibleProperty().bind(viewModel.previousButtonVisibleProperty());
 		previousButton.managedProperty().bind(viewModel.previousButtonVisibleProperty());
@@ -91,21 +84,21 @@ public class ContactDialogView implements FxmlView<ContactDialogViewModel> {
 	}
 	
 	@FXML
-	private void previous(){
+	private void previous() {
 		viewModel.previousAction();
 	}
 	
 	@FXML
-	private void next(){
+	private void next() {
 		viewModel.nextAction();
 	}
 	
 	@FXML
-	private void ok(){
+	private void ok() {
 		viewModel.okAction();
 	}
 	
-	public ContactDialogViewModel getViewModel(){
+	public ContactDialogViewModel getViewModel() {
 		return viewModel;
 	}
 }

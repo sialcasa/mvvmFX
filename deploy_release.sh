@@ -25,4 +25,4 @@
 #   </servers>
 # </settings>
 
-mvn clean deploy -pl 'mvvmfx,mvvmfx-cdi,mvvmfx-guice,mvvmfx-archetype' -am -DskipTests=true -Pdeploy-release --settings ~/.m2/settings-mvvmfx.xml
+mvn clean deploy -pl 'mvvmfx,mvvmfx-cdi,mvvmfx-guice,mvvmfx-archetype,mvvmfx-utils,mvvmfx-testing-utils' -am -DskipTests=true -Pdeploy-release --settings ~/.m2/settings-mvvmfx.xml

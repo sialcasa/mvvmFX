@@ -36,7 +36,7 @@ import de.saxsys.mvvmfx.guice.internal.MvvmfxModule;
  *
  * @author manuel.mauky
  */
-public abstract class MvvmfxGuiceApplication extends GuiceApplication implements MvvmfxApplication{
+public abstract class MvvmfxGuiceApplication extends GuiceApplication implements MvvmfxApplication {
 	
 	
 	@Inject
@@ -57,14 +57,14 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication implements
 						return getHostServices();
 					}
 				});
-
+				
 				bind(Stage.class).toProvider(new Provider<Stage>() {
 					@Override
 					public Stage get() {
 						return primaryStage;
 					}
 				});
-
+				
 				bind(Parameters.class).toProvider(new Provider<Parameters>() {
 					@Override
 					public Parameters get() {
@@ -90,12 +90,12 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication implements
 		
 		this.startMvvmfx(stage);
 	}
-
+	
 	@Override
 	public final void stop() throws Exception {
 		stopMvvmfx();
 	}
-
+	
 	/**
 	 * Configure the guice modules.
 	 *
@@ -104,6 +104,6 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication implements
 	 * @throws Exception
 	 *             exc
 	 */
-	public void initGuiceModules(List<Module> modules) throws Exception{
+	public void initGuiceModules(List<Module> modules) throws Exception {
 	}
 }

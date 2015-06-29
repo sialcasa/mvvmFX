@@ -15,12 +15,23 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx;
 
+import de.saxsys.mvvmfx.utils.notifications.NotificationTestHelper;
+import javafx.application.Platform;
 import de.saxsys.mvvmfx.internal.viewloader.View;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
+import de.saxsys.mvvmfx.utils.notifications.NotificationObserver;
 
 /**
  * <p>
- * Marker interface for a View Model. Some additional hints to this layer:
+ * Interface for a View Model.
+ * </p>
+ * <p>
+ * You can use a notification mechanism by using the {@link #publish(String, Object...)} method. In the View you can
+ * subscribe to this notifications by using viewModel.
+ * {@link #subscribe(String messageName, NotificationObserver observer)}.
+ * </p>
+ * <p>
+ * Some additional hints to this layer:
  * </p>
  * 
  * <p>
@@ -33,4 +44,76 @@ import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
  * 
  */
 public interface ViewModel {
+	
+	/**
+	 * Publishes a notification to the subscribers of the messageName. This notification will be send to the
+	 * UI-Thread (if the UI-toolkit was bootstrapped). If no UI-Toolkit is available the notification will be directly 
+	 * published. This is typically the case in unit tests. 
+	 * <p>
+	 *     
+	 * This notification mechanism uses the {@link NotificationCenter} internally with the difference that messages send
+	 * by this method aren't globally available. Instead they can only be received by this viewModels {@link #subscribe(String, NotificationObserver)}
+	 * method or when using this viewModel instance as argument to the {@link NotificationCenter#subscribe(ViewModel, String, NotificationObserver)} method.
+	 * <p>
+	 *     
+	 * See {@link NotificationTestHelper} for a utility that's purpose is to simplify unit tests with notifications.
+	 * 
+	 * @param messageName
+	 *            of the notification
+	 * @param payload
+	 *            to be send
+	 */
+	default void publish(String messageName, Object... payload) {
+		if (Platform.isFxApplicationThread()) {
+			MvvmFX.getNotificationCenter().publish(this, messageName, payload);
+		} else {
+			try {
+				Platform.runLater(() -> MvvmFX.getNotificationCenter().publish(this, messageName, payload));
+			} catch(IllegalStateException e) {
+				
+				// If the toolkit isn't initialized yet we will publish the notification directly. 
+				// In most cases this means that we are in a unit test and not JavaFX application is running.
+				if(e.getMessage().equals("Toolkit not initialized")) {
+					MvvmFX.getNotificationCenter().publish(this, messageName, payload);
+				} else {
+					throw e;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Subscribe to a notification with a given {@link NotificationObserver}. 
+	 * The observer will be invoked on the UI thread.
+	 * 
+	 * @param messageName
+	 *            of the Notification
+	 * @param observer
+	 *            which should execute when the notification occurs
+	 */
+	default void subscribe(String messageName, NotificationObserver observer) {
+		MvvmFX.getNotificationCenter().subscribe(this, messageName, observer);
+	}
+	
+	/**
+	 * Remove the observer for a specific notification by a given messageName.
+	 * 
+	 * @param messageName
+	 *            of the notification for that the observer should be removed
+	 * @param observer
+	 *            to remove
+	 */
+	default void unsubscribe(String messageName, NotificationObserver observer) {
+		MvvmFX.getNotificationCenter().unsubscribe(this, messageName, observer);
+	}
+	
+	/**
+	 * Removes the observer for all messages.
+	 * 
+	 * @param observer
+	 *            to be removed
+	 */
+	default void unsubscribe(NotificationObserver observer) {
+		MvvmFX.getNotificationCenter().unsubscribe(this, observer);
+	}
 }

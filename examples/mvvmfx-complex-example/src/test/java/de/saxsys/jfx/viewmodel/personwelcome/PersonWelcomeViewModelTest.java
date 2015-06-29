@@ -1,13 +1,14 @@
 package de.saxsys.jfx.viewmodel.personwelcome;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import de.saxsys.jfx.exampleapplication.model.Gender;
 import de.saxsys.jfx.exampleapplication.model.Person;
 import de.saxsys.jfx.exampleapplication.model.Repository;
 import de.saxsys.jfx.exampleapplication.viewmodel.personwelcome.PersonWelcomeViewModel;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 public class PersonWelcomeViewModelTest {
 	
@@ -27,7 +28,7 @@ public class PersonWelcomeViewModelTest {
 		personWelcomeViewModel.setPersonId(repository.getPersons().get(0)
 				.getId());
 		assertEquals(
-				"Willkommen Herr Casall, oder wollen Sie Alexander genannt werden?",
+				"Willkommen Herr Alexander Casall",
 				personWelcomeViewModel.welcomeStringProperty().get());
 		
 		assertEquals(repository.getPersons().get(0).getId(),
@@ -39,7 +40,7 @@ public class PersonWelcomeViewModelTest {
 		personWelcomeViewModel.setPersonId(repository.getPersons().get(2)
 				.getId());
 		assertEquals(
-				"Willkommen Frau Schulze, oder wollen Sie Anna genannt werden?",
+				"Willkommen Frau Anna Schulze",
 				personWelcomeViewModel.welcomeStringProperty().get());
 		
 		assertEquals(repository.getPersons().get(2).getId(),
@@ -52,7 +53,7 @@ public class PersonWelcomeViewModelTest {
 		personWelcomeViewModel.setPersonId(person.getId());
 		person.setFirstName(person.getFirstName() + 'X');
 		assertEquals(
-				"Willkommen Herr Casall, oder wollen Sie AlexanderX genannt werden?",
+				"Willkommen Herr AlexanderX Casall",
 				personWelcomeViewModel.welcomeStringProperty().get());
 	}
 	
@@ -62,7 +63,7 @@ public class PersonWelcomeViewModelTest {
 		personWelcomeViewModel.setPersonId(person.getId());
 		person.setLastName(person.getLastName() + 'X');
 		assertEquals(
-				"Willkommen Herr CasallX, oder wollen Sie Alexander genannt werden?",
+				"Willkommen Herr Alexander CasallX",
 				personWelcomeViewModel.welcomeStringProperty().get());
 	}
 	
@@ -72,7 +73,7 @@ public class PersonWelcomeViewModelTest {
 		personWelcomeViewModel.setPersonId(person.getId());
 		person.setGender(Gender.FEMALE);
 		assertEquals(
-				"Willkommen Frau Casall, oder wollen Sie Alexander genannt werden?",
+				"Willkommen Frau Alexander Casall",
 				personWelcomeViewModel.welcomeStringProperty().get());
 	}
 }

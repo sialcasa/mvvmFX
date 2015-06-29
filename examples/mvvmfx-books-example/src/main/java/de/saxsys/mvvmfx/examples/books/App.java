@@ -10,7 +10,6 @@ import com.guigarage.flatterfx.FlatterInputType;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.MvvmFX;
-import de.saxsys.mvvmfx.examples.books.backend.Book;
 import de.saxsys.mvvmfx.examples.books.backend.LibraryService;
 import de.saxsys.mvvmfx.examples.books.backend.LibraryServiceImpl;
 import de.saxsys.mvvmfx.examples.books.backend.LibraryServiceMockImpl;
@@ -18,7 +17,7 @@ import eu.lestard.easydi.EasyDI;
 
 public class App extends Application {
 	
-	private static final boolean ENABLE_MOCK_SERVICE = false;
+	private static final boolean ENABLE_MOCK_SERVICE = true;
 	
 	private EasyDI context = new EasyDI();
 	
@@ -38,7 +37,7 @@ public class App extends Application {
 		}
 		
 		
-		MvvmFX.setCustomDependencyInjector(context::getInstance);
+		MvvmFX.setCustomDependencyInjector(type -> context.getInstance(type));
 		
 		primaryStage.setTitle("Library JavaFX");
 		primaryStage.setMinWidth(1200);

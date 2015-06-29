@@ -34,17 +34,18 @@ public class AddContactDialog implements FxmlView<AddContactDialogViewModel> {
 	private Parent root;
 	
 	@Inject
-	AddContactDialog(ResourceBundle defaultResourceBundle) {
-		ViewTuple<AddContactDialog, AddContactDialogViewModel> viewTuple = FluentViewLoader.fxmlView(this.getClass())
-				.codeBehind(this).resourceBundle(defaultResourceBundle).load();
-		
-		root = viewTuple.getView();
+	AddContactDialog() {
+		root = FluentViewLoader
+				.fxmlView(AddContactDialog.class)
+				.codeBehind(this)
+				.load()
+				.getView();
 	}
 	
 	public void initialize() {
 		viewModel.setContactDialogViewModel(contactDialogViewController.getViewModel());
 		
-		DialogHelper.initDialog(viewModel.dialogOpenProperty(), primaryStage, ()-> root);
+		DialogHelper.initDialog(viewModel.dialogOpenProperty(), primaryStage, () -> root);
 	}
 	
 	public void open(@Observes OpenAddContactDialogEvent event) {

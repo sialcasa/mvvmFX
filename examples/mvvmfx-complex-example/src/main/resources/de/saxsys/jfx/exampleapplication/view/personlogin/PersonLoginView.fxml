@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.collections.FXCollections?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import java.lang.String?>
-<StackPane prefHeight="133.9998779296875" prefWidth="461.0" xmlns:fx="http://javafx.com/fxml"
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+		   xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.40"
 		   fx:controller="de.saxsys.jfx.exampleapplication.view.personlogin.PersonLoginView">
 	<!-- TODO Add Nodes -->
 	<children>
-		<VBox fx:id="layoutVbox" alignment="CENTER" minHeight="37.0" prefHeight="155.0" prefWidth="461.0" spacing="5.0">
+		<VBox fx:id="layoutVbox" alignment="CENTER" minHeight="37.0" spacing="5.0">
 			<children>
 				<Label alignment="CENTER" prefWidth="270.0" text="Personen" textAlignment="LEFT">
 					<font>
@@ -28,8 +27,10 @@
 						</FXCollections>
 					</items>
 				</ChoiceBox>
-				<Button mnemonicParsing="false" onAction="#loginButtonPressed" text="Login"/>
+				<Button fx:id="loginButton" alignment="CENTER" mnemonicParsing="false" onAction="#loginButtonPressed"
+						text="Login"/>
 			</children>
 		</VBox>
+		<ProgressIndicator fx:id="loginProgressIndicator"/>
 	</children>
 </StackPane>

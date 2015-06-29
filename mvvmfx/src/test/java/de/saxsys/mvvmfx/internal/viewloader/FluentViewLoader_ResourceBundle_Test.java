@@ -1,12 +1,12 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
-import static org.assertj.core.api.Assertions.*;
+import static de.saxsys.mvvmfx.internal.viewloader.ResourceBundleAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.StringReader;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlViewResourceBundleWithoutController;
 import javafx.scene.layout.VBox;
 
 import org.junit.Before;
@@ -17,7 +17,9 @@ import de.saxsys.mvvmfx.InjectResourceBundle;
 import de.saxsys.mvvmfx.JavaView;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlViewResourceBundle;
+import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlViewResourceBundleWithoutController;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelWithResourceBundle;
+
 
 /**
  * This test focuses on the handling of {@link ResourceBundle}s.
@@ -46,10 +48,10 @@ public class FluentViewLoader_ResourceBundle_Test {
 		final TestViewModelWithResourceBundle viewModel = viewTuple.getViewModel();
 		final TestFxmlViewResourceBundle view = viewTuple.getCodeBehind();
 		
-		assertThat(view.resources).isNotNull().isEqualTo(resourceBundle);
-		assertThat(view.resourceBundle).isNotNull().isEqualTo(resourceBundle);
+		assertThat(view.resources).isNotNull().hasSameContent(resourceBundle);
+		assertThat(view.resourceBundle).isNotNull().hasSameContent(resourceBundle);
 		
-		assertThat(viewModel.resourceBundle).isNotNull().isEqualTo(resourceBundle);
+		assertThat(viewModel.resourceBundle).isNotNull().hasSameContent(resourceBundle);
 	}
 	
 	@Test
@@ -66,13 +68,13 @@ public class FluentViewLoader_ResourceBundle_Test {
 		final TestFxmlViewResourceBundle view = viewTuple.getCodeBehind();
 		
 		
-		assertThat(view.resourceBundle).isNotNull().isEqualTo(resourceBundle);
-		assertThat(viewModel.resourceBundle).isNotNull().isEqualTo(resourceBundle);
+		assertThat(view.resourceBundle).isNotNull().hasSameContent(resourceBundle);
+		assertThat(viewModel.resourceBundle).isNotNull().hasSameContent(resourceBundle);
 	}
-
-
+	
+	
 	@Test
-	public void success_fxml_existingCodeBehind(){
+	public void success_fxml_existingCodeBehind() {
 		TestFxmlViewResourceBundleWithoutController codeBehind = new TestFxmlViewResourceBundleWithoutController();
 		
 		final ViewTuple<TestFxmlViewResourceBundleWithoutController, TestViewModelWithResourceBundle> viewTuple =
@@ -81,19 +83,19 @@ public class FluentViewLoader_ResourceBundle_Test {
 						.codeBehind(codeBehind)
 						.resourceBundle(resourceBundle)
 						.load();
-
+		
 		assertThat(viewTuple.getCodeBehind()).isEqualTo(codeBehind);
 		final TestViewModelWithResourceBundle viewModel = viewTuple.getViewModel();
-
-		assertThat(viewModel.resourceBundle).isEqualTo(resourceBundle);
-		assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
+		
+		assertThat(viewModel.resourceBundle).hasSameContent(resourceBundle);
+		assertThat(codeBehind.resourceBundle).hasSameContent(resourceBundle);
 	}
-
+	
 	@Test
 	public void success_fxml_existingCodeBehind_and_existingViewModel() {
 		TestFxmlViewResourceBundleWithoutController codeBehind = new TestFxmlViewResourceBundleWithoutController();
 		TestViewModelWithResourceBundle viewModel = new TestViewModelWithResourceBundle();
-
+		
 		final ViewTuple<TestFxmlViewResourceBundleWithoutController, TestViewModelWithResourceBundle> viewTuple =
 				FluentViewLoader
 						.fxmlView(TestFxmlViewResourceBundleWithoutController.class)
@@ -101,29 +103,15 @@ public class FluentViewLoader_ResourceBundle_Test {
 						.viewModel(viewModel)
 						.resourceBundle(resourceBundle)
 						.load();
-
-
-
+		
+		
+		
 		assertThat(viewTuple.getCodeBehind()).isEqualTo(codeBehind);
 		assertThat(viewTuple.getViewModel()).isEqualTo(viewModel);
-
-		assertThat(viewModel.resourceBundle).isEqualTo(resourceBundle);
-		assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
+		
+		assertThat(viewModel.resourceBundle).hasSameContent(resourceBundle);
+		assertThat(codeBehind.resourceBundle).hasSameContent(resourceBundle);
 	}
-
-
-	@Test
-	public void fail_fxml_noResourceBundleProvidedOnLoad() {
-		try {
-			FluentViewLoader
-					.fxmlView(TestFxmlViewResourceBundle.class)
-					.load();
-			fail("Expected an IllegalStateException");
-		} catch (Exception e) {
-			assertThat(e).hasRootCauseInstanceOf(IllegalStateException.class);
-		}
-	}
-	
 	
 	public static class TestJavaView extends VBox implements JavaView<TestViewModelWithResourceBundle> {
 		@InjectResourceBundle
@@ -142,9 +130,9 @@ public class FluentViewLoader_ResourceBundle_Test {
 		final TestViewModelWithResourceBundle viewModel = viewTuple.getViewModel();
 		final TestJavaView view = viewTuple.getCodeBehind();
 		
-		assertThat(view.resourceBundle).isNotNull().isEqualTo(resourceBundle);
+		assertThat(view.resourceBundle).isNotNull().hasSameContent(resourceBundle);
 		
-		assertThat(viewModel.resourceBundle).isNotNull().isEqualTo(resourceBundle);
+		assertThat(viewModel.resourceBundle).isNotNull().hasSameContent(resourceBundle);
 	}
 	
 	@Test
@@ -161,20 +149,7 @@ public class FluentViewLoader_ResourceBundle_Test {
 		final TestJavaView view = viewTuple.getCodeBehind();
 		
 		
-		assertThat(view.resourceBundle).isNotNull().isEqualTo(resourceBundle);
-		assertThat(viewModel.resourceBundle).isNotNull().isEqualTo(resourceBundle);
+		assertThat(view.resourceBundle).isNotNull().hasSameContent(resourceBundle);
+		assertThat(viewModel.resourceBundle).isNotNull().hasSameContent(resourceBundle);
 	}
-	
-	@Test
-	public void fail_java_noResourceBundleProvidedOnLoad() {
-		try {
-			FluentViewLoader
-					.javaView(TestJavaView.class)
-					.load();
-			fail("Expected an IllegalStateException");
-		} catch (Exception e) {
-			assertThat(e).isInstanceOf(IllegalStateException.class);
-		}
-	}
-	
 }

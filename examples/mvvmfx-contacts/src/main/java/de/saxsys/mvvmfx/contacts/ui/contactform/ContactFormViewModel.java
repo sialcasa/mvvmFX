@@ -1,164 +1,139 @@
 package de.saxsys.mvvmfx.contacts.ui.contactform;
 
-import java.time.LocalDate;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.scene.control.Control;
-
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.contacts.model.Contact;
-import de.saxsys.mvvmfx.contacts.model.validation.BirthdayValidator;
-import de.saxsys.mvvmfx.contacts.model.validation.EmailAddressValidator;
-import de.saxsys.mvvmfx.contacts.model.validation.PhoneNumberValidator;
+import de.saxsys.mvvmfx.contacts.ui.validators.BirthdayValidator;
+import de.saxsys.mvvmfx.contacts.ui.validators.EmailValidator;
+import de.saxsys.mvvmfx.contacts.ui.validators.PhoneValidator;
+import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
+import de.saxsys.mvvmfx.utils.validation.*;
+import javafx.beans.binding.BooleanExpression;
+import javafx.beans.property.Property;
+import javafx.beans.property.StringProperty;
+
+import java.time.LocalDate;
 
 public class ContactFormViewModel implements ViewModel {
+	private ModelWrapper<Contact> contactWrapper = new ModelWrapper<>();
 	
-	private StringProperty firstname = new SimpleStringProperty();
-	private StringProperty title = new SimpleStringProperty();
-	private StringProperty lastname = new SimpleStringProperty();
-
-	private StringProperty role = new SimpleStringProperty();
-	private StringProperty department = new SimpleStringProperty();
-
-	private ObjectProperty<LocalDate> birthday = new SimpleObjectProperty<>();
-
-	private StringProperty email = new SimpleStringProperty();
-	private StringProperty mobileNumber = new SimpleStringProperty();
-	private StringProperty phoneNumber = new SimpleStringProperty();
-
-
-
-	private ReadOnlyBooleanWrapper valid = new ReadOnlyBooleanWrapper();
-
-
-	ValidationSupport validationSupport = new ValidationSupport();
-	private Contact contact;
+	private Validator firstnameValidator;
+	private Validator lastnameValidator;
+	private Validator emailValidator = new EmailValidator(emailProperty());
+	private Validator birthdayValidator = new BirthdayValidator(birthdayProperty());
 	
-	public ContactFormViewModel(){
-		valid.bind(validationSupport.invalidProperty().isNull().or(validationSupport.invalidProperty().isEqualTo
-				(false)));
+	private Validator phoneValidator = new PhoneValidator(phoneNumberProperty(), "The phone number is invalid!");
+	private Validator mobileValidator = new PhoneValidator(mobileNumberProperty(), "The mobile number is invalid!");
+	
+	private CompositeValidator formValidator = new CompositeValidator();
+	
+	public ContactFormViewModel() {
+		firstnameValidator = new FunctionBasedValidator<>(
+				firstnameProperty(),
+				firstName -> firstName != null && !firstName.trim().isEmpty(),
+				ValidationMessage.error("Firstname may not be empty"));
 		
+		
+		lastnameValidator = new FunctionBasedValidator<>(lastnameProperty(), lastName -> {
+			if (lastName == null || lastName.isEmpty()) {
+				return ValidationMessage.error("Lastname may not be empty");
+			} else if (lastName.trim().isEmpty()) {
+				return ValidationMessage.error("Lastname may not only contain whitespaces");
+			}
+			
+			return null;
+		});
+		
+		
+		formValidator.addValidators(
+				firstnameValidator,
+				lastnameValidator,
+				emailValidator,
+				birthdayValidator,
+				phoneValidator,
+				mobileValidator);
 	}
-
+	
 	public void resetForm() {
-		firstname.set("");
-		lastname.set("");
-		title.set("");
-		role.set("");
-		department.set("");
-		email.set("");
-		mobileNumber.set("");
-		phoneNumber.set("");
-
-		birthday.set(null);
+		contactWrapper.reset();
 	}
 	
-	public void initWithContact(Contact contact){
-		// init the values with the contact.
-		this.contact = contact;
-		
-		firstname.set(contact.getFirstname());
-		lastname.set(contact.getLastname());
-		title.set(contact.getTitle());
-		
-		role.set(contact.getRole());
-		department.set(contact.getDepartment());
-		
-		birthday.set(contact.getBirthday());
-		email.set(contact.getEmailAddress());
-		mobileNumber.set(contact.getMobileNumber());
-		phoneNumber.set(contact.getPhoneNumber());
+	public void initWithContact(Contact contact) {
+		this.contactWrapper.set(contact);
+		this.contactWrapper.reload();
 	}
 	
-	public Contact getContact(){
-		// use existing contact if it was set, otherwise create new instance
-		Contact resultContact = (contact == null) ? new Contact() : contact;
-
-		resultContact.setFirstname(firstname.get());
-		resultContact.setLastname(lastname.get());
-		resultContact.setTitle(title.get());
-
-		resultContact.setRole(role.get());
-		resultContact.setDepartment(department.get());
-
-		resultContact.setBirthday(birthday.get());
-		resultContact.setEmailAddress(email.get());
-		resultContact.setMobileNumber(mobileNumber.get());
-		resultContact.setPhoneNumber(phoneNumber.get());
-
-		return resultContact;
+	public Contact getContact() {
+		
+		if (contactWrapper.get() == null) {
+			contactWrapper.set(new Contact());
+		}
+		
+		contactWrapper.commit();
+		
+		return contactWrapper.get();
 	}
-
-	public void initValidationForFirstname(Control input) {
-		validationSupport.registerValidator(input, Validator.createEmptyValidator("Firstname may not be empty!"));
+	
+	public ValidationStatus firstnameValidation() {
+		return firstnameValidator.getValidationStatus();
 	}
-
-	public void initValidationForLastname(Control input) {
-		validationSupport.registerValidator(input, Validator.createEmptyValidator("Lastname may not be empty!"));
+	
+	public ValidationStatus lastnameValidation() {
+		return lastnameValidator.getValidationStatus();
 	}
-
-	public void initValidationForBirthday(Control input) {
-		validationSupport.registerValidator(input, false, new BirthdayValidator());
+	
+	public ValidationStatus birthdayValidation() {
+		return birthdayValidator.getValidationStatus();
 	}
-
-	public void initValidationForEmail(Control input) {
-		validationSupport.registerValidator(input, true, new EmailAddressValidator());
+	
+	public ValidationStatus emailValidation() {
+		return emailValidator.getValidationStatus();
 	}
-
-	public void initValidationForPhoneNumber(Control input) {
-		validationSupport.registerValidator(input, false, new PhoneNumberValidator("The phone number is invalid!"));
+	
+	public ValidationStatus phoneValidation() {
+		return phoneValidator.getValidationStatus();
 	}
-
-	public void initValidationForMobileNumber(Control input) {
-		validationSupport.registerValidator(input, false, new PhoneNumberValidator("The mobile number is invalid!"));
+	
+	public ValidationStatus mobileValidation() {
+		return mobileValidator.getValidationStatus();
 	}
-
-	public ReadOnlyBooleanProperty validProperty() {
-		return valid.getReadOnlyProperty();
-	}
-
-
-
+	
 	public StringProperty firstnameProperty() {
-		return firstname;
+		return contactWrapper.field("firstname", Contact::getFirstname, Contact::setFirstname);
 	}
-
+	
 	public StringProperty titleProperty() {
-		return title;
+		return contactWrapper.field("title", Contact::getTitle, Contact::setTitle);
 	}
-
+	
 	public StringProperty lastnameProperty() {
-		return lastname;
+		return contactWrapper.field("lastname", Contact::getLastname, Contact::setLastname);
 	}
-
+	
 	public StringProperty roleProperty() {
-		return role;
+		return contactWrapper.field("role", Contact::getRole, Contact::setRole);
 	}
-
+	
 	public StringProperty departmentProperty() {
-		return department;
+		return contactWrapper.field("department", Contact::getDepartment, Contact::setDepartment);
 	}
-
-	public ObjectProperty<LocalDate> birthdayProperty() {
-		return birthday;
+	
+	public Property<LocalDate> birthdayProperty() {
+		return contactWrapper.field("birthday", Contact::getBirthday, Contact::setBirthday);
 	}
-
+	
 	public StringProperty emailProperty() {
-		return email;
+		return contactWrapper.field("email", Contact::getEmailAddress, Contact::setEmailAddress);
 	}
-
+	
 	public StringProperty mobileNumberProperty() {
-		return mobileNumber;
+		return contactWrapper.field("mobileNumber", Contact::getMobileNumber, Contact::setMobileNumber);
 	}
-
+	
 	public StringProperty phoneNumberProperty() {
-		return phoneNumber;
+		return contactWrapper.field("phoneNumber", Contact::getPhoneNumber, Contact::setPhoneNumber);
+	}
+	
+	public BooleanExpression validProperty() {
+		return formValidator.getValidationStatus().validProperty();
 	}
 }

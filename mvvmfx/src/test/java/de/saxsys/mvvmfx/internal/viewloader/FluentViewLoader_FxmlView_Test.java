@@ -15,39 +15,25 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.internal.viewloader;
 
-import static org.assertj.core.api.Assertions.*;
+import de.saxsys.javafx.test.JfxRunner;
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.internal.viewloader.example.*;
+import de.saxsys.mvvmfx.testingutils.ExceptionUtils;
+import javafx.fxml.LoadException;
+import javafx.scene.layout.VBox;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlViewResourceBundle;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelWithResourceBundle;
-import javafx.fxml.LoadException;
-import javafx.scene.layout.VBox;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import de.saxsys.javafx.test.JfxRunner;
-import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.ViewTuple;
-import de.saxsys.mvvmfx.internal.viewloader.example.InvalidFxmlTestView;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlView;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlViewFxRoot;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlViewMultipleViewModels;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlViewWithActionMethod;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlViewWithMissingController;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlViewWithWrongController;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlViewWithoutViewModelField;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlViewWithoutViewModelType;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestViewA;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestViewB;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModel;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelA;
-import de.saxsys.mvvmfx.testingutils.TestUtils;
+import static org.assertj.core.api.Assertions.assertThat;
+import static de.saxsys.mvvmfx.internal.viewloader.ResourceBundleAssert.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Test the loading of FxmlViews.
@@ -81,7 +67,7 @@ public class FluentViewLoader_FxmlView_Test {
 		
 		final TestFxmlView codeBehind = viewTuple.getCodeBehind();
 		assertThat(codeBehind.getViewModel()).isNotNull();
-		assertThat(codeBehind.resourceBundle).isEqualTo(resourceBundle);
+		assertThat(codeBehind.resourceBundle).hasSameContent(resourceBundle);
 		
 		assertThat(codeBehind.viewModelWasNull).isFalse();
 		
@@ -98,7 +84,8 @@ public class FluentViewLoader_FxmlView_Test {
 		
 		// when
 		
-		final ViewTuple<TestFxmlViewResourceBundle, TestViewModelWithResourceBundle> viewTuple = FluentViewLoader.fxmlView(TestFxmlViewResourceBundle.class)
+		final ViewTuple<TestFxmlViewResourceBundle, TestViewModelWithResourceBundle> viewTuple = FluentViewLoader
+				.fxmlView(TestFxmlViewResourceBundle.class)
 				.resourceBundle(resourceBundle).load();
 		
 		// then
@@ -135,7 +122,8 @@ public class FluentViewLoader_FxmlView_Test {
 		assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
 		assertThat(viewTuple.getCodeBehind()).isNotNull().isInstanceOf(TestFxmlViewWithoutViewModelType.class);
 		
-		final TestFxmlViewWithoutViewModelType codeBehind = (TestFxmlViewWithoutViewModelType) viewTuple.getCodeBehind();
+		final TestFxmlViewWithoutViewModelType codeBehind = (TestFxmlViewWithoutViewModelType) viewTuple
+				.getCodeBehind();
 		
 		assertThat(codeBehind.wasInitialized).isTrue();
 		assertThat(codeBehind.viewModel).isNull();
@@ -197,7 +185,7 @@ public class FluentViewLoader_FxmlView_Test {
 		} catch (Exception e) {
 			assertThat(e).hasCauseInstanceOf(LoadException.class).hasRootCauseInstanceOf(ClassNotFoundException.class);
 			
-			Throwable cause = TestUtils.getRootCause(e);
+			Throwable cause = ExceptionUtils.getRootCause(e);
 			assertThat(cause).hasMessageContaining("WrongControllerNameTROLOLO");
 		}
 	}
@@ -278,7 +266,7 @@ public class FluentViewLoader_FxmlView_Test {
 			FluentViewLoader.fxmlView(TestFxmlViewMultipleViewModels.class).load();
 			fail("Expecting an Exception because in the view class there are 2 viewmodels defined.");
 		} catch (Exception e) {
-			assertThat(TestUtils.getRootCause(e)).isInstanceOf(RuntimeException.class).hasMessageContaining(
+			assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(RuntimeException.class).hasMessageContaining(
 					"<2> viewModel fields");
 		}
 	}

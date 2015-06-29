@@ -1,34 +1,50 @@
 package de.saxsys.mvvmfx.contacts.model.validation;
 
-import de.saxsys.javafx.test.JfxRunner;
-import javafx.scene.control.TextField;
+import static org.assertj.core.api.Assertions.*;
+
+import de.saxsys.mvvmfx.contacts.ui.validators.EmailValidator;
+import de.saxsys.mvvmfx.utils.validation.Validator;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThat;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 
-@RunWith(JfxRunner.class)
 public class EmailAddressValidatorTest {
 	
-	private EmailAddressValidator validator;
+	private ValidationStatus result;
+	private StringProperty value = new SimpleStringProperty();
+	
 	
 	@Before
-	public void setup(){
-		validator = new EmailAddressValidator();
-	}
-
-	@Test
-	public void testValidationOfEmail(){
-		TextField emailInput = new TextField();
-
-		assertThat(validator.apply(emailInput, "darthvader@imperium.org")).isNull();
-
-		assertThat(validator.apply(emailInput, "darthvader.imperium.org")).isNotNull(); // wrong email format
+	public void setup() {
+		Validator validator = new EmailValidator(value);
 		
-		assertThat(validator.apply(emailInput, null)).isNotNull();
-		assertThat(validator.apply(emailInput, "")).isNotNull();
-		assertThat(validator.apply(emailInput, "   ")).isNotNull();
+		result = validator.getValidationStatus();
+	}
+	
+	@Test
+	public void testValidationOfEmail() {
+		assertThat(result.isValid()).isFalse();
+		
+		
+		value.set("darthvader@imperium.org");
+		assertThat(result.isValid()).isTrue();
+		
+		
+		value.set("darthvader.imperium.org"); // wrong email format
+		assertThat(result.isValid()).isFalse();
+
+		
+		value.set(null);
+		assertThat(result.isValid()).isFalse();
+		
+		value.set("");
+		assertThat(result.isValid()).isFalse();
+		
+		value.set("    ");
+		assertThat(result.isValid()).isFalse();
 	}
 }

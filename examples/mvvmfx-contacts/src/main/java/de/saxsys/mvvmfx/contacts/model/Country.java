@@ -12,19 +12,19 @@ public class Country {
 	
 	@XmlAttribute(name = "name")
 	private String name;
-
+	
 	@XmlAttribute(name = "alpha_2_code")
 	private String countryCode;
 	
-	Country(){
+	Country() {
 		
 	}
 	
-	public Country(String name, String countryCode){
+	public Country(String name, String countryCode) {
 		this.name = name;
 		this.countryCode = countryCode;
 	}
-
+	
 	public String getName() {
 		return name;
 	}
@@ -32,19 +32,19 @@ public class Country {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
 	public String getCountryCode() {
 		return countryCode;
 	}
-
 	
-
+	
+	
 	public void setCountryCode(String countryCode) {
 		this.countryCode = countryCode;
 	}
-
-
-
+	
+	
+	
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -53,33 +53,33 @@ public class Country {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-
 		
-		if(name == null || countryCode == null){
-			return  false;
+		
+		if (name == null || countryCode == null) {
+			return false;
 		}
 		
 		Country country = (Country) o;
-
+		
 		if (!name.equals(country.name)) {
 			return false;
 		}
 		
-		if(!countryCode.equals(country.countryCode)){
+		if (!countryCode.equals(country.countryCode)) {
 			return false;
 		}
-
+		
 		return true;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		int result = name == null ? 13 : name.hashCode();
 		result += countryCode == null ? 13 : countryCode.hashCode();
 		return result;
 	}
-
-
+	
+	
 	@Override
 	public String toString() {
 		return "Country:" + name + ", code:" + countryCode;

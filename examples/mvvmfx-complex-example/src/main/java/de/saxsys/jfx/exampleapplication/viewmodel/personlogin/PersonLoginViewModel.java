@@ -1,16 +1,21 @@
 package de.saxsys.jfx.exampleapplication.viewmodel.personlogin;
 
-import de.saxsys.jfx.exampleapplication.model.Person;
-import de.saxsys.jfx.exampleapplication.model.Repository;
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.utils.itemlist.ModelToStringFunction;
-import de.saxsys.mvvmfx.utils.itemlist.SelectableItemList;
-import de.saxsys.mvvmfx.utils.itemlist.SelectableStringList;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import de.saxsys.mvvmfx.utils.commands.Action;
+import javafx.application.Platform;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.collections.FXCollections;
 
 import javax.inject.Inject;
+
+import de.saxsys.jfx.exampleapplication.model.Person;
+import de.saxsys.jfx.exampleapplication.model.Repository;
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.utils.commands.Command;
+import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
+import de.saxsys.mvvmfx.utils.itemlist.SelectableItemList;
+import de.saxsys.mvvmfx.utils.itemlist.SelectableStringList;
 
 /**
  * ViewModel for a login view for the persons. It provides the data which should be visualized in the frontend e.g. the
@@ -24,16 +29,20 @@ import javax.inject.Inject;
 public class PersonLoginViewModel implements ViewModel {
 	
 	// Properties which are used by the view.
-	private final SelectableItemList<Person> selectablePersons;
+	private SelectableItemList<Person> selectablePersons;
+	private ReadOnlyIntegerWrapper loggedInPersonId;
+	private Command loginCommand;
 	
-	private final IntegerProperty loggedInPersonId = new SimpleIntegerProperty();
+	// Repo
+	private final Repository repository;
 	
 	@Inject
 	public PersonLoginViewModel(Repository repository) {
-		ModelToStringFunction<Person> personMapper = person -> person.getFirstName() + " " + person.getLastName();
-		selectablePersons = new SelectableItemList<Person>(
-				FXCollections.observableArrayList(repository.getPersons()),
-				personMapper);
+		this.repository = repository;
+	}
+	
+	private BooleanBinding createLoginPossibleBinding() {
+		return selectablePersonsProperty().selectedIndexProperty().isNotEqualTo(-1);
 	}
 	
 	/**
@@ -42,6 +51,12 @@ public class PersonLoginViewModel implements ViewModel {
 	 * @return persons
 	 */
 	public SelectableStringList selectablePersonsProperty() {
+		if (selectablePersons == null) {
+			selectablePersons =
+					new SelectableItemList<Person>(FXCollections.observableArrayList(repository.getPersons()),
+							person -> person.getFirstName() + " "
+									+ person.getLastName());
+		}
 		return selectablePersons;
 	}
 	
@@ -50,14 +65,35 @@ public class PersonLoginViewModel implements ViewModel {
 	 * 
 	 * @return person
 	 */
-	public IntegerProperty loggedInPersonIdProperty() {
-		return loggedInPersonId;
+	public ReadOnlyIntegerProperty loggedInPersonIdProperty() {
+		if (loggedInPersonId == null) {
+			loggedInPersonId = new ReadOnlyIntegerWrapper();
+		}
+		return loggedInPersonId.getReadOnlyProperty();
 	}
 	
-	/**
-	 * Action when the login button was clicked.
-	 */
-	public void login() {
-		loggedInPersonId.set(selectablePersons.getSelectedItem().getId());
+	public Command getLoginCommand() {
+		if (loginCommand == null) {
+			loginCommand = new DelegateCommand(()-> new Action() {
+				@Override
+				protected void action() throws Exception {
+					performLogin();
+				}
+			}, createLoginPossibleBinding(), true);
+		}
+		return loginCommand;
+	}
+	
+	private void performLogin() {
+		try {
+			// fakesleep, simulating latency
+			Thread.sleep(2000);
+		} catch (Exception e) {
+		}
+		
+		Platform.runLater(() -> {
+			loggedInPersonId.set(selectablePersons.getSelectedItem().getId());
+		});
+		publish(PersonLoginViewModelNotifications.OK.getId(), PersonLoginViewModelNotifications.OK.getMessage());
 	}
 }

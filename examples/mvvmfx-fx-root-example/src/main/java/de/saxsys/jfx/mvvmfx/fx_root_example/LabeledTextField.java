@@ -25,7 +25,7 @@ public class LabeledTextField extends HBox implements FxmlView<LabeledTextFieldV
 	private LabeledTextFieldViewModel viewModel;
 	
 	public LabeledTextField() {
-		FluentViewLoader.fxmlView(this.getClass()).root(this).codeBehind(this).load();
+		FluentViewLoader.fxmlView(LabeledTextField.class).root(this).codeBehind(this).load();
 	}
 	
 	public void initialize() {

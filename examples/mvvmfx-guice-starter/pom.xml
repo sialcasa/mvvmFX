@@ -12,7 +12,7 @@
 	<parent>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx-examples</artifactId>
-		<version>1.1.0-SNAPSHOT</version>
+		<version>1.4.0-SNAPSHOT</version>
 	</parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,17 +45,14 @@
 		<dependency>
 			<groupId>de.saxsys</groupId>
 			<artifactId>mvvmfx</artifactId>
-			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.saxsys</groupId>
 			<artifactId>mvvmfx-guice</artifactId>
-			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.saxsys</groupId>
 			<artifactId>mvvmfx-complex</artifactId>
-			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>

@@ -1,17 +1,16 @@
 package de.saxsys.mvvmfx.contacts.ui.about;
 
-import javafx.beans.property.ReadOnlyStringProperty;
-import org.junit.Before;
-import org.junit.Test;
+import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.util.function.Consumer;
 
-import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import javafx.beans.property.ReadOnlyStringProperty;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class AboutViewModelTest {
 	
@@ -27,7 +26,7 @@ public class AboutViewModelTest {
 	
 	@SuppressWarnings("unchecked")
 	@Before
-	public void setup(){
+	public void setup() {
 		viewModel = new AboutViewModel();
 		
 		onLinkClickedHandler = mock(Consumer.class);
@@ -35,14 +34,14 @@ public class AboutViewModelTest {
 	}
 	
 	@Test
-	public void testLibrariesLabel(){
-
+	public void testLibrariesLabel() {
+		
 		ReadOnlyStringProperty libraries = viewModel.librariesLabelTextProperty();
 		
 		assertThat(libraries).hasValue("");
-
+		
 		viewModel.libraryLinkMap.put(MY_COOL_LIB_NAME, MY_COOL_LIB_URL);
-
+		
 		assertThat(libraries).hasValue("- [my cool library]\n");
 		
 		viewModel.libraryLinkMap.put(OTHER_FX_NAME, OTHER_FX_URL);
@@ -50,7 +49,7 @@ public class AboutViewModelTest {
 	}
 	
 	@Test
-	public void testOnLinkClicked(){
+	public void testOnLinkClicked() {
 		
 		viewModel.libraryLinkMap.put(MY_COOL_LIB_NAME, MY_COOL_LIB_URL);
 		viewModel.libraryLinkMap.put(OTHER_FX_NAME, OTHER_FX_URL);

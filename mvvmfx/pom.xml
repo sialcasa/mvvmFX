@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx-parent</artifactId>
-		<version>1.1.0-SNAPSHOT</version>
+		<version>1.4.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>mvvmfx</artifactId>
@@ -29,19 +29,6 @@
 	<name>mvvmFX core</name>
 	<description>This module is the core implementation of the framework</description>
 
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-					<excludePackageNames>
-						de.saxsys.mvvmfx.internal
-					</excludePackageNames>
-				</configuration>
-			</plugin>
-		</plugins>
-
-	</build>
 
 	<dependencies>
 		<dependency>
@@ -52,8 +39,25 @@
 			<groupId>net.jodah</groupId>
 			<artifactId>typetools</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>eu.lestard</groupId>
+			<artifactId>doc-annotations</artifactId>
+		</dependency>
+
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.40.9</version>
+			<scope>provided</scope>
+        </dependency>
 
 		<!-- Testing Frameworks -->
+
+		<dependency>
+			<groupId>de.saxsys</groupId>
+			<artifactId>mvvmfx-testing-utils</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -74,14 +78,18 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.1.2</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>de.saxsys</groupId>
 			<artifactId>jfx-testrunner</artifactId>
-			<version>1.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.cedarsoft.commons</groupId>
+			<artifactId>test-utils</artifactId>
 			<scope>test</scope>
 		</dependency>
 

@@ -62,37 +62,38 @@ public class FxmlViewLoader {
 	 */
 	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
 			Class<? extends ViewType> viewType, ResourceBundle resourceBundle, ViewType codeBehind, Object root,
-			ViewModelType viewModel, Object scope) {
+			ViewModelType viewModel) {
 		final String pathToFXML = createFxmlPath(viewType);
-		return loadFxmlViewTuple(pathToFXML, resourceBundle, codeBehind, root, viewModel, scope);
+		return loadFxmlViewTuple(pathToFXML, resourceBundle, codeBehind, root, viewModel);
 	}
-
+	
 	/**
 	 * This method is used to create a String with the path to the FXML file for a given View class.
 	 * 
-	 * This is done by taking the package of the view class (if any) and replace "." with "/". 
-	 * After that the Name of the class and the file ending ".fxml" is appended.
+	 * This is done by taking the package of the view class (if any) and replace "." with "/". After that the Name of
+	 * the class and the file ending ".fxml" is appended.
 	 * 
 	 * Example: de.saxsys.myapp.ui.MainView as view class will be transformed to "/de/saxsys/myapp/ui/MainView.fxml"
 	 * 
 	 * Example 2: MainView (located in the default package) will be transformed to "/MainView.fxml"
 	 * 
-	 * @param viewType the view class type.
+	 * @param viewType
+	 *            the view class type.
 	 * @return the path to the fxml file as string.
 	 */
-	private String createFxmlPath(Class<?> viewType){
+	private String createFxmlPath(Class<?> viewType) {
 		final StringBuilder pathBuilder = new StringBuilder();
-
+		
 		pathBuilder.append("/");
 		
-		if(viewType.getPackage() != null){
-			pathBuilder.append(viewType.getPackage().getName().replaceAll("\\.","/"));
+		if (viewType.getPackage() != null) {
+			pathBuilder.append(viewType.getPackage().getName().replaceAll("\\.", "/"));
 			pathBuilder.append("/");
 		}
-
+		
 		pathBuilder.append(viewType.getSimpleName());
 		pathBuilder.append(".fxml");
-
+		
 		return pathBuilder.toString();
 	}
 	
@@ -120,10 +121,10 @@ public class FxmlViewLoader {
 	 */
 	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
 			final String resource, ResourceBundle resourceBundle, final ViewType codeBehind, final Object root,
-			ViewModelType viewModel, Object scope) {
+			ViewModelType viewModel) {
 		try {
 			
-			final FXMLLoader loader = createFxmlLoader(resource, resourceBundle, codeBehind, root, viewModel, scope);
+			final FXMLLoader loader = createFxmlLoader(resource, resourceBundle, codeBehind, root, viewModel);
 			
 			loader.load();
 			
@@ -151,7 +152,7 @@ public class FxmlViewLoader {
 	
 	
 	private FXMLLoader createFxmlLoader(String resource, ResourceBundle resourceBundle, View codeBehind, Object root,
-			ViewModel viewModel, Object scope)
+			ViewModel viewModel)
 			throws IOException {
 		
 		// Load FXML file
@@ -169,9 +170,9 @@ public class FxmlViewLoader {
 		// when the user provides a viewModel but no codeBehind, we need to use the custom controller factory.
 		// in all other cases the default factory can be used.
 		if (viewModel != null && codeBehind == null) {
-			fxmlLoader.setControllerFactory(new ControllerFactoryForCustomViewModel(viewModel, resourceBundle, scope));
+			fxmlLoader.setControllerFactory(new ControllerFactoryForCustomViewModel(viewModel, resourceBundle));
 		} else {
-			fxmlLoader.setControllerFactory(new DefaultControllerFactory(resourceBundle, scope));
+			fxmlLoader.setControllerFactory(new DefaultControllerFactory(resourceBundle));
 		}
 		
 		// When the user provides a codeBehind instance we take care of the injection of the viewModel to this
@@ -180,7 +181,7 @@ public class FxmlViewLoader {
 			fxmlLoader.setController(codeBehind);
 			
 			if (viewModel == null) {
-				handleInjection(codeBehind, resourceBundle, scope);
+				handleInjection(codeBehind, resourceBundle);
 			} else {
 				handleInjection(codeBehind, resourceBundle, viewModel);
 			}
@@ -195,11 +196,9 @@ public class FxmlViewLoader {
 	 */
 	private static class DefaultControllerFactory implements Callback<Class<?>, Object> {
 		private ResourceBundle resourceBundle;
-		private Object scope;
 		
-		public DefaultControllerFactory(ResourceBundle resourceBundle, Object scope){
+		public DefaultControllerFactory(ResourceBundle resourceBundle) {
 			this.resourceBundle = resourceBundle;
-			this.scope = scope;
 		}
 		
 		@Override
@@ -208,8 +207,8 @@ public class FxmlViewLoader {
 			
 			if (controller instanceof View) {
 				View codeBehind = (View) controller;
-
-				handleInjection(codeBehind, resourceBundle, scope);
+				
+				handleInjection(codeBehind, resourceBundle);
 			}
 			
 			return controller;
@@ -217,26 +216,24 @@ public class FxmlViewLoader {
 	}
 	
 	
-	private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, Object scope){
+	private static void handleInjection(View codeBehind, ResourceBundle resourceBundle) {
 		ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
 		
 		final Optional viewModelOptional = ViewLoaderReflectionUtils.createAndInjectViewModel(codeBehind);
 		
-		if(viewModelOptional.isPresent()) {
+		if (viewModelOptional.isPresent()) {
 			final Object viewModel = viewModelOptional.get();
-			if(viewModel instanceof ViewModel) {
+			if (viewModel instanceof ViewModel) {
 				ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
-				ScopeInjector.injectScope((ViewModel)viewModel, scope);
-				
-				ViewLoaderReflectionUtils.initializeViewModel((ViewModel)viewModel);
+				ViewLoaderReflectionUtils.initializeViewModel((ViewModel) viewModel);
 			}
 		}
 	}
 	
-	private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, ViewModel viewModel){
+	private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, ViewModel viewModel) {
 		ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
-	
-		if(viewModel != null){
+		
+		if (viewModel != null) {
 			ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
 			
 			ViewLoaderReflectionUtils.injectViewModel(codeBehind, viewModel);
@@ -251,16 +248,17 @@ public class FxmlViewLoader {
 	 * requested from this factory. For all later requests this factory will work the same way as the default factory
 	 * {@link de.saxsys.mvvmfx.internal.viewloader.FxmlViewLoader.DefaultControllerFactory}.
 	 * 
-	 * The problem we are facing here is the following: The user wants to load a specific View with a specific ViewModel instance.
-	 * But this root View (fxml file) can declare other sub views. Only the root View has to get the existing ViewModel instance, all
-	 * other sub Views have to get their ViewModels via the default way (i.e. DependencyInjection or a new instance every time).
+	 * The problem we are facing here is the following: The user wants to load a specific View with a specific ViewModel
+	 * instance. But this root View (fxml file) can declare other sub views. Only the root View has to get the existing
+	 * ViewModel instance, all other sub Views have to get their ViewModels via the default way (i.e.
+	 * DependencyInjection or a new instance every time).
 	 * 
-	 * But, from the perspective of the controller factory, when a View instance is requested, we can't know if this is the
-	 * root View or a sub View. How do we know when to use the existing ViewModel instance? 
+	 * But, from the perspective of the controller factory, when a View instance is requested, we can't know if this is
+	 * the root View or a sub View. How do we know when to use the existing ViewModel instance?
 	 * 
-	 * To fix this we depend on the standard JavaFX behaviour of the {@link FXMLLoader}: The first instance that the FXMLLoader
-	 * will request from the controller factory will always be the controller for the root fxml file. In this case 
-	 * we can use the existing ViewModel. All subsequent requests will be handled with the default behaviour.
+	 * To fix this we depend on the standard JavaFX behaviour of the {@link FXMLLoader}: The first instance that the
+	 * FXMLLoader will request from the controller factory will always be the controller for the root fxml file. In this
+	 * case we can use the existing ViewModel. All subsequent requests will be handled with the default behaviour.
 	 */
 	private static class ControllerFactoryForCustomViewModel implements Callback<Class<?>, Object> {
 		
@@ -270,12 +268,9 @@ public class FxmlViewLoader {
 		
 		private ResourceBundle resourceBundle;
 		
-		private Object scope;
-		
-		public ControllerFactoryForCustomViewModel(ViewModel customViewModel, ResourceBundle resourceBundle, Object scope) {
+		public ControllerFactoryForCustomViewModel(ViewModel customViewModel, ResourceBundle resourceBundle) {
 			this.customViewModel = customViewModel;
 			this.resourceBundle = resourceBundle;
-			this.scope = scope;
 		}
 		
 		@Override
@@ -287,7 +282,6 @@ public class FxmlViewLoader {
 				
 				if (!customViewModelInjected) {
 					ResourceBundleInjector.injectResourceBundle(customViewModel, resourceBundle);
-					ScopeInjector.injectScope(customViewModel, scope);
 					ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
 					
 					ViewLoaderReflectionUtils.injectViewModel(codeBehind, customViewModel);
@@ -296,8 +290,8 @@ public class FxmlViewLoader {
 					customViewModelInjected = true;
 					return codeBehind;
 				}
-
-				handleInjection(codeBehind, resourceBundle, scope);
+				
+				handleInjection(codeBehind, resourceBundle);
 			}
 			
 			return controller;

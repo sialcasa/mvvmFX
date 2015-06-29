@@ -13,7 +13,7 @@ public class SliderViewModel implements ViewModel {
 	
 	private final ReadOnlyStringWrapper labelText = new ReadOnlyStringWrapper();
 	
-	public SliderViewModel(){
+	public SliderViewModel() {
 		labelText.bind(Bindings.format("Current Value: %1$.1f", sliderValue));
 	}
 	
@@ -23,31 +23,33 @@ public class SliderViewModel implements ViewModel {
 	public DoubleProperty sliderValueProperty() {
 		return sliderValue;
 	}
+	
 	/**
 	 * @param value
-	 * the new value for the slider.
+	 *            the new value for the slider.
 	 */
 	public void setSliderValue(final double value) {
 		sliderValue.set(value);
 	}
+	
 	/**
 	 * @return the current slider value.
 	 */
 	public double getSliderValue() {
 		return sliderValue.get();
 	}
-
+	
 	/**
 	 * @return the text value of the label as read only string property.
 	 */
-	public ReadOnlyStringProperty labelTextProperty(){
+	public ReadOnlyStringProperty labelTextProperty() {
 		return labelText.getReadOnlyProperty();
 	}
-
+	
 	/**
 	 * @return the text value of the label.
 	 */
-	public String getLabelText(){
+	public String getLabelText() {
 		return labelText.get();
 	}
 }

@@ -17,8 +17,8 @@ public class FxmlViewinDefaultPackageTest {
 	
 	
 	@Test
-	public void test(){
-
+	public void test() {
+		
 		ViewTuple<FxmlViewInDefaultPackage, TestViewModel> viewTuple = FluentViewLoader
 				.fxmlView(FxmlViewInDefaultPackage.class).load();
 		

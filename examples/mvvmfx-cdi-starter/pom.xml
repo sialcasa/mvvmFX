@@ -12,7 +12,7 @@
 	<parent>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx-examples</artifactId>
-		<version>1.1.0-SNAPSHOT</version>
+		<version>1.4.0-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -31,17 +31,19 @@
 		<dependency>
 			<groupId>de.saxsys</groupId>
 			<artifactId>mvvmfx</artifactId>
-			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.saxsys</groupId>
 			<artifactId>mvvmfx-cdi</artifactId>
-			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.saxsys</groupId>
 			<artifactId>mvvmfx-complex</artifactId>
-			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss</groupId>
+			<artifactId>jandex</artifactId>
+			<version>1.2.4.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

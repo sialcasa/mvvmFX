@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx-parent</artifactId>
-		<version>1.1.0-SNAPSHOT</version>
+		<version>1.4.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>mvvmfx-examples</artifactId>
@@ -22,7 +22,64 @@
 		<module>mvvmfx-synchronizefx</module>
 		<module>mvvmfx-contacts</module>
 		<module>mvvmfx-books-example</module>
+		<module>mvvmfx-todomvc</module>
 		<module>mvvmfx-scopes-example</module>
 	</modules>
+
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>de.saxsys</groupId>
+				<artifactId>mvvmfx-complex</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.saxsys</groupId>
+				<artifactId>mvvmfx-guice-example</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.saxsys</groupId>
+				<artifactId>mvvmfx-cdi-example</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.saxsys</groupId>
+				<artifactId>mvvmfx-fx-root-example</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.saxsys</groupId>
+				<artifactId>mvvmfx-helloworld</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.saxsys</groupId>
+				<artifactId>mvvmfx-helloworld-without-fxml</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.saxsys</groupId>
+				<artifactId>mvvmfx-synchronizefx</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.saxsys</groupId>
+				<artifactId>mvvmfx-contacts</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.saxsys</groupId>
+				<artifactId>mvvmfx-library-example</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.saxsys</groupId>
+				<artifactId>mvvmfx-todomvc</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 </project>

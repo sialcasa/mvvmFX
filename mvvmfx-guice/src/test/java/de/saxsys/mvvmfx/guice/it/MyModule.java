@@ -6,13 +6,13 @@ import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MyModule extends AbstractModule{
+public class MyModule extends AbstractModule {
 	
 	public static boolean works = false;
 	
 	@Override
 	protected void configure() {
-		Supplier<String> supplier = ()-> "lambda in module works";
+		Supplier<String> supplier = () -> "lambda in module works";
 		
 		assertThat(supplier.get()).isNotEmpty().contains("works");
 		works = true;

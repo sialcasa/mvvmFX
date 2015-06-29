@@ -21,7 +21,7 @@ public class MenuViewModel implements ViewModel {
 	
 	@Inject
 	private Event<OpenAboutDialogEvent> aboutDialogEvent;
-
+	
 	@Inject
 	private MasterViewModel masterViewModel;
 	
@@ -32,25 +32,25 @@ public class MenuViewModel implements ViewModel {
 	private ReadOnlyBooleanWrapper removeItemDisabled = new ReadOnlyBooleanWrapper();
 	
 	@PostConstruct
-	public void init(){
+	public void init() {
 		removeItemDisabled.bind(masterViewModel.selectedContactProperty().isNull());
 	}
 	
-	public void closeAction(){
+	public void closeAction() {
 		shouldCloseEvent.fire(new TriggerShutdownEvent());
 	}
-
+	
 	public void removeAction() {
 		Contact selectedContact = masterViewModel.selectedContactProperty().get();
-		if(selectedContact != null) {
+		if (selectedContact != null) {
 			repository.delete(masterViewModel.selectedContactProperty().get());
 		}
 	}
 	
-	public ReadOnlyBooleanProperty removeItemDisabledProperty(){
+	public ReadOnlyBooleanProperty removeItemDisabledProperty() {
 		return removeItemDisabled.getReadOnlyProperty();
 	}
-
+	
 	public void aboutAction() {
 		aboutDialogEvent.fire(new OpenAboutDialogEvent());
 	}

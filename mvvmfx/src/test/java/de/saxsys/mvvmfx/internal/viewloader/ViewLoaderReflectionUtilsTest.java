@@ -11,28 +11,28 @@ public class ViewLoaderReflectionUtilsTest {
 	
 	
 	@Test
-	public void testCreateViewModel(){
+	public void testCreateViewModel() {
 		class TestView implements View<TestViewModel> {
 		}
-
+		
 		ViewModel viewModel = ViewLoaderReflectionUtils.createViewModel(new TestView());
 		
 		assertThat(viewModel).isNotNull().isInstanceOf(TestViewModel.class);
 	}
 	
 	@Test
-	public void testCreateViewModelWithoutViewModelType(){
-		class TestView implements View{
+	public void testCreateViewModelWithoutViewModelType() {
+		class TestView implements View {
 		}
-
+		
 		ViewModel viewModel = ViewLoaderReflectionUtils.createViewModel(new TestView());
 		
 		assertThat(viewModel).isNull();
 	}
 	
 	@Test
-	public void testCreateViewModelWithGeneticViewModelAsType(){
-		class TestView implements View<ViewModel>{
+	public void testCreateViewModelWithGeneticViewModelAsType() {
+		class TestView implements View<ViewModel> {
 		}
 		
 		ViewModel viewModel = ViewLoaderReflectionUtils.createViewModel(new TestView());

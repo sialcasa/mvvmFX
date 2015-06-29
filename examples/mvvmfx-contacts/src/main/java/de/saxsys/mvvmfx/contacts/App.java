@@ -1,6 +1,9 @@
 package de.saxsys.mvvmfx.contacts;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
+
+import de.saxsys.mvvmfx.MvvmFX;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -20,38 +23,42 @@ import de.saxsys.mvvmfx.contacts.model.Repository;
 import de.saxsys.mvvmfx.contacts.ui.main.MainView;
 import de.saxsys.mvvmfx.contacts.ui.main.MainViewModel;
 
-public class App extends MvvmfxCdiApplication{
+public class App extends MvvmfxCdiApplication {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
+	
+	public static void main(String... args) {
 
-	public static void main(String...args){
+		Locale.setDefault(Locale.ENGLISH);
+		
 		launch(args);
 	}
 	
-
+	
 	@Inject
 	private ResourceBundle resourceBundle;
-
+	
 	@Inject
 	private Repository repository;
 	
-	@Override 
+	@Override
 	public void initMvvmfx() throws Exception {
 		int numberOfContacts = 30;
-		for(int i=0 ; i<numberOfContacts ; i++){
+		for (int i = 0; i < numberOfContacts; i++) {
 			repository.save(ContactFactory.createRandomContact());
 		}
 	}
-
-	@Override 
+	
+	@Override
 	public void startMvvmfx(Stage stage) throws Exception {
 		LOG.info("Starting the Application");
+		MvvmFX.setGlobalResourceBundle(resourceBundle);
 		
 		stage.setTitle(resourceBundle.getString("window.title"));
 		
-		ViewTuple<MainView, MainViewModel> main = FluentViewLoader.fxmlView(MainView.class).resourceBundle(resourceBundle).load();
+		ViewTuple<MainView, MainViewModel> main = FluentViewLoader.fxmlView(MainView.class).load();
 		
-
+		
 		Scene rootScene = new Scene(main.getView());
 		
 		rootScene.getStylesheets().add("/contacts.css");
@@ -59,12 +66,12 @@ public class App extends MvvmfxCdiApplication{
 		stage.setScene(rootScene);
 		stage.show();
 	}
-
+	
 	/**
 	 * The shutdown of the application can be triggered by firing the {@link TriggerShutdownEvent} CDI event.
 	 */
-	public void triggerShutdown(@Observes TriggerShutdownEvent event){
+	public void triggerShutdown(@Observes TriggerShutdownEvent event) {
 		LOG.info("Application will now shut down");
-		Platform.exit();	
+		Platform.exit();
 	}
 }

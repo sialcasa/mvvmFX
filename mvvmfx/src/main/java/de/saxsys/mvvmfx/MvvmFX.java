@@ -15,11 +15,14 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx;
 
+import de.saxsys.mvvmfx.internal.viewloader.ResourceBundleManager;
 import javafx.util.Callback;
 
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenterFactory;
 import de.saxsys.mvvmfx.internal.viewloader.DependencyInjector;
+
+import java.util.ResourceBundle;
 
 /**
  * This class is a facade that is used by the user to access classes and services from the framework.
@@ -35,8 +38,7 @@ public class MvvmFX {
 	
 	/**
 	 * This method is used to integrate the mvvmFX framework into your dependency injection environment. This way you
-	 * can tell the framework how it can get instances of classes f.e. services or business facades.
-	 * <br>
+	 * can tell the framework how it can get instances of classes f.e. services or business facades. <br>
 	 * The callback has to return an instance for a given class type. This is the same way as it is done with the
 	 * {@link javafx.fxml.FXMLLoader#setControllerFactory(javafx.util.Callback)} that is normally used with JavaFX's
 	 * fxml.
@@ -46,5 +48,21 @@ public class MvvmFX {
 	 */
 	public static void setCustomDependencyInjector(final Callback<Class<?>, Object> injector) {
 		DependencyInjector.getInstance().setCustomInjector(injector);
+	}
+
+	/**
+	 * This method is used to set a global {@link ResourceBundle} for the application.
+	 * 
+	 * This resource bundle is automatically loaded for all views. If there is an resourceBundle provided
+	 * while loading the view (via {@link FluentViewLoader.FxmlViewStep#resourceBundle(ResourceBundle)} or 
+	 * {@link FluentViewLoader.JavaViewStep#resourceBundle(ResourceBundle)}) both resourceBundles will be merged.
+	 * <p>
+	 * The global resourceBundle set by this method will have a lower priority then the ones provided while loading. 
+	 * If there are keys available in both resourceBundles, the values of the global resourceBundle will be overwritten.
+	 * 
+	 * @param resourceBundle the resourceBundle
+	 */
+	public static void setGlobalResourceBundle(ResourceBundle resourceBundle) {
+		ResourceBundleManager.getInstance().setGlobalResourceBundle(resourceBundle);
 	}
 }
