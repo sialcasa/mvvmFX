@@ -2,7 +2,6 @@ package de.saxsys.mvvmfx.testingutils;
 
 import java.lang.ref.WeakReference;
 
-import static org.assertj.core.api.Assertions.fail;
 
 /**
  * This is a small testing helper to verify that a given object is available for Garbage Collection.
@@ -51,7 +50,7 @@ public class GCVerifier {
 		forceGC();
 		
 		if (reference.get() != null) {
-			fail(message);
+			throw new AssertionError(message);
 		}
 	}
 	
