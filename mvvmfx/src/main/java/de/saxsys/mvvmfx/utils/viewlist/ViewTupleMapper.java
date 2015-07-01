@@ -37,6 +37,6 @@ public interface ViewTupleMapper<T> {
 	 *            to map
 	 * @return created {@link ViewTuple}
 	 */
-	public abstract ViewTuple<? extends View, ? extends ViewModel> map(T element);
+	ViewTuple<? extends View, ? extends ViewModel> map(T element);
 	
 }

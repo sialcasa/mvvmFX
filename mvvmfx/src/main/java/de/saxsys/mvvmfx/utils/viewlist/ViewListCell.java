@@ -31,7 +31,7 @@ import de.saxsys.mvvmfx.ViewTuple;
  * @param <T>
  *            which is used to create get the {@link ViewTuple}
  */
-abstract class ViewListCell<T> extends ListCell<T> implements
+public abstract class ViewListCell<T> extends ListCell<T> implements
 		ViewTupleMapper<T> {
 	
 	@Override
