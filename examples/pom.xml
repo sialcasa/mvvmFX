@@ -23,7 +23,7 @@
 		<module>mvvmfx-synchronizefx</module>
 		<module>contacts-example</module>
 		<module>books-example</module>
-		<module>mvvmfx-todomvc</module>
+		<module>todomvc-example</module>
 	</modules>
 
 
@@ -76,7 +76,7 @@
 			</dependency>
 			<dependency>
 				<groupId>de.saxsys.mvvmfx</groupId>
-				<artifactId>mvvmfx-todomvc</artifactId>
+				<artifactId>todomvc-example</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 		</dependencies>

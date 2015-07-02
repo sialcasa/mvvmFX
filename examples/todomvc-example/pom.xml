@@ -9,7 +9,7 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>mvvmfx-todomvc</artifactId>
+	<artifactId>todomvc-example</artifactId>
 
 	<dependencies>
 		<dependency>
