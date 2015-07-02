@@ -8,74 +8,64 @@
 		<version>1.4.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>mvvmfx-examples</artifactId>
+	<groupId>de.saxsys.mvvmfx</groupId>
+	<artifactId>examples</artifactId>
 	<packaging>pom</packaging>
 
 
 	<modules>
-		<module>mvvmfx-complex-example</module>
-		<module>mvvmfx-guice-starter</module>
-		<module>mvvmfx-cdi-starter</module>
-		<module>mvvmfx-fx-root-example</module>
-		<module>mvvmfx-helloworld</module>
-		<module>mvvmfx-helloworld-without-fxml</module>
-		<module>mvvmfx-synchronizefx</module>
-		<module>mvvmfx-contacts</module>
-		<module>mvvmfx-books-example</module>
-		<module>mvvmfx-todomvc</module>
+		<module>contacts-example</module>
+		<module>books-example</module>
+		<module>todomvc-example</module>
+		<module>mini-examples</module>
 	</modules>
 
 
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>de.saxsys</groupId>
-				<artifactId>mvvmfx-complex</artifactId>
+				<groupId>de.saxsys.mvvmfx</groupId>
+				<artifactId>mini-examples</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>de.saxsys</groupId>
-				<artifactId>mvvmfx-guice-example</artifactId>
+				<groupId>de.saxsys.mvvmfx</groupId>
+				<artifactId>fx-root-example</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>de.saxsys</groupId>
-				<artifactId>mvvmfx-cdi-example</artifactId>
+				<groupId>de.saxsys.mvvmfx</groupId>
+				<artifactId>helloworld</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>de.saxsys</groupId>
-				<artifactId>mvvmfx-fx-root-example</artifactId>
+				<groupId>de.saxsys.mvvmfx</groupId>
+				<artifactId>helloworld-without-fxml</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>de.saxsys</groupId>
-				<artifactId>mvvmfx-helloworld</artifactId>
+				<groupId>de.saxsys.mvvmfx</groupId>
+				<artifactId>synchronizefx-example</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>de.saxsys</groupId>
-				<artifactId>mvvmfx-helloworld-without-fxml</artifactId>
+				<groupId>de.saxsys.mvvmfx</groupId>
+				<artifactId>contacts-example</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>de.saxsys</groupId>
-				<artifactId>mvvmfx-synchronizefx</artifactId>
+				<groupId>de.saxsys.mvvmfx</groupId>
+				<artifactId>books-example</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>de.saxsys</groupId>
-				<artifactId>mvvmfx-contacts</artifactId>
+				<groupId>de.saxsys.mvvmfx</groupId>
+				<artifactId>todomvc-example</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>de.saxsys</groupId>
-				<artifactId>mvvmfx-library-example</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>de.saxsys</groupId>
-				<artifactId>mvvmfx-todomvc</artifactId>
+				<groupId>de.saxsys.mvvmfx</groupId>
+				<artifactId>welcome-example</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
