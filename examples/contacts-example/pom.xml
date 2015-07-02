@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>de.saxsys.mvvmfx</groupId>
+		<artifactId>examples</artifactId>
+		<version>1.4.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>contacts-example</artifactId>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.zenjava</groupId>
+				<artifactId>javafx-maven-plugin</artifactId>
+				<version>8.1.2</version>
+				<configuration>
+					<mainClass>de.saxsys.mvvmfx.examples.contacts.App</mainClass>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>de.saxsys</groupId>
+			<artifactId>mvvmfx</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.saxsys</groupId>
+			<artifactId>mvvmfx-cdi</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss</groupId>
+			<artifactId>jandex</artifactId>
+			<version>1.2.4.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.controlsfx</groupId>
+			<artifactId>controlsfx</artifactId>
+			<version>8.40.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>de.jensd</groupId>
+			<artifactId>fontawesomefx</artifactId>
+			<version>8.0.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.javafxdata</groupId>
+			<artifactId>datafx-core</artifactId>
+			<version>8.0b5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.javafxdata</groupId>
+			<artifactId>datafx-datareader</artifactId>
+			<version>8.0b5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>eu.lestard</groupId>
+			<artifactId>advanced-bindings</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.saxsys</groupId>
+			<artifactId>jfx-testrunner</artifactId>
+			<version>1.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>eu.lestard</groupId>
+			<artifactId>assertj-javafx</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testfx</groupId>
+			<artifactId>testfx-core</artifactId>
+			<version>4.0.1-alpha</version>
+			<scope>test</scope>
+		</dependency>
+
+        <dependency>
+            <groupId>de.saxsys</groupId>
+            <artifactId>mvvmfx-testing-utils</artifactId>
+            <scope>test</scope>
+        </dependency>
+	</dependencies>
+
+</project>
