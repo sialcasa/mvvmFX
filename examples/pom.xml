@@ -22,7 +22,7 @@
 		<module>mvvmfx-helloworld-without-fxml</module>
 		<module>mvvmfx-synchronizefx</module>
 		<module>mvvmfx-contacts</module>
-		<module>mvvmfx-books-example</module>
+		<module>books-example</module>
 		<module>mvvmfx-todomvc</module>
 	</modules>
 
@@ -71,7 +71,7 @@
 			</dependency>
 			<dependency>
 				<groupId>de.saxsys.mvvmfx</groupId>
-				<artifactId>mvvmfx-library-example</artifactId>
+				<artifactId>books-example</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

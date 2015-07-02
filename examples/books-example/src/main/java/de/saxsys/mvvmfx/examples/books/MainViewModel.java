@@ -32,12 +32,12 @@ public class MainViewModel implements ViewModel {
 	private ObjectProperty<BookListItemViewModel> selectedBook = new SimpleObjectProperty<>();
 	
 	private StringProperty error = new SimpleStringProperty();
-
+	
 	private Command searchCommand;
 	
 	public MainViewModel(LibraryService libraryService) {
 		this.libraryService = libraryService;
-
+		
 		searchCommand = new DelegateCommand(() -> new Action() {
 			@Override
 			protected void action() throws Exception {
@@ -53,7 +53,7 @@ public class MainViewModel implements ViewModel {
 	public Command getSearchCommand() {
 		return searchCommand;
 	}
-
+	
 	void search() {
 		Consumer<Error> errorHandler = err -> error.set(err.getMessage());
 		

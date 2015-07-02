@@ -55,9 +55,9 @@ public class MainView implements FxmlView<MainViewModel> {
 		
 		viewModel.selectedBookProperty().bind(bookList.getSelectionModel().selectedItemProperty());
 		errorLabel.textProperty().bind(viewModel.errorProperty());
-
+		
 		searchButton.disableProperty().bind(viewModel.getSearchCommand().executableProperty().not());
-
+		
 	}
 	
 	public void searchButtonPressed() {
