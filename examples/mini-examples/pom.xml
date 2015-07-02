@@ -19,6 +19,7 @@
 		<module>fx-root-example</module>
 		<module>helloworld</module>
 		<module>helloworld-without-fxml</module>
+		<module>welcome-example</module>
 	</modules>
 
 

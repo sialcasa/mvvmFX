@@ -14,9 +14,6 @@
 
 
 	<modules>
-		<module>mvvmfx-complex-example</module>
-		<module>mvvmfx-guice-starter</module>
-		<module>mvvmfx-cdi-starter</module>
 		<module>contacts-example</module>
 		<module>books-example</module>
 		<module>todomvc-example</module>
@@ -29,21 +26,6 @@
 			<dependency>
 				<groupId>de.saxsys.mvvmfx</groupId>
 				<artifactId>mini-examples</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>de.saxsys.mvvmfx</groupId>
-				<artifactId>mvvmfx-complex</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>de.saxsys.mvvmfx</groupId>
-				<artifactId>mvvmfx-guice-example</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>de.saxsys.mvvmfx</groupId>
-				<artifactId>mvvmfx-cdi-example</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -79,6 +61,11 @@
 			<dependency>
 				<groupId>de.saxsys.mvvmfx</groupId>
 				<artifactId>todomvc-example</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.saxsys.mvvmfx</groupId>
+				<artifactId>welcome-example</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
