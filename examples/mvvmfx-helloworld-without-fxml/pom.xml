@@ -5,8 +5,8 @@
 	<name>HelloWorld Example without FXML</name>
 
 	<parent>
-		<groupId>de.saxsys</groupId>
-		<artifactId>mvvmfx-examples</artifactId>
+		<groupId>de.saxsys.mvvmfx</groupId>
+		<artifactId>examples</artifactId>
 		<version>1.4.0-SNAPSHOT</version>
 	</parent>
 
