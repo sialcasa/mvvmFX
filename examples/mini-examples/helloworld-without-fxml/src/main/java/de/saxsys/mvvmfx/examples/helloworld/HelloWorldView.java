@@ -1,4 +1,4 @@
-package de.saxsys.jfx.mvvmfx.helloworld;
+package de.saxsys.mvvmfx.examples.helloworld;
 
 import java.net.URL;
 import java.util.ResourceBundle;

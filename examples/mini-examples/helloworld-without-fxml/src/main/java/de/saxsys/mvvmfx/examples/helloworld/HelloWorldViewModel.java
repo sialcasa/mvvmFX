@@ -1,4 +1,4 @@
-package de.saxsys.jfx.mvvmfx.helloworld;
+package de.saxsys.mvvmfx.examples.helloworld;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

@@ -1,4 +1,4 @@
-package de.saxsys.jfx.mvvmfx.fx_root_example;
+package de.saxsys.mvvmfx.examples.fx_root_example;
 
 import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
 

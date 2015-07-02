@@ -4,7 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 <VBox alignment="CENTER" xmlns:fx="http://javafx.com/fxml"
-	  fx:controller="de.saxsys.jfx.mvvmfx.helloworld.HelloWorldView">
+	  fx:controller="de.saxsys.mvvmfx.examples.helloworld.HelloWorldView">
 	<children>
 		<Label fx:id="helloLabel"/>
 	</children>
