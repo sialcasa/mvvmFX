@@ -7,19 +7,20 @@ It is based on [fx-guice](https://github.com/cathive/fx-guice).
 
 To create an application that is powered by Guice you have to extend `MvvmfxGuiceApplication`:
 
-    public class Starter extends MvvmfxGuiceApplication {
+```java
+public class Starter extends MvvmfxGuiceApplication {
 
-        public static void main(final String[] args) {
-            launch(args);
-        }
-
-        @Override
-        public void startMvvmfx(final Stage stage) throws Exception {
-            // your code to initialize the view
-        }
+    public static void main(final String[] args) {
+        launch(args);
     }
 
+    @Override
+    public void startMvvmfx(final Stage stage) throws Exception {
+        // your code to initialize the view
+    }
+}
+```
 
-A simple example for this is available at [mvvmfx-guice-starter](/examples/mvvmfx-guice-starter).
+A simple example for this is available at [welcome-example](/examples/mini-examples/welcome-example).
 
 If you prefer CDI as dependency injection framework you can use [mvvnfx-cdi](/mvvmfx-cdi).
