@@ -16,11 +16,18 @@
 package de.saxsys.mvvmfx.utils.itemlist;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link ItemList}.
@@ -143,5 +150,36 @@ public class ItemListTest {
 		Assert.assertEquals(PREFIX + "replacedPerson", itemList
 				.stringListProperty().get(1));
 	}
-	
+
+	/**
+	 * This test is used to reproduce the bug <a href="https://github.com/sialcasa/mvvmFX/issues/281">#281</a>.
+	 * 
+	 * When multiple elements are added to the list in a single method call ({@link ObservableList#addAll(Object[])},
+	 * only a single change event should be fired.
+	 */
+	@Test
+	public void addMultipleItemsEventListener() {
+		AtomicInteger counter = new AtomicInteger(0);
+		
+		itemList.getTargetList().addListener((ListChangeListener<String>) c -> {
+			counter.incrementAndGet();
+		});
+		
+		listWithModelObjects.addAll(new Person("one"), new Person("two"), new Person("three"));
+		
+		assertThat(counter.get()).isEqualTo(1);
+	}
+
+	@Test
+	public void removeMultipleItemsEventListener() {
+		AtomicInteger counter = new AtomicInteger(0);
+		
+		itemList.getTargetList().addListener((ListChangeListener<String>) c -> {
+			counter.incrementAndGet();
+		});
+
+		listWithModelObjects.removeAll(person1, person3);
+
+		assertThat(counter.get()).isEqualTo(1);
+	}
 }
