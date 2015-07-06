@@ -16,6 +16,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -155,6 +156,7 @@ public class CompositeCommandTest {
 		compositeCommand.unregister(delegateCommand2);
 	}
 	
+	@Ignore("unstable test. Needs to be fixed. see bug #260")
 	@Test
 	public void longRunningAsyncComposite() throws Exception {
 		
