@@ -1,46 +1,45 @@
 package de.saxsys.mvvmfx.examples.scopes.ui;
 
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.examples.scopes.model.Note;
+import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import org.fxmisc.easybind.EasyBind;
-import org.fxmisc.easybind.monadic.MonadicObservableValue;
+import javax.inject.Inject;
 
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.examples.scopes.model.Note;
-import de.saxsys.mvvmfx.scopes.InjectScope;
-
+//@LoadingScope
 public class NoteInfoViewModel implements ViewModel {
 	
 	
 	private StringProperty title = new SimpleStringProperty();
-	private StringProperty lastModified = new SimpleStringProperty();
-	
-	@InjectScope
-	private ScopeViewModel scopeViewModel;
-	
-	
-	public void initialize() {
-		MonadicObservableValue<Note> note = EasyBind.monadic(scopeViewModel.noteProperty());
-		
-		title.bind(note.flatMap(Note::titleProperty));
-		
-		lastModified.bind(note
-				.flatMap(Note::lastUpdateProperty)
-				.map(n -> {
-					if (n == null) {
-						return "";
-					} else {
-						return n.toString();
-					}
-				}));
-	}
-	
+	private StringProperty id = new SimpleStringProperty();
+
+    @Inject
+    private ScopeContext scopeContext;
+
+    public void initialize() {
+
+        scopeContext.noteProperty().addListener((observable, oldValue, newValue) -> {
+            initBindings(oldValue, newValue);
+        });
+        initBindings(null, scopeContext.getNote());
+    }
+
+    private void initBindings(Note oldNote, Note newNote) {
+        if(oldNote != null) {
+            title.unbindBidirectional(oldNote.titleProperty());
+        }
+
+        title.bindBidirectional(newNote.titleProperty());
+        id.set(newNote.getId());
+    }
+
 	public StringProperty titleProperty() {
 		return title;
 	}
-	
-	public StringProperty lastModifiedProperty() {
-		return lastModified;
-	}
+
+    public ReadOnlyStringProperty idProperty() {
+        return id;
+    }
 }

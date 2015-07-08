@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<HBox fx:controller="de.saxsys.mvvmfx.examples.scopes.ui.NoteView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" >
+ <children>
+     <fx:include source="NoteInfoView.fxml"/>
+     <fx:include source="NoteTextView.fxml"/>
+ </children>
+</HBox>

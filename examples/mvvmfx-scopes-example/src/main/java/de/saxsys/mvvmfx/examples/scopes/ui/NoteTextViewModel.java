@@ -1,32 +1,45 @@
 package de.saxsys.mvvmfx.examples.scopes.ui;
 
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.examples.scopes.model.Note;
+import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import org.fxmisc.easybind.EasyBind;
-import org.fxmisc.easybind.monadic.MonadicObservableValue;
+import javax.inject.Inject;
 
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.examples.scopes.model.Note;
-import de.saxsys.mvvmfx.scopes.InjectScope;
-
+//@LoadingScope
 public class NoteTextViewModel implements ViewModel {
 	
 	private StringProperty content = new SimpleStringProperty();
-	
-	
-	
-	@InjectScope
-	private ScopeViewModel scopeViewModel;
-	
-	
+
+    private StringProperty id = new SimpleStringProperty();
+
+    @Inject
+    private ScopeContext scopeContext;
+
 	public void initialize() {
-		MonadicObservableValue<Note> note = EasyBind.monadic(scopeViewModel.noteProperty());
-		
-		content.bind(note.flatMap(Note::textProperty));
+        scopeContext.noteProperty().addListener((observable, oldValue, newValue) -> {
+            initBindings(oldValue, newValue);
+        });
+        initBindings(null, scopeContext.getNote());
 	}
-	
-	public StringProperty contentProperty() {
+
+    private void initBindings(Note oldNote, Note newNote) {
+        if(oldNote != null) {
+            content.unbindBidirectional(oldNote.textProperty());
+        }
+
+        content.bindBidirectional(newNote.textProperty());
+        id.set(newNote.getId());
+    }
+
+    public StringProperty contentProperty() {
 		return content;
 	}
+
+    public ReadOnlyStringProperty idProperty() {
+        return id;
+    }
+
 }

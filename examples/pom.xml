@@ -79,6 +79,11 @@
 				<artifactId>mvvmfx-todomvc</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+            <dependency>
+                <groupId>de.saxsys</groupId>
+                <artifactId>mvvmfx-scopes-example</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 

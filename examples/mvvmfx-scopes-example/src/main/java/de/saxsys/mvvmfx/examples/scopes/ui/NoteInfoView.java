@@ -9,7 +9,7 @@ public class NoteInfoView implements FxmlView<NoteInfoViewModel> {
 	@FXML
 	public Label title;
 	@FXML
-	public Label lastModified;
+	public Label idLabel;
 
 	
 	@InjectViewModel
@@ -18,6 +18,6 @@ public class NoteInfoView implements FxmlView<NoteInfoViewModel> {
 	
 	public void initialize(){
 		title.textProperty().bind(viewModel.titleProperty());		
-		lastModified.textProperty().bind(viewModel.lastModifiedProperty());		
+		idLabel.textProperty().bind(viewModel.idProperty());
 	}
 }

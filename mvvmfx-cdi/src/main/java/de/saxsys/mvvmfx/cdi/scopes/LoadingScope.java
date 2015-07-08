@@ -1,14 +1,13 @@
-package de.saxsys.mvvmfx.scopes;
+package de.saxsys.mvvmfx.cdi.scopes;
 
+import javax.inject.Scope;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * @author manuel.mauky
- */
+@Scope
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface InjectScope {
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
+public @interface LoadingScope {
 }

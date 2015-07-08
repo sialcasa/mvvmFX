@@ -15,20 +15,20 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.internal.viewloader;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.ViewTuple;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.util.Callback;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.ViewTuple;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  * This viewLoader is used to load views that are implementing {@link de.saxsys.mvvmfx.FxmlView}.
@@ -38,7 +38,28 @@ import de.saxsys.mvvmfx.ViewTuple;
 public class FxmlViewLoader {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(FxmlViewLoader.class);
-	
+
+    @FunctionalInterface
+    public interface OnBeforeLoadCallback {
+        void action();
+    }
+
+    @FunctionalInterface
+    public interface OnAfterLoadCallback {
+        <V extends View<? extends VM>, VM extends ViewModel> void action(V view, VM viewModel);
+    }
+
+    private static List<OnBeforeLoadCallback> onBeforeLoadCallbacks = new ArrayList<>();
+    private static List<OnAfterLoadCallback> onAfterLoadCallbacks = new ArrayList<>();
+
+    public  static void addOnBeforeLoadCallback(OnBeforeLoadCallback callback) {
+        onBeforeLoadCallbacks.add(callback);
+    }
+
+    public static void addOnAfterLoadCallback(OnAfterLoadCallback callback) {
+        onAfterLoadCallbacks.add(callback);
+    }
+
 	/**
 	 * Load the viewTuple by it`s ViewType.
 	 * 
@@ -125,7 +146,9 @@ public class FxmlViewLoader {
 		try {
 			
 			final FXMLLoader loader = createFxmlLoader(resource, resourceBundle, codeBehind, root, viewModel);
-			
+
+            onBeforeLoadCallbacks.forEach(OnBeforeLoadCallback::action);
+
 			loader.load();
 			
 			final ViewType loadedController = loader.getController();
@@ -135,23 +158,30 @@ public class FxmlViewLoader {
 				throw new IOException("Could not load the controller for the View " + resource
 						+ " maybe your missed the fx:controller in your fxml?");
 			}
-			
-			
-			ViewModelType loadedViewModel = ViewLoaderReflectionUtils.getExistingViewModel(loadedController);
-			
-			if (loadedViewModel == null) {
-				loadedViewModel = ViewLoaderReflectionUtils.createViewModel(loadedController);
-			}
-			
+
+
+            final ViewModelType loadedViewModel = getLoadedViewModel(loadedController);
+
+            onAfterLoadCallbacks.forEach(callback -> callback.action(loadedController, loadedViewModel));
+
 			return new ViewTuple<>(loadedController, loadedRoot, loadedViewModel);
 			
 		} catch (final IOException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
-	
-	
-	private FXMLLoader createFxmlLoader(String resource, ResourceBundle resourceBundle, View codeBehind, Object root,
+
+    private <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewModelType getLoadedViewModel(ViewType loadedController) {
+        ViewModelType loadedViewModel = ViewLoaderReflectionUtils.getExistingViewModel(loadedController);
+
+        if (loadedViewModel == null) {
+            loadedViewModel = ViewLoaderReflectionUtils.createViewModel(loadedController);
+        }
+        return loadedViewModel;
+    }
+
+
+    private FXMLLoader createFxmlLoader(String resource, ResourceBundle resourceBundle, View codeBehind, Object root,
 			ViewModel viewModel)
 			throws IOException {
 		
