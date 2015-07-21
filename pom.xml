@@ -198,11 +198,6 @@
 				<version>0.3.0</version>
 			</dependency>
 			<dependency>
-				<groupId>de.saxsys</groupId>
-				<artifactId>jfx-testrunner</artifactId>
-				<version>1.1</version>
-			</dependency>
-			<dependency>
 				<groupId>com.cedarsoft.commons</groupId>
 				<artifactId>test-utils</artifactId>
 				<version>6.1.1</version>

@@ -1,6 +1,6 @@
 package de.saxsys.mvvmfx.examples.contacts.model;
 
-import de.saxsys.javafx.test.JfxRunner;
+import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
 import javafx.application.Platform;
 import org.datafx.reader.converter.XmlConverter;
 import org.junit.Before;

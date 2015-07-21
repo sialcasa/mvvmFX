@@ -15,11 +15,11 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.internal.viewloader;
 
-import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.internal.viewloader.example.*;
 import de.saxsys.mvvmfx.testingutils.ExceptionUtils;
+import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
 import javafx.fxml.LoadException;
 import javafx.scene.layout.VBox;
 import org.junit.Before;

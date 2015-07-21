@@ -89,12 +89,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>de.saxsys</groupId>
-			<artifactId>jfx-testrunner</artifactId>
-			<version>1.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>eu.lestard</groupId>
 			<artifactId>assertj-javafx</artifactId>
 			<scope>test</scope>
