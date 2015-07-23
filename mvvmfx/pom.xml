@@ -80,13 +80,7 @@
 			<artifactId>logback-classic</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>de.saxsys</groupId>
-			<artifactId>jfx-testrunner</artifactId>
-			<scope>test</scope>
-		</dependency>
-
+		
 		<dependency>
 			<groupId>com.cedarsoft.commons</groupId>
 			<artifactId>test-utils</artifactId>
