@@ -1,18 +1,29 @@
 ### Contains the examples for mvvmfx
 
-Content:
+At the moment we have 3 example applications:
+- **books-example**: An app to search for books in a library.
+  - Shows how to integrate a REST backend (Optional)
+  - Uses EasyDI as dependency injection library
+- **contacts-example**: A contact management application
+  - Master-Detail
+  - Dialogs
+  - CDI as dependency injection library, including CDI-Events
+  - Validation
+  - Model-Wrapper
+  - I18N and ResourceBundle handling
+  - [DataFX](http://www.javafxdata.org/)
+- **todomvc-example**: A Todo-App influenced by the popular [TodoMVC.com](http://todomvc.com/).
+  - NotificationCenter
+  - MvvmFX views as items of a ListView
+  - [EasyBind](https://github.com/TomasMikula/EasyBind) for filtering Lists
 
-- **mvvmfx-books-example**: An app to search for books in a library. Connects to a REST backend.
-- **mvvmfx-complex-example**: contains the user interface and logic code for an example application.
-To run this example you need either mvvmfx-cdi-starter or mvvmfx-guice-starter.
-- **mvvmfx-cdi-starter**: contains the startup code to run the mvvmfx-complex-example with CDI/Weld
-as dependency injection framework.
-- **mvvmfx-guice-starter**: contains the startup code to run the mvvmfx-complex-example with Guice
-as dependency injection framework. 
-- **mvvmfx-fx-root-example**: contains a small custom control that uses the fx:root element together with mvvmfx.
-- **mvvmfx-helloworld-example**: A simple hello world view. This example is used in the [Getting Started/Step-by-Step tutorial](/../../wiki/Getting-Started-HelloWorld-%28deutsch%29).
-- **mvvmfx-helloworld-without-fxml**: A hello world example that shows hot to use MvvmFX with a view implemented in pure Java and not with FXML.
-- **mvvmfx-contacts**: A contact management application. This example shows a master-detail view, dialogs and the usage of CDI including CDI-Events. 
-This example also integrates some other JavaFX community libraries.
-- **mvvmfx-synchronizefx**: This example uses the library [SynchronizeFX](https://github.com/saxsys/SynchronizeFX) to create a distributed ViewModel. 
-This way the state of the UI of different instances of the App (on different JVM's, on different computers) is always synchronized between the apps. 
+
+In addition to these apps we have some smaller examples. Each examples shows a specific aspect of the framework but isn't very useful by itself. 
+
+- **fx-root-example**: Shows how to use `fx:root` with mvvmFX. This way you can create your own custom components.
+- **helloworld**: A minimal mvvmFX application using *FXML*.
+- **helloworld-without-fxml**: A minimal mvvmFX application using pure Java code instead of *FXML*.
+- **synchronizefx-example**: Shows how to integrade the library [SynchronizeFX](https://github.com/saxsys/SynchronizeFX) to implement a distributed ViewModel. This way the state of the UI of different instances of the App (on different JVM's, on different computers) is always synchronized between the apps. 
+- **welcome-example**: A simple app that shows a welcome message for people. 
+    - It demonstrates the usage of [mvvmfx-cdi](https://github.com/sialcasa/mvvmFX/tree/develop/mvvmfx-cdi) and [mvvmfx-guice](https://github.com/sialcasa/mvvmFX/tree/develop/mvvmfx-guice). The complete code base is shared, only a specific starter class for each dependency injection framework is needed.
+    - Shows the usage of [Commands](https://github.com/sialcasa/mvvmFX/wiki/Commands).

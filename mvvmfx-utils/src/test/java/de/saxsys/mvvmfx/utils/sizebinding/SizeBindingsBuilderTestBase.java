@@ -17,6 +17,7 @@ package de.saxsys.mvvmfx.utils.sizebinding;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.scene.control.Control;
 import javafx.scene.control.ScrollPane;
@@ -28,7 +29,6 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.internal.util.reflection.Whitebox;
 
-import de.saxsys.javafx.test.JfxRunner;
 
 @RunWith(JfxRunner.class)
 public abstract class SizeBindingsBuilderTestBase {

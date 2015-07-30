@@ -89,6 +89,7 @@ public class ListTransformation<SourceType, TargetType> {
 				// targetList
 				List<TargetType> deleteStaging = new ArrayList<>();
 				
+				
 				while (listEvent.next()) {
 					if (listEvent.wasUpdated()) {
 						processUpdateEvent(listEvent);
@@ -118,10 +119,13 @@ public class ListTransformation<SourceType, TargetType> {
 	 */
 	private void processAddEvent(
 			ListChangeListener.Change<? extends SourceType> listEvent) {
-		for (int i = listEvent.getFrom(); i < listEvent.getTo(); i++) {
-			SourceType item = listEvent.getList().get(i);
-			viewModelList.add(i, ListTransformation.this.function.apply(item));
+
+		final List<TargetType> toAdd = new ArrayList<>();
+		for (int index = listEvent.getFrom(); index < listEvent.getTo(); index++) {
+			final SourceType item = listEvent.getList().get(index);
+			toAdd.add(function.apply(item));
 		}
+		viewModelList.addAll(listEvent.getFrom(), toAdd);
 	}
 	
 	/**

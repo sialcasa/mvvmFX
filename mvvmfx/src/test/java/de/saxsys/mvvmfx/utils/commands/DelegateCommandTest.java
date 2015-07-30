@@ -1,7 +1,6 @@
 package de.saxsys.mvvmfx.utils.commands;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.core.api.Assertions.offset;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -10,21 +9,17 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import com.cedarsoft.test.utils.CatchAllExceptionsRule;
-import de.saxsys.javafx.test.TestInJfxThread;
-import javafx.application.Application;
+import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import de.saxsys.javafx.test.JfxRunner;
-import org.junit.runners.JUnit4;
 
 
 @RunWith(JfxRunner.class)

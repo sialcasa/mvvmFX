@@ -1,9 +1,9 @@
 package de.saxsys.mvvmfx.resourcebundle.included;
 
-import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

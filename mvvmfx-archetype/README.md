@@ -12,4 +12,4 @@ To use this archetype:
         -DartifactId=your.artifact.id
         
 
-This creates an example mvvmfx project similar to the [mvvmfx-helloworld example](/examples/mvvmfx-helloworld).
+This creates an example mvvmfx project similar to the [helloworld example](/examples/mini-examples/helloworld).
