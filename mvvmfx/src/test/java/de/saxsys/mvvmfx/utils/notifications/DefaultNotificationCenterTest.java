@@ -16,11 +16,10 @@
 
 package de.saxsys.mvvmfx.utils.notifications;
 
-import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
 import javafx.application.Platform;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
