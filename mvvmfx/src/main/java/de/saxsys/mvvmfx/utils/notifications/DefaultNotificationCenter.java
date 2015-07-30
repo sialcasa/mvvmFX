@@ -15,16 +15,16 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.notifications;
 
+import de.saxsys.mvvmfx.ViewModel;
+import javafx.application.Platform;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import de.saxsys.mvvmfx.ViewModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of {@link NotificationCenter}.
@@ -61,12 +61,35 @@ class DefaultNotificationCenter implements NotificationCenter {
 	public void publish(String messageName, Object... payload) {
 		publish(messageName, payload, globalObservers);
 	}
-	
+
+	/**
+	 *  This notification will be send to the UI-Thread (if the UI-toolkit was bootstrapped).
+	 *  If no UI-Toolkit is available the notification will be directly published. This is typically the case in unit tests.
+	 *
+	 * @param viewModel 	the ViewModel
+	 * @param messageName 	the message to sent
+	 * @param payload 		additional arguments to the message
+	 */
 	@Override
 	public void publish(ViewModel viewModel, String messageName, Object[] payload) {
 		ObserverMap observerMap = viewModelObservers.get(viewModel);
 		if (observerMap != null) {
-			publish(messageName, payload, observerMap);
+			if (Platform.isFxApplicationThread()) {
+				publish(messageName, payload, observerMap);
+			} else {
+				try {
+					Platform.runLater(() -> publish(messageName, payload, observerMap));
+				} catch(IllegalStateException e) {
+
+					// If the toolkit isn't initialized yet we will publish the notification directly.
+					// In most cases this means that we are in a unit test and not JavaFX application is running.
+					if(e.getMessage().equals("Toolkit not initialized")) {
+						publish(messageName, payload, observerMap);
+					} else {
+						throw e;
+					}
+				}
+			}
 		}
 	}
 	
