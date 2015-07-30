@@ -46,9 +46,7 @@ import de.saxsys.mvvmfx.utils.notifications.NotificationObserver;
 public interface ViewModel {
 	
 	/**
-	 * Publishes a notification to the subscribers of the messageName. This notification will be send to the
-	 * UI-Thread (if the UI-toolkit was bootstrapped). If no UI-Toolkit is available the notification will be directly 
-	 * published. This is typically the case in unit tests. 
+	 * Publishes a notification to the subscribers of the messageName.
 	 * <p>
 	 *     
 	 * This notification mechanism uses the {@link NotificationCenter} internally with the difference that messages send
@@ -64,22 +62,7 @@ public interface ViewModel {
 	 *            to be send
 	 */
 	default void publish(String messageName, Object... payload) {
-		if (Platform.isFxApplicationThread()) {
-			MvvmFX.getNotificationCenter().publish(this, messageName, payload);
-		} else {
-			try {
-				Platform.runLater(() -> MvvmFX.getNotificationCenter().publish(this, messageName, payload));
-			} catch(IllegalStateException e) {
-				
-				// If the toolkit isn't initialized yet we will publish the notification directly. 
-				// In most cases this means that we are in a unit test and not JavaFX application is running.
-				if(e.getMessage().equals("Toolkit not initialized")) {
-					MvvmFX.getNotificationCenter().publish(this, messageName, payload);
-				} else {
-					throw e;
-				}
-			}
-		}
+		MvvmFX.getNotificationCenter().publish(this, messageName, payload);
 	}
 	
 	/**
