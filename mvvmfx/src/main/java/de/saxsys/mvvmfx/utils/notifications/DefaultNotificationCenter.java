@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -126,7 +127,11 @@ class DefaultNotificationCenter implements NotificationCenter {
 	private void publish(String messageName, Object[] payload, ObserverMap observerMap) {
 		Collection<NotificationObserver> notificationReceivers = observerMap.get(messageName);
 		if (notificationReceivers != null) {
-			for (NotificationObserver observer : notificationReceivers) {
+			
+			// make a copy to prevent ConcurrentModificationException if inside of an observer a new observer is subscribed.
+			final Collection<NotificationObserver> copy = new ArrayList<>(notificationReceivers);
+			
+			for (NotificationObserver observer : copy) {
 				observer.receivedNotification(messageName, payload);
 			}
 		}
