@@ -355,7 +355,6 @@ public class FluentViewLoader_FxmlView_Test {
 	 * 
 	 */
 	@Test
-	@Ignore("ignore until fixed")
 	public void testExistingViewModelWithoutInjectionInView() {
 		DependencyInjector.getInstance().setCustomInjector(type -> {
 			if(type.equals(TestViewModel.class)) {
@@ -377,5 +376,8 @@ public class FluentViewLoader_FxmlView_Test {
 				.fxmlView(TestFxmlViewWithoutViewModelField.class).viewModel(viewModel).load();
 		
 		assertThat(viewTuple.getViewModel()).isEqualTo(viewModel);
+		
+		// we need to reset the DI
+		DependencyInjector.getInstance().setCustomInjector(null);
 	}
 }
