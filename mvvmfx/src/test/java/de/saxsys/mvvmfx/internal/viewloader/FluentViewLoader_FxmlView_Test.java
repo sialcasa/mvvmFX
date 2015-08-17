@@ -16,6 +16,7 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.internal.viewloader.example.*;
 import de.saxsys.mvvmfx.testingutils.ExceptionUtils;
@@ -23,6 +24,7 @@ import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
 import javafx.fxml.LoadException;
 import javafx.scene.layout.VBox;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -340,5 +342,40 @@ public class FluentViewLoader_FxmlView_Test {
 		
 		assertThat(viewTuple.getViewModel()).isNotNull();
 		
+	}
+
+	/**
+	 * This test reproduces the <a href="https://github.com/sialcasa/mvvmFX/issues/292">bug #292</a>
+	 * Given the following conditions:
+	 * 1. The View has no ViewModel field and not injection of the ViewModel.
+	 * 2. While loading an existing ViewModel instance is passed to the {@link FluentViewLoader}
+	 * 
+	 * Under this conditions the ViewLoader was still creating a new ViewModel instance or retrieved an instance
+	 * from DI. This isn't expected because the user has passed an existing ViewModel instance into the ViewLoader.
+	 * 
+	 */
+	@Test
+	@Ignore("ignore until fixed")
+	public void testExistingViewModelWithoutInjectionInView() {
+		DependencyInjector.getInstance().setCustomInjector(type -> {
+			if(type.equals(TestViewModel.class)) {
+				fail("An instance of TestViewModel was requested!");
+				throw new IllegalStateException("An instance of TestViewModel was requested!");
+			} else {
+				try {
+					return type.newInstance();
+				} catch (InstantiationException | IllegalAccessException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+		
+		
+		TestViewModel viewModel = new TestViewModel();
+
+		final ViewTuple<TestFxmlViewWithoutViewModelField, TestViewModel> viewTuple = FluentViewLoader
+				.fxmlView(TestFxmlViewWithoutViewModelField.class).viewModel(viewModel).load();
+		
+		assertThat(viewTuple.getViewModel()).isEqualTo(viewModel);
 	}
 }
