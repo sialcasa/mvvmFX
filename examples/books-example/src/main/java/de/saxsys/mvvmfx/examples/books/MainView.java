@@ -1,15 +1,14 @@
 package de.saxsys.mvvmfx.examples.books;
 
-import de.saxsys.mvvmfx.utils.viewlist.CachedViewModelCellFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import de.saxsys.mvvmfx.FluentViewLoader;
+
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
+import de.saxsys.mvvmfx.utils.viewlist.CachedViewModelCellFactory;
 
 public class MainView implements FxmlView<MainViewModel> {
 	
@@ -46,12 +45,7 @@ public class MainView implements FxmlView<MainViewModel> {
 		
 		bookList.setItems(viewModel.booksProperty());
 		
-		
-		final ViewListCellFactory<BookListItemViewModel> cellFactory =
-				new CachedViewModelCellFactory<>(viewModel -> FluentViewLoader.fxmlView(BookListItemView.class)
-						.viewModel(viewModel).load());
-		
-		bookList.setCellFactory(cellFactory);
+		bookList.setCellFactory(CachedViewModelCellFactory.createForFxmlView(BookListItemView.class));
 		
 		viewModel.selectedBookProperty().bind(bookList.getSelectionModel().selectedItemProperty());
 		errorLabel.textProperty().bind(viewModel.errorProperty());
