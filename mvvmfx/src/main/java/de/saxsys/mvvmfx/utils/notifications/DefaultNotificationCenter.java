@@ -20,9 +20,9 @@ import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -125,48 +125,41 @@ class DefaultNotificationCenter implements NotificationCenter {
 	 */
 	
 	private void publish(String messageName, Object[] payload, ObserverMap observerMap) {
-		Collection<WeakReference<NotificationObserver>> notificationReceivers = observerMap.get(messageName);
+		Collection<NotificationObserver> notificationReceivers = observerMap.get(messageName);
 		if (notificationReceivers != null) {
 			
 			// make a copy to prevent ConcurrentModificationException if inside of an observer a new observer is subscribed.
-			final Collection<WeakReference<NotificationObserver>> copy = new ArrayList<>(notificationReceivers);
+			final Collection<NotificationObserver> copy = new ArrayList<>(notificationReceivers);
 			
-			for (WeakReference<NotificationObserver> observerReference : copy) {
-                final NotificationObserver observer = observerReference.get();
-                if(observer != null) {
-				    observer.receivedNotification(messageName, payload);
-                }
+			for (NotificationObserver observer : copy) {
+				observer.receivedNotification(messageName, payload);
 			}
 		}
 	}
 	
 	private void addObserver(String messageName, NotificationObserver observer, ObserverMap observerMap) {
-		List<WeakReference<NotificationObserver>> observers = observerMap.get(messageName);
+		List<NotificationObserver> observers = observerMap.get(messageName);
 		if (observers == null) {
-			observerMap.put(messageName, new ArrayList<>());
+			observerMap.put(messageName, new ArrayList<NotificationObserver>());
 		}
 		observers = observerMap.get(messageName);
-
-		if(observers.stream()
-                .anyMatch(reference -> observer.equals(reference.get()))) {
+		
+		if(observers.contains(observer)) {
 			LOG.warn("Subscribe the observer ["+ observer + "] for the message [" + messageName + 
 					"], but the same observer was already added for this message in the past.");	
 		}
-
-        WeakReference<NotificationObserver> reference = new WeakReference<>(observer);
-
-		observers.add(reference);
+		observers.add(observer);
 	}
 	
 	
 	
 	private void removeObserverFromObserverMap(NotificationObserver observer, ObserverMap observerMap) {
 		for (String key : observerMap.keySet()) {
-			final List<WeakReference<NotificationObserver>> observers = observerMap.get(key);
+			final List<NotificationObserver> observers = observerMap.get(key);
 			
-			final List<WeakReference<NotificationObserver>> observersToBeRemoved = observers
+			final List<NotificationObserver> observersToBeRemoved = observers
 					.stream()
-					.filter(reference -> observer.equals(reference.get()))
+					.filter(actualObserver -> actualObserver.equals(observer))
 					.collect(Collectors.toList());
 			
 			observers.removeAll(observersToBeRemoved);
@@ -175,16 +168,15 @@ class DefaultNotificationCenter implements NotificationCenter {
 	
 	private void removeObserversForMessageName(String messageName, NotificationObserver observer,
 			ObserverMap observerMap) {
-		List<WeakReference<NotificationObserver>> observers = observerMap.get(messageName);
-
-        observers.removeIf(reference -> observer.equals(reference.get()));
+		List<NotificationObserver> observers = observerMap.get(messageName);
+		observers.remove(observer);
 		if (observers.size() == 0) {
 			observerMap.remove(messageName);
 		}
 	}
 	
 	@SuppressWarnings("serial")
-	private class ObserverMap extends HashMap<String, List<WeakReference<NotificationObserver>>> {
+	private class ObserverMap extends HashMap<String, List<NotificationObserver>> {
 	}
 	
 	@SuppressWarnings("serial")
