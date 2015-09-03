@@ -1,8 +1,6 @@
 package de.saxsys.mvvmfx.utils.mapping;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class Person {
@@ -11,14 +9,14 @@ public class Person {
 	
 	private int age;
 	
-	private ObservableList<String> nicknames = FXCollections.observableArrayList();
+	private List<String> nicknames = new ArrayList<>();
 
 	public List<String> getNicknames() {
 		return nicknames;
 	}
 
 	public void setNicknames (List<String> nicknames) {
-		this.nicknames.setAll(nicknames);
+		this.nicknames = nicknames;
 	}
 
 	public int getAge() {
