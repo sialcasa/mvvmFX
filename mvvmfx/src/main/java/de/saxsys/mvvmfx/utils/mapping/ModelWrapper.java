@@ -12,6 +12,9 @@ import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.FloatSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.IntGetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.IntPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.IntSetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ListGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ListPropertyAccessor;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ListSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.LongGetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.LongPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.LongSetter;
@@ -23,6 +26,9 @@ import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringSetter;
 import eu.lestard.doc.Beta;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -341,6 +347,119 @@ public class ModelWrapper<M> {
         }
     }
 	
+	/**
+	 * An implementation of {@link PropertyField} that is used when the field of the model class is a {@link List} and
+	 * and is a JavaFX {@link ListProperty} too.
+	 *
+	 * @param <T>
+	 * @param <E>
+	 *            the type of the list elements.
+	 */
+	private class FxListPropertyField<E, T extends ObservableList<E>, R extends Property<T>>
+			implements PropertyField<T, M, R> {
+
+		private final List<E> defaultValue;
+		private final ListPropertyAccessor<M, E> accessor;
+		private final ListProperty<E> targetProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+		public FxListPropertyField(ListPropertyAccessor<M, E> accessor) {
+			this(accessor, Collections.emptyList());
+		}
+
+		public FxListPropertyField(ListPropertyAccessor<M, E> accessor, List<E> defaultValue) {
+			this.accessor = accessor;
+			this.defaultValue = defaultValue;
+
+			this.targetProperty.addListener((ListChangeListener) change -> propertyWasChanged());
+		}
+
+		@Override
+		public void commit(M wrappedObject) {
+			accessor.apply(wrappedObject).setAll(targetProperty.getValue());
+		}
+
+		@Override
+		public void reload(M wrappedObject) {
+			targetProperty.setAll(accessor.apply(wrappedObject).getValue());
+		}
+
+		@Override
+		public void resetToDefault() {
+			targetProperty.setAll(defaultValue);
+		}
+
+		@Override
+		public R getProperty() {
+			return (R) targetProperty;
+		}
+
+		@Override
+		public boolean isDifferent(M wrappedObject) {
+			final List<E> modelValue = accessor.apply(wrappedObject).getValue();
+			final List<E> wrapperValue = targetProperty;
+
+			return !(modelValue.containsAll(wrapperValue) && wrapperValue.containsAll(modelValue));
+		}
+	}
+
+	/**
+	 * An implementation of {@link PropertyField} that is used when the field of the model class is a {@link List} and
+	 * is <b>not</b> a JavaFX ListProperty but is following the old Java-Beans standard, i.e. there is getter and
+	 * setter method for the field.
+	 *
+	 * @param <T>
+	 * @param <E>
+	 *            the type of the list elements.
+	 */
+	private class BeanListPropertyField<E, T extends ObservableList<E>, R extends Property<T>>
+			implements PropertyField<T, M, R> {
+
+		private final ListGetter<M, E> getter;
+		private final ListSetter<M, E> setter;
+
+		private final List<E> defaultValue;
+		private final ListProperty<E> targetProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+		public BeanListPropertyField(ListGetter<M, E> getter, ListSetter<M, E> setter) {
+			this(getter, setter, Collections.emptyList());
+		}
+
+		public BeanListPropertyField(ListGetter<M, E> getter, ListSetter<M, E> setter, List<E> defaultValue) {
+			this.defaultValue = defaultValue;
+			this.getter = getter;
+			this.setter = setter;
+
+			this.targetProperty.addListener((ListChangeListener) change -> propertyWasChanged());
+		}
+
+		@Override
+		public void commit(M wrappedObject) {
+			setter.accept(wrappedObject, targetProperty.getValue());
+		}
+
+		@Override
+		public void reload(M wrappedObject) {
+			targetProperty.setAll(getter.apply(wrappedObject));
+		}
+
+		@Override
+		public void resetToDefault() {
+			targetProperty.setAll(defaultValue);
+		}
+
+		@Override
+		public R getProperty() {
+			return (R) targetProperty;
+		}
+
+		@Override
+		public boolean isDifferent(M wrappedObject) {
+			final List<E> modelValue = getter.apply(wrappedObject);
+			final List<E> wrapperValue = targetProperty;
+
+			return !(modelValue.containsAll(wrapperValue) && wrapperValue.containsAll(modelValue));
+		}
+	}
 	
 	private Set<PropertyField<?, M, ?>> fields = new HashSet<>();
 	private Map<String, PropertyField<?, M, ?>> identifiedFields = new HashMap<>();
@@ -861,6 +980,47 @@ public class ModelWrapper<M> {
 	public <T> ObjectProperty<T> field(String identifier, ObjectPropertyAccessor<M, T> accessor, T defaultValue) {
 		return addIdentified(identifier,
 				new FxPropertyField<>(accessor::apply, defaultValue, SimpleObjectProperty::new));
+	}
+
+
+	/** Field type list **/
+
+	public <E> ListProperty<E> field(ListGetter<M, E> getter, ListSetter<M, E> setter) {
+		return add(new BeanListPropertyField<>(getter::apply, (m, list)
+				-> setter.accept(m, FXCollections.observableArrayList(list))));
+	}
+
+	public <E> ListProperty<E> field(ListGetter<M, E> getter, ListSetter<M, E> setter, List<E> defaultValue) {
+		return add(new BeanListPropertyField<>(getter::apply, (m, list)
+				-> setter.accept(m, FXCollections.observableArrayList(list)), defaultValue));
+	}
+
+	public <E> ListProperty<E> field(ListPropertyAccessor<M, E> accessor) {
+		return add(new FxListPropertyField<>(accessor::apply));
+	}
+
+	public <E> ListProperty<E> field(ListPropertyAccessor<M, E> accessor, List<E> defaultValue) {
+		return add(new FxListPropertyField<>(accessor::apply, defaultValue));
+	}
+
+
+	public <E> ListProperty<E> field(String identifier, ListGetter<M, E> getter, ListSetter<M, E> setter) {
+		return addIdentified(identifier, new BeanListPropertyField<>(getter::apply, (m, list)
+				-> setter.accept(m, FXCollections.observableArrayList(list))));
+	}
+
+	public <E> ListProperty<E> field(String identifier, ListGetter<M, E> getter, ListSetter<M, E> setter,
+									 List<E> defaultValue) {
+		return addIdentified(identifier, new BeanListPropertyField<>(getter::apply, (m, list)
+				-> setter.accept(m, FXCollections.observableArrayList(list)), defaultValue));
+	}
+
+	public <E> ListProperty<E> field(String identifier, ListPropertyAccessor<M, E> accessor) {
+		return addIdentified(identifier, new FxListPropertyField<>(accessor::apply));
+	}
+
+	public <E> ListProperty<E> field(String identifier, ListPropertyAccessor<M, E> accessor, List<E> defaultValue) {
+		return addIdentified(identifier, new FxListPropertyField<>(accessor::apply, defaultValue));
 	}
 	
 	private <T, R extends Property<T>> R add(PropertyField<T, M, R> field) {
