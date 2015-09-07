@@ -101,6 +101,17 @@ public class ViewModelTest {
 		Mockito.verify(observer3).receivedNotification(TEST_NOTIFICATION,
 				OBJECT_ARRAY_FOR_NOTIFICATION);
 	}
+
+
+	/**
+	 * See {@link DefaultNotificationCenterTest#removeObserverThatWasNotRegisteredYet()}.
+	 */
+	@Test
+	public void removeObserverThatWasNotRegisteredYet() {
+		viewModel.unsubscribe(observer1);
+		
+		viewModel.unsubscribe(TEST_NOTIFICATION, observer1);
+	}
 	
 	/**
 	 * This method is used to wait until the UI thread has done all work that was queued via
