@@ -120,6 +120,36 @@ public class DefaultNotificationCenterTest {
 		Mockito.verify(observer1, Mockito.never()).receivedNotification(TEST_NOTIFICATION);
 	}
 
+
+	/**
+	 * This is the same as {@link #unsubscribeObserverThatWasSubscribedMultipleTimes()} with the
+	 * difference that here we use the overloaded unsubscribe method {@link NotificationCenter#unsubscribe(String, NotificationObserver)} that takes
+	 * the message key as first parameter.
+	 */
+	@Test
+	public void unsubscribeObserverThatWasSubscribedMultipleTimesViaMessageName() {
+		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
+		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
+		defaultCenter.subscribe(TEST_NOTIFICATION, observer1);
+
+		defaultCenter.unsubscribe(TEST_NOTIFICATION, observer1);
+
+		defaultCenter.publish(TEST_NOTIFICATION);
+		Mockito.verify(observer1, Mockito.never()).receivedNotification(TEST_NOTIFICATION);
+	}
+
+
+	/**
+	 * In some use cases it's convenient to unregister an observer even if it wasn't subscribed yet.
+	 * For example to prevent a duplicated subscription. 
+	 * 
+	 * This test case reproduces <a href="https://github.com/sialcasa/mvvmFX/issues/301">bug #301</a>.
+	 */
+	@Test
+	public void removeObserverThatWasNotRegisteredYet() {
+		defaultCenter.unsubscribe(TEST_NOTIFICATION, observer1);
+	}
+
 	@Test
 	public void observerForViewModelIsCalledFromUiThread() throws InterruptedException, ExecutionException, TimeoutException {
 		// Check that there is a UI-Thread available. This JUnit-Test isn't running on the UI-Thread but there needs to

@@ -73,8 +73,9 @@ class DefaultNotificationCenter implements NotificationCenter {
 	 */
 	@Override
 	public void publish(ViewModel viewModel, String messageName, Object[] payload) {
-		ObserverMap observerMap = viewModelObservers.get(viewModel);
-		if (observerMap != null) {
+		if(viewModelObservers.containsKey(viewModel)) {
+			final ObserverMap observerMap = viewModelObservers.get(viewModel);
+			
 			if (Platform.isFxApplicationThread()) {
 				publish(messageName, payload, observerMap);
 			} else {
@@ -96,19 +97,19 @@ class DefaultNotificationCenter implements NotificationCenter {
 	
 	
 	@Override
-	public void subscribe(ViewModel view, String messageName, NotificationObserver observer) {
-		ObserverMap observerMap = viewModelObservers.get(view);
-		if (observerMap == null) {
-			observerMap = new ObserverMap();
-			viewModelObservers.put(view, observerMap);
+	public void subscribe(ViewModel viewModel, String messageName, NotificationObserver observer) {
+		if(!viewModelObservers.containsKey(viewModel)) {
+			viewModelObservers.put(viewModel, new ObserverMap());
 		}
+		
+		final ObserverMap observerMap = viewModelObservers.get(viewModel);
 		addObserver(messageName, observer, observerMap);
 	}
 	
 	@Override
-	public void unsubscribe(ViewModel view, String messageName, NotificationObserver observer) {
-		ObserverMap observerMap = viewModelObservers.get(view);
-		if (observerMap != null) {
+	public void unsubscribe(ViewModel viewModel, String messageName, NotificationObserver observer) {
+		if(viewModelObservers.containsKey(viewModel)) {
+			final ObserverMap observerMap = viewModelObservers.get(viewModel);
 			removeObserversForMessageName(messageName, observer, observerMap);
 		}
 	}
@@ -116,8 +117,10 @@ class DefaultNotificationCenter implements NotificationCenter {
 	
 	@Override
 	public void unsubscribe(ViewModel viewModel, NotificationObserver observer) {
-		ObserverMap observerMap = viewModelObservers.get(viewModel);
-		removeObserverFromObserverMap(observer, observerMap);
+		if(viewModelObservers.containsKey(viewModel)){
+			ObserverMap observerMap = viewModelObservers.get(viewModel);
+			removeObserverFromObserverMap(observer, observerMap);
+		}
 	}
 	
 	/*
@@ -138,11 +141,11 @@ class DefaultNotificationCenter implements NotificationCenter {
 	}
 	
 	private void addObserver(String messageName, NotificationObserver observer, ObserverMap observerMap) {
-		List<NotificationObserver> observers = observerMap.get(messageName);
-		if (observers == null) {
-			observerMap.put(messageName, new ArrayList<NotificationObserver>());
+		if(!observerMap.containsKey(messageName)) {
+			observerMap.put(messageName, new ArrayList<>());
 		}
-		observers = observerMap.get(messageName);
+		
+		final List<NotificationObserver> observers = observerMap.get(messageName);
 		
 		if(observers.contains(observer)) {
 			LOG.warn("Subscribe the observer ["+ observer + "] for the message [" + messageName + 
@@ -157,21 +160,19 @@ class DefaultNotificationCenter implements NotificationCenter {
 		for (String key : observerMap.keySet()) {
 			final List<NotificationObserver> observers = observerMap.get(key);
 			
-			final List<NotificationObserver> observersToBeRemoved = observers
-					.stream()
-					.filter(actualObserver -> actualObserver.equals(observer))
-					.collect(Collectors.toList());
-			
-			observers.removeAll(observersToBeRemoved);
+			observers.removeIf(actualObserver -> actualObserver.equals(observer));
 		}
 	}
 	
 	private void removeObserversForMessageName(String messageName, NotificationObserver observer,
 			ObserverMap observerMap) {
-		List<NotificationObserver> observers = observerMap.get(messageName);
-		observers.remove(observer);
-		if (observers.size() == 0) {
-			observerMap.remove(messageName);
+		
+		if(observerMap.containsKey(messageName)) {
+			final List<NotificationObserver> observers = observerMap.get(messageName);
+			observers.removeIf(actualObserver -> actualObserver.equals(observer));
+			if (observers.size() == 0) {
+				observerMap.remove(messageName);
+			}
 		}
 	}
 	
