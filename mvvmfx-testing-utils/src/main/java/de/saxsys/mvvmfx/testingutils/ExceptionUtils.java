@@ -10,7 +10,8 @@ public class ExceptionUtils {
 	 * @return the root cause of the given exception.
 	 */
 	public static Throwable getRootCause(Exception e) {
-		Throwable cause = e.getCause();
+		Throwable cause = e;
+		
 		while (cause != null) {
 			if (cause.getCause() == null) {
 				break;

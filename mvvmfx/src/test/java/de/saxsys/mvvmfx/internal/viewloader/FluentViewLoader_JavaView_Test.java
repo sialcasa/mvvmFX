@@ -12,8 +12,12 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelA;
+import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelB;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelWithResourceBundle;
+import de.saxsys.mvvmfx.testingutils.ExceptionUtils;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.VBox;
 
@@ -221,8 +225,42 @@ public class FluentViewLoader_JavaView_Test {
 			assertThat(e).isInstanceOf(RuntimeException.class).hasMessageContaining("<2> viewModel fields");
 		}
 	}
-	
-	
+
+	@Test
+	public void testThrowExceptionWhenWrongViewModelTypeIsInjected() {
+		class TestView extends VBox implements JavaView<TestViewModelA> {
+			@InjectViewModel
+			public TestViewModelB viewModel;
+		}
+		
+		
+		try {
+			FluentViewLoader.javaView(TestView.class).load();
+			fail("Expected an Exception");
+		} catch (Exception e) {
+			assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(RuntimeException.class).hasMessageContaining("field doesn't match the generic ViewModel type ");
+		}
+	}
+
+	/**
+	 * The {@link InjectViewModel} annotation may only be used on fields whose Type are implementing {@link ViewModel}.
+	 */
+	@Test
+	public void testThrowExceptionWhenInjectViewModelAnnotationIsUsedOnOtherType() {
+		class TestView extends VBox implements JavaView<TestViewModel> {
+			@InjectViewModel
+			public Object viewModel;
+		}
+		
+		
+		try {
+			FluentViewLoader.javaView(TestView.class).load();
+			fail("Expected an Exception");
+		} catch (Exception e) {
+			Throwable rootCause = ExceptionUtils.getRootCause(e);
+			assertThat(rootCause).isInstanceOf(RuntimeException.class).hasMessageContaining("doesn't implement the 'ViewModel' interface");
+		}
+	}
 	
 	/**
 	 * When the ViewModel isn't injected in the view it should still be available in the ViewTuple.
