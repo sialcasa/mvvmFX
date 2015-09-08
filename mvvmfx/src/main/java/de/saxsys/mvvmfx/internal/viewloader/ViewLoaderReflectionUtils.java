@@ -34,19 +34,44 @@ public class ViewLoaderReflectionUtils {
 	 * @return an Optional that contains the Field when the field exists.
 	 */
 	public static Optional<Field> getViewModelField(Class<? extends View> viewType, Class<?> viewModelType) {
-		List<Field> viewModelFields = Arrays.stream(viewType.getDeclaredFields())
-				.filter(field -> field.isAnnotationPresent(InjectViewModel.class))
-				.filter(field -> field.getType().isAssignableFrom(viewModelType))
-				.collect(Collectors.toList());
-		if (viewModelFields.isEmpty()) {
+		List<Field> allViewModelFields = getViewModelFields(viewType);
+		
+		if(allViewModelFields.isEmpty()) {
 			return Optional.empty();
 		}
-		if (viewModelFields.size() > 1) {
+
+		if (allViewModelFields.size() > 1) {
 			throw new RuntimeException("The View <" + viewType + "> may only define one viewModel but there were <"
-					+ viewModelFields.size() + "> viewModel fields!");
+					+ allViewModelFields.size() + "> viewModel fields with the @InjectViewModel annotation!");
 		}
-		return Optional.of(viewModelFields.get(0));
+
+		Field field = allViewModelFields.get(0);
+		
+		if(! ViewModel.class.isAssignableFrom(field.getType())) {
+			throw new RuntimeException("The View <" + viewType + "> has a field annotated with @InjectViewModel but the type of the field doesn't implement the 'ViewModel' interface!");
+		}
+		
+		if(! field.getType().isAssignableFrom(viewModelType)) {
+			throw new RuntimeException("The View <" + viewType + "> has a field annotated with @InjectViewModel but the type of the field doesn't match the generic ViewModel type of the View class. " 
+					+ "The declared generic type is <" + viewModelType + "> but the actual type of the field is <" + field.getType() + ">.");
+		}
+
+		return Optional.of(field);
 	}
+
+
+	/**
+	 * Returns a list of all {@link Field}s of ViewModels for a given view type that are annotated with {@link InjectViewModel}.
+	 * 
+	 * @param viewType the type of the view.
+	 * @return a list of fields.
+	 */
+	private static List<Field> getViewModelFields(Class<? extends View> viewType) {
+		return Arrays.stream(viewType.getDeclaredFields())
+				.filter(field -> field.isAnnotationPresent(InjectViewModel.class))
+				.collect(Collectors.toList());
+	}
+	
 	
 	/**
 	 * This method is used to get the ViewModel instance of a given view/codeBehind.
@@ -114,6 +139,8 @@ public class ViewLoaderReflectionUtils {
 	 *            the generic type of the ViewModel.
 	 * @return an Optional containing the ViewModel if it was created or already existing. Otherwise the Optional is
 	 *         empty.
+	 *         
+	 * @throws RuntimeException if there is a ViewModel field in the View with the {@link InjectViewModel} annotation whose type doesn't match the generic ViewModel type from the View class.
 	 */
 	@SuppressWarnings("unchecked")
 	public static <V extends View<? extends VM>, VM extends ViewModel> Optional<VM> createAndInjectViewModel(

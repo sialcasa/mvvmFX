@@ -16,7 +16,9 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.MvvmFX;
+import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.internal.viewloader.example.*;
 import de.saxsys.mvvmfx.testingutils.ExceptionUtils;
@@ -128,7 +130,6 @@ public class FluentViewLoader_FxmlView_Test {
 				.getCodeBehind();
 		
 		assertThat(codeBehind.wasInitialized).isTrue();
-		assertThat(codeBehind.viewModel).isNull();
 	}
 	
 	@Test
@@ -273,6 +274,29 @@ public class FluentViewLoader_FxmlView_Test {
 		}
 	}
 	
+	
+	@Test
+	public void testThrowExceptionWhenWrongViewModelTypeIsInjected() {
+		try {
+			FluentViewLoader.fxmlView(TestFxmlViewWithWrongInjectedViewModel.class).load();
+			fail("Expected an Exception");
+		} catch (Exception e) {
+			assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(RuntimeException.class).hasMessageContaining("field doesn't match the generic ViewModel type ");
+		}
+	}
+
+	/**
+	 * The {@link InjectViewModel} annotation may only be used on fields whose Type are implementing {@link ViewModel}.
+	 */
+	@Test
+	public void testThrowExceptionWhenInjectViewModelAnnotationIsUsedOnOtherType() {
+		try {
+			FluentViewLoader.fxmlView(TestFxmlViewWithWrongAnnotationUsage.class).load();
+			fail("Expected an Exception");
+		} catch (Exception e) {
+			assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(RuntimeException.class).hasMessageContaining("doesn't implement the 'ViewModel' interface");
+		}
+	}
 	
 	/**
 	 * When a mvvmFX view A is part of another mvvmFX view B (i.e. referenced in the fxml file of B) we have to verify
