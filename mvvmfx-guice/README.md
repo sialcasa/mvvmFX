@@ -3,6 +3,16 @@
 This module is an extension for the [MvvmFX](https://github.com/sialcasa/mvvmFX) framework that adds support for 
 [Guice](https://github.com/google/guice) as dependency injection framework.
 
+
+```xml
+<dependency>
+		<groupId>de.saxsys</groupId>
+		<artifactId>mvvmfx-guice</artifactId>
+		<version>${mvvmfx-version}</version>
+</dependency>
+```
+
+
 It is based on [fx-guice](https://github.com/cathive/fx-guice).
 
 To create an application that is powered by Guice you have to extend `MvvmfxGuiceApplication`:

@@ -3,6 +3,16 @@
 This module is an extension for the [MvvmFX](https://github.com/sialcasa/mvvmFX) framework that adds support for 
 [CDI](http://cdi-spec.org/) as dependency injection framework. It uses [JBoss Weld](http://weld.cdi-spec.org/) as implementation for CDI.
 
+
+```xml
+<dependency>
+		<groupId>de.saxsys</groupId>
+		<artifactId>mvvmfx-cdi</artifactId>
+		<version>${mvvmfx-version}</version>
+</dependency>
+```
+
+
 To create an application that is powered by CDI / Weld you have to extend `MvvmfxCdiApplication`:
 
 ```java
