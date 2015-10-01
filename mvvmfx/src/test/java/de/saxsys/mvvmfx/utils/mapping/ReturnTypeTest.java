@@ -4,6 +4,9 @@ import javafx.beans.property.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 /**
  * This test is used to check the return values when fields are mapped. See Issue 211 <a
  * href="https://github.com/sialcasa/mvvmFX/issues/211">https://github.com/sialcasa/mvvmFX/issues/211</a>
@@ -129,4 +132,19 @@ public class ReturnTypeTest {
 				new Person());
 	}
 	
+	@Test
+	public void listProperty() {
+		final ListProperty<String> beanField = wrapper.field(ExampleModel::getList, ExampleModel::setList);
+		final ListProperty<String> fxField = wrapper.field(ExampleModel::listProperty);
+		final ListProperty<String> beanFieldDefault = wrapper.field(ExampleModel::getList, ExampleModel::setList,
+				Collections.emptyList());
+		final ListProperty<String> fxFieldDefault = wrapper.field(ExampleModel::listProperty, Arrays.asList());
+
+		final ListProperty<String> idBeanField = wrapper.field("list1", ExampleModel::getList, ExampleModel::setList);
+		final ListProperty<String> idFxField = wrapper.field("list2", ExampleModel::listProperty);
+		final ListProperty<String> idBeanFieldDefault = wrapper.field("list3", ExampleModel::getList,
+				ExampleModel::setList, Collections.emptyList());
+		final ListProperty<String> idFxFieldDefault = wrapper.field("list4", ExampleModel::listProperty,
+				Arrays.asList());
+	}
 }

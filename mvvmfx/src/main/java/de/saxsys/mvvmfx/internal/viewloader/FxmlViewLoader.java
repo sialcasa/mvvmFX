@@ -135,15 +135,27 @@ public class FxmlViewLoader {
 				throw new IOException("Could not load the controller for the View " + resource
 						+ " maybe your missed the fx:controller in your fxml?");
 			}
+
+
+			// the actually used ViewModel instance. We need this so we can return it in the ViewTuple
+			ViewModelType actualViewModel;
 			
-			
-			ViewModelType loadedViewModel = ViewLoaderReflectionUtils.getExistingViewModel(loadedController);
-			
-			if (loadedViewModel == null) {
-				loadedViewModel = ViewLoaderReflectionUtils.createViewModel(loadedController);
+			// if no existing viewModel was provided...
+			if(viewModel == null) {
+				// ... we try to find the created ViewModel from the codeBehind.
+				// this is only possible when the codeBehind has a field for the VM and the VM was injected
+				actualViewModel = ViewLoaderReflectionUtils.getExistingViewModel(loadedController);
+
+				// otherwise we create a new ViewModel. This is needed because the ViewTuple has to contain a VM even if the codeBehind doesn't need one
+				if (actualViewModel == null) {
+					actualViewModel = ViewLoaderReflectionUtils.createViewModel(loadedController);
+				}
+			} else {
+				actualViewModel = viewModel;
 			}
 			
-			return new ViewTuple<>(loadedController, loadedRoot, loadedViewModel);
+			
+			return new ViewTuple<>(loadedController, loadedRoot, actualViewModel);
 			
 		} catch (final IOException ex) {
 			throw new RuntimeException(ex);

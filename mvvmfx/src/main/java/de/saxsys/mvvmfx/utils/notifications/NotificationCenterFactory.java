@@ -19,11 +19,16 @@ package de.saxsys.mvvmfx.utils.notifications;
  * This class is used to get instances of the {@link NotificationCenter} interface.
  */
 public class NotificationCenterFactory {
-	
-	private static NotificationCenter singleton = new DefaultNotificationCenter();
-	
+
+	private static final NotificationCenter defaultNotificationCenter = new DefaultNotificationCenter();
+	private static NotificationCenter currentNotificationCenter = defaultNotificationCenter;
+
 	public static NotificationCenter getNotificationCenter() {
-		return singleton;
+		return currentNotificationCenter;
 	}
-	
+
+    public static void setNotificationCenter(final NotificationCenter notificationCenter) {
+        currentNotificationCenter = notificationCenter;
+    }
+
 }

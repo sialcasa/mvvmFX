@@ -1,23 +1,18 @@
 package de.saxsys.mvvmfx.utils.notifications;
 
-import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
 import javafx.application.Platform;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-
-import de.saxsys.mvvmfx.utils.notifications.NotificationObserver;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(JfxRunner.class)
 public class ViewModelTest {
@@ -38,37 +33,7 @@ public class ViewModelTest {
 		viewModel = new ViewModel() {
 		};
 	}
-	
-	@Test
-	public void observerIsCalledFromUiThread() throws InterruptedException, ExecutionException, TimeoutException {
-		// Check that there is a UI-Thread available. This JUnit-Test isn't running on the UI-Thread but there needs to
-		// be a UI-Thread available in the background.
-		CompletableFuture<Void> uiThreadIsAvailable = new CompletableFuture<>();
-		Platform.runLater(() -> uiThreadIsAvailable.complete(null));  // This would throw an IllegalStateException if no
-																		// UI-Thread is available.
-		uiThreadIsAvailable.get(1l, TimeUnit.SECONDS);
-		
-		
-		
-		CompletableFuture<Boolean> future = new CompletableFuture<>();
-		
-		// The test doesn't run on the FX thread.
-		assertThat(Platform.isFxApplicationThread()).isFalse();
-		
-		viewModel.subscribe(TEST_NOTIFICATION, (key, payload) -> {
-			// the notification is executed on the FX thread.
-				future.complete(Platform.isFxApplicationThread());
-			});
-		
-		viewModel.publish(TEST_NOTIFICATION);
-		
-		
-		final Boolean wasCalledOnUiThread = future.get(1l, TimeUnit.SECONDS);
-		
-		assertThat(wasCalledOnUiThread).isTrue();
-	}
-	
-	
+
 	@Test
 	public void observerFromOutsideDoesNotReceiveNotifications() {
 		MvvmFX.getNotificationCenter().subscribe(TEST_NOTIFICATION, observer1);
@@ -135,6 +100,17 @@ public class ViewModelTest {
 				OBJECT_ARRAY_FOR_NOTIFICATION);
 		Mockito.verify(observer3).receivedNotification(TEST_NOTIFICATION,
 				OBJECT_ARRAY_FOR_NOTIFICATION);
+	}
+
+
+	/**
+	 * See {@link DefaultNotificationCenterTest#removeObserverThatWasNotRegisteredYet()}.
+	 */
+	@Test
+	public void removeObserverThatWasNotRegisteredYet() {
+		viewModel.unsubscribe(observer1);
+		
+		viewModel.unsubscribe(TEST_NOTIFICATION, observer1);
 	}
 	
 	/**

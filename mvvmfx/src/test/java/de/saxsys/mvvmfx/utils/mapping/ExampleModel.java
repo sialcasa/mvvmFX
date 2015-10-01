@@ -2,6 +2,8 @@ package de.saxsys.mvvmfx.utils.mapping;
 
 import javafx.beans.property.*;
 
+import java.util.List;
+
 public class ExampleModel {
 	
 	private IntegerProperty integerProperty = new SimpleIntegerProperty();
@@ -14,6 +16,8 @@ public class ExampleModel {
 	private ObjectProperty<Person> objectProperty = new SimpleObjectProperty<>();
 	
 	private BooleanProperty booleanProperty = new SimpleBooleanProperty();
+
+	private ListProperty<String> listProperty = new SimpleListProperty<>();
 	
 	
 	public int getInteger() {
@@ -98,5 +102,17 @@ public class ExampleModel {
 	
 	public void setBoolean(boolean booleanProperty) {
 		this.booleanProperty.set(booleanProperty);
+	}
+
+	public List<String> getList() {
+		return listProperty.get();
+	}
+
+	public ListProperty<String> listProperty() {
+		return listProperty;
+	}
+
+	public void setList(List<String> listProperty) {
+		this.listProperty.setAll(listProperty);
 	}
 }

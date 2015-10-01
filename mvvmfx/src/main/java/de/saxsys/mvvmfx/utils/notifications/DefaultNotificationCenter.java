@@ -15,16 +15,17 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.notifications;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import de.saxsys.mvvmfx.ViewModel;
+import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Default implementation of {@link NotificationCenter}.
@@ -61,30 +62,54 @@ class DefaultNotificationCenter implements NotificationCenter {
 	public void publish(String messageName, Object... payload) {
 		publish(messageName, payload, globalObservers);
 	}
-	
+
+	/**
+	 *  This notification will be send to the UI-Thread (if the UI-toolkit was bootstrapped).
+	 *  If no UI-Toolkit is available the notification will be directly published. This is typically the case in unit tests.
+	 *
+	 * @param viewModel 	the ViewModel
+	 * @param messageName 	the message to sent
+	 * @param payload 		additional arguments to the message
+	 */
 	@Override
 	public void publish(ViewModel viewModel, String messageName, Object[] payload) {
-		ObserverMap observerMap = viewModelObservers.get(viewModel);
-		if (observerMap != null) {
-			publish(messageName, payload, observerMap);
+		if(viewModelObservers.containsKey(viewModel)) {
+			final ObserverMap observerMap = viewModelObservers.get(viewModel);
+			
+			if (Platform.isFxApplicationThread()) {
+				publish(messageName, payload, observerMap);
+			} else {
+				try {
+					Platform.runLater(() -> publish(messageName, payload, observerMap));
+				} catch(IllegalStateException e) {
+
+					// If the toolkit isn't initialized yet we will publish the notification directly.
+					// In most cases this means that we are in a unit test and not JavaFX application is running.
+					if(e.getMessage().equals("Toolkit not initialized")) {
+						publish(messageName, payload, observerMap);
+					} else {
+						throw e;
+					}
+				}
+			}
 		}
 	}
 	
 	
 	@Override
-	public void subscribe(ViewModel view, String messageName, NotificationObserver observer) {
-		ObserverMap observerMap = viewModelObservers.get(view);
-		if (observerMap == null) {
-			observerMap = new ObserverMap();
-			viewModelObservers.put(view, observerMap);
+	public void subscribe(ViewModel viewModel, String messageName, NotificationObserver observer) {
+		if(!viewModelObservers.containsKey(viewModel)) {
+			viewModelObservers.put(viewModel, new ObserverMap());
 		}
+		
+		final ObserverMap observerMap = viewModelObservers.get(viewModel);
 		addObserver(messageName, observer, observerMap);
 	}
 	
 	@Override
-	public void unsubscribe(ViewModel view, String messageName, NotificationObserver observer) {
-		ObserverMap observerMap = viewModelObservers.get(view);
-		if (observerMap != null) {
+	public void unsubscribe(ViewModel viewModel, String messageName, NotificationObserver observer) {
+		if(viewModelObservers.containsKey(viewModel)) {
+			final ObserverMap observerMap = viewModelObservers.get(viewModel);
 			removeObserversForMessageName(messageName, observer, observerMap);
 		}
 	}
@@ -92,8 +117,10 @@ class DefaultNotificationCenter implements NotificationCenter {
 	
 	@Override
 	public void unsubscribe(ViewModel viewModel, NotificationObserver observer) {
-		ObserverMap observerMap = viewModelObservers.get(viewModel);
-		removeObserverFromObserverMap(observer, observerMap);
+		if(viewModelObservers.containsKey(viewModel)){
+			ObserverMap observerMap = viewModelObservers.get(viewModel);
+			removeObserverFromObserverMap(observer, observerMap);
+		}
 	}
 	
 	/*
@@ -103,18 +130,22 @@ class DefaultNotificationCenter implements NotificationCenter {
 	private void publish(String messageName, Object[] payload, ObserverMap observerMap) {
 		Collection<NotificationObserver> notificationReceivers = observerMap.get(messageName);
 		if (notificationReceivers != null) {
-			for (NotificationObserver observer : notificationReceivers) {
+			
+			// make a copy to prevent ConcurrentModificationException if inside of an observer a new observer is subscribed.
+			final Collection<NotificationObserver> copy = new ArrayList<>(notificationReceivers);
+			
+			for (NotificationObserver observer : copy) {
 				observer.receivedNotification(messageName, payload);
 			}
 		}
 	}
 	
 	private void addObserver(String messageName, NotificationObserver observer, ObserverMap observerMap) {
-		List<NotificationObserver> observers = observerMap.get(messageName);
-		if (observers == null) {
-			observerMap.put(messageName, new ArrayList<NotificationObserver>());
+		if(!observerMap.containsKey(messageName)) {
+			observerMap.put(messageName, new ArrayList<>());
 		}
-		observers = observerMap.get(messageName);
+		
+		final List<NotificationObserver> observers = observerMap.get(messageName);
 		
 		if(observers.contains(observer)) {
 			LOG.warn("Subscribe the observer ["+ observer + "] for the message [" + messageName + 
@@ -129,21 +160,19 @@ class DefaultNotificationCenter implements NotificationCenter {
 		for (String key : observerMap.keySet()) {
 			final List<NotificationObserver> observers = observerMap.get(key);
 			
-			final List<NotificationObserver> observersToBeRemoved = observers
-					.stream()
-					.filter(actualObserver -> actualObserver.equals(observer))
-					.collect(Collectors.toList());
-			
-			observers.removeAll(observersToBeRemoved);
+			observers.removeIf(actualObserver -> actualObserver.equals(observer));
 		}
 	}
 	
 	private void removeObserversForMessageName(String messageName, NotificationObserver observer,
 			ObserverMap observerMap) {
-		List<NotificationObserver> observers = observerMap.get(messageName);
-		observers.remove(observer);
-		if (observers.size() == 0) {
-			observerMap.remove(messageName);
+		
+		if(observerMap.containsKey(messageName)) {
+			final List<NotificationObserver> observers = observerMap.get(messageName);
+			observers.removeIf(actualObserver -> actualObserver.equals(observer));
+			if (observers.size() == 0) {
+				observerMap.remove(messageName);
+			}
 		}
 	}
 	

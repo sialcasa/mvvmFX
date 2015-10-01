@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<?import java.net.URL?>
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+	  xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	  fx:controller="de.saxsys.mvvmfx.examples.todomvc.ui.MainView">
+	<children>
+		<Label id="title" text="todos"/>
+		<fx:include source="additems/AddItemsView.fxml"/>
+		<fx:include source="item/ItemOverviewView.fxml" VBox.vgrow="ALWAYS"/>
+		<fx:include source="controls/ControlsView.fxml"/>
+	</children>
+	<stylesheets>
+		<URL value="@main.css"/>
+	</stylesheets>
+</VBox>
