@@ -204,9 +204,6 @@ import java.util.function.Supplier;
  * 
  * 
  * 
- * 
- * 
- * 
  * @param <M>
  *            the type of the model class.
  */
@@ -220,8 +217,9 @@ public class ModelWrapper<M> {
 	/**
 	 * This interface defines the operations that are possible for each field of a wrapped class.
 	 * 
-	 * @param <T>
-	 * @param <M>
+	 * @param <T> target type. The base type of the returned property, f.e. {@link String}.
+	 * @param <M> model type. The type of the Model class, that is wrapped by this ModelWrapper instance.
+	 * @param <R> return type. The type of the Property that is returned via {@link #getProperty()}, f.e. {@link StringProperty} or {@link Property<String>}. 
 	 */
 	private interface PropertyField<T, M, R extends Property<T>> {
 		void commit(M wrappedObject);
@@ -232,6 +230,14 @@ public class ModelWrapper<M> {
 		
 		R getProperty();
 
+		/**
+		 * Determines if the value in the model object and the property field are different or not. 
+		 * 
+		 * This method is used to implement the {@link #differentProperty()} flag.
+ 		 * 
+		 * @param wrappedObject the wrapped model object
+		 * @return <code>false</code> if both the wrapped model object and the property field have the same value, otherwise <code>true</code>
+		 */
         boolean isDifferent(M wrappedObject);
 	}
 	
@@ -348,8 +354,8 @@ public class ModelWrapper<M> {
     }
 	
 	/**
-	 * An implementation of {@link PropertyField} that is used when the field of the model class is a {@link List} and
-	 * and is a JavaFX {@link ListProperty} too.
+	 * An implementation of {@link PropertyField} that is used when the field of the model class is a {@link List}
+	 * and will be mapped to a JavaFX {@link ListProperty}.
 	 *
 	 * @param <T>
 	 * @param <E>
@@ -370,7 +376,7 @@ public class ModelWrapper<M> {
 			this.accessor = accessor;
 			this.defaultValue = defaultValue;
 
-			this.targetProperty.addListener((ListChangeListener) change -> propertyWasChanged());
+			this.targetProperty.addListener((ListChangeListener<E>) change -> ModelWrapper.this.propertyWasChanged());
 		}
 
 		@Override
@@ -398,7 +404,7 @@ public class ModelWrapper<M> {
 			final List<E> modelValue = accessor.apply(wrappedObject).getValue();
 			final List<E> wrapperValue = targetProperty;
 
-			return !(modelValue.containsAll(wrapperValue) && wrapperValue.containsAll(modelValue));
+			return !Objects.equals(modelValue, wrapperValue);
 		}
 	}
 
@@ -428,8 +434,8 @@ public class ModelWrapper<M> {
 			this.defaultValue = defaultValue;
 			this.getter = getter;
 			this.setter = setter;
-
-			this.targetProperty.addListener((ListChangeListener) change -> propertyWasChanged());
+			
+			this.targetProperty.addListener((ListChangeListener<E>) change -> propertyWasChanged());
 		}
 
 		@Override
@@ -457,7 +463,7 @@ public class ModelWrapper<M> {
 			final List<E> modelValue = getter.apply(wrappedObject);
 			final List<E> wrapperValue = targetProperty;
 
-			return !(modelValue.containsAll(wrapperValue) && wrapperValue.containsAll(modelValue));
+			return !Objects.equals(modelValue, wrapperValue);
 		}
 	}
 	
