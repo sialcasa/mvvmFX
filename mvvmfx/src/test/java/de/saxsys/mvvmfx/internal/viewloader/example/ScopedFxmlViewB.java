@@ -6,7 +6,7 @@ import de.saxsys.mvvmfx.FxmlView;
 /**
  * This class is used as example View class that uses FXML.
  * 
- * @author manuel.mauky
+ * @author alexander.casall
  */
 public class ScopedFxmlViewB implements FxmlView<ScopedViewModelB> {
 	

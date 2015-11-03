@@ -6,6 +6,13 @@ import java.util.Map;
 import de.saxsys.mvvmfx.internal.viewloader.DependencyInjector;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestScope;
 
+/**
+ * Scope Store.
+ * 
+ * @author alexander.casall
+ *
+ * @param <V>
+ */
 public class ScopeStore<V extends Scope> {
 	
 	// TODO Memory Leak fixen?

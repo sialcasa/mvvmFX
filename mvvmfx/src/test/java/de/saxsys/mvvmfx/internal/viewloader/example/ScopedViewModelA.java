@@ -1,12 +1,16 @@
 package de.saxsys.mvvmfx.internal.viewloader.example;
 
-import de.saxsys.mvvmfx.InjectViewScope;
+import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ScopeStore;
 import de.saxsys.mvvmfx.ViewModel;
 
+/**
+ * 
+ * @author alexander.casall
+ */
 public class ScopedViewModelA implements ViewModel {
 	
-	@InjectViewScope
+	@InjectScope
 	private TestScope scope;
 	
 	private final TestScope scope2;

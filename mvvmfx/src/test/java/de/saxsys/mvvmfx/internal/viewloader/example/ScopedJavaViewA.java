@@ -10,6 +10,8 @@ import de.saxsys.mvvmfx.JavaView;
 
 /**
  * This class is used as example View class that is written in pure java.
+ * 
+ * @author alexander.casall
  */
 public class ScopedJavaViewA extends VBox implements JavaView<ScopedViewModelA>, Initializable {
 	@InjectViewModel
