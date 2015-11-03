@@ -17,8 +17,8 @@ public class ScopedViewModelA implements ViewModel {
 	private final TestScope scope3;
 	
 	public ScopedViewModelA() {
-		scope2 = ScopeStore.getInstance().getScope(TestScope.class, "coolId2");
-		scope3 = ScopeStore.getInstance().getScope(TestScope.class, "coolId3");
+		scope2 = ScopeStore.<TestScope> getInstance().getScope(TestScope.class, "coolId2");
+		scope3 = ScopeStore.<TestScope> getInstance().getScope(TestScope.class, "coolId3");
 	}
 	
 	public TestScope getScope() {

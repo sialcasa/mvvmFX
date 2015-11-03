@@ -7,7 +7,7 @@ import de.saxsys.mvvmfx.ViewModel;
 /**
  * 
  * @author alexander.casall
- *
+ *		
  */
 public class ScopedViewModelB implements ViewModel {
 	@InjectScope
@@ -17,8 +17,8 @@ public class ScopedViewModelB implements ViewModel {
 	private final TestScope scope3;
 	
 	public ScopedViewModelB() {
-		scope2 = ScopeStore.getInstance().getScope(TestScope.class, "coolId2");
-		scope3 = ScopeStore.getInstance().getScope(TestScope.class, "coolId3");
+		scope2 = ScopeStore.<TestScope> getInstance().getScope(TestScope.class, "coolId2");
+		scope3 = ScopeStore.<TestScope> getInstance().getScope(TestScope.class, "coolId3");
 	}
 	
 	public TestScope getScope() {
