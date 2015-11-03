@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import net.jodah.typetools.TypeResolver;
 import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.InjectViewScope;
+import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.Scope;
 import de.saxsys.mvvmfx.ScopeStore;
 import de.saxsys.mvvmfx.ViewModel;
@@ -104,7 +104,7 @@ public class ViewLoaderReflectionUtils {
 	
 	private static List<Field> getScopeFieldsUnchecked(Class<?> viewModelType) {
 		return Arrays.stream(viewModelType.getDeclaredFields())
-				.filter(field -> field.isAnnotationPresent(InjectViewScope.class))
+				.filter(field -> field.isAnnotationPresent(InjectScope.class))
 				.collect(Collectors.toList());
 	}
 	
