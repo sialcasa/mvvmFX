@@ -11,7 +11,10 @@ __MVVM__ is the enhanced version of the [Presentation Model](http://martinfowler
 ### Maven dependency###
 
 #### Stable Release
-```
+
+This is the stable release that can be used in production.
+
+```xml
 <dependency>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx</artifactId>
@@ -19,12 +22,27 @@ __MVVM__ is the enhanced version of the [Presentation Model](http://martinfowler
 </dependency>
 ```
 
-#### Development Snapshot
-```
+#### Bugfix Development Snapshot
+
+Here we make bug fixes for the current stable release.
+
+```xml
 <dependency>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx</artifactId>
 		<version>1.4.1-SNAPSHOT</version>
+</dependency>
+```
+
+#### Development Snapshot
+
+Here we develop new features. This release is unstable and shouldn't be used in production. 
+
+```
+<dependency>
+		<groupId>de.saxsys</groupId>
+		<artifactId>mvvmfx</artifactId>
+		<version>1.5.0-SNAPSHOT</version>
 </dependency>
 ```
 
