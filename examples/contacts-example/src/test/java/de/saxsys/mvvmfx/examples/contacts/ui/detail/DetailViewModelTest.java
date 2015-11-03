@@ -7,15 +7,14 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 
-import de.saxsys.mvvmfx.examples.contacts.model.Repository;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import de.saxsys.mvvmfx.examples.contacts.model.Contact;
+import de.saxsys.mvvmfx.examples.contacts.model.Repository;
 import de.saxsys.mvvmfx.examples.contacts.ui.master.MasterViewModel;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 public class DetailViewModelTest {
 	
@@ -23,7 +22,7 @@ public class DetailViewModelTest {
 	
 	private DetailViewModel viewModel;
 	
-	private ObjectProperty<Contact> selectedContact = new SimpleObjectProperty<>();
+	private final ObjectProperty<Contact> selectedContact = new SimpleObjectProperty<>();
 	private Contact luke;
 	private Contact obi;
 	
@@ -51,16 +50,10 @@ public class DetailViewModelTest {
 	@Test
 	public void testRemoveAction() {
 		selectedContact.set(null);
-		assertThat(viewModel.removeButtonDisabledProperty()).isTrue();
-		
-		
+		assertThat(viewModel.getRemoveCommand().notExecutableProperty()).isTrue();
 		selectedContact.set(luke);
-		assertThat(viewModel.removeButtonDisabledProperty()).isFalse();
-		
-		
-		
-		viewModel.removeAction();
-		
+		assertThat(viewModel.getRemoveCommand().notExecutableProperty()).isFalse();
+		viewModel.getRemoveCommand().execute();
 		verify(repository).delete(luke);
 	}
 	

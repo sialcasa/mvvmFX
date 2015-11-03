@@ -4,14 +4,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
@@ -24,6 +16,13 @@ import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.contacts.events.ContactsUpdatedEvent;
 import de.saxsys.mvvmfx.examples.contacts.model.Contact;
 import de.saxsys.mvvmfx.examples.contacts.model.Repository;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 
 @ApplicationScoped
@@ -31,11 +30,11 @@ public class MasterViewModel implements ViewModel {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(MasterViewModel.class);
 	
-	private ObservableList<MasterTableViewModel> contacts = FXCollections.observableArrayList();
+	private final ObservableList<MasterTableViewModel> contacts = FXCollections.observableArrayList();
 	
-	private ReadOnlyObjectWrapper<Contact> selectedContact = new ReadOnlyObjectWrapper<>();
+	private final ReadOnlyObjectWrapper<Contact> selectedContact = new ReadOnlyObjectWrapper<>();
 	
-	private ObjectProperty<MasterTableViewModel> selectedTableRow = new SimpleObjectProperty<>();
+	private final ObjectProperty<MasterTableViewModel> selectedTableRow = new SimpleObjectProperty<>();
 	
 	private Optional<Consumer<MasterTableViewModel>> onSelect = Optional.empty();
 	
@@ -52,7 +51,7 @@ public class MasterViewModel implements ViewModel {
 			} else {
 				return repository.findById(selectedTableRow.get().getId()).orElse(null);
 			}
-		}, selectedTableRow));
+		} , selectedTableRow));
 	}
 	
 	public void onContactsUpdateEvent(@Observes ContactsUpdatedEvent event) {
@@ -75,7 +74,7 @@ public class MasterViewModel implements ViewModel {
 		if (selectedContactId != null) {
 			Optional<MasterTableViewModel> selectedRow = contacts.stream()
 					.filter(row -> row.getId().equals(selectedContactId)).findFirst();
-			
+					
 			if (selectedRow.isPresent()) {
 				onSelect.ifPresent(consumer -> consumer.accept(selectedRow.get()));
 			} else {
@@ -98,6 +97,13 @@ public class MasterViewModel implements ViewModel {
 	}
 	
 	public ReadOnlyObjectProperty<Contact> selectedContactProperty() {
-		return selectedContact.getReadOnlyProperty();
+		return this.selectedContact.getReadOnlyProperty();
 	}
+	
+	
+	public Contact getSelectedContact() {
+		return this.selectedContactProperty().get();
+	}
+	
+	
 }
