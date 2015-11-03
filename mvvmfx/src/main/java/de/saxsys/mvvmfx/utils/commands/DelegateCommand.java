@@ -23,6 +23,10 @@ import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.lestard.doc.Beta;
 
 /**
@@ -42,9 +46,10 @@ public class DelegateCommand extends Service<Void> implements Command {
 	protected final ReadOnlyBooleanWrapper executable = new ReadOnlyBooleanWrapper(true);
 	protected ReadOnlyBooleanWrapper notExecutable;
 	protected ReadOnlyBooleanWrapper notRunning;
+	private Exception occuredException;
 	
 	
-	
+	Logger LOG = LoggerFactory.getLogger(DelegateCommand.class);
 	
 	/**
 	 * Creates a command without a condition about the executability.
@@ -114,6 +119,8 @@ public class DelegateCommand extends Service<Void> implements Command {
 	 */
 	@Override
 	public void execute() {
+		occuredException = null;
+		
 		if (!isExecutable()) {
 			throw new RuntimeException("The execute()-method of the command was called while it wasn't executable.");
 		} else {
@@ -123,18 +130,28 @@ public class DelegateCommand extends Service<Void> implements Command {
 					start();
 				}
 			} else {
-				try {
-					actionSupplier.get().action();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				callActionAndSynthesizeServiceRun();
 			}
 		}
 	}
 	
+	private void callActionAndSynthesizeServiceRun() {
+		try {
+			actionSupplier.get().action();
+		} catch (Exception e) {
+			LOG.error("Exception in Command Execution", occuredException);
+			this.occuredException = e;
+		}
+		reset();
+		start();
+	}
+	
 	@Override
 	protected Task<Void> createTask() {
-		return actionSupplier.get();
+		if (inBackground) {
+			return actionSupplier.get();
+		}
+		return createSynthesizedTask();
 	}
 	
 	@Override
@@ -174,5 +191,17 @@ public class DelegateCommand extends Service<Void> implements Command {
 	@Override
 	public final boolean isNotRunning() {
 		return notRunningProperty().get();
+	}
+	
+	private Task<Void> createSynthesizedTask() {
+		return new Task<Void>() {
+			@Override
+			protected Void call() throws Exception {
+				if (occuredException != null) {
+					throw occuredException;
+				}
+				return null;
+			}
+		};
 	}
 }

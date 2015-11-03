@@ -6,31 +6,33 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
-import com.cedarsoft.test.utils.CatchAllExceptionsRule;
-import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker.State;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.cedarsoft.test.utils.CatchAllExceptionsRule;
+
+import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
+
 
 
 @RunWith(JfxRunner.class)
 public class DelegateCommandTest {
-
+	
 	// Rule to get exceptions from the JavaFX Thread into the JUnit thread
 	@Rule
 	public CatchAllExceptionsRule catchAllExceptionsRule = new CatchAllExceptionsRule();
-
-
-
+	
 	@Test
 	public void executable() {
 		BooleanProperty condition = new SimpleBooleanProperty(true);
@@ -56,7 +58,7 @@ public class DelegateCommandTest {
 	}
 	
 	@Test
-	public void firePositive() {
+	public void firePositive() throws InterruptedException, ExecutionException, TimeoutException {
 		BooleanProperty condition = new SimpleBooleanProperty(true);
 		BooleanProperty called = new SimpleBooleanProperty();
 		
@@ -70,6 +72,16 @@ public class DelegateCommandTest {
 		assertFalse(called.get());
 		delegateCommand.execute();
 		assertTrue(called.get());
+		
+		CompletableFuture<State> stateFromFxThread = new CompletableFuture<>();
+		Platform.runLater(() -> {
+			delegateCommand.stateProperty().addListener((b, o, n) -> {
+				if (n == State.SUCCEEDED) {
+					stateFromFxThread.complete(n);
+				}
+			});
+		});
+		assertThat(stateFromFxThread.get(3, TimeUnit.SECONDS)).isEqualTo(State.SUCCEEDED);
 	}
 	
 	@Test(expected = RuntimeException.class)
@@ -83,6 +95,45 @@ public class DelegateCommandTest {
 		}, condition);
 		
 		delegateCommand.execute();
+	}
+	
+	@Test
+	public void firePositiveWithExc() throws InterruptedException, ExecutionException, TimeoutException {
+		BooleanProperty throwExc = new SimpleBooleanProperty(true);
+		
+		DelegateCommand delegateCommand = new DelegateCommand(() -> new Action() {
+			@Override
+			protected void action() {
+				if (throwExc.get())
+					throw new RuntimeException("Someerror");
+			}
+		}, new SimpleBooleanProperty(true));
+		
+		
+		
+		CompletableFuture<State> stateFromFxThread1 = new CompletableFuture<>();
+		Platform.runLater(() -> {
+			delegateCommand.stateProperty().addListener((b, o, n) -> {
+				if (n == State.FAILED) {
+					stateFromFxThread1.complete(n);
+				}
+			});
+		});
+		Platform.runLater(() -> delegateCommand.execute());
+		assertThat(stateFromFxThread1.get(3, TimeUnit.SECONDS)).isEqualTo(State.FAILED);
+		
+		throwExc.set(false);
+		CompletableFuture<State> stateFromFxThread2 = new CompletableFuture<>();
+		Platform.runLater(() -> {
+			delegateCommand.stateProperty().addListener((b, o, n) -> {
+				if (n == State.SUCCEEDED) {
+					stateFromFxThread2.complete(n);
+				}
+			});
+		});
+		Platform.runLater(() -> delegateCommand.execute());
+		assertThat(stateFromFxThread2.get(3, TimeUnit.SECONDS)).isEqualTo(State.SUCCEEDED);
+		
 	}
 	
 	
@@ -104,26 +155,22 @@ public class DelegateCommandTest {
 		assertFalse(delegateCommand.runningProperty().get());
 		assertTrue(delegateCommand.notRunningProperty().get());
 		
-		delegateCommand.runningProperty().addListener(new ChangeListener<Boolean>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				if (newValue) {
-					assertTrue(delegateCommand.runningProperty().get());
-					assertFalse(delegateCommand.notRunningProperty().get());
-					assertFalse(delegateCommand.executableProperty().get());
-					assertTrue(delegateCommand.notExecutableProperty().get());
-					commandStarted.complete(null);
-				}
-				if (!newValue && oldValue) {
-					assertFalse(delegateCommand.runningProperty().get());
-					assertTrue(delegateCommand.notRunningProperty().get());
-					assertTrue(delegateCommand.executableProperty().get());
-					assertFalse(delegateCommand.notExecutableProperty().get());
-					commandCompleted.complete(null);
-				}
-
+		delegateCommand.runningProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
+			if (newValue) {
+				assertTrue(delegateCommand.runningProperty().get());
+				assertFalse(delegateCommand.notRunningProperty().get());
+				assertFalse(delegateCommand.executableProperty().get());
+				assertTrue(delegateCommand.notExecutableProperty().get());
+				commandStarted.complete(null);
 			}
+			if (!newValue && oldValue) {
+				assertFalse(delegateCommand.runningProperty().get());
+				assertTrue(delegateCommand.notRunningProperty().get());
+				assertTrue(delegateCommand.executableProperty().get());
+				assertFalse(delegateCommand.notExecutableProperty().get());
+				commandCompleted.complete(null);
+			}
+			
 		});
 		
 		delegateCommand.execute();
@@ -134,13 +181,13 @@ public class DelegateCommandTest {
 	
 	@Test
 	public void progressProperty() throws Exception {
-
+		
 		CompletableFuture<Void> stepOne = new CompletableFuture<>();
 		CompletableFuture<Void> stepTwo = new CompletableFuture<>();
 		CompletableFuture<Void> stepThree = new CompletableFuture<>();
 		CompletableFuture<Void> stepFour = new CompletableFuture<>();
 		
-		DelegateCommand command = new DelegateCommand(()-> new Action() {
+		DelegateCommand command = new DelegateCommand(() -> new Action() {
 			@Override
 			protected void action() throws Exception {
 				updateProgress(0, 3);
@@ -162,7 +209,7 @@ public class DelegateCommandTest {
 		stepOne.get(1, TimeUnit.SECONDS);
 		Platform.runLater(() ->
 				assertThat(command.getProgress()).isEqualTo(0.0));
-
+		
 		stepTwo.get(1, TimeUnit.SECONDS);
 		Platform.runLater(() ->
 				assertThat(command.getProgress()).isEqualTo(0.3, offset(0.1)));
@@ -175,7 +222,7 @@ public class DelegateCommandTest {
 		Platform.runLater(() ->
 				assertThat(command.getProgress()).isEqualTo(1, offset(0.1)));
 		
-		// sleep to prevent the Junit thread from exiting 
+		// sleep to prevent the Junit thread from exiting
 		// before eventual assertion errors from the JavaFX Thread are detected
 		sleep(500);
 	}
