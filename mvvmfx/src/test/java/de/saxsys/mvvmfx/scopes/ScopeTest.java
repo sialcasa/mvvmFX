@@ -20,8 +20,10 @@ public class ScopeTest {
     @Test
     public void testFxmlScopedView() throws Exception {
 
-        final ScopedViewModelA viewModelA = FluentViewLoader.fxmlView(ScopedFxmlViewA.class).load().getViewModel();
-        final ScopedViewModelB viewModelB = FluentViewLoader.fxmlView(ScopedFxmlViewB.class).load().getViewModel();
+        final ScopesFxmlParentView parentView = FluentViewLoader.fxmlView(ScopesFxmlParentView.class).load().getCodeBehind();
+
+        final ScopedViewModelA viewModelA = parentView.subviewAController.viewModel;
+        final ScopedViewModelB viewModelB = parentView.subviewBController.viewModel;
 
         verifyScopes(viewModelA, viewModelB);
     }

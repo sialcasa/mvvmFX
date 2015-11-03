@@ -1,31 +1,20 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.addressform;
 
-import java.util.Optional;
-import java.util.ResourceBundle;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.examples.contacts.model.Address;
-import de.saxsys.mvvmfx.examples.contacts.model.Country;
-import de.saxsys.mvvmfx.examples.contacts.model.CountrySelector;
-import de.saxsys.mvvmfx.examples.contacts.model.Subdivision;
+import de.saxsys.mvvmfx.examples.contacts.model.*;
 import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 import de.saxsys.mvvmfx.utils.itemlist.ItemList;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
-import javafx.beans.property.ReadOnlyStringProperty;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+
+import javax.inject.Inject;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class AddressFormViewModel implements ViewModel {
 	static final String NOTHING_SELECTED_MARKER = "---";
@@ -65,13 +54,25 @@ public class AddressFormViewModel implements ViewModel {
 	// Don't inline this field. It's needed to prevent the list mapping from being garbage collected.
 	private ItemList<Subdivision> subdivisionItemList;
 	private Address address;
+
+    private ObjectBinding<Contact> contactBinding;
 	
-	@PostConstruct
-	public void init() {
-		dialogScope.subscribe(ContactDialogScope.Notifications.RESET_FORMS.toString(), (key, payload) -> resetForm());
+	public void initialize() {
+        dialogScope.subscribe(ContactDialogScope.Notifications.RESET_FORMS.toString(), (key, payload) -> resetForm());
 		dialogScope.subscribe(ContactDialogScope.Notifications.COMMIT.toString(), (key, payload) -> commitChanges());
-		
-		loadingInProgress.bind(countrySelector.inProgressProperty());
+
+        dialogScope.contactToEditProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue != null) {
+                if(newValue.getAddress() == null) {
+                    System.out.println("Address is null");
+                } else {
+                    initWithAddress(newValue.getAddress());
+                }
+            }
+        });
+
+
+        loadingInProgress.bind(countrySelector.inProgressProperty());
 		countrySelector.init();
 		
 		initSubdivisionLabel();
@@ -112,6 +113,9 @@ public class AddressFormViewModel implements ViewModel {
 		
 		countryInputDisabled.bind(loadingInProgress);
 		subdivisionInputDisabled.bind(loadingInProgress.or(Bindings.size(subdivisionsList()).lessThanOrEqualTo(1)));
+
+
+        dialogScope.addressFormValidProperty().bind(valid);
 	}
 	
 	void initSubdivisionLabel() {
@@ -141,6 +145,7 @@ public class AddressFormViewModel implements ViewModel {
 	
 	
 	private void commitChanges() {
+
 		address.setStreet(street.get());
 		address.setCity(city.get());
 		address.setPostalcode(postalCode.get());
@@ -182,11 +187,7 @@ public class AddressFormViewModel implements ViewModel {
 		return result;
 	}
 	
-	public ReadOnlyBooleanProperty validProperty() {
-		return valid.getReadOnlyProperty();
-	}
-	
-	
+
 	public ObservableList<String> countriesList() {
 		return countries;
 	}

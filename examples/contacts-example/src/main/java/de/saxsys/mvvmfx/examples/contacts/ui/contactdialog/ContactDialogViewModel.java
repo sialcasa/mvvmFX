@@ -26,7 +26,6 @@ public class ContactDialogViewModel implements ViewModel {
 	private Runnable okAction;
 	
 	public void initialize() {
-		System.out.println(dialogScope);
 		valid.bind(
 				Bindings.and(dialogScope.contactFormValidProperty(), dialogScope.addressFormValidProperty()));
 		dialogScope.subscribe(ContactDialogScope.Notifications.RESET_DIALOG_PAGE.toString(),
@@ -55,15 +54,9 @@ public class ContactDialogViewModel implements ViewModel {
 		}
 	}
 	
-	public void resetDialogPage() {
+	private void resetDialogPage() {
 		dialogPage.set(0);
 	}
-	
-	// public void resetForms() {
-	// contactFormViewModel.get().resetForm();
-	// addressFormViewModel.get().resetForm();
-	// }
-	
 	
 	public IntegerProperty dialogPageProperty() {
 		return dialogPage;

@@ -16,7 +16,7 @@ public class ContactDialogScope implements Scope {
 	
 	private final BooleanProperty contactFormValid = new SimpleBooleanProperty();
 	private final BooleanProperty addressFormValid = new SimpleBooleanProperty();
-	private final ObjectProperty<Contact> contactToEdit = new SimpleObjectProperty<>();
+	private final ObjectProperty<Contact> contactToEdit = new SimpleObjectProperty<>(this, "contactToEdit");
 	
 	public BooleanProperty contactFormValidProperty() {
 		return this.contactFormValid;

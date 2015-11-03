@@ -1,17 +1,14 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.contactdialog;
 
-import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import de.saxsys.mvvmfx.examples.contacts.ui.addressform.AddressFormViewModel;
+import de.saxsys.mvvmfx.examples.contacts.ui.contactform.ContactFormViewModel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import de.saxsys.mvvmfx.examples.contacts.ui.addressform.AddressFormViewModel;
-import de.saxsys.mvvmfx.examples.contacts.ui.contactform.ContactFormViewModel;
+import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class ContactDialogViewModelTest {
 	
@@ -27,14 +24,14 @@ public class ContactDialogViewModelTest {
 	public void setup() {
 		
 		contactFormViewModel = mock(ContactFormViewModel.class);
-		when(contactFormViewModel.validProperty()).thenReturn(contactFormValid);
+//		when(contactFormViewModel.validProperty()).thenReturn(contactFormValid);
 		
 		addressFormViewModel = mock(AddressFormViewModel.class);
-		when(addressFormViewModel.validProperty()).thenReturn(addressFormValid);
+//		when(addressFormViewModel.validProperty()).thenReturn(addressFormValid);
 		
 		viewModel = new ContactDialogViewModel();
-		viewModel.setContactFormViewModel(contactFormViewModel);
-		viewModel.setAddressFormViewModel(addressFormViewModel);
+//		viewModel.setContactFormViewModel(contactFormViewModel);
+//		viewModel.setAddressFormViewModel(addressFormViewModel);
 	}
 	
 	@Test
@@ -46,10 +43,10 @@ public class ContactDialogViewModelTest {
 		
 		assertThat(viewModel.validProperty()).isFalse();
 		
-		viewModel.setContactFormViewModel(contactFormViewModel);
+//		viewModel.setContactFormViewModel(contactFormViewModel);
 		assertThat(viewModel.validProperty()).isFalse();
 		
-		viewModel.setAddressFormViewModel(addressFormViewModel);
+//		viewModel.setAddressFormViewModel(addressFormViewModel);
 		assertThat(viewModel.validProperty()).isTrue();
 		
 		addressFormValid.set(false);

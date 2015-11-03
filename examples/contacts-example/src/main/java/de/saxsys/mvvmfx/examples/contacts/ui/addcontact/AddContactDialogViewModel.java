@@ -1,9 +1,5 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.addcontact;
 
-import java.util.ResourceBundle;
-
-import javax.inject.Inject;
-
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.contacts.model.Contact;
@@ -12,6 +8,9 @@ import de.saxsys.mvvmfx.examples.contacts.ui.contactdialog.ContactDialogViewMode
 import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+
+import javax.inject.Inject;
+import java.util.ResourceBundle;
 
 public class AddContactDialogViewModel implements ViewModel {
 	static final String TITLE_LABEL_KEY = "dialog.addcontact.title";
@@ -32,6 +31,7 @@ public class AddContactDialogViewModel implements ViewModel {
 			if (!newV) {
 				// contactDialogViewModel.resetDialogPage();
 				dialogScope.publish(ContactDialogScope.Notifications.RESET_DIALOG_PAGE.toString());
+                dialogScope.setContactToEdit(null);
 			}
 		});
 	}

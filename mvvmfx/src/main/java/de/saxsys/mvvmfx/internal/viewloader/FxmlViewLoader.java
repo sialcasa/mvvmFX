@@ -15,19 +15,18 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.internal.viewloader;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.util.Callback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  * This viewLoader is used to load views that are implementing {@link de.saxsys.mvvmfx.FxmlView}.
@@ -239,6 +238,7 @@ public class FxmlViewLoader {
 			final Object viewModel = viewModelOptional.get();
 			if (viewModel instanceof ViewModel) {
 				ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
+                ViewLoaderReflectionUtils.injectScope(viewModel);
 				ViewLoaderReflectionUtils.initializeViewModel((ViewModel) viewModel);
 			}
 		}
@@ -249,6 +249,7 @@ public class FxmlViewLoader {
 		
 		if (viewModel != null) {
 			ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
+            ViewLoaderReflectionUtils.injectScope(viewModel);
 			
 			ViewLoaderReflectionUtils.injectViewModel(codeBehind, viewModel);
 		}
