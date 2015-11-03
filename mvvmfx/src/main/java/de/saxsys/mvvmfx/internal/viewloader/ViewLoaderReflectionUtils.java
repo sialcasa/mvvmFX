@@ -1,5 +1,9 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
+import de.saxsys.mvvmfx.*;
+import net.jodah.typetools.TypeResolver;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -9,13 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import net.jodah.typetools.TypeResolver;
-import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.InjectScope;
-import de.saxsys.mvvmfx.Scope;
-import de.saxsys.mvvmfx.ScopeStore;
-import de.saxsys.mvvmfx.ViewModel;
 
 /**
  * This class encapsulates reflection related utility operations specific for loading of views.
@@ -70,9 +67,9 @@ public class ViewLoaderReflectionUtils {
 	}
 	
 	public static List<Field> getScopeFields(Class<?> viewModelType) {
-		List<Field> allViewModelFields = getScopeFieldsUnchecked(viewModelType);
+		final List<Field> allScopeFields = getScopeFieldsUnchecked(viewModelType);
 		
-		allViewModelFields
+		allScopeFields
 				.stream()
 				.forEach(
 						field -> {
@@ -84,7 +81,7 @@ public class ViewLoaderReflectionUtils {
 							}
 						});
 		
-		return allViewModelFields;
+		return allScopeFields;
 	}
 	
 	
@@ -97,16 +94,19 @@ public class ViewLoaderReflectionUtils {
 	 * @return a list of fields.
 	 */
 	private static List<Field> getViewModelFields(Class<? extends View> viewType) {
-		return Arrays.stream(viewType.getDeclaredFields())
-				.filter(field -> field.isAnnotationPresent(InjectViewModel.class))
-				.collect(Collectors.toList());
+        return getFieldsWithAnnotation(viewType, InjectViewModel.class);
 	}
 	
 	private static List<Field> getScopeFieldsUnchecked(Class<?> viewModelType) {
-		return Arrays.stream(viewModelType.getDeclaredFields())
-				.filter(field -> field.isAnnotationPresent(InjectScope.class))
-				.collect(Collectors.toList());
+        return getFieldsWithAnnotation(viewModelType, InjectScope.class);
 	}
+
+
+    private static <T, A extends Annotation> List<Field> getFieldsWithAnnotation(Class<T> classType, Class<A> annotationType) {
+        return Arrays.stream(classType.getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(annotationType))
+                .collect(Collectors.toList());
+    }
 	
 	
 	
@@ -237,7 +237,7 @@ public class ViewLoaderReflectionUtils {
 				scopeField.set(viewModel, newScope);
 				
 				return newScope;
-			}, "Can't inject Scope into ViewModel <" + viewModel.getClass());
+			}, "Can't inject Scope into ViewModel <" + viewModel.getClass() + ">");
 		});
 	}
 	

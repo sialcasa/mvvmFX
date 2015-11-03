@@ -15,11 +15,23 @@ public class ScopedViewModelA implements ViewModel {
 	
 	private final TestScope scope2;
 	private final TestScope scope3;
-	
+
+
+    public static boolean check = false;
+
+
+    private ScopeStore scopeStore = new ScopeStore();
+
 	public ScopedViewModelA() {
-		scope2 = ScopeStore.<TestScope> getInstance().getScope(TestScope.class, "coolId2");
-		scope3 = ScopeStore.<TestScope> getInstance().getScope(TestScope.class, "coolId3");
+		scope2 = scopeStore.getScope(TestScope.class, "coolId2");
+		scope3 = scopeStore.getScope(TestScope.class, "coolId3");
 	}
+
+
+    public void initialize() {
+        check = true;
+        System.out.println(">" + scope.toString());
+    }
 	
 	public TestScope getScope() {
 		return scope;
