@@ -17,17 +17,16 @@ package de.saxsys.mvvmfx.utils.commands;
 
 import java.util.function.Supplier;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.lestard.doc.Beta;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import eu.lestard.doc.Beta;
 
 /**
  * A {@link Command} implementation of a {@link Service<Void>} that encapsulates an {@link Action} ({@link Task<Void>})
@@ -130,6 +129,9 @@ public class DelegateCommand extends Service<Void> implements Command {
 					start();
 				}
 			} else {
+				// When the Command is not executed in background, we have to imitate a Service execution, so the
+				// Service Statemachine provides the
+				// correct Service State to the command.
 				callActionAndSynthesizeServiceRun();
 			}
 		}
@@ -137,11 +139,15 @@ public class DelegateCommand extends Service<Void> implements Command {
 	
 	private void callActionAndSynthesizeServiceRun() {
 		try {
+			// We call the User Action. If an exception occures we save it, therefore we can use it in the Test
+			// (createSynthesizedTask) to throw it during the Service invokation.
 			actionSupplier.get().action();
 		} catch (Exception e) {
 			LOG.error("Exception in Command Execution", occuredException);
 			this.occuredException = e;
 		}
+		// Start the Service to trigger the Service state machine. createTask->createSynthesizedTask will be called and
+		// will throw the Exception which was catched some lines before
 		reset();
 		start();
 	}
