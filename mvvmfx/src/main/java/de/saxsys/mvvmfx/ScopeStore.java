@@ -4,13 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.saxsys.mvvmfx.internal.viewloader.DependencyInjector;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestScope;
 
 /**
  * Scope Store.
  * 
  * @author alexander.casall
- *
+ *		
  * @param <V>
  */
 public class ScopeStore<V extends Scope> {
@@ -20,7 +19,7 @@ public class ScopeStore<V extends Scope> {
 	
 	private static final ScopeStore INSTANCE = new ScopeStore();
 	
-	public static ScopeStore<TestScope> getInstance() {
+	public static <X extends Scope> ScopeStore<X> getInstance() {
 		return INSTANCE;
 	}
 	
