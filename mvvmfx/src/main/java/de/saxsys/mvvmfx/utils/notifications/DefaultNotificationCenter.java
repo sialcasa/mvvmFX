@@ -15,17 +15,14 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.notifications;
 
-import de.saxsys.mvvmfx.ViewModel;
 import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Default implementation of {@link NotificationCenter}.
@@ -41,7 +38,7 @@ class DefaultNotificationCenter implements NotificationCenter {
 	}
 	
 	private final ObserverMap globalObservers = new ObserverMap();
-	private final ViewModelObservers viewModelObservers = new ViewModelObservers();
+	private final ChannelObserverMap channelObserverMap = new ChannelObserverMap();
 	
 	@Override
 	public void subscribe(String messageName, NotificationObserver observer) {
@@ -67,14 +64,14 @@ class DefaultNotificationCenter implements NotificationCenter {
 	 *  This notification will be send to the UI-Thread (if the UI-toolkit was bootstrapped).
 	 *  If no UI-Toolkit is available the notification will be directly published. This is typically the case in unit tests.
 	 *
-	 * @param viewModel 	the ViewModel
+	 * @param channel 	the channel
 	 * @param messageName 	the message to sent
 	 * @param payload 		additional arguments to the message
 	 */
 	@Override
-	public void publish(ViewModel viewModel, String messageName, Object[] payload) {
-		if(viewModelObservers.containsKey(viewModel)) {
-			final ObserverMap observerMap = viewModelObservers.get(viewModel);
+	public void publish(Object channel, String messageName, Object[] payload) {
+		if(channelObserverMap.containsKey(channel)) {
+			final ObserverMap observerMap = channelObserverMap.get(channel);
 			
 			if (Platform.isFxApplicationThread()) {
 				publish(messageName, payload, observerMap);
@@ -97,28 +94,28 @@ class DefaultNotificationCenter implements NotificationCenter {
 	
 	
 	@Override
-	public void subscribe(ViewModel viewModel, String messageName, NotificationObserver observer) {
-		if(!viewModelObservers.containsKey(viewModel)) {
-			viewModelObservers.put(viewModel, new ObserverMap());
+	public void subscribe(Object channel, String messageName, NotificationObserver observer) {
+		if(!channelObserverMap.containsKey(channel)) {
+			channelObserverMap.put(channel, new ObserverMap());
 		}
 		
-		final ObserverMap observerMap = viewModelObservers.get(viewModel);
+		final ObserverMap observerMap = channelObserverMap.get(channel);
 		addObserver(messageName, observer, observerMap);
 	}
 	
 	@Override
-	public void unsubscribe(ViewModel viewModel, String messageName, NotificationObserver observer) {
-		if(viewModelObservers.containsKey(viewModel)) {
-			final ObserverMap observerMap = viewModelObservers.get(viewModel);
+	public void unsubscribe(Object channel, String messageName, NotificationObserver observer) {
+		if(channelObserverMap.containsKey(channel)) {
+			final ObserverMap observerMap = channelObserverMap.get(channel);
 			removeObserversForMessageName(messageName, observer, observerMap);
 		}
 	}
 	
 	
 	@Override
-	public void unsubscribe(ViewModel viewModel, NotificationObserver observer) {
-		if(viewModelObservers.containsKey(viewModel)){
-			ObserverMap observerMap = viewModelObservers.get(viewModel);
+	public void unsubscribe(Object channel, NotificationObserver observer) {
+		if(channelObserverMap.containsKey(channel)){
+			ObserverMap observerMap = channelObserverMap.get(channel);
 			removeObserverFromObserverMap(observer, observerMap);
 		}
 	}
@@ -181,7 +178,7 @@ class DefaultNotificationCenter implements NotificationCenter {
 	}
 	
 	@SuppressWarnings("serial")
-	private class ViewModelObservers extends HashMap<ViewModel, ObserverMap> {
+	private class ChannelObserverMap extends HashMap<Object, ObserverMap> {
 	}
 	
 	

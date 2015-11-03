@@ -15,9 +15,6 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.notifications;
 
-import de.saxsys.mvvmfx.ViewModel;
-
-
 /**
  * Central component to provide a notification mechanism. You can add observers by using keys to get notifications for
  * it. If you want you can pass an
@@ -85,45 +82,51 @@ public interface NotificationCenter {
 	
 	
 	/**
-	 * Publishes a notification to the {@link ViewModel}-subscribers for the given notificationId.
-	 * 
+	 * Publishes a notification on a specific channel. The channel can be any object that can be distinguished by the equals method.
+     * Only subscribers that use the same channel object can receive the published message.
+	 *
+     * @param channel
+     *            a channel object.
+     *
 	 * @param messageName
 	 *            of the notification
 	 * @param payload
 	 *            to be send
 	 */
-	void publish(ViewModel viewModel, String messageName, Object[] payload);
+	void publish(Object channel, String messageName, Object[] payload);
 	
 	/**
-	 * Subscribe to a {@link ViewModel}-notification with a given {@link NotificationObserver}.
+     *
+	 * Subscribe to a notification with a given {@link NotificationObserver} on a specific channel.
+     * See {@link #publish(Object, String, Object[])} for more information on channels.
 	 * 
-	 * @param viewModel
+	 * @param channel a channel object
 	 * 
 	 * @param messageName
 	 *            of the Notification
 	 * @param observer
 	 *            which should execute when the notification occurs
 	 */
-	void subscribe(ViewModel viewModel, String messageName,
+	void subscribe(Object channel, String messageName,
 			NotificationObserver observer);
 	
 	/**
 	 * Removes a {@link NotificationObserver} for a given messageName.
 	 * 
-	 * @param viewModel
+	 * @param channel
 	 * @param messageName
 	 * @param observer
 	 */
-	void unsubscribe(ViewModel viewModel, String messageName,
+	void unsubscribe(Object channel, String messageName,
 			NotificationObserver observer);
 	
 	/**
 	 * Removes a {@link NotificationObserver} for all messageName.
 	 * 
-	 * @param viewModel
+	 * @param channel
 	 * @param observer
 	 */
-	void unsubscribe(ViewModel viewModel,
+	void unsubscribe(Object channel,
 			NotificationObserver observer);
 	
 }
