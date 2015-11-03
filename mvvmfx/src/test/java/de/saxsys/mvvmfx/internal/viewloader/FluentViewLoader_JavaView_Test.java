@@ -1,9 +1,17 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
 
-import static de.saxsys.mvvmfx.internal.viewloader.ResourceBundleAssert.assertThat;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import de.saxsys.mvvmfx.*;
+import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModel;
+import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelA;
+import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelB;
+import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelWithResourceBundle;
+import de.saxsys.mvvmfx.testingutils.ExceptionUtils;
+import javafx.fxml.Initializable;
+import javafx.scene.layout.VBox;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
@@ -11,24 +19,9 @@ import java.net.URL;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.ViewTuple;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelA;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelB;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelWithResourceBundle;
-import de.saxsys.mvvmfx.testingutils.ExceptionUtils;
-import javafx.fxml.Initializable;
-import javafx.scene.layout.VBox;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.JavaView;
-import de.saxsys.mvvmfx.MvvmFX;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModel;
+import static de.saxsys.mvvmfx.internal.viewloader.ResourceBundleAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 
 /**
@@ -139,30 +132,24 @@ public class FluentViewLoader_JavaView_Test {
 		}
 	}
 	
-	
+
 	/**
 	 * It is possible to define a view without specifying a viewModel type.
 	 */
 	@Test
 	public void testViewWithoutViewModelType() {
 		class TestView extends VBox implements JavaView {
-			@InjectViewModel
-			public TestViewModel viewModel;
 		}
-		
+
 		ViewTuple viewTuple = FluentViewLoader.javaView(TestView.class).load();
-		
+
 		assertThat(viewTuple).isNotNull();
 		assertThat(viewTuple.getViewModel()).isNull();
-		
+
 		View codeBehind = viewTuple.getCodeBehind();
 		assertThat(codeBehind).isNotNull().isInstanceOf(TestView.class);
-		
-		TestView loadedView = (TestView) codeBehind;
-		
-		assertThat(loadedView.viewModel).isNull();
 	}
-	
+
 	/**
 	 * The ViewModel has to be injected before the explicit initialize method is called.
 	 */
@@ -262,6 +249,28 @@ public class FluentViewLoader_JavaView_Test {
 		}
 	}
 	
+	
+	/**
+	 * A View without generic ViewModel type can't inject a ViewModel
+	 */
+	@Test
+	public void testViewWithoutViewModelTypeButViewModelInjection() {
+		class TestView extends VBox implements JavaView {
+			@InjectViewModel
+			public TestViewModel viewModel;
+		}
+		
+		try {
+			FluentViewLoader.javaView(TestView.class).load();
+			fail("Expected an Exception");
+		} catch (Exception e) {
+			Throwable rootCause = ExceptionUtils.getRootCause(e);
+			assertThat(rootCause).isInstanceOf(RuntimeException.class)
+					.hasMessageContaining("but tries to inject a viewModel");
+		}
+	}
+	
+	
 	/**
 	 * When the ViewModel isn't injected in the view it should still be available in the ViewTuple.
 	 */
@@ -273,7 +282,7 @@ public class FluentViewLoader_JavaView_Test {
 		
 		ViewTuple<TestView, TestViewModel> viewTuple = FluentViewLoader
 				.javaView(TestView.class).load();
-		
+
 		assertThat(viewTuple.getViewModel()).isNotNull();
 	}
 	
@@ -289,7 +298,7 @@ public class FluentViewLoader_JavaView_Test {
 		
 		ViewTuple<TestView, TestViewModel> viewTuple = FluentViewLoader.javaView(TestView.class).viewModel(viewModel)
 				.load();
-		
+
 		assertThat(viewTuple.getCodeBehind().viewModel).isEqualTo(viewModel);
 		assertThat(viewTuple.getViewModel()).isEqualTo(viewModel);
 	}
@@ -405,7 +414,7 @@ public class FluentViewLoader_JavaView_Test {
 		
 		TestView loadedView = FluentViewLoader.javaView(TestView.class).resourceBundle(resourceBundle).load()
 				.getCodeBehind();
-		
+
 		assertThat(loadedView.resources).hasSameContent(resourceBundle);
 	}
 	
@@ -427,7 +436,7 @@ public class FluentViewLoader_JavaView_Test {
 		
 		TestView loadedView = FluentViewLoader.javaView(TestView.class).resourceBundle(resourceBundle).load()
 				.getCodeBehind();
-		
+
 		assertThat(loadedView.resourcesWasInjected).isTrue();
 	}
 	
@@ -445,7 +454,7 @@ public class FluentViewLoader_JavaView_Test {
 		
 		TestView loadedView = FluentViewLoader.javaView(TestView.class).resourceBundle(resourceBundle).load()
 				.getCodeBehind();
-		
+
 		assertThat(loadedView.getResources()).isNull();
 	}
 	
@@ -461,7 +470,7 @@ public class FluentViewLoader_JavaView_Test {
 		
 		TestView loadedView = FluentViewLoader.javaView(TestView.class).resourceBundle(resourceBundle).load()
 				.getCodeBehind();
-		
+
 		assertThat(loadedView.resources).isInstanceOf(ResourceBundle.class);
 		ResourceBundle resourceBundle = (ResourceBundle)loadedView.resources;
 		assertThat(resourceBundle).isNotNull().hasSameContent(resourceBundle);
@@ -480,7 +489,7 @@ public class FluentViewLoader_JavaView_Test {
 		
 		TestView loadedView = FluentViewLoader.javaView(TestView.class).resourceBundle(resourceBundle).load()
 				.getCodeBehind();
-		
+
 		assertThat(loadedView.resources).isNull();
 	}
 	
@@ -497,7 +506,7 @@ public class FluentViewLoader_JavaView_Test {
 		
 		TestView loadedView = FluentViewLoader.javaView(TestView.class).resourceBundle(resourceBundle).load()
 				.getCodeBehind();
-		
+
 		assertThat(loadedView.resourceBundle).hasSameContent(resourceBundle);
 	}
 	
@@ -516,7 +525,7 @@ public class FluentViewLoader_JavaView_Test {
 		
 		TestView loadedView = FluentViewLoader.javaView(TestView.class).resourceBundle(resourceBundle).load()
 				.getCodeBehind();
-		
+
 		assertThat(loadedView.resources).isNull();
 	}
 	
