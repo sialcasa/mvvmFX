@@ -1,11 +1,16 @@
 language: java
 
-sudo: required
+sudo: false
 
 jdk:
   - oraclejdk8
 
 install: true
+
+addons:
+  apt:
+    packages:
+    - oracle-java8-installer
 
 before_install:
 - export DISPLAY=:99.0
