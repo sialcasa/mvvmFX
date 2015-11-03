@@ -65,7 +65,7 @@ public class DependencyInjector {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	<T> T getInstanceOf(Class<? extends T> type) {
+	public <T> T getInstanceOf(Class<? extends T> type) {
 		if (isCustomInjectorDefined()) {
 			return (T) customInjector.call(type);
 		} else {
