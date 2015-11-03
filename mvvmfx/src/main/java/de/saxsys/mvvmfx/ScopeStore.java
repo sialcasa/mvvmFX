@@ -18,23 +18,29 @@ public class ScopeStore {
 	
 	private static final ScopeStore INSTANCE = new ScopeStore();
 	
-	    public static ScopeStore getInstance() {
+	public static ScopeStore getInstance() {
 		return INSTANCE;
 	}
 
+    public <V extends Scope> V getScope(Class<V> scopeType) {
+        return getScope(scopeType, "");
+    }
+
     public <V extends Scope> V getScope(Class<V> scopeType, String id) {
-        String mapId = scopeType.getName() + id;
+        String mapId = scopeType.getName() + id.trim();
 
-        V scope = (V) getInstance().scopes.get(mapId);
 
-        if (scope == null) {
-            scope = getInstance().createScopeInstance(scopeType);
+        if(! getInstance().scopes.containsKey(mapId)) {
+            V scope = getInstance().createScopeInstance(scopeType);
             getInstance().scopes.put(mapId, scope);
         }
-        return scope;
+
+        final V v = (V) getInstance().scopes.get(mapId);
+
+        return v;
     }
 
 	private <V extends Scope> V createScopeInstance(Class<V> scopeType) {
-		return (V) DependencyInjector.getInstance().getInstanceOf(scopeType);
+		return DependencyInjector.getInstance().getInstanceOf(scopeType);
 	}
 }

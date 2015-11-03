@@ -1,4 +1,4 @@
-package de.saxsys.mvvmfx.internal.viewloader.example;
+package de.saxsys.mvvmfx.scopes;
 
 import de.saxsys.mvvmfx.FxmlView;
 
@@ -8,7 +8,7 @@ import de.saxsys.mvvmfx.FxmlView;
  * 
  * @author alexander.casall
  */
-public class ScopedFxmlViewB implements FxmlView<ScopedViewModelB> {
+public class ScopedFxmlViewA implements FxmlView<ScopedViewModelA> {
 	
 	
 }

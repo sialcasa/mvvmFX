@@ -13,4 +13,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface InjectScope {
+
+    /**
+     * the id of the scope.
+     * Default is "" which means that the scope is global.
+     */
+    String value() default "";
+
 }
