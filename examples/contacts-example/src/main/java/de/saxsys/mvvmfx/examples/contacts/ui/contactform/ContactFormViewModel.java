@@ -1,38 +1,51 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.contactform;
 
+import java.time.LocalDate;
+
+import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.contacts.model.Contact;
+import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 import de.saxsys.mvvmfx.examples.contacts.ui.validators.BirthdayValidator;
 import de.saxsys.mvvmfx.examples.contacts.ui.validators.EmailValidator;
 import de.saxsys.mvvmfx.examples.contacts.ui.validators.PhoneValidator;
 import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
-import de.saxsys.mvvmfx.utils.validation.*;
+import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
+import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import de.saxsys.mvvmfx.utils.validation.Validator;
 import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
 
-import java.time.LocalDate;
-
 public class ContactFormViewModel implements ViewModel {
-	private ModelWrapper<Contact> contactWrapper = new ModelWrapper<>();
+	private final ModelWrapper<Contact> contactWrapper = new ModelWrapper<>();
 	
 	private Validator firstnameValidator;
 	private Validator lastnameValidator;
-	private Validator emailValidator = new EmailValidator(emailProperty());
-	private Validator birthdayValidator = new BirthdayValidator(birthdayProperty());
+	private final Validator emailValidator = new EmailValidator(emailProperty());
+	private final Validator birthdayValidator = new BirthdayValidator(birthdayProperty());
 	
-	private Validator phoneValidator = new PhoneValidator(phoneNumberProperty(), "The phone number is invalid!");
-	private Validator mobileValidator = new PhoneValidator(mobileNumberProperty(), "The mobile number is invalid!");
+	private final Validator phoneValidator = new PhoneValidator(phoneNumberProperty(), "The phone number is invalid!");
+	private final Validator mobileValidator = new PhoneValidator(mobileNumberProperty(),
+			"The mobile number is invalid!");
+			
+	private final CompositeValidator formValidator = new CompositeValidator();
 	
-	private CompositeValidator formValidator = new CompositeValidator();
+	@InjectScope
+	ContactDialogScope dialogScope;
 	
 	public ContactFormViewModel() {
+		
+		dialogScope.subscribe(ContactDialogScope.Notifications.RESET_FORMS.toString(), (key, payload) -> resetForm());
+		
 		firstnameValidator = new FunctionBasedValidator<>(
 				firstnameProperty(),
 				firstName -> firstName != null && !firstName.trim().isEmpty(),
 				ValidationMessage.error("Firstname may not be empty"));
-		
-		
+				
+				
 		lastnameValidator = new FunctionBasedValidator<>(lastnameProperty(), lastName -> {
 			if (lastName == null || lastName.isEmpty()) {
 				return ValidationMessage.error("Lastname may not be empty");
@@ -53,7 +66,7 @@ public class ContactFormViewModel implements ViewModel {
 				mobileValidator);
 	}
 	
-	public void resetForm() {
+	private void resetForm() {
 		contactWrapper.reset();
 	}
 	

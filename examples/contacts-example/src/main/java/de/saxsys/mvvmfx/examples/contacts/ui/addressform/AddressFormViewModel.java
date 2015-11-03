@@ -3,7 +3,17 @@ package de.saxsys.mvvmfx.examples.contacts.ui.addressform;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import de.saxsys.mvvmfx.InjectScope;
+import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.contacts.model.Address;
+import de.saxsys.mvvmfx.examples.contacts.model.Country;
+import de.saxsys.mvvmfx.examples.contacts.model.CountrySelector;
+import de.saxsys.mvvmfx.examples.contacts.model.Subdivision;
+import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
+import de.saxsys.mvvmfx.utils.itemlist.ItemList;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -17,42 +27,36 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.examples.contacts.model.Country;
-import de.saxsys.mvvmfx.examples.contacts.model.CountrySelector;
-import de.saxsys.mvvmfx.examples.contacts.model.Subdivision;
-import de.saxsys.mvvmfx.utils.itemlist.ItemList;
-
 public class AddressFormViewModel implements ViewModel {
 	static final String NOTHING_SELECTED_MARKER = "---";
 	static final String SUBDIVISION_LABEL_KEY = "addressform.subdivision.label";
 	
-	private ReadOnlyBooleanWrapper valid = new ReadOnlyBooleanWrapper(true);
+	private final ReadOnlyBooleanWrapper valid = new ReadOnlyBooleanWrapper(true);
 	private ObservableList<String> countries;
 	private ObservableList<String> subdivisions;
-	private ReadOnlyStringWrapper subdivisionLabel = new ReadOnlyStringWrapper();
+	private final ReadOnlyStringWrapper subdivisionLabel = new ReadOnlyStringWrapper();
 	
-	private StringProperty street = new SimpleStringProperty();
-	private StringProperty postalCode = new SimpleStringProperty();
-	private StringProperty city = new SimpleStringProperty();
-	private ObjectProperty<Subdivision> subdivision = new SimpleObjectProperty<>();
-	private ObjectProperty<Country> country = new SimpleObjectProperty<>();
+	private final StringProperty street = new SimpleStringProperty();
+	private final StringProperty postalCode = new SimpleStringProperty();
+	private final StringProperty city = new SimpleStringProperty();
+	private final ObjectProperty<Subdivision> subdivision = new SimpleObjectProperty<>();
+	private final ObjectProperty<Country> country = new SimpleObjectProperty<>();
 	
-	private StringProperty selectedCountry = new SimpleStringProperty(NOTHING_SELECTED_MARKER);
-	private StringProperty selectedSubdivision = new SimpleStringProperty(NOTHING_SELECTED_MARKER);
+	private final StringProperty selectedCountry = new SimpleStringProperty(NOTHING_SELECTED_MARKER);
+	private final StringProperty selectedSubdivision = new SimpleStringProperty(NOTHING_SELECTED_MARKER);
 	
-	private ReadOnlyBooleanWrapper loadingInProgress = new ReadOnlyBooleanWrapper();
-	private ReadOnlyBooleanWrapper countryInputDisabled = new ReadOnlyBooleanWrapper();
-	private ReadOnlyBooleanWrapper subdivisionInputDisabled = new ReadOnlyBooleanWrapper();
+	private final ReadOnlyBooleanWrapper loadingInProgress = new ReadOnlyBooleanWrapper();
+	private final ReadOnlyBooleanWrapper countryInputDisabled = new ReadOnlyBooleanWrapper();
+	private final ReadOnlyBooleanWrapper subdivisionInputDisabled = new ReadOnlyBooleanWrapper();
 	
 	@Inject
 	CountrySelector countrySelector;
 	
 	@Inject
 	ResourceBundle resourceBundle;
+	
+	@InjectScope
+	private ContactDialogScope dialogScope;
 	
 	
 	
@@ -64,6 +68,8 @@ public class AddressFormViewModel implements ViewModel {
 	
 	@PostConstruct
 	public void init() {
+		dialogScope.subscribe(ContactDialogScope.Notifications.RESET_FORMS.toString(), (key, payload) -> resetForm());
+		dialogScope.subscribe(ContactDialogScope.Notifications.COMMIT.toString(), (key, payload) -> commitChanges());
 		
 		loadingInProgress.bind(countrySelector.inProgressProperty());
 		countrySelector.init();
@@ -77,7 +83,7 @@ public class AddressFormViewModel implements ViewModel {
 				Optional<Country> matchingCountry = countrySelector.availableCountries().stream()
 						.filter(country -> newV.equals(country.getName()))
 						.findFirst();
-				
+						
 				if (matchingCountry.isPresent()) {
 					countrySelector.setCountry(matchingCountry.get());
 					country.set(matchingCountry.get());
@@ -93,7 +99,7 @@ public class AddressFormViewModel implements ViewModel {
 			if (newV != null && !newV.equals(NOTHING_SELECTED_MARKER)) {
 				Optional<Subdivision> subdivisionOptional = countrySelector.subdivisions().stream()
 						.filter(subdivision -> subdivision.getName().equals(newV)).findFirst();
-				
+						
 				if (subdivisionOptional.isPresent()) {
 					subdivision.set(subdivisionOptional.get());
 				} else {
@@ -129,12 +135,12 @@ public class AddressFormViewModel implements ViewModel {
 		
 		countries = createListWithNothingSelectedMarker(
 				mappedList);
-		
+				
 		countries.addListener((ListChangeListener<String>) c -> selectedCountry.set(NOTHING_SELECTED_MARKER));
 	}
 	
 	
-	public void commitChanges() {
+	private void commitChanges() {
 		address.setStreet(street.get());
 		address.setCity(city.get());
 		address.setPostalcode(postalCode.get());
@@ -225,7 +231,7 @@ public class AddressFormViewModel implements ViewModel {
 		return subdivisionInputDisabled.getReadOnlyProperty();
 	}
 	
-	public void resetForm() {
+	private void resetForm() {
 		street.set("");
 		city.set("");
 		postalCode.set("");
