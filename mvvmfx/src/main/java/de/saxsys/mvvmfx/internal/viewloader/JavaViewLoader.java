@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ResourceBundle;
+
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 
@@ -87,6 +88,7 @@ public class JavaViewLoader {
 		
 		if (viewModel != null) {
 			ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
+			ViewLoaderReflectionUtils.injectScope(viewModel);
 			ViewLoaderReflectionUtils.initializeViewModel(viewModel);
 			ViewLoaderReflectionUtils.injectViewModel(view, viewModel);
 		}

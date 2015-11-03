@@ -135,21 +135,23 @@ public class FxmlViewLoader {
 				throw new IOException("Could not load the controller for the View " + resource
 						+ " maybe your missed the fx:controller in your fxml?");
 			}
-
-
+			
+			
 			// the actually used ViewModel instance. We need this so we can return it in the ViewTuple
 			ViewModelType actualViewModel;
 			
 			// if no existing viewModel was provided...
-			if(viewModel == null) {
+			if (viewModel == null) {
 				// ... we try to find the created ViewModel from the codeBehind.
 				// this is only possible when the codeBehind has a field for the VM and the VM was injected
 				actualViewModel = ViewLoaderReflectionUtils.getExistingViewModel(loadedController);
-
-				// otherwise we create a new ViewModel. This is needed because the ViewTuple has to contain a VM even if the codeBehind doesn't need one
+				
+				// otherwise we create a new ViewModel. This is needed because the ViewTuple has to contain a VM even if
+				// the codeBehind doesn't need one
 				if (actualViewModel == null) {
 					actualViewModel = ViewLoaderReflectionUtils.createViewModel(loadedController);
 				}
+				ViewLoaderReflectionUtils.injectScope(actualViewModel);
 			} else {
 				actualViewModel = viewModel;
 			}
@@ -207,7 +209,7 @@ public class FxmlViewLoader {
 	 * a view.
 	 */
 	private static class DefaultControllerFactory implements Callback<Class<?>, Object> {
-		private ResourceBundle resourceBundle;
+		private final ResourceBundle resourceBundle;
 		
 		public DefaultControllerFactory(ResourceBundle resourceBundle) {
 			this.resourceBundle = resourceBundle;
@@ -276,9 +278,9 @@ public class FxmlViewLoader {
 		
 		private boolean customViewModelInjected = false;
 		
-		private ViewModel customViewModel;
+		private final ViewModel customViewModel;
 		
-		private ResourceBundle resourceBundle;
+		private final ResourceBundle resourceBundle;
 		
 		public ControllerFactoryForCustomViewModel(ViewModel customViewModel, ResourceBundle resourceBundle) {
 			this.customViewModel = customViewModel;

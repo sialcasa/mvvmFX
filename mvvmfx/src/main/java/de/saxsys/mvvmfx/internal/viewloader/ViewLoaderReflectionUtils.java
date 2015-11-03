@@ -12,6 +12,9 @@ import java.util.stream.Collectors;
 
 import net.jodah.typetools.TypeResolver;
 import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.InjectViewScope;
+import de.saxsys.mvvmfx.Scope;
+import de.saxsys.mvvmfx.ScopeStore;
 import de.saxsys.mvvmfx.ViewModel;
 
 /**
@@ -36,34 +39,61 @@ public class ViewLoaderReflectionUtils {
 	public static Optional<Field> getViewModelField(Class<? extends View> viewType, Class<?> viewModelType) {
 		List<Field> allViewModelFields = getViewModelFields(viewType);
 		
-		if(allViewModelFields.isEmpty()) {
+		if (allViewModelFields.isEmpty()) {
 			return Optional.empty();
 		}
-
+		
 		if (allViewModelFields.size() > 1) {
 			throw new RuntimeException("The View <" + viewType + "> may only define one viewModel but there were <"
 					+ allViewModelFields.size() + "> viewModel fields with the @InjectViewModel annotation!");
 		}
-
+		
 		Field field = allViewModelFields.get(0);
 		
-		if(! ViewModel.class.isAssignableFrom(field.getType())) {
-			throw new RuntimeException("The View <" + viewType + "> has a field annotated with @InjectViewModel but the type of the field doesn't implement the 'ViewModel' interface!");
+		if (!ViewModel.class.isAssignableFrom(field.getType())) {
+			throw new RuntimeException(
+					"The View <"
+							+ viewType
+							+ "> has a field annotated with @InjectViewModel but the type of the field doesn't implement the 'ViewModel' interface!");
 		}
 		
-		if(! field.getType().isAssignableFrom(viewModelType)) {
-			throw new RuntimeException("The View <" + viewType + "> has a field annotated with @InjectViewModel but the type of the field doesn't match the generic ViewModel type of the View class. " 
-					+ "The declared generic type is <" + viewModelType + "> but the actual type of the field is <" + field.getType() + ">.");
+		if (!field.getType().isAssignableFrom(viewModelType)) {
+			throw new RuntimeException(
+					"The View <"
+							+ viewType
+							+ "> has a field annotated with @InjectViewModel but the type of the field doesn't match the generic ViewModel type of the View class. "
+							+ "The declared generic type is <" + viewModelType
+							+ "> but the actual type of the field is <" + field.getType() + ">.");
 		}
-
+		
 		return Optional.of(field);
 	}
-
-
+	
+	public static List<Field> getScopeFields(Class<?> viewModelType) {
+		List<Field> allViewModelFields = getScopeFieldsUnchecked(viewModelType);
+		
+		allViewModelFields
+				.stream()
+				.forEach(
+						field -> {
+							if (!Scope.class.isAssignableFrom(field.getType())) {
+								throw new RuntimeException(
+										"The ViewModel <"
+												+ viewModelType
+												+ "> has a field annotated with @InjectScope but the type of the field doesn't implement the 'Scope' interface!");
+							}
+						});
+		
+		return allViewModelFields;
+	}
+	
+	
 	/**
-	 * Returns a list of all {@link Field}s of ViewModels for a given view type that are annotated with {@link InjectViewModel}.
+	 * Returns a list of all {@link Field}s of ViewModels for a given view type that are annotated with
+	 * {@link InjectViewModel}.
 	 * 
-	 * @param viewType the type of the view.
+	 * @param viewType
+	 *            the type of the view.
 	 * @return a list of fields.
 	 */
 	private static List<Field> getViewModelFields(Class<? extends View> viewType) {
@@ -71,6 +101,13 @@ public class ViewLoaderReflectionUtils {
 				.filter(field -> field.isAnnotationPresent(InjectViewModel.class))
 				.collect(Collectors.toList());
 	}
+	
+	private static List<Field> getScopeFieldsUnchecked(Class<?> viewModelType) {
+		return Arrays.stream(viewModelType.getDeclaredFields())
+				.filter(field -> field.isAnnotationPresent(InjectViewScope.class))
+				.collect(Collectors.toList());
+	}
+	
 	
 	
 	/**
@@ -139,8 +176,10 @@ public class ViewLoaderReflectionUtils {
 	 *            the generic type of the ViewModel.
 	 * @return an Optional containing the ViewModel if it was created or already existing. Otherwise the Optional is
 	 *         empty.
-	 *         
-	 * @throws RuntimeException if there is a ViewModel field in the View with the {@link InjectViewModel} annotation whose type doesn't match the generic ViewModel type from the View class.
+	 * 
+	 * @throws RuntimeException
+	 *             if there is a ViewModel field in the View with the {@link InjectViewModel} annotation whose type
+	 *             doesn't match the generic ViewModel type from the View class.
 	 */
 	@SuppressWarnings("unchecked")
 	public static <V extends View<? extends VM>, VM extends ViewModel> Optional<VM> createAndInjectViewModel(
@@ -185,6 +224,21 @@ public class ViewLoaderReflectionUtils {
 		}
 		
 		return Optional.empty();
+	}
+	
+	static void injectScope(Object viewModel) {
+		List<Field> scopeFields = getScopeFields(viewModel.getClass());
+		
+		scopeFields.forEach(scopeField -> {
+			ReflectionUtils.accessField(scopeField, () -> {
+				Class<? extends Scope> type = (Class<? extends Scope>) scopeField.getType();
+				final Object newScope = ScopeStore.getInstance().getScope(type, "");
+				
+				scopeField.set(viewModel, newScope);
+				
+				return newScope;
+			}, "Can't inject Scope into ViewModel <" + viewModel.getClass());
+		});
 	}
 	
 	/**
