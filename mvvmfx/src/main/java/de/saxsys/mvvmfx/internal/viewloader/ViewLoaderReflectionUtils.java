@@ -1,5 +1,9 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
+import de.saxsys.mvvmfx.*;
+import net.jodah.typetools.TypeResolver;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -9,13 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import net.jodah.typetools.TypeResolver;
-import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.InjectScope;
-import de.saxsys.mvvmfx.Scope;
-import de.saxsys.mvvmfx.ScopeStore;
-import de.saxsys.mvvmfx.ViewModel;
 
 /**
  * This class encapsulates reflection related utility operations specific for loading of views.
@@ -70,9 +67,9 @@ public class ViewLoaderReflectionUtils {
 	}
 	
 	public static List<Field> getScopeFields(Class<?> viewModelType) {
-		List<Field> allViewModelFields = getScopeFieldsUnchecked(viewModelType);
+		final List<Field> allScopeFields = getFieldsWithAnnotation(viewModelType, InjectScope.class);
 		
-		allViewModelFields
+		allScopeFields
 				.stream()
 				.forEach(
 						field -> {
@@ -84,7 +81,7 @@ public class ViewLoaderReflectionUtils {
 							}
 						});
 		
-		return allViewModelFields;
+		return allScopeFields;
 	}
 	
 	
@@ -97,16 +94,14 @@ public class ViewLoaderReflectionUtils {
 	 * @return a list of fields.
 	 */
 	private static List<Field> getViewModelFields(Class<? extends View> viewType) {
-		return Arrays.stream(viewType.getDeclaredFields())
-				.filter(field -> field.isAnnotationPresent(InjectViewModel.class))
-				.collect(Collectors.toList());
+        return getFieldsWithAnnotation(viewType, InjectViewModel.class);
 	}
 	
-	private static List<Field> getScopeFieldsUnchecked(Class<?> viewModelType) {
-		return Arrays.stream(viewModelType.getDeclaredFields())
-				.filter(field -> field.isAnnotationPresent(InjectScope.class))
-				.collect(Collectors.toList());
-	}
+    private static <T, A extends Annotation> List<Field> getFieldsWithAnnotation(Class<T> classType, Class<A> annotationType) {
+        return Arrays.stream(classType.getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(annotationType))
+                .collect(Collectors.toList());
+    }
 	
 	
 	
@@ -230,16 +225,38 @@ public class ViewLoaderReflectionUtils {
 		List<Field> scopeFields = getScopeFields(viewModel.getClass());
 		
 		scopeFields.forEach(scopeField -> {
-			ReflectionUtils.accessField(scopeField, () -> {
-				Class<? extends Scope> type = (Class<? extends Scope>) scopeField.getType();
-				final Object newScope = ScopeStore.getInstance().getScope(type, "");
-				
-				scopeField.set(viewModel, newScope);
-				
-				return newScope;
-			}, "Can't inject Scope into ViewModel <" + viewModel.getClass());
+			ReflectionUtils.accessField(scopeField,
+                    () -> injectScopeIntoField(scopeField, viewModel),
+                    "Can't inject Scope into ViewModel <" + viewModel.getClass() + ">");
 		});
 	}
+
+    static Object injectScopeIntoField(Field scopeField, Object viewModel) throws IllegalAccessException {
+        Class<? extends Scope> scopeType = (Class<? extends Scope>) scopeField.getType();
+
+
+        final InjectScope[] annotations = scopeField.getAnnotationsByType(InjectScope.class);
+
+        if(annotations.length != 1) {
+            throw new RuntimeException("A field to inject a Scope into should have exactly one @InjectScope annotation " +
+                    "but the viewModel <" + viewModel + "> has a field that violates this rule.");
+        }
+
+        Object newScope;
+
+        final String annotationValue = annotations[0].value();
+
+        if(annotationValue == null || annotationValue.trim().isEmpty()) {
+            newScope = ScopeStore.getInstance().getScope(scopeType);
+        } else {
+            newScope = ScopeStore.getInstance().getScope(scopeType, annotationValue);
+        }
+
+
+        scopeField.set(viewModel, newScope);
+
+        return newScope;
+    }
 	
 	/**
 	 * Creates a viewModel instance for a View type. The type of the view is determined by the given view instance.
