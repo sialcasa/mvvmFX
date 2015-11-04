@@ -45,7 +45,7 @@ public class AddressFormViewModel implements ViewModel {
 	ResourceBundle resourceBundle;
 	
 	@InjectScope
-	private ContactDialogScope dialogScope;
+	ContactDialogScope dialogScope;
 	
 	
 	

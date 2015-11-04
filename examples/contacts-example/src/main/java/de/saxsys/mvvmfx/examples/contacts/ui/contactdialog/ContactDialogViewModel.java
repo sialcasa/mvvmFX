@@ -4,18 +4,13 @@ import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ObservableBooleanValue;
 
 public class ContactDialogViewModel implements ViewModel {
 	
 	@InjectScope
-	private ContactDialogScope dialogScope;
+	ContactDialogScope dialogScope;
 	
 	private final IntegerProperty dialogPage = new SimpleIntegerProperty(0);
 	
@@ -24,10 +19,10 @@ public class ContactDialogViewModel implements ViewModel {
 	private final StringProperty titleText = new SimpleStringProperty();
 	
 	private Runnable okAction;
-	
+
 	public void initialize() {
-		valid.bind(
-				Bindings.and(dialogScope.contactFormValidProperty(), dialogScope.addressFormValidProperty()));
+        valid.bind(
+                Bindings.and(dialogScope.contactFormValidProperty(), dialogScope.addressFormValidProperty()));
 		dialogScope.subscribe(ContactDialogScope.Notifications.RESET_DIALOG_PAGE.toString(),
 				(key, payload) -> resetDialogPage());
 	}
@@ -64,8 +59,7 @@ public class ContactDialogViewModel implements ViewModel {
 	
 	
 	public ObservableBooleanValue okButtonDisabledProperty() {
-		return Bindings.and(dialogScope.contactFormValidProperty(), dialogScope.addressFormValidProperty())
-				.not();
+        return valid.not();
 	}
 	
 	public ObservableBooleanValue okButtonVisibleProperty() {

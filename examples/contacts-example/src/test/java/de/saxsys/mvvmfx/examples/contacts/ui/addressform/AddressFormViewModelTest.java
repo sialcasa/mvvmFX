@@ -3,6 +3,7 @@ package de.saxsys.mvvmfx.examples.contacts.ui.addressform;
 import de.saxsys.mvvmfx.examples.contacts.model.Country;
 import de.saxsys.mvvmfx.examples.contacts.model.CountrySelector;
 import de.saxsys.mvvmfx.examples.contacts.model.Subdivision;
+import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -36,6 +37,8 @@ public class AddressFormViewModelTest {
 	
 	private ObservableList<Country> availableCountries = FXCollections.observableArrayList();
 	private ObservableList<Subdivision> subdivisions = FXCollections.observableArrayList();
+
+    private ContactDialogScope scope;
 	
 	@Before
 	public void setup() {
@@ -73,9 +76,13 @@ public class AddressFormViewModelTest {
 			subdivisions.clear();
 			return null;
 		}).when(countrySelector).setCountry(null);
-		
+
+
+
+        scope = new ContactDialogScope();
 		
 		viewModel = new AddressFormViewModel();
+        viewModel.dialogScope = scope;
 		viewModel.resourceBundle = resourceBundle;
 		viewModel.countrySelector = countrySelector;
 	}

@@ -20,7 +20,7 @@ public class EditContactDialogViewModel implements ViewModel {
 	Repository repository;
 	
 	@InjectScope
-	private ContactDialogScope dialogScope;
+	ContactDialogScope dialogScope;
 	
 	@Inject
 	ResourceBundle defaultResourceBundle;

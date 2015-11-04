@@ -2,9 +2,8 @@ package de.saxsys.mvvmfx.examples.contacts.ui.editcontact;
 
 import de.saxsys.mvvmfx.examples.contacts.model.Contact;
 import de.saxsys.mvvmfx.examples.contacts.model.Repository;
-import de.saxsys.mvvmfx.examples.contacts.ui.addressform.AddressFormViewModel;
 import de.saxsys.mvvmfx.examples.contacts.ui.contactdialog.ContactDialogViewModel;
-import de.saxsys.mvvmfx.examples.contacts.ui.contactform.ContactFormViewModel;
+import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.junit.Before;
@@ -26,13 +25,14 @@ public class EditContactDialogViewModelTest {
 	private Repository repository;
 	
 	private ContactDialogViewModel contactDialogViewModel;
-	private ContactFormViewModel contactFormViewModel;
-	private AddressFormViewModel addressFormViewModel;
-	
-	private ResourceBundle resourceBundle;
-	
+
+    private ContactDialogScope scope;
+
 	@Before
 	public void setup() {
+        scope = new ContactDialogScope();
+
+
 		// sadly the ResourceBundle.getString method is final so we can't use mockito
 		ResourceBundle resourceBundle = new ListResourceBundle() {
 			@Override
@@ -44,20 +44,16 @@ public class EditContactDialogViewModelTest {
 		};
 		
 		viewModel = new EditContactDialogViewModel();
+        viewModel.dialogScope = scope;
+
 		viewModel.defaultResourceBundle = resourceBundle;
 		
 		repository = mock(Repository.class);
 		viewModel.repository = repository;
-		
-		
-		contactFormViewModel = mock(ContactFormViewModel.class);
-		addressFormViewModel = mock(AddressFormViewModel.class);
-		
+
 		contactDialogViewModel = mock(ContactDialogViewModel.class);
 		when(contactDialogViewModel.validProperty()).thenReturn(new SimpleBooleanProperty(true));
 		
-//		when(contactDialogViewModel.getContactFormViewModel()).thenReturn(contactFormViewModel);
-//		when(contactDialogViewModel.getAddressFormViewModel()).thenReturn(addressFormViewModel);
 		when(contactDialogViewModel.titleTextProperty()).thenReturn(new SimpleStringProperty());
 		
 		viewModel.setContactDialogViewModel(contactDialogViewModel);
@@ -74,7 +70,6 @@ public class EditContactDialogViewModelTest {
 		
 		viewModel.openDialog(chewie.getId());
 		
-//		verify(contactFormViewModel).initWithContact(chewie);
 		assertThat(viewModel.dialogOpenProperty()).isTrue();
 	}
 	
@@ -84,7 +79,6 @@ public class EditContactDialogViewModelTest {
 		
 		viewModel.openDialog("12345");
 		
-//		verify(contactFormViewModel, never()).initWithContact(any());
 		assertThat(viewModel.dialogOpenProperty()).isFalse();
 	}
 	
