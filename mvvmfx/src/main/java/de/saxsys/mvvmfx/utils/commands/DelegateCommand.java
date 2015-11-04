@@ -126,7 +126,7 @@ public class DelegateCommand extends Service<Void> implements Command {
 				try {
 					actionSupplier.get().action();
 				} catch (Exception e) {
-					e.printStackTrace();
+					throw new RuntimeException(e);
 				}
 			}
 		}
