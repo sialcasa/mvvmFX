@@ -15,9 +15,8 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx;
 
-import javafx.scene.Parent;
-
 import de.saxsys.mvvmfx.internal.viewloader.View;
+import javafx.scene.Parent;
 
 /**
  * <p>
@@ -87,8 +86,16 @@ public class ViewTuple<ViewType extends View<? extends ViewModelType>, ViewModel
 	}
 	
 	/**
+	 * @deprecated due to architectural reasons. The only known usecase, where you need to access the ViewModel after
+	 *             the creation of a new view, is the orchestration between multiple Views (ViewModels). For this
+	 *             usecase we introduced the Scopes feature. You can use Scopes to communicate between ViewModels (e.g.
+	 *             for Master/Detail Views or Wizard Views). If you have other use-cases where you need the access to
+	 *             the ViewModel in the ViewTuple, please report them here:
+	 *             https://github.com/sialcasa/mvvmFX/issues/326 otherwise this method will be removed in upcomming
+	 *             versions.
 	 * @return the viewModel
 	 */
+	@Deprecated
 	public ViewModelType getViewModel() {
 		return viewModel;
 	}
