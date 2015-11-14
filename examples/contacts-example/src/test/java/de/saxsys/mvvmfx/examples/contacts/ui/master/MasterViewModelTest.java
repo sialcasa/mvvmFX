@@ -61,7 +61,7 @@ public class MasterViewModelTest {
 		assertThat(viewModel.selectedContactProperty()).hasNullValue();
 		
 		
-		MasterTableViewModel firstRow = viewModel.contactList().get(0);
+		MasterTableViewModel firstRow = viewModel.getContactList().get(0);
 		
 		viewModel.selectedTableRowProperty().set(firstRow);
 		
@@ -151,7 +151,7 @@ public class MasterViewModelTest {
 	 * verify what Contacts are shown in the Table.
 	 */
 	private List<String> getContactIdsInTable() {
-		return viewModel.contactList().stream().map(MasterTableViewModel::getId).collect(
+		return viewModel.getContactList().stream().map(MasterTableViewModel::getId).collect(
 				Collectors.toList());
 	}
 	
@@ -160,6 +160,6 @@ public class MasterViewModelTest {
 	 * {@link de.saxsys.mvvmfx.examples.contacts.model.Contact} from the contact list.
 	 */
 	private MasterTableViewModel findTableViewModelForContact(Contact contact) {
-		return viewModel.contactList().stream().filter(row -> row.getId().equals(contact.getId())).findFirst().get();
+		return viewModel.getContactList().stream().filter(row -> row.getId().equals(contact.getId())).findFirst().get();
 	}
 }

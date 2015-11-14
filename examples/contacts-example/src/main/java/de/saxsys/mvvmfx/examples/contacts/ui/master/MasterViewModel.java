@@ -83,7 +83,7 @@ public class MasterViewModel implements ViewModel {
 		}
 	}
 	
-	public ObservableList<MasterTableViewModel> contactList() {
+	public ObservableList<MasterTableViewModel> getContactList() {
 		return contacts;
 	}
 	
