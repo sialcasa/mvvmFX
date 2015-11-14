@@ -1,6 +1,5 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.addcontact;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import de.saxsys.mvvmfx.FxmlView;
@@ -16,9 +15,6 @@ public class AddContactDialog implements FxmlView<AddContactDialogViewModel> {
 	@FXML
 	private ContactDialogView contactDialogViewController;
 	
-	@Inject
-	private Stage primaryStage;
-	
 	@InjectViewModel
 	private AddContactDialogViewModel viewModel;
 	
@@ -26,8 +22,6 @@ public class AddContactDialog implements FxmlView<AddContactDialogViewModel> {
 	
 	
 	public void initialize() {
-		viewModel.setContactDialogViewModel(contactDialogViewController.getViewModel());
-		
 		viewModel.subscribe(AddContactDialogViewModel.CLOSE_DIALOG_NOTIFICATION, (key, payload) -> {
 			showDialog.close();
 		});

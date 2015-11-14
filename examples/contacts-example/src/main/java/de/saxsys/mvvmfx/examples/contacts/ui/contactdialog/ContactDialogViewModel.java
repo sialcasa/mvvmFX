@@ -31,6 +31,7 @@ public class ContactDialogViewModel implements ViewModel {
 		dialogScope.bothFormsValidProperty().bind(valid);
 		dialogScope.subscribe(ContactDialogScope.Notifications.RESET_DIALOG_PAGE.toString(),
 				(key, payload) -> resetDialogPage());
+		titleText.bind(dialogScope.dialogTitleProperty());
 	}
 	
 	public void okAction() {

@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.contacts.model.Repository;
-import de.saxsys.mvvmfx.examples.contacts.ui.contactdialog.ContactDialogViewModel;
 import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 
 public class EditContactDialogViewModel implements ViewModel {
@@ -24,16 +23,15 @@ public class EditContactDialogViewModel implements ViewModel {
 	@Inject
 	ResourceBundle defaultResourceBundle;
 	
-	public void setContactDialogViewModel(ContactDialogViewModel contactDialogViewModel) {
-		contactDialogViewModel.setOkAction(this::applyAction);
-		contactDialogViewModel.titleTextProperty().set(defaultResourceBundle.getString(TITLE_LABEL_KEY));
-		
-	}
-	
-	public void initialze() {
+	public void initialize() {
 		dialogScope.publish(ContactDialogScope.Notifications.RESET_FORMS.toString());
 		dialogScope.publish(ContactDialogScope.Notifications.RESET_DIALOG_PAGE.toString());
-		// dialogScope.setContactToEdit(null);
+		
+		dialogScope.subscribe(ContactDialogScope.Notifications.OK_BEFORE_COMMIT.toString(), (key, payload) -> {
+			applyAction();
+		});
+		
+		dialogScope.dialogTitleProperty().set(defaultResourceBundle.getString(TITLE_LABEL_KEY));
 	}
 	
 	public void applyAction() {

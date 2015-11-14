@@ -16,16 +16,16 @@ import javafx.collections.ObservableMap;
 
 public class AboutViewModel implements ViewModel {
 	
-	
-	private final ReadOnlyStringWrapper librariesLabelText = new ReadOnlyStringWrapper("");
-	
-	ObservableMap<String, String> libraryLinkMap = FXCollections.observableHashMap();
-	
 	@Inject
 	private HostServices hostServices;
 	
 	@Inject
 	private NotificationCenter notificationCenter;
+	
+	private final ReadOnlyStringWrapper librariesLabelText = new ReadOnlyStringWrapper("");
+	
+	// Package Private because of testing reasons
+	ObservableMap<String, String> libraryLinkMap = FXCollections.observableHashMap();
 	
 	/**
 	 * Sadly the {@link javafx.application.HostServices} class of JavaFX is <code>final</code> so we can't mock it in
