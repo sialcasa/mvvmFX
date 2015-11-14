@@ -13,38 +13,35 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="50.0" minWidth="100.0"
-			xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-			fx:controller="de.saxsys.mvvmfx.examples.contacts.ui.detail.DetailView">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="50.0" minWidth="100.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.examples.contacts.ui.detail.DetailView">
 	<children>
-		<VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-			  AnchorPane.topAnchor="0.0">
+		<VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<children>
 				<VBox maxHeight="1.7976931348623157E308" spacing="3.0" VBox.vgrow="ALWAYS">
 					<children>
-						<Label fx:id="nameLabel" style="-fx-text-fill: dimgrey; -fx-font-size: 20;" text="name"/>
-						<Label fx:id="birthdayLabel" text="birthday"/>
-						<Label fx:id="roleDepartmentLabel" text="role/department"/>
-						<Hyperlink fx:id="emailHyperlink" text="email address"/>
-						<Label fx:id="phoneLabel" text="phone number"/>
-						<Label fx:id="mobileLabel" text="mobile number"/>
-						<Separator prefWidth="200.0"/>
-						<Label fx:id="streetLabel" text="street"/>
-						<Label fx:id="cityPostalCodeLabel" text="city (postalcode)"/>
-						<Label fx:id="countrySubdivisionLabel" text="country / subdivision"/>
+						<Label fx:id="nameLabel" style="-fx-text-fill: dimgrey; -fx-font-size: 20;" text="name" />
+						<Label fx:id="birthdayLabel" text="birthday" />
+						<Label fx:id="roleDepartmentLabel" text="role/department" />
+						<Hyperlink fx:id="emailHyperlink" onAction="#mailAction" text="email address" />
+						<Label fx:id="phoneLabel" text="phone number" />
+						<Label fx:id="mobileLabel" text="mobile number" />
+						<Separator prefWidth="200.0" />
+						<Label fx:id="streetLabel" text="street" />
+						<Label fx:id="cityPostalCodeLabel" text="city (postalcode)" />
+						<Label fx:id="countrySubdivisionLabel" text="country / subdivision" />
 					</children>
 					<padding>
-						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
 					</padding>
 				</VBox>
-				<Separator/>
+				<Separator />
 				<HBox alignment="CENTER" spacing="5.0">
 					<children>
-						<Button fx:id="editButton" mnemonicParsing="false" onAction="#edit" text="%common.edit"/>
-						<Button fx:id="removeButton" mnemonicParsing="false" onAction="#remove" text="%common.remove"/>
+						<Button fx:id="editButton" mnemonicParsing="false" onAction="#editAction" text="%common.edit" />
+						<Button fx:id="removeButton" mnemonicParsing="false" onAction="#removeAction" text="%common.remove" />
 					</children>
 					<padding>
-						<Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+						<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
 					</padding>
 				</HBox>
 			</children>

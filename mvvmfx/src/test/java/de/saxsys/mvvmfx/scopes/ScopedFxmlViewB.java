@@ -16,6 +16,7 @@
 package de.saxsys.mvvmfx.scopes;
 
 import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 
 
 /**
@@ -24,6 +25,7 @@ import de.saxsys.mvvmfx.FxmlView;
  * @author alexander.casall
  */
 public class ScopedFxmlViewB implements FxmlView<ScopedViewModelB> {
-	
+	@InjectViewModel
+    public ScopedViewModelB viewModel;
 	
 }

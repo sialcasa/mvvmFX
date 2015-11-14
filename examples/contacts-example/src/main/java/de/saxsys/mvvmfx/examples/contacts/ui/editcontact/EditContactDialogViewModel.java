@@ -1,8 +1,10 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.editcontact;
 
+import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.contacts.model.Repository;
 import de.saxsys.mvvmfx.examples.contacts.ui.contactdialog.ContactDialogViewModel;
+import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -12,10 +14,13 @@ import java.util.ResourceBundle;
 public class EditContactDialogViewModel implements ViewModel {
 	static final String TITLE_LABEL_KEY = "dialog.editcontact.title";
 	
-	private BooleanProperty dialogOpen = new SimpleBooleanProperty();
+	private final BooleanProperty dialogOpen = new SimpleBooleanProperty();
 	
 	@Inject
 	Repository repository;
+	
+	@InjectScope
+	ContactDialogScope dialogScope;
 	
 	@Inject
 	ResourceBundle defaultResourceBundle;
@@ -31,7 +36,8 @@ public class EditContactDialogViewModel implements ViewModel {
 		
 		dialogOpen.addListener((observable, oldValue, newValue) -> {
 			if (!newValue) {
-				contactDialogViewModel.resetDialogPage();
+                dialogScope.publish(ContactDialogScope.Notifications.RESET_DIALOG_PAGE.toString());
+                dialogScope.setContactToEdit(null);
 			}
 		});
 	}
@@ -39,8 +45,10 @@ public class EditContactDialogViewModel implements ViewModel {
 	public void applyAction() {
 		if (contactDialogViewModel.validProperty().get()) {
 			
-			contactDialogViewModel.getAddressFormViewModel().commitChanges();
-			repository.save(contactDialogViewModel.getContactFormViewModel().getContact());
+			// contactDialogViewModel.getAddressFormViewModel().commitChanges();
+			dialogScope.publish(ContactDialogScope.Notifications.COMMIT.toString());
+			
+			repository.save(dialogScope.contactToEditProperty().get());
 			
 			dialogOpen.set(false);
 		}
@@ -48,10 +56,10 @@ public class EditContactDialogViewModel implements ViewModel {
 	
 	
 	public void openDialog(String contactId) {
-		contactDialogViewModel.resetForms();
+		dialogScope.publish(ContactDialogScope.Notifications.RESET_FORMS.toString());
+		
 		repository.findById(contactId).ifPresent(contact -> {
-			contactDialogViewModel.getContactFormViewModel().initWithContact(contact);
-			contactDialogViewModel.getAddressFormViewModel().initWithAddress(contact.getAddress());
+			dialogScope.setContactToEdit(contact);
 			dialogOpen.set(true);
 		});
 	}

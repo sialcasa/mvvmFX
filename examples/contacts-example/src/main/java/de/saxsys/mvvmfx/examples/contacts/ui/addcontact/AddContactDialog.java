@@ -1,9 +1,5 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.addcontact;
 
-import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.stage.Stage;
-
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -14,6 +10,9 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.examples.contacts.events.OpenAddContactDialogEvent;
 import de.saxsys.mvvmfx.examples.contacts.ui.contactdialog.ContactDialogView;
 import de.saxsys.mvvmfx.examples.contacts.util.DialogHelper;
+import javafx.fxml.FXML;
+import javafx.scene.Parent;
+import javafx.stage.Stage;
 
 @Singleton
 public class AddContactDialog implements FxmlView<AddContactDialogViewModel> {
@@ -22,14 +21,13 @@ public class AddContactDialog implements FxmlView<AddContactDialogViewModel> {
 	@FXML
 	private ContactDialogView contactDialogViewController;
 	
-	
 	@Inject
 	private Stage primaryStage;
 	
 	@InjectViewModel
 	private AddContactDialogViewModel viewModel;
 	
-	private Parent root;
+	private final Parent root;
 	
 	@Inject
 	AddContactDialog() {

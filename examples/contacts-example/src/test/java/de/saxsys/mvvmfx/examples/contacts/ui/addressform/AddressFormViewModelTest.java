@@ -1,27 +1,25 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.addressform;
 
-import static de.saxsys.mvvmfx.examples.contacts.ui.addressform.AddressFormViewModel.NOTHING_SELECTED_MARKER;
-import static de.saxsys.mvvmfx.examples.contacts.ui.addressform.AddressFormViewModel.SUBDIVISION_LABEL_KEY;
-import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.ListResourceBundle;
-import java.util.ResourceBundle;
+import de.saxsys.mvvmfx.examples.contacts.model.Country;
+import de.saxsys.mvvmfx.examples.contacts.model.CountrySelector;
+import de.saxsys.mvvmfx.examples.contacts.model.Subdivision;
+import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import de.saxsys.mvvmfx.examples.contacts.model.Country;
-import de.saxsys.mvvmfx.examples.contacts.model.CountrySelector;
-import de.saxsys.mvvmfx.examples.contacts.model.Subdivision;
+import java.util.ListResourceBundle;
+import java.util.ResourceBundle;
+
+import static de.saxsys.mvvmfx.examples.contacts.ui.addressform.AddressFormViewModel.NOTHING_SELECTED_MARKER;
+import static de.saxsys.mvvmfx.examples.contacts.ui.addressform.AddressFormViewModel.SUBDIVISION_LABEL_KEY;
+import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 
 public class AddressFormViewModelTest {
@@ -39,6 +37,8 @@ public class AddressFormViewModelTest {
 	
 	private ObservableList<Country> availableCountries = FXCollections.observableArrayList();
 	private ObservableList<Subdivision> subdivisions = FXCollections.observableArrayList();
+
+    private ContactDialogScope scope;
 	
 	@Before
 	public void setup() {
@@ -76,9 +76,13 @@ public class AddressFormViewModelTest {
 			subdivisions.clear();
 			return null;
 		}).when(countrySelector).setCountry(null);
-		
+
+
+
+        scope = new ContactDialogScope();
 		
 		viewModel = new AddressFormViewModel();
+        viewModel.dialogScope = scope;
 		viewModel.resourceBundle = resourceBundle;
 		viewModel.countrySelector = countrySelector;
 	}
@@ -101,7 +105,7 @@ public class AddressFormViewModelTest {
 	
 	@Test
 	public void testCountryAndFederalStateLists() throws Exception {
-		viewModel.init();
+		viewModel.initialize();
 		
 		assertThat(viewModel.countriesList()).hasSize(3).contains(NOTHING_SELECTED_MARKER, "Austria", "Germany");
 		assertThat(viewModel.countriesList().get(0)).isEqualTo(NOTHING_SELECTED_MARKER);
