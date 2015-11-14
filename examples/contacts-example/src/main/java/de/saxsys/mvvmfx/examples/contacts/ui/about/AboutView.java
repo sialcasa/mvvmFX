@@ -1,12 +1,5 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.about;
 
-import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.scene.control.Hyperlink;
-import javafx.stage.Stage;
-
-import javax.enterprise.event.Observes;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -15,15 +8,11 @@ import org.controlsfx.control.HyperlinkLabel;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-
-import de.saxsys.mvvmfx.examples.contacts.events.OpenAboutDialogEvent;
 import de.saxsys.mvvmfx.examples.contacts.util.DialogHelper;
-
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Hyperlink;
 import javafx.stage.Stage;
-
 
 @Singleton
 public class AboutView implements FxmlView<AboutViewModel> {
@@ -33,7 +22,7 @@ public class AboutView implements FxmlView<AboutViewModel> {
 	
 	@InjectViewModel
 	private AboutViewModel viewModel;
-
+	
 	@Inject
 	private Stage primaryStage;
 	

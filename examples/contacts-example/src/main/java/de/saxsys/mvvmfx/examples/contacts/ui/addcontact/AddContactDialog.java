@@ -7,7 +7,6 @@ import javax.inject.Singleton;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.examples.contacts.events.OpenAddContactDialogEvent;
 import de.saxsys.mvvmfx.examples.contacts.ui.contactdialog.ContactDialogView;
 import de.saxsys.mvvmfx.examples.contacts.util.DialogHelper;
 import javafx.fxml.FXML;

@@ -2,11 +2,11 @@ package de.saxsys.mvvmfx.examples.contacts.ui.menu;
 
 import javax.inject.Inject;
 
-import de.saxsys.mvvmfx.DialogHelper;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.examples.contacts.ui.about.AboutView;
+import de.saxsys.mvvmfx.examples.contacts.util.DialogHelper;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.MenuItem;
