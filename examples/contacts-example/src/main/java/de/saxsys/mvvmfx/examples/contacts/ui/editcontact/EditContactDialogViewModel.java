@@ -24,10 +24,9 @@ public class EditContactDialogViewModel implements ViewModel {
 	ResourceBundle defaultResourceBundle;
 	
 	public void initialize() {
-		dialogScope.publish(ContactDialogScope.Notifications.RESET_FORMS.toString());
-		dialogScope.publish(ContactDialogScope.Notifications.RESET_DIALOG_PAGE.toString());
-		
-		dialogScope.subscribe(ContactDialogScope.Notifications.OK_BEFORE_COMMIT.toString(), (key, payload) -> {
+		dialogScope.publish(ContactDialogScope.RESET_FORMS);
+		dialogScope.publish(ContactDialogScope.RESET_DIALOG_PAGE);
+		dialogScope.subscribe(ContactDialogScope.OK_BEFORE_COMMIT, (key, payload) -> {
 			applyAction();
 		});
 		
@@ -36,7 +35,7 @@ public class EditContactDialogViewModel implements ViewModel {
 	
 	public void applyAction() {
 		if (dialogScope.bothFormsValidProperty().get()) {
-			dialogScope.publish(ContactDialogScope.Notifications.COMMIT.toString());
+			dialogScope.publish(ContactDialogScope.COMMIT);
 			repository.save(dialogScope.contactToEditProperty().get());
 			publish(CLOSE_DIALOG_NOTIFICATION);
 		}

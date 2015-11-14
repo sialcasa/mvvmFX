@@ -64,8 +64,8 @@ public class ContactFormViewModel implements ViewModel {
 	}
 	
 	public void initialize() {
-		dialogScope.subscribe(ContactDialogScope.Notifications.RESET_FORMS.toString(), (key, payload) -> resetForm());
-		dialogScope.subscribe(ContactDialogScope.Notifications.COMMIT.toString(), (key, payload) -> commitChanges());
+		dialogScope.subscribe(ContactDialogScope.RESET_FORMS, (key, payload) -> resetForm());
+		dialogScope.subscribe(ContactDialogScope.COMMIT, (key, payload) -> commitChanges());
 		
 		ObjectProperty<Contact> contactToEditProperty = dialogScope.contactToEditProperty();
 		if (contactToEditProperty.get() != null) {

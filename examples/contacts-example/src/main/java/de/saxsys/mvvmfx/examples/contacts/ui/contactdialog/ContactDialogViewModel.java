@@ -25,13 +25,13 @@ public class ContactDialogViewModel implements ViewModel {
 		valid.bind(
 				Bindings.and(dialogScope.contactFormValidProperty(), dialogScope.addressFormValidProperty()));
 		dialogScope.bothFormsValidProperty().bind(valid);
-		dialogScope.subscribe(ContactDialogScope.Notifications.RESET_DIALOG_PAGE.toString(),
+		dialogScope.subscribe(ContactDialogScope.RESET_DIALOG_PAGE,
 				(key, payload) -> resetDialogPage());
 		titleText.bind(dialogScope.dialogTitleProperty());
 	}
 	
 	public void okAction() {
-		dialogScope.publish(ContactDialogScope.Notifications.OK_BEFORE_COMMIT.toString());
+		dialogScope.publish(ContactDialogScope.OK_BEFORE_COMMIT);
 	}
 	
 	public void previousAction() {

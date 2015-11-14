@@ -26,12 +26,12 @@ public class AddContactDialogViewModel implements ViewModel {
 	private ResourceBundle defaultResourceBundle;
 	
 	public void initialize() {
-		dialogScope.subscribe(ContactDialogScope.Notifications.OK_BEFORE_COMMIT.toString(), (key, payload) -> {
+		dialogScope.subscribe(ContactDialogScope.OK_BEFORE_COMMIT, (key, payload) -> {
 			addContactAction();
 		});
 		
 		dialogScope.dialogTitleProperty().set(defaultResourceBundle.getString(TITLE_LABEL_KEY));
-		dialogScope.publish(ContactDialogScope.Notifications.RESET_FORMS.toString());
+		dialogScope.publish(ContactDialogScope.RESET_FORMS);
 		Contact contact = new Contact();
 		dialogScope.setContactToEdit(contact);
 	}
@@ -39,13 +39,13 @@ public class AddContactDialogViewModel implements ViewModel {
 	public void addContactAction() {
 		if (dialogScope.isContactFormValid()) {
 			
-			dialogScope.publish(ContactDialogScope.Notifications.COMMIT.toString());
+			dialogScope.publish(ContactDialogScope.COMMIT);
 			
 			Contact contact = dialogScope.getContactToEdit();
 			
 			repository.save(contact);
 			
-			dialogScope.publish(ContactDialogScope.Notifications.RESET_DIALOG_PAGE.toString());
+			dialogScope.publish(ContactDialogScope.RESET_DIALOG_PAGE);
 			dialogScope.setContactToEdit(null);
 			
 			publish(CLOSE_DIALOG_NOTIFICATION);
