@@ -32,9 +32,10 @@ public class AddressFormViewModel implements ViewModel {
 	static final String NOTHING_SELECTED_MARKER = "---";
 	static final String SUBDIVISION_LABEL_KEY = "addressform.subdivision.label";
 	
-	private final ReadOnlyBooleanWrapper valid = new ReadOnlyBooleanWrapper(true);
 	private ObservableList<String> countries;
 	private ObservableList<String> subdivisions;
+	
+	private final ReadOnlyBooleanWrapper valid = new ReadOnlyBooleanWrapper(true);
 	private final ReadOnlyStringWrapper subdivisionLabel = new ReadOnlyStringWrapper();
 	
 	private final StringProperty street = new SimpleStringProperty();
@@ -150,29 +151,23 @@ public class AddressFormViewModel implements ViewModel {
 	
 	private void initCountryList() {
 		countryItemList = new ItemList<>(countrySelector.availableCountries(), Country::getName);
-		
 		ObservableList<String> mappedList = countryItemList.getTargetList();
 		
-		countries = createListWithNothingSelectedMarker(
-				mappedList);
-				
+		countries = createListWithNothingSelectedMarker(mappedList);
 		countries.addListener((ListChangeListener<String>) c -> selectedCountry.set(NOTHING_SELECTED_MARKER));
 	}
 	
 	
 	private void commitChanges() {
-		
 		address.setStreet(street.get());
 		address.setCity(city.get());
 		address.setPostalcode(postalCode.get());
-		
 		address.setCountry(country.get());
 		address.setSubdivision(subdivision.get());
 	}
 	
 	public void initWithAddress(Address address) {
 		this.address = address;
-		
 		street.set(address.getStreet());
 		city.set(address.getCity());
 		postalCode.set(address.getPostalcode());
