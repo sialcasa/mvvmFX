@@ -1,5 +1,8 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.master;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
 import de.saxsys.mvvmfx.examples.contacts.model.Contact;
 import de.saxsys.mvvmfx.examples.contacts.util.CentralClock;
 import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
@@ -8,13 +11,11 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.StringProperty;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-
 public class MasterTableViewModel {
+	
 	private final String id;
-	private IntegerProperty age = new SimpleIntegerProperty();
-	private ModelWrapper<Contact> contactWrapper = new ModelWrapper<>();
+	private final IntegerProperty age = new SimpleIntegerProperty();
+	private final ModelWrapper<Contact> contactWrapper = new ModelWrapper<>();
 	
 	public MasterTableViewModel(Contact contact) {
 		id = contact.getId();
@@ -25,7 +26,6 @@ public class MasterTableViewModel {
 			age.set((int) ChronoUnit.YEARS.between(contact.getBirthday(), LocalDate.now(CentralClock.getClock())));
 		}
 	}
-	
 	
 	@Override
 	public boolean equals(Object obj) {

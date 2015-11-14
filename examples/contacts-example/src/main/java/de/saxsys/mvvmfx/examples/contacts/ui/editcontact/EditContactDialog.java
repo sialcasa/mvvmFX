@@ -1,6 +1,5 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.editcontact;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import de.saxsys.mvvmfx.FxmlView;
@@ -15,16 +14,13 @@ public class EditContactDialog implements FxmlView<EditContactDialogViewModel> {
 	@FXML
 	private ContactDialogView contactDialogViewController;
 	
-	@Inject
-	private Stage primaryStage;
-	
 	@InjectViewModel
 	private EditContactDialogViewModel viewModel;
 	
 	private Stage showDialog;
 	
 	public void initialize() {
-		viewModel.subscribe(viewModel.CLOSE_DIALOG_NOTIFICATION, (key, payload) -> {
+		viewModel.subscribe(EditContactDialogViewModel.CLOSE_DIALOG_NOTIFICATION, (key, payload) -> {
 			showDialog.close();
 		});
 	}

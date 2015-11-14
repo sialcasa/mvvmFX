@@ -10,8 +10,8 @@ import de.saxsys.mvvmfx.examples.contacts.model.Repository;
 import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 
 public class EditContactDialogViewModel implements ViewModel {
-	static final String TITLE_LABEL_KEY = "dialog.editcontact.title";
 	
+	static final String TITLE_LABEL_KEY = "dialog.editcontact.title";
 	public static final String CLOSE_DIALOG_NOTIFICATION = "CLOSE_DIALOG_NOT";
 	
 	@Inject
@@ -36,12 +36,8 @@ public class EditContactDialogViewModel implements ViewModel {
 	
 	public void applyAction() {
 		if (dialogScope.bothFormsValidProperty().get()) {
-			
-			// contactDialogViewModel.getAddressFormViewModel().commitChanges();
 			dialogScope.publish(ContactDialogScope.Notifications.COMMIT.toString());
-			
 			repository.save(dialogScope.contactToEditProperty().get());
-			
 			publish(CLOSE_DIALOG_NOTIFICATION);
 		}
 	}
