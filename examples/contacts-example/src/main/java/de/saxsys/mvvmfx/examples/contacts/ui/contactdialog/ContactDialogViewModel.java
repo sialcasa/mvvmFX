@@ -18,12 +18,8 @@ public class ContactDialogViewModel implements ViewModel {
 	ContactDialogScope dialogScope;
 	
 	private final IntegerProperty dialogPage = new SimpleIntegerProperty(0);
-	
 	private final ReadOnlyBooleanWrapper valid = new ReadOnlyBooleanWrapper();
-	
 	private final StringProperty titleText = new SimpleStringProperty();
-	
-	private Runnable okAction;
 	
 	public void initialize() {
 		valid.bind(
@@ -35,13 +31,7 @@ public class ContactDialogViewModel implements ViewModel {
 	}
 	
 	public void okAction() {
-		if (okAction != null) {
-			okAction.run();
-		}
-	}
-	
-	public void setOkAction(Runnable okAction) {
-		this.okAction = okAction;
+		dialogScope.publish(ContactDialogScope.Notifications.OK_BEFORE_COMMIT.toString());
 	}
 	
 	public void previousAction() {

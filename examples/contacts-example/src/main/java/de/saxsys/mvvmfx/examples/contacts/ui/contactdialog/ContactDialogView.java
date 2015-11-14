@@ -36,7 +36,6 @@ public class ContactDialogView implements FxmlView<ContactDialogViewModel> {
 	@InjectViewModel
 	private ContactDialogViewModel viewModel;
 	
-	
 	public void initialize() {
 		ViewTuple<ContactFormView, ContactFormViewModel> contactFormTuple = FluentViewLoader
 				.fxmlView(ContactFormView.class).load();
