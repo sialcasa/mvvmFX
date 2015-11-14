@@ -53,7 +53,6 @@ public class ContactFormViewModel implements ViewModel {
 			return null;
 		});
 		
-		
 		formValidator.addValidators(
 				firstnameValidator,
 				lastnameValidator,
