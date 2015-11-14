@@ -39,7 +39,6 @@ public class AddContactDialogViewModel implements ViewModel {
 	public void addContactAction() {
 		if (dialogScope.isContactFormValid()) {
 			
-			// contactDialogViewModel.getAddressFormViewModel().commitChanges();
 			dialogScope.publish(ContactDialogScope.Notifications.COMMIT.toString());
 			
 			Contact contact = dialogScope.getContactToEdit();

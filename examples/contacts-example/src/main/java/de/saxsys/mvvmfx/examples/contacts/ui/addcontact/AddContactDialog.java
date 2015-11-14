@@ -4,16 +4,10 @@ import javax.inject.Singleton;
 
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.examples.contacts.ui.contactdialog.ContactDialogView;
-import javafx.fxml.FXML;
 import javafx.stage.Stage;
 
 @Singleton
 public class AddContactDialog implements FxmlView<AddContactDialogViewModel> {
-	
-	
-	@FXML
-	private ContactDialogView contactDialogViewController;
 	
 	@InjectViewModel
 	private AddContactDialogViewModel viewModel;
