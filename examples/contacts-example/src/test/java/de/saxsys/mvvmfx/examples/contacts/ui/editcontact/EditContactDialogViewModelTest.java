@@ -53,7 +53,6 @@ public class EditContactDialogViewModelTest {
 		
 		when(contactDialogViewModel.titleTextProperty()).thenReturn(new SimpleStringProperty());
 		
-		viewModel.setContactDialogViewModel(contactDialogViewModel);
 	}
 	
 }
