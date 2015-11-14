@@ -15,6 +15,8 @@ public class ContactDialogScope implements Scope {
 	
 	private final BooleanProperty contactFormValid = new SimpleBooleanProperty();
 	private final BooleanProperty addressFormValid = new SimpleBooleanProperty();
+	private final BooleanProperty bothFormsValid = new SimpleBooleanProperty();
+	
 	private final ObjectProperty<Contact> contactToEdit = new SimpleObjectProperty<>(this, "contactToEdit");
 	
 	public BooleanProperty contactFormValidProperty() {
@@ -54,6 +56,21 @@ public class ContactDialogScope implements Scope {
 	public void setContactToEdit(final Contact contactToEdit) {
 		this.contactToEditProperty().set(contactToEdit);
 	}
+	
+	public final BooleanProperty bothFormsValidProperty() {
+		return this.bothFormsValid;
+	}
+	
+	
+	public final boolean isBothFormsValid() {
+		return this.bothFormsValidProperty().get();
+	}
+	
+	
+	public final void setBothFormsValid(final boolean bothFormsValid) {
+		this.bothFormsValidProperty().set(bothFormsValid);
+	}
+	
 	
 	
 }

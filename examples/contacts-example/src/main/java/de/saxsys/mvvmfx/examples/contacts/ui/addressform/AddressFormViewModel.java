@@ -59,8 +59,6 @@ public class AddressFormViewModel implements ViewModel {
 	@InjectScope
 	ContactDialogScope dialogScope;
 	
-	
-	
 	// Don't inline this field. It's needed to prevent the list mapping from being garbage collected.
 	private ItemList<Country> countryItemList;
 	// Don't inline this field. It's needed to prevent the list mapping from being garbage collected.
@@ -74,6 +72,7 @@ public class AddressFormViewModel implements ViewModel {
 		dialogScope.subscribe(ContactDialogScope.Notifications.COMMIT.toString(), (key, payload) -> commitChanges());
 		
 		ObjectProperty<Contact> contactToEditProperty = dialogScope.contactToEditProperty();
+		
 		if (contactToEditProperty.get() != null) {
 			initWithAddress(contactToEditProperty.get().getAddress());
 		}

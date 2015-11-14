@@ -6,15 +6,15 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
+import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.examples.contacts.events.OpenEditContactDialogEvent;
 import de.saxsys.mvvmfx.examples.contacts.model.Address;
 import de.saxsys.mvvmfx.examples.contacts.model.Contact;
 import de.saxsys.mvvmfx.examples.contacts.model.Repository;
 import de.saxsys.mvvmfx.examples.contacts.ui.master.MasterViewModel;
+import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
@@ -27,6 +27,8 @@ import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 
 public class DetailViewModel implements ViewModel {
+	
+	public static final String OPEN_EDIT_CONTACT_DIALOG = "open_edit_contact";
 	
 	private static final DateTimeFormatter BIRTHDAY_FORMATTER = DateTimeFormatter.ISO_DATE;
 	
@@ -47,8 +49,6 @@ public class DetailViewModel implements ViewModel {
 	private DelegateCommand removeCommand;
 	private DelegateCommand emailLinkCommand;
 	
-	@Inject
-	private Event<OpenEditContactDialogEvent> openEditEvent;
 	
 	@Inject
 	MasterViewModel masterViewModel;
@@ -58,6 +58,9 @@ public class DetailViewModel implements ViewModel {
 	
 	@Inject
 	Repository repository;
+	
+	@InjectScope
+	ContactDialogScope scope;
 	
 	@PostConstruct
 	void init() {
@@ -70,7 +73,8 @@ public class DetailViewModel implements ViewModel {
 			protected void action() throws Exception {
 				Contact selectedContact = masterViewModel.selectedContactProperty().get();
 				if (selectedContact != null) {
-					openEditEvent.fire(new OpenEditContactDialogEvent(selectedContact.getId()));
+					scope.setContactToEdit(selectedContact);
+					publish(OPEN_EDIT_CONTACT_DIALOG);
 				}
 			}
 		}, masterViewModel.selectedContactProperty().isNotNull());
