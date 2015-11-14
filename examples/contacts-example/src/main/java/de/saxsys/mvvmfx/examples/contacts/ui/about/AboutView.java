@@ -40,7 +40,7 @@ public class AboutView implements FxmlView<AboutViewModel> {
 	public void openAuthorPage() {
 		Parent view = FluentViewLoader.fxmlView(AboutAuthorView.class)
 				.load().getView();
-		DialogHelper.showDialog(view, primaryStage);
+		DialogHelper.showDialog(view, primaryStage, "/contacts.css");
 	}
 	
 }

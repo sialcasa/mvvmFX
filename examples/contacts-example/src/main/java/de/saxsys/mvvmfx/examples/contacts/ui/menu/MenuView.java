@@ -41,6 +41,6 @@ public class MenuView implements FxmlView<MenuViewModel> {
 	public void about() {
 		Parent view = FluentViewLoader.fxmlView(AboutView.class)
 				.load().getView();
-		DialogHelper.showDialog(view, primaryStage);
+		DialogHelper.showDialog(view, primaryStage, "/contacts.css");
 	}
 }

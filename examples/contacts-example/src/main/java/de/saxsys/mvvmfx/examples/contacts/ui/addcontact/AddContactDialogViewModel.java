@@ -1,5 +1,9 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.addcontact;
 
+import java.util.ResourceBundle;
+
+import javax.inject.Inject;
+
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.contacts.model.Contact;
@@ -9,14 +13,13 @@ import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-import javax.inject.Inject;
-import java.util.ResourceBundle;
-
 public class AddContactDialogViewModel implements ViewModel {
+	
+	public static final String CLOSE_DIALOG_NOTIFICATION = "closeDialog";
+	
 	static final String TITLE_LABEL_KEY = "dialog.addcontact.title";
 	
 	private final BooleanProperty dialogOpen = new SimpleBooleanProperty();
-	
 	@Inject
 	private Repository repository;
 	
@@ -31,9 +34,13 @@ public class AddContactDialogViewModel implements ViewModel {
 			if (!newV) {
 				// contactDialogViewModel.resetDialogPage();
 				dialogScope.publish(ContactDialogScope.Notifications.RESET_DIALOG_PAGE.toString());
-                dialogScope.setContactToEdit(null);
+				dialogScope.setContactToEdit(null);
 			}
 		});
+	}
+	
+	public void initialize() {
+		openDialog();
 	}
 	
 	
@@ -53,21 +60,16 @@ public class AddContactDialogViewModel implements ViewModel {
 			
 			repository.save(contact);
 			
-			dialogOpen.set(false);
+			publish(CLOSE_DIALOG_NOTIFICATION);
 		}
 	}
 	
 	public void openDialog() {
-		// contactDialogViewModel.resetForms();
 		dialogScope.publish(ContactDialogScope.Notifications.RESET_FORMS.toString());
 		
 		Contact contact = new Contact();
 		dialogScope.setContactToEdit(contact);
-		this.dialogOpenProperty().set(true);
 	}
 	
 	
-	public BooleanProperty dialogOpenProperty() {
-		return dialogOpen;
-	}
 }

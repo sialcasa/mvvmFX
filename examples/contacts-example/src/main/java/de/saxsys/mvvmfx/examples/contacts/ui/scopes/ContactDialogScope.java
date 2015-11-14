@@ -13,7 +13,6 @@ public class ContactDialogScope implements Scope {
 		RESET_DIALOG_PAGE, COMMIT, RESET_FORMS;
 	}
 	
-	
 	private final BooleanProperty contactFormValid = new SimpleBooleanProperty();
 	private final BooleanProperty addressFormValid = new SimpleBooleanProperty();
 	private final ObjectProperty<Contact> contactToEdit = new SimpleObjectProperty<>(this, "contactToEdit");

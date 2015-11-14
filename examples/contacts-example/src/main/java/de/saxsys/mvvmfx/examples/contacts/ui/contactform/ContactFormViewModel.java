@@ -1,5 +1,7 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.contactform;
 
+import java.time.LocalDate;
+
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.contacts.model.Contact;
@@ -8,11 +10,14 @@ import de.saxsys.mvvmfx.examples.contacts.ui.validators.BirthdayValidator;
 import de.saxsys.mvvmfx.examples.contacts.ui.validators.EmailValidator;
 import de.saxsys.mvvmfx.examples.contacts.ui.validators.PhoneValidator;
 import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
-import de.saxsys.mvvmfx.utils.validation.*;
+import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
+import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import de.saxsys.mvvmfx.utils.validation.Validator;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
-
-import java.time.LocalDate;
 
 public class ContactFormViewModel implements ViewModel {
 	private final ModelWrapper<Contact> contactWrapper = new ModelWrapper<>();
@@ -57,39 +62,44 @@ public class ContactFormViewModel implements ViewModel {
 				phoneValidator,
 				mobileValidator);
 	}
-
-    public void initialize() {
-        dialogScope.subscribe(ContactDialogScope.Notifications.RESET_FORMS.toString(), (key, payload) -> resetForm());
-        dialogScope.subscribe(ContactDialogScope.Notifications.COMMIT.toString(), (key, payload) -> commitChanges());
-
-        dialogScope.contactToEditProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null) {
-                initWithContact(newValue);
-            }
-        });
-
-
-        dialogScope.contactFormValidProperty().bind(formValidator.getValidationStatus().validProperty());
-    }
-
-
+	
+	public void initialize() {
+		dialogScope.subscribe(ContactDialogScope.Notifications.RESET_FORMS.toString(), (key, payload) -> resetForm());
+		dialogScope.subscribe(ContactDialogScope.Notifications.COMMIT.toString(), (key, payload) -> commitChanges());
+		
+		ObjectProperty<Contact> contactToEditProperty = dialogScope.contactToEditProperty();
+		if (contactToEditProperty.get() != null) {
+			initWithContact(contactToEditProperty.get());
+		}
+		
+		contactToEditProperty.addListener((observable, oldValue, newValue) -> {
+			if (newValue != null) {
+				initWithContact(newValue);
+			}
+		});
+		
+		
+		dialogScope.contactFormValidProperty().bind(formValidator.getValidationStatus().validProperty());
+	}
+	
+	
 	private void resetForm() {
 		contactWrapper.reset();
-    }
+	}
 	
 	private void initWithContact(Contact contact) {
 		this.contactWrapper.set(contact);
 		this.contactWrapper.reload();
 	}
-
-    private void commitChanges() {
-        if (contactWrapper.get() == null) {
-            contactWrapper.set(new Contact());
-        }
-
-        contactWrapper.commit();
-    }
-
+	
+	private void commitChanges() {
+		if (contactWrapper.get() == null) {
+			contactWrapper.set(new Contact());
+		}
+		
+		contactWrapper.commit();
+	}
+	
 	public ValidationStatus firstnameValidation() {
 		return firstnameValidator.getValidationStatus();
 	}
