@@ -22,33 +22,78 @@ With a dialog you can add new contacts or edit existing ones.
 
 ### Highlights and interesting parts
 
-#### Dialogs opened with CDI-Events
+#### Usage of Scopes
 
-- The application uses CDI-Events to decouple the *add*/*edit* dialogs from the places where they are opened. Instead, when a
- button is clicked to open a dialog, an CDI-Event is fired. The dialog reacts to this event and will open up itself.
+[mvvmFX Scopes](https://github.com/sialcasa/mvvmFX/wiki/Scopes) are used for two scenarios in this example:
 
-[ToolbarViewModel.java:](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/toolbar/ToolbarViewModel.java)
+* Communication between the Master and the Detail View
+* Dialog to add or edit a contact
 
-```java
-@Inject
-private Event<OpenAddContactDialogEvent> openPopupEvent;
+##### Scope for Master Detail View
 
-public void addNewContactAction(){
-    openPopupEvent.fire(new OpenAddContactDialogEvent());
+
+[MasterDetailScope.java](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/scopes/MasterDetailScope.java)
+
+[MasterViewModel.java](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/master/MasterViewModel.java)
+
+[DetailViewModel.java](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/detail/DetailViewModel.java)
+
+```Java
+public class MasterDetailScope implements Scope {
+	private final ObjectProperty<Contact> selectedContact = new SimpleObjectProperty<>(this, "selectedContact");
 }
 ```
 
-[AddContactDialog.java:](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/addcontact/AddContactDialog.java)
-
-```java
-public class AddContactDialog implements FxmlView<AddContactDialogViewModel> {
-    ...
-
-    public void open(@Observes OpenAddContactDialogEvent event) {
-      viewModel.openDialog();
-    }
+```Java
+public class MasterViewModel implements ViewModel {
+	@InjectScope
+	MasterDetailScope mdScope;
+	
+	public void initialize() {
+		mdScope.selectedContactProperty().bind(selectedContact);
+	}
 }
 ```
+
+```Java
+public class MasterDetailScope implements Scope {
+	private final ObjectProperty<Contact> selectedContact = new SimpleObjectProperty<>(this, "selectedContact");
+}
+```
+
+
+##### Scope for Dialog Wizard
+
+In this case the scope is used to handle the state of a multi paged wizard dialog.
+
+###### Classes that are opening the dialogs
+
+[ToolbarView.java](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/toolbar/ToolbarView)
+
+[DetailView](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/detail/DetailView.java)
+
+First usage of the scope in [DetailViewModel.java](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/detail/DetailViewModel), where the person object which should get edited is set.
+
+
+
+###### Dialog Base
+
+[ContactDialogViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/contactdialog/ContactDialogViewModel.java)
+
+###### Specific Dialog Implementation
+
+[EditContactDialogViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/editcontact/EditContactDialogViewModel.java)
+
+[AddContactDialogViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/addcontact/AddContactDialogViewModel.java)
+
+###### Dialog pages
+
+[ContactFormViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/contactform/ContactFormViewModel.java)
+
+[AddressFormViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/addressform/AddressFormViewModel.java)
+
+
+
 
 #### ResourceBundles and I18N
 
