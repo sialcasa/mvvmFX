@@ -21,6 +21,7 @@ import javafx.application.HostServices;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -61,31 +62,31 @@ public class DetailViewModel implements ViewModel {
 	ContactDialogScope dialogscope;
 	
 	public void initialize() {
-		ReadOnlyObjectProperty<Contact> contactProperty = mdScope.selectedContactProperty();
+		ReadOnlyObjectProperty<Contact> contactProperty = getSelectedContactPropertyFromScope();
 		
 		createBindingsForLabels(contactProperty);
 		
 		editCommand = new DelegateCommand(() -> new Action() {
 			@Override
 			protected void action() throws Exception {
-				Contact selectedContact = mdScope.selectedContactProperty().get();
+				Contact selectedContact = getSelectedContactFromScope();
 				if (selectedContact != null) {
 					dialogscope.setContactToEdit(selectedContact);
 					publish(OPEN_EDIT_CONTACT_DIALOG);
 				}
 			}
-		}, mdScope.selectedContactProperty().isNotNull());
+		}, getSelectedContactPropertyFromScope().isNotNull());
 		
 		removeCommand = new DelegateCommand(() -> new Action() {
 			@Override
 			protected void action() throws Exception {
-				Contact selectedContact = mdScope.selectedContactProperty().get();
+				Contact selectedContact = getSelectedContactFromScope();
 				if (selectedContact != null) {
-					repository.delete(mdScope.selectedContactProperty().get());
+					repository.delete(getSelectedContactFromScope());
 				}
 			}
 			
-		}, mdScope.selectedContactProperty().isNotNull());
+		}, getSelectedContactPropertyFromScope().isNotNull());
 		
 		emailLinkCommand = new DelegateCommand(() -> new Action() {
 			@Override
@@ -252,5 +253,13 @@ public class DetailViewModel implements ViewModel {
 			return "";
 		}
 		return string + append;
+	}
+	
+	private Contact getSelectedContactFromScope() {
+		return getSelectedContactPropertyFromScope().get();
+	}
+	
+	private ObjectProperty<Contact> getSelectedContactPropertyFromScope() {
+		return mdScope.selectedContactProperty();
 	}
 }
