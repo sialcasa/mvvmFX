@@ -15,7 +15,7 @@ public class MasterView implements FxmlView<MasterViewModel> {
 	private MasterViewModel viewModel;
 	
 	public void initialize() {
-		contactTable.setItems(viewModel.contactList());
+		contactTable.setItems(viewModel.getContactList());
 		
 		viewModel.selectedTableRowProperty().bind(contactTable.getSelectionModel().selectedItemProperty());
 		

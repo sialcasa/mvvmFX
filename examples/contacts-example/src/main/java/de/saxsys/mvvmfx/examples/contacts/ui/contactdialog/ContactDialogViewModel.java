@@ -4,7 +4,12 @@ import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableBooleanValue;
 
 public class ContactDialogViewModel implements ViewModel {
@@ -13,28 +18,20 @@ public class ContactDialogViewModel implements ViewModel {
 	ContactDialogScope dialogScope;
 	
 	private final IntegerProperty dialogPage = new SimpleIntegerProperty(0);
-	
 	private final ReadOnlyBooleanWrapper valid = new ReadOnlyBooleanWrapper();
-	
 	private final StringProperty titleText = new SimpleStringProperty();
 	
-	private Runnable okAction;
-
 	public void initialize() {
-        valid.bind(
-                Bindings.and(dialogScope.contactFormValidProperty(), dialogScope.addressFormValidProperty()));
-		dialogScope.subscribe(ContactDialogScope.Notifications.RESET_DIALOG_PAGE.toString(),
+		valid.bind(
+				Bindings.and(dialogScope.contactFormValidProperty(), dialogScope.addressFormValidProperty()));
+		dialogScope.bothFormsValidProperty().bind(valid);
+		dialogScope.subscribe(ContactDialogScope.RESET_DIALOG_PAGE,
 				(key, payload) -> resetDialogPage());
+		titleText.bind(dialogScope.dialogTitleProperty());
 	}
 	
 	public void okAction() {
-		if (okAction != null) {
-			okAction.run();
-		}
-	}
-	
-	public void setOkAction(Runnable okAction) {
-		this.okAction = okAction;
+		dialogScope.publish(ContactDialogScope.OK_BEFORE_COMMIT);
 	}
 	
 	public void previousAction() {
@@ -59,7 +56,7 @@ public class ContactDialogViewModel implements ViewModel {
 	
 	
 	public ObservableBooleanValue okButtonDisabledProperty() {
-        return valid.not();
+		return valid.not();
 	}
 	
 	public ObservableBooleanValue okButtonVisibleProperty() {

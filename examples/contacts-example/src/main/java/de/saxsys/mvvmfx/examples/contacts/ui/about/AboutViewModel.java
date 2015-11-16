@@ -2,35 +2,30 @@ package de.saxsys.mvvmfx.examples.contacts.ui.about;
 
 import java.util.function.Consumer;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import javafx.application.HostServices;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.examples.contacts.events.OpenAuthorPageEvent;
-
 public class AboutViewModel implements ViewModel {
-	
-	private BooleanProperty dialogOpen = new SimpleBooleanProperty();
-	
-	private ReadOnlyStringWrapper librariesLabelText = new ReadOnlyStringWrapper("");
-	
-	ObservableMap<String, String> libraryLinkMap = FXCollections.observableHashMap();
-	
-	@Inject
-	private Event<OpenAuthorPageEvent> openAuthorPageEvent;
 	
 	@Inject
 	private HostServices hostServices;
+	
+	@Inject
+	private NotificationCenter notificationCenter;
+	
+	private final ReadOnlyStringWrapper librariesLabelText = new ReadOnlyStringWrapper("");
+	
+	// Package Private because of testing reasons
+	ObservableMap<String, String> libraryLinkMap = FXCollections.observableHashMap();
 	
 	/**
 	 * Sadly the {@link javafx.application.HostServices} class of JavaFX is <code>final</code> so we can't mock it in
@@ -39,6 +34,7 @@ public class AboutViewModel implements ViewModel {
 	Consumer<String> onLinkClickedHandler;
 	
 	public AboutViewModel() {
+		
 		libraryLinkMap.addListener((MapChangeListener<String, String>) change -> {
 			StringBuilder labelText = new StringBuilder();
 			
@@ -64,9 +60,6 @@ public class AboutViewModel implements ViewModel {
 		libraryLinkMap.put("JFX-Testrunner", "https://github.com/sialcasa/jfx-testrunner");
 	}
 	
-	public void openDialog() {
-		dialogOpen.set(true);
-	}
 	
 	public void onLinkClicked(String linkText) {
 		if (libraryLinkMap.containsKey(linkText)) {
@@ -74,15 +67,8 @@ public class AboutViewModel implements ViewModel {
 		}
 	}
 	
-	public BooleanProperty dialogOpenProperty() {
-		return dialogOpen;
-	}
-	
 	public ReadOnlyStringProperty librariesLabelTextProperty() {
 		return librariesLabelText.getReadOnlyProperty();
 	}
 	
-	public void openAuthorPage() {
-		openAuthorPageEvent.fire(new OpenAuthorPageEvent());
-	}
 }

@@ -59,4 +59,21 @@ public class DialogHelper {
 		// we want to set the property to false
 		dialogStage.setOnCloseRequest(event -> openProperty.set(false));
 	}
+	
+	public static Stage showDialog(Parent view, Stage parentStage, String... sceneStyleSheets) {
+		final Stage dialogStage = new Stage(StageStyle.UTILITY);
+		dialogStage.initOwner(parentStage);
+		dialogStage.initModality(Modality.APPLICATION_MODAL);
+		if (dialogStage.getScene() == null) {
+			// ... we create a new scene and register it in the stage.
+			Scene dialogScene = new Scene(view);
+			dialogScene.getStylesheets().addAll(sceneStyleSheets);
+			dialogStage.setScene(dialogScene);
+			
+			dialogStage.sizeToScene();
+			dialogStage.show();
+			return dialogStage;
+		}
+		return null;
+	}
 }
