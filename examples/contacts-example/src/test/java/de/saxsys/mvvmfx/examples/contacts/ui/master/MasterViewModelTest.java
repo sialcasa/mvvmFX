@@ -19,12 +19,14 @@ import de.saxsys.mvvmfx.examples.contacts.model.Contact;
 import de.saxsys.mvvmfx.examples.contacts.model.ContactFactory;
 import de.saxsys.mvvmfx.examples.contacts.model.InmemoryRepository;
 import de.saxsys.mvvmfx.examples.contacts.model.Repository;
+import de.saxsys.mvvmfx.examples.contacts.ui.scopes.MasterDetailScope;
 
 @SuppressWarnings("unchecked")
 public class MasterViewModelTest {
 	
 	
 	private MasterViewModel viewModel;
+	private MasterDetailScope mdScope;
 	
 	private Repository repository;
 	private Contact contact1;
@@ -37,6 +39,9 @@ public class MasterViewModelTest {
 	public void setup() {
 		repository = new InmemoryRepository();
 		viewModel = new MasterViewModel();
+		mdScope = new MasterDetailScope();
+		
+		viewModel.mdScope = mdScope;
 		viewModel.repository = repository;
 		
 		contact1 = ContactFactory.createRandomContact();
@@ -54,24 +59,24 @@ public class MasterViewModelTest {
 	
 	@Test
 	public void testSelectContact() {
-		viewModel.init();
+		viewModel.initialize();
 		
 		
 		assertThat(viewModel.selectedTableRowProperty()).hasNullValue();
-		assertThat(viewModel.selectedContactProperty()).hasNullValue();
+		assertThat(mdScope.selectedContactProperty()).hasNullValue();
 		
 		
 		MasterTableViewModel firstRow = viewModel.getContactList().get(0);
 		
 		viewModel.selectedTableRowProperty().set(firstRow);
 		
-		assertThat(viewModel.selectedContactProperty()).hasNotNullValue();
-		assertThat(viewModel.selectedContactProperty().get().getId()).isEqualTo(firstRow.getId());
+		assertThat(mdScope.selectedContactProperty()).hasNotNullValue();
+		assertThat(mdScope.selectedContactProperty().get().getId()).isEqualTo(firstRow.getId());
 		
 		
 		viewModel.selectedTableRowProperty().set(null);
 		
-		assertThat(viewModel.selectedContactProperty()).hasNullValue();
+		assertThat(mdScope.selectedContactProperty()).hasNullValue();
 	}
 	
 	
@@ -80,7 +85,7 @@ public class MasterViewModelTest {
 	 */
 	@Test
 	public void testUpdateContactListNoSelection() {
-		viewModel.init();
+		viewModel.initialize();
 		viewModel.selectedTableRowProperty().set(null);
 		
 		assertThat(getContactIdsInTable()).contains(contact1.getId(), contact2.getId(), contact3.getId());
@@ -96,7 +101,7 @@ public class MasterViewModelTest {
 	 */
 	@Test
 	public void testUpdateContactListSelectionPersistsAfterUpdate() {
-		viewModel.init();
+		viewModel.initialize();
 		assertThat(getContactIdsInTable()).contains(contact1.getId(), contact2.getId(), contact3.getId());
 		
 		MasterTableViewModel row2 = findTableViewModelForContact(contact2);
@@ -111,7 +116,7 @@ public class MasterViewModelTest {
 		
 		assertThat(getContactIdsInTable()).contains(contact2.getId(), contact3.getId())
 				.doesNotContain(contact1.getId());
-		
+				
 		verify(onSelectConsumer).accept(row2);
 	}
 	
@@ -121,7 +126,7 @@ public class MasterViewModelTest {
 	 */
 	@Test
 	public void testUpdateContactListNoSelectionWhenSelectedItemIsRemoved() {
-		viewModel.init();
+		viewModel.initialize();
 		MasterTableViewModel row2 = findTableViewModelForContact(contact2);
 		
 		viewModel.selectedTableRowProperty().set(row2);
@@ -135,7 +140,7 @@ public class MasterViewModelTest {
 		
 		assertThat(getContactIdsInTable()).contains(contact1.getId(), contact3.getId())
 				.doesNotContain(contact2.getId());
-		
+				
 		verify(onSelectConsumer).accept(null);
 	}
 	

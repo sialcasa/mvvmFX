@@ -5,7 +5,6 @@ import static eu.lestard.advanced_bindings.api.ObjectBindings.map;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import de.saxsys.mvvmfx.InjectScope;
@@ -13,8 +12,8 @@ import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.contacts.model.Address;
 import de.saxsys.mvvmfx.examples.contacts.model.Contact;
 import de.saxsys.mvvmfx.examples.contacts.model.Repository;
-import de.saxsys.mvvmfx.examples.contacts.ui.master.MasterViewModel;
 import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
+import de.saxsys.mvvmfx.examples.contacts.ui.scopes.MasterDetailScope;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
@@ -49,10 +48,6 @@ public class DetailViewModel implements ViewModel {
 	private DelegateCommand removeCommand;
 	private DelegateCommand emailLinkCommand;
 	
-	
-	@Inject
-	MasterViewModel masterViewModel;
-	
 	@Inject
 	HostServices hostServices;
 	
@@ -60,35 +55,37 @@ public class DetailViewModel implements ViewModel {
 	Repository repository;
 	
 	@InjectScope
-	ContactDialogScope scope;
+	MasterDetailScope mdScope;
 	
-	@PostConstruct
-	void init() {
-		ReadOnlyObjectProperty<Contact> contactProperty = masterViewModel.selectedContactProperty();
+	@InjectScope
+	ContactDialogScope dialogscope;
+	
+	public void initialize() {
+		ReadOnlyObjectProperty<Contact> contactProperty = mdScope.selectedContactProperty();
 		
 		createBindingsForLabels(contactProperty);
 		
 		editCommand = new DelegateCommand(() -> new Action() {
 			@Override
 			protected void action() throws Exception {
-				Contact selectedContact = masterViewModel.selectedContactProperty().get();
+				Contact selectedContact = mdScope.selectedContactProperty().get();
 				if (selectedContact != null) {
-					scope.setContactToEdit(selectedContact);
+					dialogscope.setContactToEdit(selectedContact);
 					publish(OPEN_EDIT_CONTACT_DIALOG);
 				}
 			}
-		}, masterViewModel.selectedContactProperty().isNotNull());
+		}, mdScope.selectedContactProperty().isNotNull());
 		
 		removeCommand = new DelegateCommand(() -> new Action() {
 			@Override
 			protected void action() throws Exception {
-				Contact selectedContact = masterViewModel.selectedContactProperty().get();
+				Contact selectedContact = mdScope.selectedContactProperty().get();
 				if (selectedContact != null) {
-					repository.delete(masterViewModel.selectedContactProperty().get());
+					repository.delete(mdScope.selectedContactProperty().get());
 				}
 			}
 			
-		}, masterViewModel.selectedContactProperty().isNotNull());
+		}, mdScope.selectedContactProperty().isNotNull());
 		
 		emailLinkCommand = new DelegateCommand(() -> new Action() {
 			@Override

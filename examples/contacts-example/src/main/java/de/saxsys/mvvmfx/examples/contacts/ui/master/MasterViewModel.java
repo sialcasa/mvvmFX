@@ -4,28 +4,25 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.contacts.events.ContactsUpdatedEvent;
 import de.saxsys.mvvmfx.examples.contacts.model.Contact;
 import de.saxsys.mvvmfx.examples.contacts.model.Repository;
+import de.saxsys.mvvmfx.examples.contacts.ui.scopes.MasterDetailScope;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-
-@ApplicationScoped
 public class MasterViewModel implements ViewModel {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(MasterViewModel.class);
@@ -41,9 +38,14 @@ public class MasterViewModel implements ViewModel {
 	@Inject
 	Repository repository;
 	
-	@PostConstruct
-	public void init() {
+	@InjectScope
+	MasterDetailScope mdScope;
+	
+	
+	public void initialize() {
 		updateContactList();
+		
+		mdScope.selectedContactProperty().bind(selectedContact);
 		
 		selectedContact.bind(Bindings.createObjectBinding(() -> {
 			if (selectedTableRow.get() == null) {
@@ -96,14 +98,7 @@ public class MasterViewModel implements ViewModel {
 		return selectedTableRow;
 	}
 	
-	public ReadOnlyObjectProperty<Contact> selectedContactProperty() {
-		return this.selectedContact.getReadOnlyProperty();
-	}
 	
-	
-	public Contact getSelectedContact() {
-		return this.selectedContactProperty().get();
-	}
 	
 	
 }
