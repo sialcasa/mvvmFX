@@ -38,7 +38,7 @@ Here we make bug fixes for the current stable release.
 
 Here we develop new features. This release is unstable and shouldn't be used in production. 
 
-```
+```xml
 <dependency>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx</artifactId>
