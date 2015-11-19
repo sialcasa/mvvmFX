@@ -10,12 +10,8 @@ public class InterceptedView implements FxmlView<InterceptedViewModel> {
     @InjectViewModel
     private InterceptedViewModel viewModel;
 
-    public InterceptedView() {
-        System.out.println("new InterceptedView()");
-    }
 
     public void initialize() {
-        System.out.println("init");
         wasInitCalled = true;
         vmWasInjected = viewModel != null;
     }

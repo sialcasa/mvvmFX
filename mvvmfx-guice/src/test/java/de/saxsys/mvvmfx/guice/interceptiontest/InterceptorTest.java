@@ -1,7 +1,6 @@
 package de.saxsys.mvvmfx.guice.interceptiontest;
 
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,7 +12,7 @@ public class InterceptorTest {
 
 
     @Test
-    @Ignore("until fixed")
+//    @Ignore("until fixed")
     public void test() {
 
         InterceptedView.vmWasInjected = false;
@@ -22,6 +21,9 @@ public class InterceptorTest {
 
 
         InterceptorTestApp.main();
+
+        final InterceptedView codeBehind = InterceptorTestApp.viewTuple.getCodeBehind();
+
 
         assertThat(TestInterceptor.wasIntercepted).isTrue();
 
