@@ -9,8 +9,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -77,24 +75,11 @@ public class ViewLoaderReflectionUtils {
 	 * @return a list of fields.
 	 */
 	public static List<Field> getViewModelFields(Class<? extends View> viewType) {
-        return getFieldsFromClassHierarchy(viewType).stream()
+        return ReflectionUtils.getFieldsFromClassHierarchy(viewType).stream()
 				.filter(field -> field.isAnnotationPresent(InjectViewModel.class))
 				.collect(Collectors.toList());
 	}
 
-    public static List<Field> getFieldsFromClassHierarchy(Class<?> startClass) {
-
-        final List<Field> classFields = new ArrayList<>();
-        classFields.addAll(Arrays.asList(startClass.getDeclaredFields()));
-        final Class<?> parentClass = startClass.getSuperclass();
-
-        if (parentClass != null && !(parentClass.equals(Object.class))) {
-            List<Field> parentClassFields = getFieldsFromClassHierarchy(parentClass);
-            classFields.addAll(parentClassFields);
-        }
-
-        return classFields;
-    }
 
 	
 	
