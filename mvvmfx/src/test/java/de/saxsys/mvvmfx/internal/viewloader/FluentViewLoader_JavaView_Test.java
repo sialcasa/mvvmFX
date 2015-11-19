@@ -85,6 +85,7 @@ public class FluentViewLoader_JavaView_Test {
 	 */
 	@Test
 	public void testViewTuple() {
+        TestViewModel.wasInitialized = false;
 		class TestView extends VBox implements JavaView<TestViewModel> {
 			@InjectViewModel
 			private TestViewModel viewModel;
@@ -96,6 +97,7 @@ public class FluentViewLoader_JavaView_Test {
 		assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
 		assertThat(viewTuple.getCodeBehind()).isNotNull();
 		assertThat(viewTuple.getViewModel()).isNotNull();
+        assertThat(TestViewModel.wasInitialized).isTrue();
 	}
 	
 	@Test
@@ -248,8 +250,9 @@ public class FluentViewLoader_JavaView_Test {
 			assertThat(rootCause).isInstanceOf(RuntimeException.class).hasMessageContaining("doesn't implement the 'ViewModel' interface");
 		}
 	}
-	
-	
+
+
+
 	/**
 	 * A View without generic ViewModel type can't inject a ViewModel
 	 */

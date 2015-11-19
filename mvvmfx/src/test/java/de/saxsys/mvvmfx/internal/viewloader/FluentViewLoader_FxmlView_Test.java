@@ -58,6 +58,8 @@ public class FluentViewLoader_FxmlView_Test {
 		
 		TestFxmlView.instanceCounter = 0;
 		TestViewModel.instanceCounter = 0;
+
+        TestViewModel.wasInitialized = false;
 		
 		final ViewTuple<TestFxmlView, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlView.class)
 				.resourceBundle(resourceBundle).load();
@@ -75,6 +77,7 @@ public class FluentViewLoader_FxmlView_Test {
 		
 		assertThat(TestFxmlView.instanceCounter).isEqualTo(1);
 		assertThat(TestViewModel.instanceCounter).isEqualTo(1);
+        assertThat(TestViewModel.wasInitialized).isTrue();
 	}
 	
 	
@@ -133,6 +136,7 @@ public class FluentViewLoader_FxmlView_Test {
 	@Test
 	public void testViewWithFxRoot() {
 		TestFxmlViewFxRoot root = new TestFxmlViewFxRoot();
+        TestViewModel.wasInitialized = false;
 		
 		ViewTuple<TestFxmlViewFxRoot, TestViewModel> viewTuple = FluentViewLoader.fxmlView(
 				TestFxmlViewFxRoot.class).codeBehind(root).root(root).load();
@@ -144,6 +148,8 @@ public class FluentViewLoader_FxmlView_Test {
 		
 		assertThat(viewTuple.getCodeBehind().viewModel).isNotNull();
 		assertThat(viewTuple.getCodeBehind().viewModelWasNull).isFalse();
+
+        assertThat(TestViewModel.wasInitialized).isTrue();
 	}
 	
 	
@@ -152,6 +158,7 @@ public class FluentViewLoader_FxmlView_Test {
 	 */
 	@Test
 	public void testUseExistingCodeBehind() {
+        TestViewModel.wasInitialized = false;
 		TestFxmlViewWithMissingController codeBehind = new TestFxmlViewWithMissingController();
 		
 		ViewTuple<TestFxmlViewWithMissingController, TestViewModel> viewTuple =
@@ -161,6 +168,8 @@ public class FluentViewLoader_FxmlView_Test {
 		
 		assertThat(viewTuple.getCodeBehind()).isEqualTo(codeBehind);
 		assertThat(viewTuple.getCodeBehind().viewModel).isNotNull();
+
+        assertThat(TestViewModel.wasInitialized).isTrue();
 	}
 	
 	/**
@@ -240,12 +249,16 @@ public class FluentViewLoader_FxmlView_Test {
 		TestViewModel existingViewModel = new TestViewModel();
 
 		codeBehind.viewModel = existingViewModel;
+        TestViewModel.wasInitialized = false;
 
 		ViewTuple<TestFxmlViewWithMissingController, TestViewModel> viewTuple = FluentViewLoader
 				.fxmlView(TestFxmlViewWithMissingController.class).codeBehind(codeBehind).load();
 
 		assertThat(viewTuple.getCodeBehind()).isNotNull();
 		assertThat(viewTuple.getCodeBehind().viewModel).isEqualTo(existingViewModel);
+
+        // Existing VM should not be re-initialized
+        assertThat(TestViewModel.wasInitialized).isFalse();
 	}
 	
 	
@@ -311,7 +324,18 @@ public class FluentViewLoader_FxmlView_Test {
 					.hasMessageContaining("field doesn't match the generic ViewModel type ");
 		}
 	}
-	
+
+
+    @Test
+    public void testInjectViewModelInViewWithoutGenericViewModelType() {
+        try {
+            FluentViewLoader.fxmlView(TestFxmlViewWithoutViewModelTypeButWithInjection.class).load();
+            fail("Expected an Exception");
+        } catch (Exception e) {
+            assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(RuntimeException.class).hasMessageContaining("field doesn't match the generic ViewModel type ");
+        }
+    }
+
 	/**
 	 * The {@link InjectViewModel} annotation may only be used on fields whose Type are implementing {@link ViewModel}.
 	 */
@@ -355,7 +379,7 @@ public class FluentViewLoader_FxmlView_Test {
 	 */
 	@Test
 	public void testUseExistingViewModel() {
-		
+		TestViewModel.wasInitialized = false;
 		TestViewModel viewModel = new TestViewModel();
 		
 		ViewTuple<TestFxmlView, TestViewModel> viewTupleOne = FluentViewLoader.fxmlView(TestFxmlView.class)
@@ -378,6 +402,9 @@ public class FluentViewLoader_FxmlView_Test {
 		assertThat(viewTupleTwo.getCodeBehind().getViewModel()).isEqualTo(viewModel);
 		
 		assertThat(viewTupleTwo.getCodeBehind()).isNotEqualTo(viewTupleOne.getCodeBehind());
+
+        // when an existing VM is used it should not be re-initialized
+        assertThat(TestViewModel.wasInitialized).isFalse();
 	}
 	
 	/**
@@ -385,14 +412,15 @@ public class FluentViewLoader_FxmlView_Test {
 	 */
 	@Test
 	public void testViewModelIsAvailableInViewTupleEvenIfItIsntInjectedInTheView() {
-		
+		TestViewModel.wasInitialized = false;
 		ViewTuple<TestFxmlViewWithoutViewModelField, TestViewModel> viewTuple = FluentViewLoader
 				.fxmlView(TestFxmlViewWithoutViewModelField.class).load();
 				
 		assertThat(viewTuple.getCodeBehind().wasInitialized).isTrue();
 		
 		assertThat(viewTuple.getViewModel()).isNotNull();
-		
+
+        assertThat(TestViewModel.wasInitialized).isTrue();
 	}
 
 	/**
@@ -407,6 +435,8 @@ public class FluentViewLoader_FxmlView_Test {
 	 */
 	@Test
 	public void testExistingViewModelWithoutInjectionInView() {
+        TestViewModel.wasInitialized = false;
+
 		DependencyInjector.getInstance().setCustomInjector(type -> {
 			if(type.equals(TestViewModel.class)) {
 				fail("An instance of TestViewModel was requested!");
@@ -430,5 +460,8 @@ public class FluentViewLoader_FxmlView_Test {
 		
 		// we need to reset the DI
 		DependencyInjector.getInstance().setCustomInjector(null);
+
+
+        assertThat(TestViewModel.wasInitialized).isFalse();
 	}
 }
