@@ -1,6 +1,7 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
-import de.saxsys.mvvmfx.*;
+import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.ViewModel;
 import net.jodah.typetools.TypeResolver;
 
 import java.lang.reflect.Field;
@@ -8,7 +9,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -75,10 +75,12 @@ public class ViewLoaderReflectionUtils {
 	 * @return a list of fields.
 	 */
 	public static List<Field> getViewModelFields(Class<? extends View> viewType) {
-		return Arrays.stream(viewType.getDeclaredFields())
+        return ReflectionUtils.getFieldsFromClassHierarchy(viewType).stream()
 				.filter(field -> field.isAnnotationPresent(InjectViewModel.class))
 				.collect(Collectors.toList());
 	}
+
+
 	
 	
 	/**
