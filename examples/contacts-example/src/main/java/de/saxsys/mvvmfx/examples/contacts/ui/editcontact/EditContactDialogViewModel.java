@@ -1,20 +1,18 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.editcontact;
 
+import java.util.ResourceBundle;
+
+import javax.inject.Inject;
+
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.contacts.model.Repository;
-import de.saxsys.mvvmfx.examples.contacts.ui.contactdialog.ContactDialogViewModel;
 import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-
-import javax.inject.Inject;
-import java.util.ResourceBundle;
 
 public class EditContactDialogViewModel implements ViewModel {
-	static final String TITLE_LABEL_KEY = "dialog.editcontact.title";
 	
-	private final BooleanProperty dialogOpen = new SimpleBooleanProperty();
+	static final String TITLE_LABEL_KEY = "dialog.editcontact.title";
+	public static final String CLOSE_DIALOG_NOTIFICATION = "CLOSE_DIALOG_NOT";
 	
 	@Inject
 	Repository repository;
@@ -25,49 +23,21 @@ public class EditContactDialogViewModel implements ViewModel {
 	@Inject
 	ResourceBundle defaultResourceBundle;
 	
-	private ContactDialogViewModel contactDialogViewModel;
-	
-	
-	public void setContactDialogViewModel(ContactDialogViewModel contactDialogViewModel) {
-		this.contactDialogViewModel = contactDialogViewModel;
-		
-		contactDialogViewModel.setOkAction(this::applyAction);
-		contactDialogViewModel.titleTextProperty().set(defaultResourceBundle.getString(TITLE_LABEL_KEY));
-		
-		dialogOpen.addListener((observable, oldValue, newValue) -> {
-			if (!newValue) {
-                dialogScope.publish(ContactDialogScope.Notifications.RESET_DIALOG_PAGE.toString());
-                dialogScope.setContactToEdit(null);
-			}
+	public void initialize() {
+		dialogScope.publish(ContactDialogScope.RESET_FORMS);
+		dialogScope.publish(ContactDialogScope.RESET_DIALOG_PAGE);
+		dialogScope.subscribe(ContactDialogScope.OK_BEFORE_COMMIT, (key, payload) -> {
+			applyAction();
 		});
+		
+		dialogScope.dialogTitleProperty().set(defaultResourceBundle.getString(TITLE_LABEL_KEY));
 	}
 	
 	public void applyAction() {
-		if (contactDialogViewModel.validProperty().get()) {
-			
-			// contactDialogViewModel.getAddressFormViewModel().commitChanges();
-			dialogScope.publish(ContactDialogScope.Notifications.COMMIT.toString());
-			
+		if (dialogScope.bothFormsValidProperty().get()) {
+			dialogScope.publish(ContactDialogScope.COMMIT);
 			repository.save(dialogScope.contactToEditProperty().get());
-			
-			dialogOpen.set(false);
+			publish(CLOSE_DIALOG_NOTIFICATION);
 		}
 	}
-	
-	
-	public void openDialog(String contactId) {
-		dialogScope.publish(ContactDialogScope.Notifications.RESET_FORMS.toString());
-		
-		repository.findById(contactId).ifPresent(contact -> {
-			dialogScope.setContactToEdit(contact);
-			dialogOpen.set(true);
-		});
-	}
-	
-	public BooleanProperty dialogOpenProperty() {
-		return dialogOpen;
-	}
-	
-	
-	
 }

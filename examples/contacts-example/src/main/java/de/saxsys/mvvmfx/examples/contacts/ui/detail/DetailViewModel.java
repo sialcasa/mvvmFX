@@ -5,16 +5,15 @@ import static eu.lestard.advanced_bindings.api.ObjectBindings.map;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
+import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.examples.contacts.events.OpenEditContactDialogEvent;
 import de.saxsys.mvvmfx.examples.contacts.model.Address;
 import de.saxsys.mvvmfx.examples.contacts.model.Contact;
 import de.saxsys.mvvmfx.examples.contacts.model.Repository;
-import de.saxsys.mvvmfx.examples.contacts.ui.master.MasterViewModel;
+import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
+import de.saxsys.mvvmfx.examples.contacts.ui.scopes.MasterDetailScope;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
@@ -22,11 +21,14 @@ import javafx.application.HostServices;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 
 public class DetailViewModel implements ViewModel {
+	
+	public static final String OPEN_EDIT_CONTACT_DIALOG = "open_edit_contact";
 	
 	private static final DateTimeFormatter BIRTHDAY_FORMATTER = DateTimeFormatter.ISO_DATE;
 	
@@ -48,43 +50,43 @@ public class DetailViewModel implements ViewModel {
 	private DelegateCommand emailLinkCommand;
 	
 	@Inject
-	private Event<OpenEditContactDialogEvent> openEditEvent;
-	
-	@Inject
-	MasterViewModel masterViewModel;
-	
-	@Inject
 	HostServices hostServices;
 	
 	@Inject
 	Repository repository;
 	
-	@PostConstruct
-	void init() {
-		ReadOnlyObjectProperty<Contact> contactProperty = masterViewModel.selectedContactProperty();
+	@InjectScope
+	MasterDetailScope mdScope;
+	
+	@InjectScope
+	ContactDialogScope dialogscope;
+	
+	public void initialize() {
+		ReadOnlyObjectProperty<Contact> contactProperty = getSelectedContactPropertyFromScope();
 		
 		createBindingsForLabels(contactProperty);
 		
 		editCommand = new DelegateCommand(() -> new Action() {
 			@Override
 			protected void action() throws Exception {
-				Contact selectedContact = masterViewModel.selectedContactProperty().get();
+				Contact selectedContact = getSelectedContactFromScope();
 				if (selectedContact != null) {
-					openEditEvent.fire(new OpenEditContactDialogEvent(selectedContact.getId()));
+					dialogscope.setContactToEdit(selectedContact);
+					publish(OPEN_EDIT_CONTACT_DIALOG);
 				}
 			}
-		}, masterViewModel.selectedContactProperty().isNotNull());
+		}, getSelectedContactPropertyFromScope().isNotNull());
 		
 		removeCommand = new DelegateCommand(() -> new Action() {
 			@Override
 			protected void action() throws Exception {
-				Contact selectedContact = masterViewModel.selectedContactProperty().get();
+				Contact selectedContact = getSelectedContactFromScope();
 				if (selectedContact != null) {
-					repository.delete(masterViewModel.selectedContactProperty().get());
+					repository.delete(getSelectedContactFromScope());
 				}
 			}
 			
-		}, masterViewModel.selectedContactProperty().isNotNull());
+		}, getSelectedContactPropertyFromScope().isNotNull());
 		
 		emailLinkCommand = new DelegateCommand(() -> new Action() {
 			@Override
@@ -251,5 +253,13 @@ public class DetailViewModel implements ViewModel {
 			return "";
 		}
 		return string + append;
+	}
+	
+	private Contact getSelectedContactFromScope() {
+		return getSelectedContactPropertyFromScope().get();
+	}
+	
+	private ObjectProperty<Contact> getSelectedContactPropertyFromScope() {
+		return mdScope.selectedContactProperty();
 	}
 }
