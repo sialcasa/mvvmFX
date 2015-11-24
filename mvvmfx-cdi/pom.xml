@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx-parent</artifactId>
-		<version>1.5.0-SNAPSHOT</version>
+		<version>1.4.1</version>
 	</parent>
 
 	<artifactId>mvvmfx-cdi</artifactId>
