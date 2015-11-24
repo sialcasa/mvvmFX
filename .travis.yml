@@ -1,16 +1,20 @@
 language: java
 
-sudo: required
+sudo: false
 
 jdk:
   - oraclejdk8
 
 install: true
 
+addons:
+  apt:
+    packages:
+    - oracle-java8-installer
+
 before_install:
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
-- sudo apt-get update && sudo apt-get install oracle-java8-installer
 - java -version
 
 env:
@@ -19,4 +23,5 @@ env:
   - secure: Bm0zIwBo4saIBlfr9YDvNqd8UN50FeT2hZyum3RFDmJqaXiUqwxw7sCz/lRjUwTfQrvGJXQ1I8le7zE4OVQdvpn4/LwwTJIjLY2jZNjzs4mZhkHzsM5IcGcL3lukR6soVYrGloQwmw63Okw2kZxces+1fveisPIKDlVaU1RTtMQ=
 
 after_success:
- - "[[ $TRAVIS_BRANCH == \"develop\" ]] && { python addServer.py; mvn clean deploy -pl 'mvvmfx,mvvmfx-cdi,mvvmfx-guice,mvvmfx-archetype' -am -DskipTests=true --settings ~/.m2/mySettings.xml; };"
+ - chmod ugo+x travis_snapshot_release.sh
+ - ./travis_snapshot_release.sh

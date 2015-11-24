@@ -1,5 +1,17 @@
 package de.saxsys.mvvmfx.utils.mapping;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.BooleanGetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.BooleanPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.BooleanSetter;
@@ -25,15 +37,28 @@ import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringGetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringSetter;
 import eu.lestard.doc.Beta;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-
-import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 
 /**
@@ -204,24 +229,26 @@ import java.util.function.Supplier;
  * 
  * 
  * 
- * 
- * 
- * 
  * @param <M>
  *            the type of the model class.
  */
 @Beta
 public class ModelWrapper<M> {
-
-	private ReadOnlyBooleanWrapper dirtyFlag = new ReadOnlyBooleanWrapper();
-	private ReadOnlyBooleanWrapper diffFlag = new ReadOnlyBooleanWrapper();
-
-
+	
+	private final ReadOnlyBooleanWrapper dirtyFlag = new ReadOnlyBooleanWrapper();
+	private final ReadOnlyBooleanWrapper diffFlag = new ReadOnlyBooleanWrapper();
+	
+	
 	/**
 	 * This interface defines the operations that are possible for each field of a wrapped class.
 	 * 
 	 * @param <T>
+	 *            target type. The base type of the returned property, f.e. {@link String}.
 	 * @param <M>
+	 *            model type. The type of the Model class, that is wrapped by this ModelWrapper instance.
+	 * @param <R>
+	 *            return type. The type of the Property that is returned via {@link #getProperty()}, f.e.
+	 *            {@link StringProperty} or {@link Property<String>}.
 	 */
 	private interface PropertyField<T, M, R extends Property<T>> {
 		void commit(M wrappedObject);
@@ -231,8 +258,18 @@ public class ModelWrapper<M> {
 		void resetToDefault();
 		
 		R getProperty();
-
-        boolean isDifferent(M wrappedObject);
+		
+		/**
+		 * Determines if the value in the model object and the property field are different or not.
+		 * 
+		 * This method is used to implement the {@link #differentProperty()} flag.
+		 * 
+		 * @param wrappedObject
+		 *            the wrapped model object
+		 * @return <code>false</code> if both the wrapped model object and the property field have the same value,
+		 *         otherwise <code>true</code>
+		 */
+		boolean isDifferent(M wrappedObject);
 	}
 	
 	/**
@@ -252,12 +289,13 @@ public class ModelWrapper<M> {
 		}
 		
 		@SuppressWarnings("unchecked")
-		public FxPropertyField(Function<M, Property<T>> accessor, T defaultValue, Supplier<Property<T>> propertySupplier) {
+		public FxPropertyField(Function<M, Property<T>> accessor, T defaultValue,
+				Supplier<Property<T>> propertySupplier) {
 			this.accessor = accessor;
 			this.defaultValue = defaultValue;
 			this.targetProperty = (R) propertySupplier.get();
-
-            this.targetProperty.addListener((observable, oldValue, newValue) -> propertyWasChanged());
+			
+			this.targetProperty.addListener((observable, oldValue, newValue) -> propertyWasChanged());
 		}
 		
 		@Override
@@ -279,15 +317,15 @@ public class ModelWrapper<M> {
 		public R getProperty() {
 			return targetProperty;
 		}
-
-        @Override
-        public boolean isDifferent(M wrappedObject) {
-            final T modelValue = accessor.apply(wrappedObject).getValue();
-            final T wrapperValue = targetProperty.getValue();
-
-            return !Objects.equals(modelValue, wrapperValue);
-        }
-    }
+		
+		@Override
+		public boolean isDifferent(M wrappedObject) {
+			final T modelValue = accessor.apply(wrappedObject).getValue();
+			final T wrapperValue = targetProperty.getValue();
+			
+			return !Objects.equals(modelValue, wrapperValue);
+		}
+	}
 	
 	/**
 	 * An implementation of {@link PropertyField} that is used when the fields of the model class are <b>not</b> JavaFX
@@ -314,8 +352,8 @@ public class ModelWrapper<M> {
 			this.getter = getter;
 			this.setter = setter;
 			this.targetProperty = propertySupplier.get();
-
-            this.targetProperty.addListener((observable, oldValue, newValue) -> propertyWasChanged());
+			
+			this.targetProperty.addListener((observable, oldValue, newValue) -> propertyWasChanged());
 		}
 		
 		@Override
@@ -337,19 +375,19 @@ public class ModelWrapper<M> {
 		public R getProperty() {
 			return targetProperty;
 		}
-
-        @Override
-        public boolean isDifferent(M wrappedObject) {
-            final T modelValue = getter.apply(wrappedObject);
-            final T wrapperValue = targetProperty.getValue();
-
-            return !Objects.equals(modelValue, wrapperValue);
-        }
-    }
+		
+		@Override
+		public boolean isDifferent(M wrappedObject) {
+			final T modelValue = getter.apply(wrappedObject);
+			final T wrapperValue = targetProperty.getValue();
+			
+			return !Objects.equals(modelValue, wrapperValue);
+		}
+	}
 	
 	/**
 	 * An implementation of {@link PropertyField} that is used when the field of the model class is a {@link List} and
-	 * and is a JavaFX {@link ListProperty} too.
+	 * will be mapped to a JavaFX {@link ListProperty}.
 	 *
 	 * @param <T>
 	 * @param <E>
@@ -357,55 +395,55 @@ public class ModelWrapper<M> {
 	 */
 	private class FxListPropertyField<E, T extends ObservableList<E>, R extends Property<T>>
 			implements PropertyField<T, M, R> {
-
+			
 		private final List<E> defaultValue;
 		private final ListPropertyAccessor<M, E> accessor;
 		private final ListProperty<E> targetProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-
+		
 		public FxListPropertyField(ListPropertyAccessor<M, E> accessor) {
 			this(accessor, Collections.emptyList());
 		}
-
+		
 		public FxListPropertyField(ListPropertyAccessor<M, E> accessor, List<E> defaultValue) {
 			this.accessor = accessor;
 			this.defaultValue = defaultValue;
-
-			this.targetProperty.addListener((ListChangeListener) change -> propertyWasChanged());
+			
+			this.targetProperty.addListener((ListChangeListener<E>) change -> ModelWrapper.this.propertyWasChanged());
 		}
-
+		
 		@Override
 		public void commit(M wrappedObject) {
 			accessor.apply(wrappedObject).setAll(targetProperty.getValue());
 		}
-
+		
 		@Override
 		public void reload(M wrappedObject) {
 			targetProperty.setAll(accessor.apply(wrappedObject).getValue());
 		}
-
+		
 		@Override
 		public void resetToDefault() {
 			targetProperty.setAll(defaultValue);
 		}
-
+		
 		@Override
 		public R getProperty() {
 			return (R) targetProperty;
 		}
-
+		
 		@Override
 		public boolean isDifferent(M wrappedObject) {
 			final List<E> modelValue = accessor.apply(wrappedObject).getValue();
 			final List<E> wrapperValue = targetProperty;
-
-			return !(modelValue.containsAll(wrapperValue) && wrapperValue.containsAll(modelValue));
+			
+			return !Objects.equals(modelValue, wrapperValue);
 		}
 	}
-
+	
 	/**
 	 * An implementation of {@link PropertyField} that is used when the field of the model class is a {@link List} and
-	 * is <b>not</b> a JavaFX ListProperty but is following the old Java-Beans standard, i.e. there is getter and
-	 * setter method for the field.
+	 * is <b>not</b> a JavaFX ListProperty but is following the old Java-Beans standard, i.e. there is getter and setter
+	 * method for the field.
 	 *
 	 * @param <T>
 	 * @param <E>
@@ -413,56 +451,56 @@ public class ModelWrapper<M> {
 	 */
 	private class BeanListPropertyField<E, T extends ObservableList<E>, R extends Property<T>>
 			implements PropertyField<T, M, R> {
-
+			
 		private final ListGetter<M, E> getter;
 		private final ListSetter<M, E> setter;
-
+		
 		private final List<E> defaultValue;
 		private final ListProperty<E> targetProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-
+		
 		public BeanListPropertyField(ListGetter<M, E> getter, ListSetter<M, E> setter) {
 			this(getter, setter, Collections.emptyList());
 		}
-
+		
 		public BeanListPropertyField(ListGetter<M, E> getter, ListSetter<M, E> setter, List<E> defaultValue) {
 			this.defaultValue = defaultValue;
 			this.getter = getter;
 			this.setter = setter;
-
-			this.targetProperty.addListener((ListChangeListener) change -> propertyWasChanged());
+			
+			this.targetProperty.addListener((ListChangeListener<E>) change -> propertyWasChanged());
 		}
-
+		
 		@Override
 		public void commit(M wrappedObject) {
 			setter.accept(wrappedObject, targetProperty.getValue());
 		}
-
+		
 		@Override
 		public void reload(M wrappedObject) {
 			targetProperty.setAll(getter.apply(wrappedObject));
 		}
-
+		
 		@Override
 		public void resetToDefault() {
 			targetProperty.setAll(defaultValue);
 		}
-
+		
 		@Override
 		public R getProperty() {
 			return (R) targetProperty;
 		}
-
+		
 		@Override
 		public boolean isDifferent(M wrappedObject) {
 			final List<E> modelValue = getter.apply(wrappedObject);
 			final List<E> wrapperValue = targetProperty;
-
-			return !(modelValue.containsAll(wrapperValue) && wrapperValue.containsAll(modelValue));
+			
+			return !Objects.equals(modelValue, wrapperValue);
 		}
 	}
 	
-	private Set<PropertyField<?, M, ?>> fields = new HashSet<>();
-	private Map<String, PropertyField<?, M, ?>> identifiedFields = new HashMap<>();
+	private final Set<PropertyField<?, M, ?>> fields = new HashSet<>();
+	private final Map<String, PropertyField<?, M, ?>> identifiedFields = new HashMap<>();
 	
 	private M model;
 	
@@ -511,8 +549,8 @@ public class ModelWrapper<M> {
 	 */
 	public void reset() {
 		fields.forEach(field -> field.resetToDefault());
-
-        calculateDifferenceFlag();
+		
+		calculateDifferenceFlag();
 	}
 	
 	/**
@@ -526,10 +564,10 @@ public class ModelWrapper<M> {
 	public void commit() {
 		if (model != null) {
 			fields.forEach(field -> field.commit(model));
-
-            dirtyFlag.set(false);
-
-            calculateDifferenceFlag();
+			
+			dirtyFlag.set(false);
+			
+			calculateDifferenceFlag();
 		}
 	}
 	
@@ -544,28 +582,28 @@ public class ModelWrapper<M> {
 	public void reload() {
 		if (model != null) {
 			fields.forEach(field -> field.reload(model));
-
-            dirtyFlag.set(false);
-            calculateDifferenceFlag();
+			
+			dirtyFlag.set(false);
+			calculateDifferenceFlag();
 		}
 	}
-
-
-
-    private void propertyWasChanged(){
-        dirtyFlag.set(true);
-        calculateDifferenceFlag();
-    }
-
-    private void calculateDifferenceFlag(){
-        if(model != null) {
-            final Optional<PropertyField<?, M, ?>> optional = fields.stream()
-                    .filter(field -> field.isDifferent(model))
-                    .findAny();
-
-            diffFlag.set(optional.isPresent());
-        }
-    }
+	
+	
+	
+	private void propertyWasChanged() {
+		dirtyFlag.set(true);
+		calculateDifferenceFlag();
+	}
+	
+	private void calculateDifferenceFlag() {
+		if (model != null) {
+			final Optional<PropertyField<?, M, ?>> optional = fields.stream()
+					.filter(field -> field.isDifferent(model))
+					.findAny();
+					
+			diffFlag.set(optional.isPresent());
+		}
+	}
 	
 	
 	
@@ -599,7 +637,7 @@ public class ModelWrapper<M> {
 	 * @param setter
 	 *            a function that sets the given value to the given model element. Typically you will use a method
 	 *            reference to the setter method of the model element.
-	 *
+	 * 			
 	 * @return The wrapped property instance.
 	 */
 	public StringProperty field(StringGetter<M> getter, StringSetter<M> setter) {
@@ -620,7 +658,7 @@ public class ModelWrapper<M> {
 	 *            reference to the setter method of the model element.
 	 * @param defaultValue
 	 *            the default value that is used when {@link #reset()} is invoked.
-	 *
+	 * 			
 	 * @return The wrapped property instance.
 	 */
 	public StringProperty field(StringGetter<M> getter, StringSetter<M> setter, String defaultValue) {
@@ -648,7 +686,7 @@ public class ModelWrapper<M> {
 	 * @param accessor
 	 *            a function that returns the property for a given model instance. Typically you will use a method
 	 *            reference to the javafx-property accessor method.
-	 *
+	 * 			
 	 * @return The wrapped property instance.
 	 */
 	public StringProperty field(StringPropertyAccessor<M> accessor) {
@@ -694,7 +732,8 @@ public class ModelWrapper<M> {
 		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, SimpleStringProperty::new));
 	}
 	
-	public StringProperty field(String identifier, StringGetter<M> getter, StringSetter<M> setter, String defaultValue) {
+	public StringProperty field(String identifier, StringGetter<M> getter, StringSetter<M> setter,
+			String defaultValue) {
 		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, defaultValue,
 				SimpleStringProperty::new));
 	}
@@ -707,7 +746,7 @@ public class ModelWrapper<M> {
 	 *
 	 * @param identifier
 	 *            an identifier for the field.
-	 *
+	 * 			
 	 * @param accessor
 	 *            a function that returns the property for a given model instance. Typically you will use a method
 	 *            reference to the javafx-property accessor method.
@@ -764,14 +803,18 @@ public class ModelWrapper<M> {
 	
 	
 	public DoubleProperty field(DoubleGetter<M> getter, DoubleSetter<M> setter) {
-		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
-				SimpleDoubleProperty::new));
+		final ModelWrapper<M>.BeanPropertyField<Number, SimpleDoubleProperty> beanPropertyField = new BeanPropertyField<>(
+				getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
+				SimpleDoubleProperty::new);
+		return add(beanPropertyField);
 	}
 	
 	public DoubleProperty field(DoubleGetter<M> getter, DoubleSetter<M> setter, double defaultValue) {
-		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
+		final ModelWrapper<M>.BeanPropertyField<Number, SimpleDoubleProperty> beanPropertyField = new BeanPropertyField<>(
+				getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
 				defaultValue,
-				SimpleDoubleProperty::new));
+				SimpleDoubleProperty::new);
+		return add(beanPropertyField);
 	}
 	
 	public DoubleProperty field(DoublePropertyAccessor<M> accessor) {
@@ -783,16 +826,20 @@ public class ModelWrapper<M> {
 	}
 	
 	public DoubleProperty field(String identifier, DoubleGetter<M> getter, DoubleSetter<M> setter) {
-		return addIdentified(identifier,
-				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
-						SimpleDoubleProperty::new));
+		final ModelWrapper<M>.BeanPropertyField<Number, SimpleDoubleProperty> beanPropertyField = new BeanPropertyField<>(
+				getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
+				SimpleDoubleProperty::new);
+				
+		return addIdentified(identifier, beanPropertyField);
 	}
 	
-	public DoubleProperty field(String identifier, DoubleGetter<M> getter, DoubleSetter<M> setter, double defaultValue) {
-		return addIdentified(identifier,
-				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
-						defaultValue,
-						SimpleDoubleProperty::new));
+	public DoubleProperty field(String identifier, DoubleGetter<M> getter, DoubleSetter<M> setter,
+			double defaultValue) {
+		ModelWrapper<M>.BeanPropertyField<Number, SimpleDoubleProperty> beanPropertyField = new BeanPropertyField<>(
+				getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
+				defaultValue,
+				SimpleDoubleProperty::new);
+		return addIdentified(identifier, beanPropertyField);
 	}
 	
 	public DoubleProperty field(String identifier, DoublePropertyAccessor<M> accessor) {
@@ -810,14 +857,17 @@ public class ModelWrapper<M> {
 	/** Field type Float **/
 	
 	public FloatProperty field(FloatGetter<M> getter, FloatSetter<M> setter) {
-		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.floatValue()),
-				SimpleFloatProperty::new));
+		final ModelWrapper<M>.BeanPropertyField<Number, SimpleFloatProperty> beanPropertyField = new BeanPropertyField<>(
+				getter::apply, (m, number) -> setter.accept(m, number.floatValue()),
+				SimpleFloatProperty::new);
+		return add(beanPropertyField);
 	}
 	
 	public FloatProperty field(FloatGetter<M> getter, FloatSetter<M> setter, float defaultValue) {
-		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.floatValue()),
-				defaultValue,
-				SimpleFloatProperty::new));
+		ModelWrapper<M>.BeanPropertyField<Number, SimpleFloatProperty> beanPropertyField = new BeanPropertyField<>(
+				getter::apply, (m, number) -> setter.accept(m, number.floatValue()), defaultValue,
+				SimpleFloatProperty::new);
+		return add(beanPropertyField);
 	}
 	
 	public FloatProperty field(FloatPropertyAccessor<M> accessor) {
@@ -829,16 +879,19 @@ public class ModelWrapper<M> {
 	}
 	
 	public FloatProperty field(String identifier, FloatGetter<M> getter, FloatSetter<M> setter) {
-		return addIdentified(identifier,
-				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.floatValue()),
-						SimpleFloatProperty::new));
+		ModelWrapper<M>.BeanPropertyField<Number, SimpleFloatProperty> beanPropertyField = new BeanPropertyField<>(
+				getter::apply, (m, number) -> setter.accept(m, number.floatValue()),
+				SimpleFloatProperty::new);
+		return addIdentified(identifier, beanPropertyField);
 	}
 	
 	public FloatProperty field(String identifier, FloatGetter<M> getter, FloatSetter<M> setter, float defaultValue) {
-		return addIdentified(identifier,
-				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.floatValue()),
-						defaultValue,
-						SimpleFloatProperty::new));
+		
+		ModelWrapper<M>.BeanPropertyField<Number, SimpleFloatProperty> beanPropertyField = new BeanPropertyField<>(
+				getter::apply, (m, number) -> setter.accept(m, number.floatValue()),
+				defaultValue,
+				SimpleFloatProperty::new);
+		return addIdentified(identifier, beanPropertyField);
 	}
 	
 	public FloatProperty field(String identifier, FloatPropertyAccessor<M> accessor) {
@@ -846,7 +899,8 @@ public class ModelWrapper<M> {
 	}
 	
 	public FloatProperty field(String identifier, FloatPropertyAccessor<M> accessor, float defaultValue) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, defaultValue, SimpleFloatProperty::new));
+		return addIdentified(identifier,
+				new FxPropertyField<>(accessor::apply, defaultValue, SimpleFloatProperty::new));
 	}
 	
 	
@@ -854,14 +908,18 @@ public class ModelWrapper<M> {
 	
 	
 	public IntegerProperty field(IntGetter<M> getter, IntSetter<M> setter) {
-		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.intValue()),
-				SimpleIntegerProperty::new));
+		ModelWrapper<M>.BeanPropertyField<Number, SimpleIntegerProperty> beanPropertyField = new BeanPropertyField<>(
+				getter::apply, (m, number) -> setter.accept(m, number.intValue()),
+				SimpleIntegerProperty::new);
+		return add(beanPropertyField);
 	}
 	
 	public IntegerProperty field(IntGetter<M> getter, IntSetter<M> setter, int defaultValue) {
-		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.intValue()),
+		ModelWrapper<M>.BeanPropertyField<Number, SimpleIntegerProperty> beanPropertyField = new BeanPropertyField<>(
+				getter::apply, (m, number) -> setter.accept(m, number.intValue()),
 				defaultValue,
-				SimpleIntegerProperty::new));
+				SimpleIntegerProperty::new);
+		return add(beanPropertyField);
 	}
 	
 	
@@ -874,16 +932,18 @@ public class ModelWrapper<M> {
 	}
 	
 	public IntegerProperty field(String identifier, IntGetter<M> getter, IntSetter<M> setter) {
-		return addIdentified(identifier,
-				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.intValue()),
-						SimpleIntegerProperty::new));
+		ModelWrapper<M>.BeanPropertyField<Number, SimpleIntegerProperty> beanPropertyField = new BeanPropertyField<>(
+				getter::apply, (m, number) -> setter.accept(m, number.intValue()),
+				SimpleIntegerProperty::new);
+		return addIdentified(identifier, beanPropertyField);
 	}
 	
 	public IntegerProperty field(String identifier, IntGetter<M> getter, IntSetter<M> setter, int defaultValue) {
-		return addIdentified(identifier,
-				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.intValue()),
-						defaultValue,
-						SimpleIntegerProperty::new));
+		ModelWrapper<M>.BeanPropertyField<Number, SimpleIntegerProperty> beanPropertyField = new BeanPropertyField<>(
+				getter::apply, (m, number) -> setter.accept(m, number.intValue()),
+				defaultValue,
+				SimpleIntegerProperty::new);
+		return addIdentified(identifier, beanPropertyField);
 	}
 	
 	
@@ -901,14 +961,18 @@ public class ModelWrapper<M> {
 	/** Field type Long **/
 	
 	public LongProperty field(LongGetter<M> getter, LongSetter<M> setter) {
-		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.longValue()),
-				SimpleLongProperty::new));
+		ModelWrapper<M>.BeanPropertyField<Number, SimpleLongProperty> beanPropertyField = new BeanPropertyField<>(
+				getter::apply, (m, number) -> setter.accept(m, number.longValue()),
+				SimpleLongProperty::new);
+		return add(beanPropertyField);
 	}
 	
 	public LongProperty field(LongGetter<M> getter, LongSetter<M> setter, long defaultValue) {
-		return add(new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.longValue()),
+		ModelWrapper<M>.BeanPropertyField<Number, SimpleLongProperty> beanPropertyField = new BeanPropertyField<>(
+				getter::apply, (m, number) -> setter.accept(m, number.longValue()),
 				defaultValue,
-				SimpleLongProperty::new));
+				SimpleLongProperty::new);
+		return add(beanPropertyField);
 	}
 	
 	public LongProperty field(LongPropertyAccessor<M> accessor) {
@@ -921,16 +985,19 @@ public class ModelWrapper<M> {
 	
 	
 	public LongProperty field(String identifier, LongGetter<M> getter, LongSetter<M> setter) {
-		return addIdentified(identifier,
-				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.longValue()),
-						SimpleLongProperty::new));
+		ModelWrapper<M>.BeanPropertyField<Number, SimpleLongProperty> beanPropertyField = new BeanPropertyField<>(
+				getter::apply, (m, number) -> setter.accept(m, number.longValue()),
+				SimpleLongProperty::new);
+		return addIdentified(identifier, beanPropertyField);
 	}
 	
 	public LongProperty field(String identifier, LongGetter<M> getter, LongSetter<M> setter, long defaultValue) {
+		ModelWrapper<M>.BeanPropertyField<Number, SimpleLongProperty> beanPropertyField = new BeanPropertyField<>(
+				getter::apply, (m, number) -> setter.accept(m, number.longValue()),
+				defaultValue,
+				SimpleLongProperty::new);
 		return addIdentified(identifier,
-				new BeanPropertyField<>(getter::apply, (m, number) -> setter.accept(m, number.longValue()),
-						defaultValue,
-						SimpleLongProperty::new));
+				beanPropertyField);
 	}
 	
 	public LongProperty field(String identifier, LongPropertyAccessor<M> accessor) {
@@ -981,44 +1048,44 @@ public class ModelWrapper<M> {
 		return addIdentified(identifier,
 				new FxPropertyField<>(accessor::apply, defaultValue, SimpleObjectProperty::new));
 	}
-
-
+	
+	
 	/** Field type list **/
-
+	
 	public <E> ListProperty<E> field(ListGetter<M, E> getter, ListSetter<M, E> setter) {
-		return add(new BeanListPropertyField<>(getter::apply, (m, list)
-				-> setter.accept(m, FXCollections.observableArrayList(list))));
+		return add(new BeanListPropertyField<>(getter::apply,
+				(m, list) -> setter.accept(m, FXCollections.observableArrayList(list))));
 	}
-
+	
 	public <E> ListProperty<E> field(ListGetter<M, E> getter, ListSetter<M, E> setter, List<E> defaultValue) {
-		return add(new BeanListPropertyField<>(getter::apply, (m, list)
-				-> setter.accept(m, FXCollections.observableArrayList(list)), defaultValue));
+		return add(new BeanListPropertyField<>(getter::apply,
+				(m, list) -> setter.accept(m, FXCollections.observableArrayList(list)), defaultValue));
 	}
-
+	
 	public <E> ListProperty<E> field(ListPropertyAccessor<M, E> accessor) {
 		return add(new FxListPropertyField<>(accessor::apply));
 	}
-
+	
 	public <E> ListProperty<E> field(ListPropertyAccessor<M, E> accessor, List<E> defaultValue) {
 		return add(new FxListPropertyField<>(accessor::apply, defaultValue));
 	}
-
-
+	
+	
 	public <E> ListProperty<E> field(String identifier, ListGetter<M, E> getter, ListSetter<M, E> setter) {
-		return addIdentified(identifier, new BeanListPropertyField<>(getter::apply, (m, list)
-				-> setter.accept(m, FXCollections.observableArrayList(list))));
+		return addIdentified(identifier, new BeanListPropertyField<>(getter::apply,
+				(m, list) -> setter.accept(m, FXCollections.observableArrayList(list))));
 	}
-
+	
 	public <E> ListProperty<E> field(String identifier, ListGetter<M, E> getter, ListSetter<M, E> setter,
-									 List<E> defaultValue) {
-		return addIdentified(identifier, new BeanListPropertyField<>(getter::apply, (m, list)
-				-> setter.accept(m, FXCollections.observableArrayList(list)), defaultValue));
+			List<E> defaultValue) {
+		return addIdentified(identifier, new BeanListPropertyField<>(getter::apply,
+				(m, list) -> setter.accept(m, FXCollections.observableArrayList(list)), defaultValue));
 	}
-
+	
 	public <E> ListProperty<E> field(String identifier, ListPropertyAccessor<M, E> accessor) {
 		return addIdentified(identifier, new FxListPropertyField<>(accessor::apply));
 	}
-
+	
 	public <E> ListProperty<E> field(String identifier, ListPropertyAccessor<M, E> accessor, List<E> defaultValue) {
 		return addIdentified(identifier, new FxListPropertyField<>(accessor::apply, defaultValue));
 	}
@@ -1041,63 +1108,61 @@ public class ModelWrapper<M> {
 			return add(field);
 		}
 	}
-
-    /**
-     * This boolean flag indicates whether there is a difference of the data between
-     * the wrapped model object and the properties provided by this wrapper.
-     * <p>
-     * Note the difference to {@link #dirtyProperty()}:
-     * This property will be <code>true</code> if the data of the wrapped model is different to
-     * the properties of this wrapper. If you change the data back to the initial state so that the data
-     * is equal again, this property will change back to <code>false</code> while the {@link #dirtyProperty()}
-     * will still be <code>true</code>.
-     *
-     * Simply speaking: This property indicates whether there is a difference in data between the model and the wrapper.
-     * The {@link #dirtyProperty()} indicates whether there was a change done.
-     *
-     *
-     * Note: Only those changes are observed that are done through the wrapped property fields of this wrapper.
-     * If you change the data of the model instance directly, this property won't turn to <code>true</code>.
-     *
-     *
-     * @return a reay-only property indicating a difference between model and wrapper.
-     */
+	
+	/**
+	 * This boolean flag indicates whether there is a difference of the data between the wrapped model object and the
+	 * properties provided by this wrapper.
+	 * <p>
+	 * Note the difference to {@link #dirtyProperty()}: This property will be <code>true</code> if the data of the
+	 * wrapped model is different to the properties of this wrapper. If you change the data back to the initial state so
+	 * that the data is equal again, this property will change back to <code>false</code> while the
+	 * {@link #dirtyProperty()} will still be <code>true</code>.
+	 *
+	 * Simply speaking: This property indicates whether there is a difference in data between the model and the wrapper.
+	 * The {@link #dirtyProperty()} indicates whether there was a change done.
+	 *
+	 *
+	 * Note: Only those changes are observed that are done through the wrapped property fields of this wrapper. If you
+	 * change the data of the model instance directly, this property won't turn to <code>true</code>.
+	 *
+	 *
+	 * @return a reay-only property indicating a difference between model and wrapper.
+	 */
 	public ReadOnlyBooleanProperty differentProperty() {
 		return diffFlag.getReadOnlyProperty();
 	}
-
-    /**
-     * See {@link #differentProperty()}.
-     */
+	
+	/**
+	 * See {@link #differentProperty()}.
+	 */
 	public boolean isDifferent() {
 		return diffFlag.get();
 	}
-
-    /**
-     * This boolean flag indicates whether there was a change to at least one wrapped property.
-     * <p>
-     * Note the difference to {@link #differentProperty()}:
-     * This property will turn to <code>true</code> when the value of one of the wrapped properties is
-     * changed. It will only change back to <code>false</code> when either the {@link #commit()} or {@link #reload()}
-     *  method is called.
-     * This property will stay <code>true</code> even if afterwards another change is done so that the
-     * data is equal again. In this case the {@link #differentProperty()} will switch back to <code>false</code>.
-     *
-     * Simply speaking: This property indicates whether there was a change done to the wrapped properties or not.
-     * The {@link #differentProperty()} indicates whether there is a difference in data at the moment.
-     *
-     * @return a read only boolean property indicating if there was a change done.
-     */
+	
+	/**
+	 * This boolean flag indicates whether there was a change to at least one wrapped property.
+	 * <p>
+	 * Note the difference to {@link #differentProperty()}: This property will turn to <code>true</code> when the value
+	 * of one of the wrapped properties is changed. It will only change back to <code>false</code> when either the
+	 * {@link #commit()} or {@link #reload()} method is called. This property will stay <code>true</code> even if
+	 * afterwards another change is done so that the data is equal again. In this case the {@link #differentProperty()}
+	 * will switch back to <code>false</code>.
+	 *
+	 * Simply speaking: This property indicates whether there was a change done to the wrapped properties or not. The
+	 * {@link #differentProperty()} indicates whether there is a difference in data at the moment.
+	 *
+	 * @return a read only boolean property indicating if there was a change done.
+	 */
 	public ReadOnlyBooleanProperty dirtyProperty() {
 		return dirtyFlag.getReadOnlyProperty();
 	}
-
-    /**
-     * See {@link #dirtyProperty()}.
-     */
+	
+	/**
+	 * See {@link #dirtyProperty()}.
+	 */
 	public boolean isDirty() {
 		return dirtyFlag.get();
 	}
-
-
+	
+	
 }
