@@ -332,7 +332,8 @@ public class FluentViewLoader_FxmlView_Test {
             FluentViewLoader.fxmlView(TestFxmlViewWithoutViewModelTypeButWithInjection.class).load();
             fail("Expected an Exception");
         } catch (Exception e) {
-            assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(RuntimeException.class).hasMessageContaining("field doesn't match the generic ViewModel type ");
+            assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(RuntimeException.class)
+					.hasMessageContaining("tries to inject a viewModel");
         }
     }
 
@@ -345,7 +346,8 @@ public class FluentViewLoader_FxmlView_Test {
 			FluentViewLoader.fxmlView(TestFxmlViewWithWrongAnnotationUsage.class).load();
 			fail("Expected an Exception");
 		} catch (Exception e) {
-			assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(RuntimeException.class).hasMessageContaining("doesn't implement the 'ViewModel' interface");
+			assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(RuntimeException.class)
+					.hasMessageContaining("doesn't implement the 'ViewModel' interface");
 		}
 	}
 	
@@ -390,7 +392,9 @@ public class FluentViewLoader_FxmlView_Test {
 		
 		assertThat(viewTupleOne.getCodeBehind().getViewModel()).isEqualTo(viewModel);
 		assertThat(viewTupleOne.getViewModel()).isEqualTo(viewModel);
-		
+
+		// when an existing VM is used it should not be re-initialized
+		assertThat(TestViewModel.wasInitialized).isFalse();
 		
 		ViewTuple<TestFxmlView, TestViewModel> viewTupleTwo = FluentViewLoader.fxmlView(TestFxmlView.class)
 				.viewModel(viewModel)

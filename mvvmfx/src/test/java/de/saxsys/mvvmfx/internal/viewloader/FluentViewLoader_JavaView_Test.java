@@ -116,6 +116,7 @@ public class FluentViewLoader_JavaView_Test {
 		assertThat(TestViewModelWithResourceBundle.wasInitialized).isTrue();
 		assertThat(TestViewModelWithResourceBundle.resourceBundleWasAvailableAtInitialize).isTrue();
 	}
+
 	
 	
 	/**
@@ -140,6 +141,8 @@ public class FluentViewLoader_JavaView_Test {
 	 */
 	@Test
 	public void testViewWithoutViewModelType() {
+
+		TestViewModel.wasInitialized = false;
 		class TestView extends VBox implements JavaView {
 		}
 
@@ -150,6 +153,8 @@ public class FluentViewLoader_JavaView_Test {
 
 		View codeBehind = viewTuple.getCodeBehind();
 		assertThat(codeBehind).isNotNull().isInstanceOf(TestView.class);
+
+		assertThat(TestViewModel.wasInitialized).isTrue();
 	}
 
 	/**
@@ -157,6 +162,8 @@ public class FluentViewLoader_JavaView_Test {
 	 */
 	@Test
 	public void testViewModelWasInjectedBeforeExplicitInitialize() {
+		TestViewModel.wasInitialized = false;
+
 		class TestView extends VBox implements JavaView<TestViewModel>, Initializable {
 			@InjectViewModel
 			public TestViewModel viewModel;
@@ -172,6 +179,7 @@ public class FluentViewLoader_JavaView_Test {
 		
 		assertThat(loadedView.viewModel).isNotNull();
 		assertThat(loadedView.viewModelWasInjected).isTrue();
+		assertThat(TestViewModel.wasInitialized).isTrue();
 	}
 	
 	/**
@@ -179,6 +187,8 @@ public class FluentViewLoader_JavaView_Test {
 	 */
 	@Test
 	public void testViewModelWasInjectedBeforeImplicitInitialize() {
+		TestViewModel.wasInitialized = false;
+
 		class TestView extends VBox implements JavaView<TestViewModel> {
 			@InjectViewModel
 			public TestViewModel viewModel;
@@ -193,6 +203,7 @@ public class FluentViewLoader_JavaView_Test {
 		
 		assertThat(loadedView.viewModel).isNotNull();
 		assertThat(loadedView.viewModelWasInjected).isTrue();
+		assertThat(TestViewModel.wasInitialized).isTrue();
 	}
 	
 	
@@ -279,6 +290,8 @@ public class FluentViewLoader_JavaView_Test {
 	 */
 	@Test
 	public void testViewModelIsAvailableInViewTupleEvenIfItIsntInjectedInTheView() {
+		TestViewModel.wasInitialized = false;
+
 		
 		class TestView extends VBox implements JavaView<TestViewModel> {
 		}
@@ -287,11 +300,14 @@ public class FluentViewLoader_JavaView_Test {
 				.javaView(TestView.class).load();
 
 		assertThat(viewTuple.getViewModel()).isNotNull();
+		assertThat(TestViewModel.wasInitialized).isTrue();
 	}
 	
 	
 	@Test
 	public void testUseExistingViewModel() {
+		TestViewModel.wasInitialized = false;
+
 		class TestView extends VBox implements JavaView<TestViewModel> {
 			@InjectViewModel
 			public TestViewModel viewModel;
@@ -304,6 +320,8 @@ public class FluentViewLoader_JavaView_Test {
 
 		assertThat(viewTuple.getCodeBehind().viewModel).isEqualTo(viewModel);
 		assertThat(viewTuple.getViewModel()).isEqualTo(viewModel);
+		
+		assertThat(TestViewModel.wasInitialized).isFalse(); // existing VMs aren't re-initialized
 	}
 	
 	
