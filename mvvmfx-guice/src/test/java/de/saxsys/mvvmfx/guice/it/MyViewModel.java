@@ -18,6 +18,4 @@ public class MyViewModel implements ViewModel {
 		assertThat(service).isNotNull();
 		works = true;
 	}
-	
-	
 }

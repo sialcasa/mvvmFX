@@ -50,12 +50,20 @@ public class FxmlViewLoader {
 	 *            the root object that is passed to the {@link javafx.fxml.FXMLLoader}
 	 * @param viewModel
 	 *            the viewModel instance that is used when loading the viewTuple.
+<<<<<<< HEAD
 	 * 			
+=======
+	 *
+>>>>>>> release
 	 * @param <ViewType>
 	 *            the generic type of the view.
 	 * @param <ViewModelType>
 	 *            the generic type of the viewModel.
+<<<<<<< HEAD
 	 * 			
+=======
+	 *
+>>>>>>> release
 	 * @return the loaded ViewTuple.
 	 */
 	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
@@ -100,7 +108,11 @@ public class FxmlViewLoader {
 	 * 
 	 * @param resource
 	 *            the string path to the fxml file that is loaded.
+<<<<<<< HEAD
 	 * 			
+=======
+	 *
+>>>>>>> release
 	 * @param resourceBundle
 	 *            the resourceBundle that is passed to the {@link javafx.fxml.FXMLLoader}.
 	 * @param codeBehind
@@ -109,12 +121,20 @@ public class FxmlViewLoader {
 	 *            the root object that is passed to the {@link javafx.fxml.FXMLLoader}
 	 * @param viewModel
 	 *            the viewModel instance that is used when loading the viewTuple.
+<<<<<<< HEAD
 	 * 			
+=======
+	 *
+>>>>>>> release
 	 * @param <ViewType>
 	 *            the generic type of the view.
 	 * @param <ViewModelType>
 	 *            the generic type of the viewModel.
+<<<<<<< HEAD
 	 * 			
+=======
+	 *
+>>>>>>> release
 	 * @return the loaded ViewTuple.
 	 */
 	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
@@ -167,7 +187,6 @@ public class FxmlViewLoader {
 	private FXMLLoader createFxmlLoader(String resource, ResourceBundle resourceBundle, View codeBehind, Object root,
 			ViewModel viewModel)
 					throws IOException {
-					
 		// Load FXML file
 		final URL location = FxmlViewLoader.class.getResource(resource);
 		if (location == null) {

@@ -19,12 +19,15 @@ import de.saxsys.mvvmfx.*;
 import net.jodah.typetools.TypeResolver;
 
 import java.lang.annotation.Annotation;
+import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.ViewModel;
+import net.jodah.typetools.TypeResolver;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -108,14 +111,16 @@ public class ViewLoaderReflectionUtils {
 	 *            the type of the view.
 	 * @return a list of fields.
 	 */
-	private static List<Field> getViewModelFields(Class<? extends View> viewType) {
+	public static List<Field> getViewModelFields(Class<? extends View> viewType) {
         return getFieldsWithAnnotation(viewType, InjectViewModel.class);
 	}
+
+
 	
     private static <T, A extends Annotation> List<Field> getFieldsWithAnnotation(Class<T> classType, Class<A> annotationType) {
-        return Arrays.stream(classType.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(annotationType))
-                .collect(Collectors.toList());
+			return ReflectionUtils.getFieldsFromClassHierarchy(classType).stream()
+					.filter(field -> field.isAnnotationPresent(annotationType))
+					.collect(Collectors.toList());
     }
 	
 	
@@ -186,7 +191,11 @@ public class ViewLoaderReflectionUtils {
 	 *            the generic type of the ViewModel.
 	 * @return an Optional containing the ViewModel if it was created or already existing. Otherwise the Optional is
 	 *         empty.
+<<<<<<< HEAD
 	 * 
+=======
+	 *
+>>>>>>> release
 	 * @throws RuntimeException
 	 *             if there is a ViewModel field in the View with the {@link InjectViewModel} annotation whose type
 	 *             doesn't match the generic ViewModel type from the View class.
@@ -197,6 +206,14 @@ public class ViewLoaderReflectionUtils {
 		final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
 		
 		if (viewModelType == ViewModel.class) {
+            // if no viewModel can be created, we have to check if the user has tried to inject a ViewModel
+            final List<Field> viewModelFields = ViewLoaderReflectionUtils.getViewModelFields(view.getClass());
+
+            if(!viewModelFields.isEmpty()) {
+                throw new RuntimeException("The given view of type <" + view.getClass() + "> has no generic viewModel type declared but tries to inject a viewModel.");
+            }
+
+
 			return Optional.empty();
 		}
 		if (viewModelType == TypeResolver.Unknown.class) {

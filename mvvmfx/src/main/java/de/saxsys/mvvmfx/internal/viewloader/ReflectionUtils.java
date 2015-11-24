@@ -19,6 +19,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -50,10 +51,41 @@ public class ReflectionUtils {
 	 * @return a List of Fields that are annotated with the given annotation.
 	 */
 	public static List<Field> getFieldsWithAnnotation(Object target, Class<? extends Annotation> annotationType) {
-		return Arrays.stream(target.getClass().getDeclaredFields())
+		return ReflectionUtils.getFieldsFromClassHierarchy(target.getClass())
+                .stream()
 				.filter(field -> field.isAnnotationPresent(annotationType))
 				.collect(Collectors.toList());
 	}
+	
+	
+	/**
+	 * Returns all fields of the given type and all parent types (except Object).
+	 * <br>
+	 * The difference to {@link Class#getFields()} is that getFields only returns public fields while this method will
+	 * return all fields whatever the access modifier is.
+	 * <br>
+     *
+	 * The difference to {@link Class#getDeclaredFields()} is that getDeclaredFields returns all fields (with all
+	 * modifiers) from the given class but not from super classes. This method instead will return all fields of all
+	 * modifiers from all super classes up in the class hierarchy, except from Object itself.
+	 *
+	 * @param type the type whose fields will be searched.
+	 * @return a list of field instances.
+	 */
+	public static List<Field> getFieldsFromClassHierarchy(Class<?> type) {
+		
+		final List<Field> classFields = new ArrayList<>();
+		classFields.addAll(Arrays.asList(type.getDeclaredFields()));
+		final Class<?> parentClass = type.getSuperclass();
+		
+		if (parentClass != null && !(parentClass.equals(Object.class))) {
+			List<Field> parentClassFields = getFieldsFromClassHierarchy(parentClass);
+			classFields.addAll(parentClassFields);
+		}
+		
+		return classFields;
+	}
+	
 	
 	
 	/**
@@ -68,9 +100,9 @@ public class ReflectionUtils {
 	 *            the callback that will be executed.
 	 * @param errorMessage
 	 *            the error message that is used in the exception when something went wrong.
-	 *
+	 *			
 	 * @return the return value of the given callback.
-	 *
+	 *		
 	 * @throws IllegalStateException
 	 *             when something went wrong.
 	 */
@@ -123,7 +155,7 @@ public class ReflectionUtils {
 	 *            the callback that will be executed.
 	 * @param errorMessage
 	 *            the error message that is used in the exception when something went wrong.
-	 *
+	 *			
 	 * @throws IllegalStateException
 	 *             when something went wrong.
 	 */
