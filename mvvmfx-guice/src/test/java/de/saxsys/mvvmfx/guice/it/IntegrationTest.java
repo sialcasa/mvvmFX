@@ -1,11 +1,10 @@
 package de.saxsys.mvvmfx.guice.it;
 
-import static org.assertj.core.api.Assertions.*;
-
+import de.saxsys.mvvmfx.guice.internal.GuiceInjector;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.saxsys.mvvmfx.guice.internal.GuiceInjector;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class IntegrationTest {
 	
@@ -15,6 +14,7 @@ public class IntegrationTest {
 		MyApp.wasStopCalled = false;
 		MyModule.works = false;
 		MyViewModel.works = false;
+        MyView.wasInitCalled = false;
 	}
 	
 	@Test
@@ -48,6 +48,8 @@ public class IntegrationTest {
 		
 		assertThat(MyModule.works).isTrue();
 		assertThat(MyViewModel.works).isTrue();
+
+        assertThat(MyView.wasInitCalled).isTrue();
 		
 	}
 	

@@ -15,20 +15,20 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.internal.viewloader;
 
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.ViewTuple;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.List;
 import java.util.ResourceBundle;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.ViewTuple;
 
 /**
  * This viewLoader is used to load views that are implementing {@link de.saxsys.mvvmfx.JavaView}.
@@ -58,7 +58,7 @@ public class JavaViewLoader {
 	 *            class of the view.
 	 * @param resourceBundle
 	 *            optional ResourceBundle that will be injected into the view.
-	 * @param viewModel
+	 * @param existingViewModel
 	 *            the viewModel instance that is used to load the view.
 	 * @param <ViewType>
 	 *            the generic type of the view.
@@ -69,7 +69,7 @@ public class JavaViewLoader {
 	 */
 	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadJavaViewTuple(
 			Class<? extends ViewType>
-			viewType, ResourceBundle resourceBundle, ViewModelType viewModel) {
+			viewType, ResourceBundle resourceBundle, final ViewModelType existingViewModel) {
 		DependencyInjector injectionFacade = DependencyInjector.getInstance();
 		
 		final ViewType view = injectionFacade.getInstanceOf(viewType);
@@ -78,21 +78,41 @@ public class JavaViewLoader {
 			throw new IllegalArgumentException("Can not load java view! The view class has to extend from "
 					+ Parent.class.getName() + " or one of it's subclasses");
 		}
-		
-		if (viewModel == null) {
-			viewModel = ViewLoaderReflectionUtils.createViewModel(view);
-		}
+
+
+        ViewModelType viewModel = null;
+
+
+        // when no viewmodel was provided by the user...
+		if (existingViewModel == null) {
+            // ... we create a new one (if possible)
+            viewModel = ViewLoaderReflectionUtils.createViewModel(view);
+		} else {
+            viewModel = existingViewModel;
+        }
 		
 		ResourceBundleInjector.injectResourceBundle(view, resourceBundle);
-		
-		if (viewModel != null) {
-			ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
-			ViewLoaderReflectionUtils.initializeViewModel(viewModel);
-			ViewLoaderReflectionUtils.injectViewModel(view, viewModel);
-		}
-		
-		
-		if (view instanceof Initializable) {
+
+
+        // if no ViewModel is available...
+        if (viewModel == null) {
+            // we need to check if the user is trying to inject a viewModel.
+
+            final List<Field> viewModelFields = ViewLoaderReflectionUtils.getViewModelFields(viewType);
+
+            if(!viewModelFields.isEmpty()) {
+                throw new RuntimeException("The given view of type <" + view.getClass() + "> has no generic viewModel type declared but tries to inject a viewModel.");
+            }
+
+
+        } else {
+            ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
+            ViewLoaderReflectionUtils.initializeViewModel(viewModel);
+            ViewLoaderReflectionUtils.injectViewModel(view, viewModel);
+        }
+
+
+        if (view instanceof Initializable) {
 			Initializable initializable = (Initializable) view;
 			initializable.initialize(null, resourceBundle);
 		} else {

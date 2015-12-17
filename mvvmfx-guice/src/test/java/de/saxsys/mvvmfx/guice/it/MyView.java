@@ -1,13 +1,12 @@
 package de.saxsys.mvvmfx.guice.it;
 
+import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
-
-import de.saxsys.mvvmfx.FxmlView;
 
 public class MyView implements FxmlView<MyViewModel> {
 	@Inject
@@ -21,5 +20,11 @@ public class MyView implements FxmlView<MyViewModel> {
 	
 	@Inject
 	HostServices hostServices;
-	
+
+    public static boolean wasInitCalled = false;
+
+
+    public void initialize() {
+        wasInitCalled = true;
+    }
 }
