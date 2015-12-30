@@ -15,10 +15,6 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.itemlist;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
-
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.ReadOnlyListWrapper;
@@ -27,6 +23,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.WeakListChangeListener;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * Binds an {@link javafx.collections.ObservableList} that contains elements of {@link TargetType} to another
@@ -41,7 +42,9 @@ import javafx.collections.WeakListChangeListener;
 public class ListTransformation<SourceType, TargetType> {
 	
 	// Converter
-	private final Function<SourceType, TargetType> function;
+	private Function<SourceType, TargetType> simpleTransformFunction;
+    private BiFunction<SourceType, TargetType, TargetType> advancedTransformFunction;
+
 	
 	// The two lists - List which was provided and the TargetType representation of
 	// the list
@@ -53,29 +56,58 @@ public class ListTransformation<SourceType, TargetType> {
 	private ListChangeListener<SourceType> listChangeListener;
 	
 	/**
-	 * Creates a {@link ListTransformation} by a given list of items and a function.
+	 * Creates a {@link ListTransformation} by a given list of items and a transform function.
 	 *
 	 * @param modelList
 	 *            which should be transformed for the UI
-	 * @param function
+	 * @param transformFunction
 	 *            which is used for transformation
 	 */
 	public ListTransformation(ObservableList<SourceType> modelList,
-			final Function<SourceType, TargetType> function) {
-		this.function = function;
+			final Function<SourceType, TargetType> transformFunction) {
+		this.simpleTransformFunction = transformFunction;
 		initListEvents();
 		this.modelListProperty().set(modelList);
 	}
+
+
+    /**
+     * Creates a {@link ListTransformation} by a given list of items and a transform function.
+     * Other then the {@link #ListTransformation(ObservableList, Function)} variant, this transform function is a bi-function that
+     * takes the instance of the source list and the existing instance in the targetlist (if any) as arguments.
+     * This way you can define a more complex mapping by reusing an already existing target instance.
+     *
+     * @param modelList
+     *            which should be transformed for the UI
+     * @param transformFunction
+     *            which is used for transformation
+     */
+    public ListTransformation(ObservableList<SourceType> modelList, final BiFunction<SourceType, TargetType, TargetType> transformFunction) {
+        this.advancedTransformFunction = transformFunction;
+        initListEvents();
+
+        this.modelListProperty().set(modelList);
+    }
 	
 	/**
 	 * Creates a {@link ListTransformation} by with a given function.
 	 *
-	 * @param function
+	 * @param transformFunction
 	 *            which is used for transformation
 	 */
-	public ListTransformation(final Function<SourceType, TargetType> function) {
-		this(FXCollections.<SourceType> emptyObservableList(), function);
+	public ListTransformation(final Function<SourceType, TargetType> transformFunction) {
+		this(FXCollections.<SourceType> emptyObservableList(), transformFunction);
 	}
+
+    /**
+     * Creates a {@link ListTransformation} by with a given function. See {@link #ListTransformation(ObservableList, BiFunction)}} for more information.
+     *
+     * @param transformFunction
+     *            which is used for transformation
+     */
+    public ListTransformation(final BiFunction<SourceType, TargetType, TargetType> transformFunction) {
+        this(FXCollections.<SourceType> emptyObservableList(), transformFunction);
+    }
 	
 	// If the list changed we want the recreate the targetType representation
 	private void initListEvents() {
@@ -123,7 +155,14 @@ public class ListTransformation<SourceType, TargetType> {
 		final List<TargetType> toAdd = new ArrayList<>();
 		for (int index = listEvent.getFrom(); index < listEvent.getTo(); index++) {
 			final SourceType item = listEvent.getList().get(index);
-			toAdd.add(function.apply(item));
+
+            if(simpleTransformFunction != null) {
+			    toAdd.add(simpleTransformFunction.apply(item));
+            } else if (advancedTransformFunction != null) {
+                toAdd.add(advancedTransformFunction.apply(item, null));
+            }
+
+
 		}
 		viewModelList.addAll(listEvent.getFrom(), toAdd);
 	}
@@ -153,7 +192,15 @@ public class ListTransformation<SourceType, TargetType> {
 	private void processUpdateEvent(ListChangeListener.Change<? extends SourceType> listEvent) {
 		for (int i = listEvent.getFrom(); i < listEvent.getTo(); i++) {
 			SourceType item = listEvent.getList().get(i);
-			viewModelList.set(i, ListTransformation.this.function.apply(item));
+
+            if(simpleTransformFunction != null) {
+			    viewModelList.set(i, ListTransformation.this.simpleTransformFunction.apply(item));
+            } else if(advancedTransformFunction != null) {
+                final TargetType existingTargetValue = viewModelList.get(i);
+
+                final TargetType newTargetValue = ListTransformation.this.advancedTransformFunction.apply(item, existingTargetValue);
+                viewModelList.set(i, newTargetValue);
+            }
 		}
 	}
 	

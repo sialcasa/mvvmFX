@@ -34,8 +34,7 @@ public class SelectableItemListTest {
 	private final Person person3 = new Person("Person 1");
 	private final Person person2 = new Person("Person 2");
 	private final Person person1 = new Person("Person 3");
-	private ModelToStringFunction<Person> stringMapper;
-	private ObservableList<Person> listWithModelObjects;
+    private ObservableList<Person> listWithModelObjects;
 	private SelectableItemList<Person> selectableItemList;
 	
 	/**
@@ -51,16 +50,11 @@ public class SelectableItemListTest {
 		listWithModelObjects.add(person3);
 		
 		// Create the converter
-		stringMapper = new ModelToStringFunction<Person>() {
-			@Override
-			public String apply(Person object) {
-				return object.name;
-			}
-		};
+        ModelToStringFunction<Person> stringMapper = object -> object.name;
 		
 		// Convenience
-		selectableItemList = new SelectableItemList<Person>(
-				listWithModelObjects, stringMapper);
+		selectableItemList = new SelectableItemList<>(
+                listWithModelObjects, stringMapper);
 	}
 	
 	/**
