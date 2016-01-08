@@ -191,11 +191,6 @@ public class ViewLoaderReflectionUtils {
 	 *            the generic type of the ViewModel.
 	 * @return an Optional containing the ViewModel if it was created or already existing. Otherwise the Optional is
 	 *         empty.
-<<<<<<< HEAD
-	 * 
-=======
-	 *
->>>>>>> release
 	 * @throws RuntimeException
 	 *             if there is a ViewModel field in the View with the {@link InjectViewModel} annotation whose type
 	 *             doesn't match the generic ViewModel type from the View class.
