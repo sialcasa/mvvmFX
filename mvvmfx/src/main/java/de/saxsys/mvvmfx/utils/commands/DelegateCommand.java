@@ -17,6 +17,7 @@ package de.saxsys.mvvmfx.utils.commands;
 
 import java.util.function.Supplier;
 
+import javafx.beans.property.ObjectProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -129,27 +130,35 @@ public class DelegateCommand extends Service<Void> implements Command {
 					start();
 				}
 			} else {
-				// When the Command is not executed in background, we have to imitate a Service execution, so the
-				// Service Statemachine provides the
-				// correct Service State to the command.
+				// When the command is not executed in background, we have to imitate a service execution, so the
+				// service statemachine provides the
+				// correct service state to the command.
 				callActionAndSynthesizeServiceRun();
 			}
 		}
 	}
+
+	/**
+	 * For internal purposes we need to change the state property of the service.
+	 */
+	private ObjectProperty<State> getStateObjectPropertyReadable() {
+		return (ObjectProperty<State>) stateProperty();
+ 	}
 	
 	private void callActionAndSynthesizeServiceRun() {
 		try {
-			// We call the User Action. If an exception occures we save it, therefore we can use it in the Test
-			// (createSynthesizedTask) to throw it during the Service invokation.
+			getStateObjectPropertyReadable().setValue(State.SCHEDULED);
+			
+			// We call the User Action. If an exception occurs we save it, therefore we can use it in the Test
+			// (createSynthesizedTask) to throw it during the Service invocation.
 			actionSupplier.get().action();
+			
+			getStateObjectPropertyReadable().setValue(State.SUCCEEDED);
 		} catch (Exception e) {
 			LOG.error("Exception in Command Execution", occuredException);
 			this.occuredException = e;
+			getStateObjectPropertyReadable().setValue(State.FAILED);
 		}
-		// Start the Service to trigger the Service state machine. createTask->createSynthesizedTask will be called and
-		// will throw the Exception which was catched some lines before
-		reset();
-		start();
 	}
 	
 	@Override
