@@ -7,7 +7,7 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.stage.Stage;
 
 @Singleton
-public class AddContactDialog implements FxmlView<AddContactDialogViewModel> {
+public class AddContactDialogView implements FxmlView<AddContactDialogViewModel> {
 	
 	@InjectViewModel
 	private AddContactDialogViewModel viewModel;

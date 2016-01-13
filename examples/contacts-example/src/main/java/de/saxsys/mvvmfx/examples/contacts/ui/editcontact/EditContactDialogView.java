@@ -9,7 +9,7 @@ import javafx.fxml.FXML;
 import javafx.stage.Stage;
 
 @Singleton
-public class EditContactDialog implements FxmlView<EditContactDialogViewModel> {
+public class EditContactDialogView implements FxmlView<EditContactDialogViewModel> {
 	
 	@FXML
 	private ContactDialogView contactDialogViewController;
