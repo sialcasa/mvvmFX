@@ -30,15 +30,6 @@ import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.ViewTuple;
-
 /**
  * This viewLoader is used to load views that are implementing {@link de.saxsys.mvvmfx.JavaView}.
  *
@@ -78,10 +69,10 @@ public class JavaViewLoader {
 	 */
 	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadJavaViewTuple(
 			Class<? extends ViewType>
-			viewType, ResourceBundle resourceBundle, final ViewModelType existingViewModel) {
+			viewType, ResourceBundle resourceBundle, final ViewModelType existingViewModel, ViewType codeBehind) {
 		DependencyInjector injectionFacade = DependencyInjector.getInstance();
-		
-		final ViewType view = injectionFacade.getInstanceOf(viewType);
+
+		final ViewType view = codeBehind == null ? injectionFacade.getInstanceOf(viewType) : codeBehind;
 		
 		if (!(view instanceof Parent)) {
 			throw new IllegalArgumentException("Can not load java view! The view class has to extend from "
