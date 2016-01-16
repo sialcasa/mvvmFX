@@ -1,10 +1,10 @@
 package de.saxsys.mvvmfx;
 
-import java.util.ResourceBundle;
-
 import de.saxsys.mvvmfx.internal.viewloader.FxmlViewLoader;
 import de.saxsys.mvvmfx.internal.viewloader.JavaViewLoader;
 import de.saxsys.mvvmfx.internal.viewloader.ResourceBundleManager;
+
+import java.util.ResourceBundle;
 
 /**
  * Fluent API for loading Views. <br>
@@ -57,6 +57,7 @@ public class FluentViewLoader {
 		private ResourceBundle resourceBundle;
 		
 		private ViewModelType viewModel;
+        private ViewType codeBehind;
 		
 		JavaViewStep(Class<? extends ViewType> viewType) {
 			this.viewType = viewType;
@@ -92,7 +93,21 @@ public class FluentViewLoader {
 			this.viewModel = viewModel;
 			return this;
 		}
-		
+
+        /**
+         * This param is used to define an existing instance of the codeBehind class that is used instead of creating a
+         * new one while loading. <br>
+         *
+         * This can be useful when creating custom controls.
+         *
+         * @param codeBehind
+         *            the codeBehind instance that is used to load this java view.
+         * @return this instance of the builder step.
+         */
+        public JavaViewStep<ViewType, ViewModelType> codeBehind(ViewType codeBehind) {
+            this.codeBehind = codeBehind;
+            return this;
+        }
 		
 		/**
 		 * The final step of the Fluent API. This method loads the view based on the given params.
@@ -102,9 +117,11 @@ public class FluentViewLoader {
 		public ViewTuple<ViewType, ViewModelType> load() {
 			JavaViewLoader javaViewLoader = new JavaViewLoader();
 			
-			return javaViewLoader.loadJavaViewTuple(viewType, ResourceBundleManager.getInstance().mergeWithGlobal(resourceBundle), viewModel);
+			return javaViewLoader.loadJavaViewTuple(viewType, ResourceBundleManager.getInstance().mergeWithGlobal(resourceBundle), viewModel, codeBehind);
 		}
-	}
+
+
+    }
 	
 	/**
 	 * This class is the builder step to load a fxml based view. It is accessed from the {@link FluentViewLoader} with
@@ -123,7 +140,7 @@ public class FluentViewLoader {
 		private Object root;
 		private ViewType codeBehind;
 		private ViewModelType viewModel;
-		
+
 		FxmlViewStep(Class<? extends ViewType> viewType) {
 			this.viewType = viewType;
 		}

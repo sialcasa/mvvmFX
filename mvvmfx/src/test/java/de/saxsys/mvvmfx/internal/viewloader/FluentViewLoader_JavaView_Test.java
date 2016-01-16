@@ -33,6 +33,7 @@ import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static de.saxsys.mvvmfx.internal.viewloader.ResourceBundleAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -543,5 +544,26 @@ public class FluentViewLoader_JavaView_Test {
 
 		assertThat(loadedView.resources).isNull();
 	}
-	
+
+
+    @Test
+    public void testExistingCodeBehindIsUsed() {
+        AtomicInteger counter = new AtomicInteger(0);
+        class TestView extends VBox implements JavaView<TestViewModel> {
+
+            TestView() {
+                counter.incrementAndGet();
+            }
+        }
+
+        TestView view = new TestView();
+
+        final ViewTuple<TestView, TestViewModel> viewTuple = FluentViewLoader.javaView(TestView.class).codeBehind(view).load();
+
+        assertThat(viewTuple.getView()).isEqualTo(view);
+        assertThat(viewTuple.getCodeBehind()).isEqualTo(view);
+
+        assertThat(counter.get()).isEqualTo(1);
+    }
+
 }
