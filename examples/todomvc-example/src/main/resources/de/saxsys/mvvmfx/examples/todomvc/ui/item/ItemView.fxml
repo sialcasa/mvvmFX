@@ -9,28 +9,28 @@
 <?import java.net.URL?>
 
 <HBox fx:id="root" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="-Infinity" styleClass="item_root"
-	  xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-	  fx:controller="de.saxsys.mvvmfx.examples.todomvc.ui.item.ItemView">
-	<children>
-		<CheckBox fx:id="completed" mnemonicParsing="false"/>
-		<StackPane alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
-			<children>
-				<HBox fx:id="contentBox" styleClass="content_box">
-					<children>
-						<Label fx:id="contentLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-							   text="Label" HBox.hgrow="ALWAYS"/>
-						<Button fx:id="deleteButton" mnemonicParsing="false" onAction="#delete">
-							<graphic>
-								<FontAwesomeIcon glyphName="CLOSE" size="1.5em" styleClass="close_icon"/>
-							</graphic>
-						</Button>
-					</children>
-				</HBox>
-				<TextField fx:id="contentInput" promptText="What needs to be done?" visible="false"/>
-			</children>
-		</StackPane>
-	</children>
-	<stylesheets>
-		<URL value="@itemview.css"/>
-	</stylesheets>
+      xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.saxsys.mvvmfx.examples.todomvc.ui.item.ItemView">
+    <children>
+        <CheckBox fx:id="completed" mnemonicParsing="false"/>
+        <StackPane alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+            <children>
+                <HBox fx:id="contentBox" styleClass="content_box">
+                    <children>
+                        <Label fx:id="contentLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                                                       text="Label" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#delete">
+                            <graphic>
+                                <FontAwesomeIcon glyphName="CLOSE" size="1.5em" styleClass="close_icon"/>
+                            </graphic>
+                        </Button>
+                    </children>
+                </HBox>
+                <TextField fx:id="contentInput" promptText="What needs to be done?" visible="false"/>
+            </children>
+        </StackPane>
+    </children>
+    <stylesheets>
+        <URL value="@itemview.css"/>
+    </stylesheets>
 </HBox>

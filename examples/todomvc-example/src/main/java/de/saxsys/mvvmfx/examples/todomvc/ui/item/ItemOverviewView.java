@@ -12,16 +12,15 @@ import de.saxsys.mvvmfx.utils.viewlist.CachedViewModelCellFactory;
  */
 public class ItemOverviewView implements FxmlView<ItemOverviewViewModel> {
 
-	@FXML
-	public ListView<ItemViewModel> items;
+    @FXML
+    public ListView<ItemViewModel> items;
 
-	@InjectViewModel
-	private ItemOverviewViewModel viewModel;
+    @InjectViewModel
+    private ItemOverviewViewModel viewModel;
 
-	public void initialize() {
-		items.setItems(viewModel.itemsProperty());
-
-		items.setCellFactory(CachedViewModelCellFactory.createForFxmlView(ItemView.class));
-	}
+    public void initialize() {
+        items.setItems(viewModel.itemsProperty());
+        items.setCellFactory(CachedViewModelCellFactory.createForFxmlView(ItemView.class));
+    }
 
 }

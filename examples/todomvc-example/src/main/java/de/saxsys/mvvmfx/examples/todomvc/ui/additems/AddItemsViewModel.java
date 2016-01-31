@@ -16,41 +16,38 @@ import de.saxsys.mvvmfx.examples.todomvc.model.TodoItemStore;
  * @author manuel.mauky
  */
 public class AddItemsViewModel implements ViewModel {
-	
-	
-	private BooleanProperty allSelected = new SimpleBooleanProperty();
-	private StringProperty newItemValue = new SimpleStringProperty("");
-	
-	private ReadOnlyBooleanWrapper allSelectedVisible = new ReadOnlyBooleanWrapper();
-	
-	public AddItemsViewModel() {
-		allSelected.addListener((obs, oldV, newV) -> {
-			TodoItemStore.getInstance().getItems()
-					.forEach(item -> item.setCompleted(newV));
-		});
-		
-		allSelectedVisible.bind(Bindings.isEmpty(TodoItemStore.getInstance().getItems()).not());
-	}
-	
-	
-	public void addItem() {
-		final String newValue = newItemValue.get();
-		if (newValue != null && !newValue.trim().isEmpty()) {
-			TodoItemStore.getInstance().getItems().add(new TodoItem(newValue));
-			newItemValue.set("");
-		}
-	}
-	
-	public StringProperty newItemValueProperty() {
-		return newItemValue;
-	}
-	
-	
-	public BooleanProperty allSelectedProperty() {
-		return allSelected;
-	}
-	
-	public ReadOnlyBooleanProperty allSelectedVisibleProperty() {
-		return allSelectedVisible;
-	}
+
+    private final BooleanProperty allSelected = new SimpleBooleanProperty();
+    private final StringProperty newItemValue = new SimpleStringProperty("");
+
+    private final ReadOnlyBooleanWrapper allSelectedVisible = new ReadOnlyBooleanWrapper();
+
+    public AddItemsViewModel() {
+        allSelected.addListener((obs, oldV, newV) -> {
+            TodoItemStore.getInstance().getItems().forEach(item -> item.setCompleted(newV));
+        });
+
+        allSelectedVisible.bind(Bindings.isEmpty(TodoItemStore.getInstance().getItems()).not());
+    }
+
+    public void addItem() {
+        final String newValue = newItemValue.get();
+        if (newValue != null && !newValue.trim().isEmpty()) {
+            TodoItemStore.getInstance().getItems().add(new TodoItem(newValue));
+            newItemValue.set("");
+        }
+    }
+
+    public StringProperty newItemValueProperty() {
+        return newItemValue;
+    }
+
+    public BooleanProperty allSelectedProperty() {
+        return allSelected;
+    }
+
+    public ReadOnlyBooleanProperty allSelectedVisibleProperty() {
+        return allSelectedVisible;
+    }
+    
 }
