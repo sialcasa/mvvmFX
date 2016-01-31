@@ -10,13 +10,13 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox alignment="CENTER_LEFT" spacing="10.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.40"
-	  fx:controller="de.saxsys.mvvmfx.examples.welcome.view.personwelcome.PersonWelcomeView">
-	<children>
-		<Label fx:id="welcomeLabel" alignment="CENTER" text="The upcoming text">
-			<VBox.margin>
-				<Insets fx:id="x1"/>
-			</VBox.margin>
-		</Label>
-		<Button mnemonicParsing="false" onAction="#closeApplicationButtonPressed" text="Hide" VBox.margin="$x1"/>
-	</children>
+      fx:controller="de.saxsys.mvvmfx.examples.welcome.view.personwelcome.PersonWelcomeView">
+    <children>
+        <Label fx:id="welcomeLabel" alignment="CENTER" text="The upcoming text">
+            <VBox.margin>
+                <Insets fx:id="x1"/>
+            </VBox.margin>
+        </Label>
+        <Button mnemonicParsing="false" onAction="#closeApplicationButtonPressed" text="Hide" VBox.margin="$x1"/>
+    </children>
 </VBox>
