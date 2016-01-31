@@ -8,18 +8,17 @@ import javafx.fxml.FXML;
 
 @Singleton
 public class AboutAuthorView implements FxmlView<AboutAuthorViewModel> {
-	
-	@InjectViewModel
-	private AboutAuthorViewModel viewModel;
-	
-	
-	@FXML
-	public void openBlog() {
-		viewModel.openBlog();
-	}
-	
-	@FXML
-	public void openTwitter() {
-		viewModel.openTwitter();
-	}
+
+    @InjectViewModel
+    private AboutAuthorViewModel viewModel;
+
+    @FXML
+    public void openBlog() {
+        viewModel.openBlog();
+    }
+
+    @FXML
+    public void openTwitter() {
+        viewModel.openTwitter();
+    }
 }

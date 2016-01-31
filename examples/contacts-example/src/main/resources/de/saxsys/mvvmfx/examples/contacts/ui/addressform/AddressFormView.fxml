@@ -16,45 +16,45 @@
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-			xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-			fx:controller="de.saxsys.mvvmfx.examples.contacts.ui.addressform.AddressFormView">
-	<children>
-		<GridPane hgap="4.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-				  style="-fx-background-color: white;" vgap="4.0" AnchorPane.bottomAnchor="0.0"
-				  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-			<columnConstraints>
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-			</columnConstraints>
-			<rowConstraints>
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-			</rowConstraints>
-			<padding>
-				<Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
-			</padding>
-			<VBox.margin>
-				<Insets/>
-			</VBox.margin>
-			<children>
-				<Label text="%addressform.street.label"/>
-				<Label text="%addressform.postalcode.label" GridPane.rowIndex="1"/>
-				<Label text="%addressform.city.label" GridPane.rowIndex="2"/>
-				<TextField fx:id="streetInput" promptText="%addressform.street.prompt" GridPane.columnIndex="1"/>
-				<TextField fx:id="postalcodeInput" promptText="%addressform.postalcode.prompt" GridPane.columnIndex="1"
-						   GridPane.rowIndex="1"/>
-				<TextField fx:id="cityInput" promptText="%addressform.city.prompt" GridPane.columnIndex="1"
-						   GridPane.rowIndex="2"/>
-				<Label fx:id="countryLabel" text="%addressform.country.label" GridPane.rowIndex="3"/>
-				<Label fx:id="subdivisionLabel" text="%addressform.subdivision.label" GridPane.rowIndex="4"/>
-				<ComboBox fx:id="federalStateInput" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-				<ComboBox fx:id="countryInput" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-				<ProgressIndicator fx:id="loadingIndicator" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
-			</children>
-		</GridPane>
-	</children>
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="de.saxsys.mvvmfx.examples.contacts.ui.addressform.AddressFormView">
+    <children>
+        <GridPane hgap="4.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                          style="-fx-background-color: white;" vgap="4.0" AnchorPane.bottomAnchor="0.0"
+                          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <padding>
+                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+            </padding>
+            <VBox.margin>
+                <Insets/>
+            </VBox.margin>
+            <children>
+                <Label text="%addressform.street.label"/>
+                <Label text="%addressform.postalcode.label" GridPane.rowIndex="1"/>
+                <Label text="%addressform.city.label" GridPane.rowIndex="2"/>
+                <TextField fx:id="streetInput" promptText="%addressform.street.prompt" GridPane.columnIndex="1"/>
+                <TextField fx:id="postalcodeInput" promptText="%addressform.postalcode.prompt" GridPane.columnIndex="1"
+                                           GridPane.rowIndex="1"/>
+                <TextField fx:id="cityInput" promptText="%addressform.city.prompt" GridPane.columnIndex="1"
+                                           GridPane.rowIndex="2"/>
+                <Label fx:id="countryLabel" text="%addressform.country.label" GridPane.rowIndex="3"/>
+                <Label fx:id="subdivisionLabel" text="%addressform.subdivision.label" GridPane.rowIndex="4"/>
+                <ComboBox fx:id="federalStateInput" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                <ComboBox fx:id="countryInput" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                <ProgressIndicator fx:id="loadingIndicator" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+            </children>
+        </GridPane>
+    </children>
 </AnchorPane>

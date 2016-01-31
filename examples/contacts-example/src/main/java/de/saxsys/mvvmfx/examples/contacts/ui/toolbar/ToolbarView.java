@@ -17,26 +17,27 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 public class ToolbarView implements FxmlView<ToolbarViewModel> {
-	
-	@FXML
-	public Button addNewContactButton;
-	
-	@InjectViewModel
-	private ToolbarViewModel viewModel;
-	
-	@Inject
-	private Stage primaryStage;
-	
-	public void initialize() {
-		AwesomeDude.setIcon(addNewContactButton, AwesomeIcon.PLUS);
-	}
-	
-	@FXML
-	public void addNewContact() {
-		ViewTuple<AddContactDialogView, AddContactDialogViewModel> load = FluentViewLoader.fxmlView(AddContactDialogView.class)
-				.load();
-		Parent view = load.getView();
-		Stage showDialog = DialogHelper.showDialog(view, primaryStage, "/contacts.css");
-		load.getCodeBehind().setDisplayingStage(showDialog);
-	}
+
+    @FXML
+    public Button addNewContactButton;
+
+    @InjectViewModel
+    private ToolbarViewModel viewModel;
+
+    @Inject
+    private Stage primaryStage;
+
+    public void initialize() {
+        AwesomeDude.setIcon(addNewContactButton, AwesomeIcon.PLUS);
+    }
+
+    @FXML
+    public void addNewContact() {
+        ViewTuple<AddContactDialogView, AddContactDialogViewModel> load = FluentViewLoader
+                .fxmlView(AddContactDialogView.class).load();
+        Parent view = load.getView();
+        Stage showDialog = DialogHelper.showDialog(view, primaryStage, "/contacts.css");
+        load.getCodeBehind().setDisplayingStage(showDialog);
+    }
+    
 }
