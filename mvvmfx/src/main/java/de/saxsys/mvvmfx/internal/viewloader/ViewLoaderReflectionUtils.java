@@ -1,9 +1,5 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
-import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.ViewModel;
-import net.jodah.typetools.TypeResolver;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,7 +7,12 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import net.jodah.typetools.TypeResolver;
+import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.ViewModel;
 
 /**
  * This class encapsulates reflection related utility operations specific for loading of views.
@@ -135,11 +136,21 @@ public class ViewLoaderReflectionUtils {
 	}
 	
 	/**
-	 * This method is used to create and inject the ViewModel for a given View instance. The ViewModel is only created
-	 * if the View has a suitable field for the ViewModel.
+	 * This method is used to create and inject the ViewModel for a given View instance.
 	 * 
-	 * If a ViewModel was created OR there was already a ViewModel set in the View, this viewModel instance is returned
-	 * via an Optional.
+	 * The following checks are done:
+	 * <ul>
+	 * <li>Check whether the View class specifies a ViewModel type as generic type.</li>
+	 * <li>Check whether the View has a field with a matching ViewModel type and the annotation {@link InjectViewModel}.
+	 * </li>
+	 * 
+	 * <li>Check whether field in the view instance already contains a ViewModel instance. In this case nothing will
+	 * happen to the existing ViewModel instance.</li>
+	 * 
+	 * </ul>
+	 * 
+	 * If a suitable field was found a new ViewModel instance will be created and injected into the field. After that
+	 * the given Consumer function will be applied with the injected ViewModel instance as argument.
 	 * 
 	 * @param view
 	 *            the view instance.
@@ -147,16 +158,16 @@ public class ViewLoaderReflectionUtils {
 	 *            the generic type of the View.
 	 * @param <VM>
 	 *            the generic type of the ViewModel.
-	 * @return an Optional containing the ViewModel if it was created or already existing. Otherwise the Optional is
-	 *         empty.
-	 *
+	 * @param newVmConsumer
+	 *            a Consumer function that is applied when a new ViewModel instance is created.
+	 *			
 	 * @throws RuntimeException
 	 *             if there is a ViewModel field in the View with the {@link InjectViewModel} annotation whose type
 	 *             doesn't match the generic ViewModel type from the View class.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <V extends View<? extends VM>, VM extends ViewModel> Optional<VM> createAndInjectViewModel(
-			final V view) {
+	public static <V extends View<? extends VM>, VM extends ViewModel> void createAndInjectViewModel(
+			final V view, Consumer<ViewModel> newVmConsumer) {
 		final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
 		
 		if (viewModelType == ViewModel.class) {
@@ -166,45 +177,30 @@ public class ViewLoaderReflectionUtils {
             if(!viewModelFields.isEmpty()) {
                 throw new RuntimeException("The given view of type <" + view.getClass() + "> has no generic viewModel type declared but tries to inject a viewModel.");
             }
-
-
-			return Optional.empty();
+			return;
 		}
 		if (viewModelType == TypeResolver.Unknown.class) {
-			return Optional.empty();
+			return;
 		}
 		
 		final Optional<Field> fieldOptional = getViewModelField(view.getClass(), viewModelType);
 		if (fieldOptional.isPresent()) {
 			Field field = fieldOptional.get();
 			
-			Object viewModel = ReflectionUtils.accessField(field, () -> {
+			ReflectionUtils.accessField(field, () -> {
 				Object existingViewModel = field.get(view);
-				
-				if (existingViewModel != null) {
-					return existingViewModel;
-				} else {
+
+				if (existingViewModel == null) {
 					final Object newViewModel = DependencyInjector.getInstance().getInstanceOf(viewModelType);
 					
 					field.set(view, newViewModel);
-					
-					return newViewModel;
+
+					newVmConsumer.accept((ViewModel) newViewModel);
 				}
 			}, "Can't inject ViewModel of type <" + viewModelType
 					+ "> into the view <" + view + ">");
 			
-			if (viewModel == null) {
-				return Optional.empty();
-			}
-			
-			try {
-				return Optional.of((VM) viewModel);
-			} catch (ClassCastException e) {
-				return Optional.empty();
-			}
 		}
-		
-		return Optional.empty();
 	}
 	
 	/**
@@ -245,6 +241,9 @@ public class ViewLoaderReflectionUtils {
 	 *            the generic type of the ViewModel.
 	 */
 	public static <ViewModelType extends ViewModel> void initializeViewModel(ViewModelType viewModel) {
+		if(viewModel == null) {
+			return;
+		}
 		try {
 			final Method initMethod = viewModel.getClass().getMethod("initialize");
 			

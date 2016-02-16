@@ -107,7 +107,12 @@ public class JavaViewLoader {
 
         } else {
             ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
-            ViewLoaderReflectionUtils.initializeViewModel(viewModel);
+			
+			// if the user has provided an existing ViewModel, we will not (re-)initialize this existing instance
+			if(existingViewModel == null) {
+            	ViewLoaderReflectionUtils.initializeViewModel(viewModel);
+			}
+			
             ViewLoaderReflectionUtils.injectViewModel(view, viewModel);
         }
 

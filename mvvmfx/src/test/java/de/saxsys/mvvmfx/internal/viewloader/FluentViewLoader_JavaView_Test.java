@@ -154,7 +154,7 @@ public class FluentViewLoader_JavaView_Test {
 		View codeBehind = viewTuple.getCodeBehind();
 		assertThat(codeBehind).isNotNull().isInstanceOf(TestView.class);
 
-		assertThat(TestViewModel.wasInitialized).isTrue();
+		assertThat(TestViewModel.wasInitialized).isFalse();
 	}
 
 	/**

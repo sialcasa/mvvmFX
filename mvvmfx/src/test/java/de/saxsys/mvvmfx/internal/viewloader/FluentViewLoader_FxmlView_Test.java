@@ -131,6 +131,8 @@ public class FluentViewLoader_FxmlView_Test {
 				.getCodeBehind();
 
 		assertThat(codeBehind.wasInitialized).isTrue();
+		
+		assertThat(viewTuple.getViewModel()).isNull();
 	}
 	
 	@Test
@@ -239,7 +241,7 @@ public class FluentViewLoader_FxmlView_Test {
 	
 	/**
 	 * The user can define a codeBehind instance that should be used by the viewLoader. When this codeBehind instance
-	 * has already has a ViewModel it should not be overwritten when the view is loaded.
+	 * already has a ViewModel it should not be overwritten when the view is loaded.
 	 */
 	@Test
 	public void testAlreadyExistingViewModelShouldNotBeOverwritten() {
@@ -430,7 +432,7 @@ public class FluentViewLoader_FxmlView_Test {
 	/**
 	 * This test reproduces the <a href="https://github.com/sialcasa/mvvmFX/issues/292">bug #292</a>
 	 * Given the following conditions:
-	 * 1. The View has no ViewModel field and not injection of the ViewModel.
+	 * 1. The View has no ViewModel field and no injection of the ViewModel.
 	 * 2. While loading an existing ViewModel instance is passed to the {@link FluentViewLoader}
 	 * 
 	 * Under this conditions the ViewLoader was still creating a new ViewModel instance or retrieved an instance

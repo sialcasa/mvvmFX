@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 /**
  * This viewLoader is used to load views that are implementing {@link de.saxsys.mvvmfx.FxmlView}.
@@ -147,6 +148,13 @@ public class FxmlViewLoader {
 				// otherwise we create a new ViewModel. This is needed because the ViewTuple has to contain a VM even if the codeBehind doesn't need one
 				if (actualViewModel == null) {
 					actualViewModel = ViewLoaderReflectionUtils.createViewModel(loadedController);
+					
+					
+					// it is possible that no viewModel could be created (f.e. when no generic VM type was specified)
+					// otherwise we need to initialize the created ViewModel instance.
+					if(actualViewModel != null) {
+						ViewLoaderReflectionUtils.initializeViewModel(actualViewModel);
+					}
 				}
 			} else {
 				actualViewModel = viewModel;
@@ -228,16 +236,13 @@ public class FxmlViewLoader {
 	
 	private static void handleInjection(View codeBehind, ResourceBundle resourceBundle) {
 		ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
+
+		Consumer<ViewModel> newVmConsumer = viewModel -> {
+			ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
+			ViewLoaderReflectionUtils.initializeViewModel(viewModel);
+		};
 		
-		final Optional viewModelOptional = ViewLoaderReflectionUtils.createAndInjectViewModel(codeBehind);
-		
-		if (viewModelOptional.isPresent()) {
-			final Object viewModel = viewModelOptional.get();
-			if (viewModel instanceof ViewModel) {
-				ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
-				ViewLoaderReflectionUtils.initializeViewModel((ViewModel) viewModel);
-			}
-		}
+		ViewLoaderReflectionUtils.createAndInjectViewModel(codeBehind, newVmConsumer);
 	}
 	
 	private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, ViewModel viewModel) {
