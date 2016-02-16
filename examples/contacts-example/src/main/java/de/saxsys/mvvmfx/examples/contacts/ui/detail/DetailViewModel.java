@@ -5,52 +5,49 @@ import static eu.lestard.advanced_bindings.api.ObjectBindings.map;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import javax.inject.Inject;
+
+import de.saxsys.mvvmfx.InjectScope;
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.examples.contacts.model.Address;
+import de.saxsys.mvvmfx.examples.contacts.model.Contact;
+import de.saxsys.mvvmfx.examples.contacts.model.Repository;
+import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
+import de.saxsys.mvvmfx.examples.contacts.ui.scopes.MasterDetailScope;
+import de.saxsys.mvvmfx.utils.commands.Action;
+import de.saxsys.mvvmfx.utils.commands.Command;
+import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import javafx.application.HostServices;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.examples.contacts.events.OpenEditContactDialogEvent;
-import de.saxsys.mvvmfx.examples.contacts.model.Address;
-import de.saxsys.mvvmfx.examples.contacts.model.Contact;
-import de.saxsys.mvvmfx.examples.contacts.model.Repository;
-import de.saxsys.mvvmfx.examples.contacts.ui.master.MasterViewModel;
-
 public class DetailViewModel implements ViewModel {
+	
+	public static final String OPEN_EDIT_CONTACT_DIALOG = "open_edit_contact";
 	
 	private static final DateTimeFormatter BIRTHDAY_FORMATTER = DateTimeFormatter.ISO_DATE;
 	
-	private ReadOnlyStringWrapper name = new ReadOnlyStringWrapper();
+	private final ReadOnlyStringWrapper name = new ReadOnlyStringWrapper();
 	
-	private ReadOnlyStringWrapper birthday = new ReadOnlyStringWrapper();
-	private ReadOnlyStringWrapper roleDepartment = new ReadOnlyStringWrapper();
-	private ReadOnlyStringWrapper email = new ReadOnlyStringWrapper();
-	private ReadOnlyStringWrapper phone = new ReadOnlyStringWrapper();
-	private ReadOnlyStringWrapper mobile = new ReadOnlyStringWrapper();
+	private final ReadOnlyStringWrapper birthday = new ReadOnlyStringWrapper();
+	private final ReadOnlyStringWrapper roleDepartment = new ReadOnlyStringWrapper();
+	private final ReadOnlyStringWrapper email = new ReadOnlyStringWrapper();
+	private final ReadOnlyStringWrapper phone = new ReadOnlyStringWrapper();
+	private final ReadOnlyStringWrapper mobile = new ReadOnlyStringWrapper();
 	
-	private ReadOnlyStringWrapper cityPostalcode = new ReadOnlyStringWrapper();
-	private ReadOnlyStringWrapper street = new ReadOnlyStringWrapper();
-	private ReadOnlyStringWrapper countrySubdivision = new ReadOnlyStringWrapper();
-	
-	private ReadOnlyBooleanWrapper removeButtonDisabled = new ReadOnlyBooleanWrapper();
-	private ReadOnlyBooleanWrapper editButtonDisabled = new ReadOnlyBooleanWrapper();
+	private final ReadOnlyStringWrapper cityPostalcode = new ReadOnlyStringWrapper();
+	private final ReadOnlyStringWrapper street = new ReadOnlyStringWrapper();
+	private final ReadOnlyStringWrapper countrySubdivision = new ReadOnlyStringWrapper();
 	
 	
-	@Inject
-	private Event<OpenEditContactDialogEvent> openEditEvent;
-	
-	@Inject
-	MasterViewModel masterViewModel;
+	private DelegateCommand editCommand;
+	private DelegateCommand removeCommand;
+	private DelegateCommand emailLinkCommand;
 	
 	@Inject
 	HostServices hostServices;
@@ -58,10 +55,50 @@ public class DetailViewModel implements ViewModel {
 	@Inject
 	Repository repository;
 	
-	@PostConstruct
-	void init() {
-		ReadOnlyObjectProperty<Contact> contactProperty = masterViewModel.selectedContactProperty();
+	@InjectScope
+	MasterDetailScope mdScope;
+	
+	@InjectScope
+	ContactDialogScope dialogscope;
+	
+	public void initialize() {
+		ReadOnlyObjectProperty<Contact> contactProperty = getSelectedContactPropertyFromScope();
 		
+		createBindingsForLabels(contactProperty);
+		
+		editCommand = new DelegateCommand(() -> new Action() {
+			@Override
+			protected void action() throws Exception {
+				Contact selectedContact = getSelectedContactFromScope();
+				if (selectedContact != null) {
+					dialogscope.setContactToEdit(selectedContact);
+					publish(OPEN_EDIT_CONTACT_DIALOG);
+				}
+			}
+		}, getSelectedContactPropertyFromScope().isNotNull());
+		
+		removeCommand = new DelegateCommand(() -> new Action() {
+			@Override
+			protected void action() throws Exception {
+				Contact selectedContact = getSelectedContactFromScope();
+				if (selectedContact != null) {
+					repository.delete(getSelectedContactFromScope());
+				}
+			}
+			
+		}, getSelectedContactPropertyFromScope().isNotNull());
+		
+		emailLinkCommand = new DelegateCommand(() -> new Action() {
+			@Override
+			protected void action() throws Exception {
+				if (email.get() != null && !email.get().trim().isEmpty()) {
+					hostServices.showDocument("mailto:" + email.get());
+				}
+			}
+		});
+	}
+	
+	private void createBindingsForLabels(ReadOnlyObjectProperty<Contact> contactProperty) {
 		name.bind(emptyStringOnNull(map(contactProperty, contact -> {
 			StringBuilder result = new StringBuilder();
 			
@@ -140,10 +177,6 @@ public class DetailViewModel implements ViewModel {
 			}
 			return result.toString();
 		})));
-		
-		
-		removeButtonDisabled.bind(masterViewModel.selectedContactProperty().isNull());
-		editButtonDisabled.bind(masterViewModel.selectedContactProperty().isNull());
 	}
 	
 	/**
@@ -157,30 +190,20 @@ public class DetailViewModel implements ViewModel {
 			} else {
 				return source.get();
 			}
-		}, source);
+		} , source);
 	}
 	
-	public void onEmailLinkClicked() {
-		if (email.get() != null && !email.get().trim().isEmpty()) {
-			hostServices.showDocument("mailto:" + email.get());
-		}
+	public Command getEditCommand() {
+		return editCommand;
 	}
 	
-	public void editAction() {
-		Contact selectedContact = masterViewModel.selectedContactProperty().get();
-		if (selectedContact != null) {
-			openEditEvent.fire(new OpenEditContactDialogEvent(selectedContact.getId()));
-		}
+	public Command getRemoveCommand() {
+		return removeCommand;
 	}
 	
-	public void removeAction() {
-		Contact selectedContact = masterViewModel.selectedContactProperty().get();
-		if (selectedContact != null) {
-			repository.delete(masterViewModel.selectedContactProperty().get());
-		}
+	public Command getEmailLinkCommand() {
+		return emailLinkCommand;
 	}
-	
-	
 	
 	public ReadOnlyStringProperty nameLabelTextProperty() {
 		return name.getReadOnlyProperty();
@@ -218,12 +241,25 @@ public class DetailViewModel implements ViewModel {
 		return countrySubdivision.getReadOnlyProperty();
 	}
 	
-	
-	public ReadOnlyBooleanProperty removeButtonDisabledProperty() {
-		return removeButtonDisabled.getReadOnlyProperty();
+	private String trimString(String string) {
+		if (string == null || string.trim().isEmpty()) {
+			return "";
+		}
+		return string;
 	}
 	
-	public ReadOnlyBooleanProperty editButtonDisabledProperty() {
-		return editButtonDisabled.getReadOnlyProperty();
+	private String trimStringWithPostfix(String string, String append) {
+		if (string == null || string.trim().isEmpty()) {
+			return "";
+		}
+		return string + append;
+	}
+	
+	private Contact getSelectedContactFromScope() {
+		return getSelectedContactPropertyFromScope().get();
+	}
+	
+	private ObjectProperty<Contact> getSelectedContactPropertyFromScope() {
+		return mdScope.selectedContactProperty();
 	}
 }

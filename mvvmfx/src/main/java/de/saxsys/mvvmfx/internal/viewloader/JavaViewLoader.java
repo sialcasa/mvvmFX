@@ -69,10 +69,10 @@ public class JavaViewLoader {
 	 */
 	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadJavaViewTuple(
 			Class<? extends ViewType>
-			viewType, ResourceBundle resourceBundle, final ViewModelType existingViewModel) {
+			viewType, ResourceBundle resourceBundle, final ViewModelType existingViewModel, ViewType codeBehind) {
 		DependencyInjector injectionFacade = DependencyInjector.getInstance();
-		
-		final ViewType view = injectionFacade.getInstanceOf(viewType);
+
+		final ViewType view = codeBehind == null ? injectionFacade.getInstanceOf(viewType) : codeBehind;
 		
 		if (!(view instanceof Parent)) {
 			throw new IllegalArgumentException("Can not load java view! The view class has to extend from "
@@ -108,8 +108,10 @@ public class JavaViewLoader {
         } else {
             ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
 			
+			
 			// if the user has provided an existing ViewModel, we will not (re-)initialize this existing instance
 			if(existingViewModel == null) {
+				ViewLoaderReflectionUtils.injectScope(viewModel);
             	ViewLoaderReflectionUtils.initializeViewModel(viewModel);
 			}
 			

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="de.saxsys.mvvmfx.scopes.ScopesFxmlParentView">
+    <children>
+        <fx:include fx:id="subviewA" source="ScopedFxmlViewA.fxml"/>
+        <fx:include fx:id="subviewB" source="ScopedFxmlViewB.fxml"/>
+    </children>
+</VBox>

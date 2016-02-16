@@ -1,5 +1,20 @@
-
-
 .invisible-pagination-control .pagination-control {
     visibility: hidden;
+}
+.hyperlink:visited {
+    -fx-text-fill: -fx-text-base-color;
+}
+
+.hyperlink {
+    -fx-text-fill: -fx-text-base-color;
+}
+
+.hyperlink:focused {
+    -fx-border-width: 0px;
+}
+.hyperlink:hover {
+    -fx-underline: true;
+}
+.hyperlink:show-mnemonics > .mnemonic-underline {
+    -fx-stroke: transparent;
 }

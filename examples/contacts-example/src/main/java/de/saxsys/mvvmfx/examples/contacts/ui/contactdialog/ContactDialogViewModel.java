@@ -1,52 +1,37 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.contactdialog;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.*;
-import javafx.beans.value.ObservableBooleanValue;
-
+import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.examples.contacts.ui.addressform.AddressFormViewModel;
-import de.saxsys.mvvmfx.examples.contacts.ui.contactform.ContactFormViewModel;
+import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableBooleanValue;
 
 public class ContactDialogViewModel implements ViewModel {
 	
-	private IntegerProperty dialogPage = new SimpleIntegerProperty(0);
+	@InjectScope
+	ContactDialogScope dialogScope;
 	
-	private ObjectProperty<ContactFormViewModel> contactFormViewModel = new SimpleObjectProperty<>();
-	private ObjectProperty<AddressFormViewModel> addressFormViewModel = new SimpleObjectProperty<>();
+	private final IntegerProperty dialogPage = new SimpleIntegerProperty(0);
+	private final ReadOnlyBooleanWrapper valid = new ReadOnlyBooleanWrapper();
+	private final StringProperty titleText = new SimpleStringProperty();
 	
-	private ReadOnlyBooleanWrapper valid = new ReadOnlyBooleanWrapper();
-	
-	private StringProperty titleText = new SimpleStringProperty();
-	
-	private Runnable okAction;
-	
-	// we need this field to prevent the binding from beeing garbage collected
-	private BooleanBinding viewModelsInitialized;
-	
-	public ContactDialogViewModel() {
-		viewModelsInitialized = contactFormViewModel.isNotNull().and(addressFormViewModel.isNotNull());
-		
-		// as soon as both viewModels are set we add a binding that is true only when both viewModels are valid.
-		viewModelsInitialized.addListener((obs, oldV, newV) -> {
-			if (newV) {
-				valid.bind(Bindings.and(contactFormViewModel.get().validProperty(), addressFormViewModel.get()
-						.validProperty()));
-			} else {
-				valid.unbind();
-			}
-		});
+	public void initialize() {
+		valid.bind(
+				Bindings.and(dialogScope.contactFormValidProperty(), dialogScope.addressFormValidProperty()));
+		dialogScope.bothFormsValidProperty().bind(valid);
+		dialogScope.subscribe(ContactDialogScope.RESET_DIALOG_PAGE,
+				(key, payload) -> resetDialogPage());
+		titleText.bind(dialogScope.dialogTitleProperty());
 	}
 	
 	public void okAction() {
-		if (okAction != null) {
-			okAction.run();
-		}
-	}
-	
-	public void setOkAction(Runnable okAction) {
-		this.okAction = okAction;
+		dialogScope.publish(ContactDialogScope.OK_BEFORE_COMMIT);
 	}
 	
 	public void previousAction() {
@@ -61,29 +46,8 @@ public class ContactDialogViewModel implements ViewModel {
 		}
 	}
 	
-	public void resetDialogPage() {
+	private void resetDialogPage() {
 		dialogPage.set(0);
-	}
-	
-	public void resetForms() {
-		contactFormViewModel.get().resetForm();
-		addressFormViewModel.get().resetForm();
-	}
-	
-	public void setContactFormViewModel(ContactFormViewModel contactFormViewModel) {
-		this.contactFormViewModel.set(contactFormViewModel);
-	}
-	
-	public ContactFormViewModel getContactFormViewModel() {
-		return contactFormViewModel.get();
-	}
-	
-	public void setAddressFormViewModel(AddressFormViewModel addressFormViewModel) {
-		this.addressFormViewModel.set(addressFormViewModel);
-	}
-	
-	public AddressFormViewModel getAddressFormViewModel() {
-		return addressFormViewModel.get();
 	}
 	
 	public IntegerProperty dialogPageProperty() {
@@ -92,8 +56,7 @@ public class ContactDialogViewModel implements ViewModel {
 	
 	
 	public ObservableBooleanValue okButtonDisabledProperty() {
-		return Bindings.and(contactFormViewModel.get().validProperty(), addressFormViewModel.get().validProperty())
-				.not();
+		return valid.not();
 	}
 	
 	public ObservableBooleanValue okButtonVisibleProperty() {
@@ -101,7 +64,7 @@ public class ContactDialogViewModel implements ViewModel {
 	}
 	
 	public ObservableBooleanValue nextButtonDisabledProperty() {
-		return contactFormViewModel.get().validProperty().not();
+		return dialogScope.contactFormValidProperty().not();
 	}
 	
 	public ObservableBooleanValue nextButtonVisibleProperty() {
@@ -113,7 +76,7 @@ public class ContactDialogViewModel implements ViewModel {
 	}
 	
 	public ObservableBooleanValue previousButtonDisabledProperty() {
-		return addressFormViewModel.get().validProperty().not();
+		return dialogScope.addressFormValidProperty().not();
 	}
 	
 	public ReadOnlyBooleanProperty validProperty() {

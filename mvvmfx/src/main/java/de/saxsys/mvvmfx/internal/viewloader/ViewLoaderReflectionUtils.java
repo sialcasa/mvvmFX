@@ -1,5 +1,21 @@
+/*******************************************************************************
+ * Copyright 2015 Alexander Casall, Manuel Mauky
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package de.saxsys.mvvmfx.internal.viewloader;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,7 +27,10 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import net.jodah.typetools.TypeResolver;
+import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.Scope;
+import de.saxsys.mvvmfx.ScopeStore;
 import de.saxsys.mvvmfx.ViewModel;
 
 /**
@@ -39,12 +58,12 @@ public class ViewLoaderReflectionUtils {
 		if (allViewModelFields.isEmpty()) {
 			return Optional.empty();
 		}
-
+		
 		if (allViewModelFields.size() > 1) {
 			throw new RuntimeException("The View <" + viewType + "> may only define one viewModel but there were <"
 					+ allViewModelFields.size() + "> viewModel fields with the @InjectViewModel annotation!");
 		}
-
+		
 		Field field = allViewModelFields.get(0);
 		
 		if (!ViewModel.class.isAssignableFrom(field.getType())) {
@@ -62,11 +81,29 @@ public class ViewLoaderReflectionUtils {
 							+ "The declared generic type is <" + viewModelType
 							+ "> but the actual type of the field is <" + field.getType() + ">.");
 		}
-
+		
 		return Optional.of(field);
 	}
-
-
+	
+	public static List<Field> getScopeFields(Class<?> viewModelType) {
+		final List<Field> allScopeFields = getFieldsWithAnnotation(viewModelType, InjectScope.class);
+		
+		allScopeFields
+				.stream()
+				.forEach(
+						field -> {
+							if (!Scope.class.isAssignableFrom(field.getType())) {
+								throw new RuntimeException(
+										"The ViewModel <"
+												+ viewModelType
+												+ "> has a field annotated with @InjectScope but the type of the field doesn't implement the 'Scope' interface!");
+							}
+						});
+		
+		return allScopeFields;
+	}
+	
+	
 	/**
 	 * Returns a list of all {@link Field}s of ViewModels for a given view type that are annotated with
 	 * {@link InjectViewModel}.
@@ -76,12 +113,17 @@ public class ViewLoaderReflectionUtils {
 	 * @return a list of fields.
 	 */
 	public static List<Field> getViewModelFields(Class<? extends View> viewType) {
-        return ReflectionUtils.getFieldsFromClassHierarchy(viewType).stream()
-				.filter(field -> field.isAnnotationPresent(InjectViewModel.class))
-				.collect(Collectors.toList());
+        return getFieldsWithAnnotation(viewType, InjectViewModel.class);
 	}
 
 
+	
+    private static <T, A extends Annotation> List<Field> getFieldsWithAnnotation(Class<T> classType, Class<A> annotationType) {
+			return ReflectionUtils.getFieldsFromClassHierarchy(classType).stream()
+					.filter(field -> field.isAnnotationPresent(annotationType))
+					.collect(Collectors.toList());
+    }
+	
 	
 	
 	/**
@@ -202,6 +244,43 @@ public class ViewLoaderReflectionUtils {
 			
 		}
 	}
+	
+	static void injectScope(Object viewModel) {
+		List<Field> scopeFields = getScopeFields(viewModel.getClass());
+		
+		scopeFields.forEach(scopeField -> {
+			ReflectionUtils.accessField(scopeField,
+                    () -> injectScopeIntoField(scopeField, viewModel),
+                    "Can't inject Scope into ViewModel <" + viewModel.getClass() + ">");
+		});
+	}
+
+    static Object injectScopeIntoField(Field scopeField, Object viewModel) throws IllegalAccessException {
+        Class<? extends Scope> scopeType = (Class<? extends Scope>) scopeField.getType();
+
+
+        final InjectScope[] annotations = scopeField.getAnnotationsByType(InjectScope.class);
+
+        if(annotations.length != 1) {
+            throw new RuntimeException("A field to inject a Scope into should have exactly one @InjectScope annotation " +
+                    "but the viewModel <" + viewModel + "> has a field that violates this rule.");
+        }
+
+        Object newScope;
+
+        final String annotationValue = annotations[0].value();
+
+        if(annotationValue == null || annotationValue.trim().isEmpty()) {
+            newScope = ScopeStore.getInstance().getScope(scopeType);
+        } else {
+            newScope = ScopeStore.getInstance().getScope(scopeType, annotationValue);
+        }
+
+
+        scopeField.set(viewModel, newScope);
+
+        return newScope;
+    }
 	
 	/**
 	 * Creates a viewModel instance for a View type. The type of the view is determined by the given view instance.

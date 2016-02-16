@@ -1,11 +1,5 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.contactdialog;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Pagination;
-import javafx.scene.text.Text;
-
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.saxsys.mvvmfx.FluentViewLoader;
@@ -16,6 +10,11 @@ import de.saxsys.mvvmfx.examples.contacts.ui.addressform.AddressFormView;
 import de.saxsys.mvvmfx.examples.contacts.ui.addressform.AddressFormViewModel;
 import de.saxsys.mvvmfx.examples.contacts.ui.contactform.ContactFormView;
 import de.saxsys.mvvmfx.examples.contacts.ui.contactform.ContactFormViewModel;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Pagination;
+import javafx.scene.text.Text;
 
 public class ContactDialogView implements FxmlView<ContactDialogViewModel> {
 	
@@ -34,21 +33,16 @@ public class ContactDialogView implements FxmlView<ContactDialogViewModel> {
 	@FXML
 	private Pagination formPagination;
 	
-	
 	@InjectViewModel
 	private ContactDialogViewModel viewModel;
-	
 	
 	public void initialize() {
 		ViewTuple<ContactFormView, ContactFormViewModel> contactFormTuple = FluentViewLoader
 				.fxmlView(ContactFormView.class).load();
-		
+				
 		ViewTuple<AddressFormView, AddressFormViewModel> addressFormTuple = FluentViewLoader
 				.fxmlView(AddressFormView.class).load();
-		
-		viewModel.setContactFormViewModel(contactFormTuple.getViewModel());
-		viewModel.setAddressFormViewModel(addressFormTuple.getViewModel());
-		
+				
 		formPagination.getStyleClass().add("invisible-pagination-control");
 		
 		formPagination.setPageFactory(index -> {
