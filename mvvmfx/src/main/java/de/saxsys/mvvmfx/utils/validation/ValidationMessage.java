@@ -27,7 +27,7 @@ public class ValidationMessage {
 	
 	private final Severity severity;
 	
-	ValidationMessage(Severity severity, String message) {
+	public ValidationMessage(Severity severity, String message) {
 		this.message = message;
 		this.severity = severity;
 	}
