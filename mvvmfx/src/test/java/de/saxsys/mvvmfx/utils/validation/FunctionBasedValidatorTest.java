@@ -56,7 +56,6 @@ public class FunctionBasedValidatorTest {
 			if (v == null) {
 				return ValidationMessage.error("null");
 			}
-			;
 			
 			if (v.isEmpty()) {
 				return ValidationMessage.error("empty");
