@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 /**
  * This viewLoader is used to load views that are implementing {@link de.saxsys.mvvmfx.FxmlView}.
@@ -50,20 +51,10 @@ public class FxmlViewLoader {
 	 *            the root object that is passed to the {@link javafx.fxml.FXMLLoader}
 	 * @param viewModel
 	 *            the viewModel instance that is used when loading the viewTuple.
-<<<<<<< HEAD
-	 * 			
-=======
-	 *
->>>>>>> release
 	 * @param <ViewType>
 	 *            the generic type of the view.
 	 * @param <ViewModelType>
 	 *            the generic type of the viewModel.
-<<<<<<< HEAD
-	 * 			
-=======
-	 *
->>>>>>> release
 	 * @return the loaded ViewTuple.
 	 */
 	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
@@ -108,11 +99,6 @@ public class FxmlViewLoader {
 	 * 
 	 * @param resource
 	 *            the string path to the fxml file that is loaded.
-<<<<<<< HEAD
-	 * 			
-=======
-	 *
->>>>>>> release
 	 * @param resourceBundle
 	 *            the resourceBundle that is passed to the {@link javafx.fxml.FXMLLoader}.
 	 * @param codeBehind
@@ -121,20 +107,10 @@ public class FxmlViewLoader {
 	 *            the root object that is passed to the {@link javafx.fxml.FXMLLoader}
 	 * @param viewModel
 	 *            the viewModel instance that is used when loading the viewTuple.
-<<<<<<< HEAD
-	 * 			
-=======
-	 *
->>>>>>> release
 	 * @param <ViewType>
 	 *            the generic type of the view.
 	 * @param <ViewModelType>
 	 *            the generic type of the viewModel.
-<<<<<<< HEAD
-	 * 			
-=======
-	 *
->>>>>>> release
 	 * @return the loaded ViewTuple.
 	 */
 	public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
@@ -168,6 +144,13 @@ public class FxmlViewLoader {
 				// the codeBehind doesn't need one
 				if (actualViewModel == null) {
 					actualViewModel = ViewLoaderReflectionUtils.createViewModel(loadedController);
+					
+					
+					// it is possible that no viewModel could be created (f.e. when no generic VM type was specified)
+					// otherwise we need to initialize the created ViewModel instance.
+					if(actualViewModel != null) {
+						ViewLoaderReflectionUtils.initializeViewModel(actualViewModel);
+					}
 				}
 			} else {
 				actualViewModel = viewModel;
@@ -250,17 +233,14 @@ public class FxmlViewLoader {
 	
 	private static void handleInjection(View codeBehind, ResourceBundle resourceBundle) {
 		ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
+
+		Consumer<ViewModel> newVmConsumer = viewModel -> {
+			ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
+			ViewLoaderReflectionUtils.injectScope(viewModel);
+			ViewLoaderReflectionUtils.initializeViewModel(viewModel);
+		};
 		
-		final Optional viewModelOptional = ViewLoaderReflectionUtils.createAndInjectViewModel(codeBehind);
-		
-		if (viewModelOptional.isPresent()) {
-			final Object viewModel = viewModelOptional.get();
-			if (viewModel instanceof ViewModel) {
-				ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
-                ViewLoaderReflectionUtils.injectScope(viewModel);
-				ViewLoaderReflectionUtils.initializeViewModel((ViewModel) viewModel);
-			}
-		}
+		ViewLoaderReflectionUtils.createAndInjectViewModel(codeBehind, newVmConsumer);
 	}
 	
 	private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, ViewModel viewModel) {
