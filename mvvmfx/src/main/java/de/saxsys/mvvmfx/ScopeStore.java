@@ -28,6 +28,9 @@ import de.saxsys.mvvmfx.internal.viewloader.DependencyInjector;
  */
 public class ScopeStore {
 	
+	private ScopeStore() {
+	}
+	
 	private final Map<String, Scope> scopes = new WeakValueHashMap();
 	
 	private static final ScopeStore INSTANCE = new ScopeStore();
