@@ -41,13 +41,12 @@ public class ScopedViewModelA implements ViewModel {
 	public final TestScope lazyScope1;
 	public final TestScope lazyScope2;
 	public final TestScope lazyScope3;
-	
-	
-	private final ScopeStore scopeStore = new ScopeStore();
-	
+
+
 	private final BooleanProperty reference = new SimpleBooleanProperty();
 	
 	public ScopedViewModelA() {
+		ScopeStore scopeStore = ScopeStore.getInstance();
 		lazyScope1 = scopeStore.getScope(TestScope.class);
 		lazyScope2 = scopeStore.getScope(TestScope.class, "coolId2");
 		lazyScope3 = scopeStore.getScope(TestScope.class, "coolId3");
@@ -56,17 +55,17 @@ public class ScopedViewModelA implements ViewModel {
 	public void initialize() {
 		// Create Potential Memory Leaks
 		injectedScope1.someProperty
-				.addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> reference.set(newValue));
+				.addListener((observable, oldValue, newValue) -> reference.set(newValue));
 		injectedScope2.someProperty
-				.addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> reference.set(newValue));
+				.addListener((observable, oldValue, newValue) -> reference.set(newValue));
 		injectedScope3.someProperty
-				.addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> reference.set(newValue));
+				.addListener((observable, oldValue, newValue) -> reference.set(newValue));
 		lazyScope1.someProperty
-				.addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> reference.set(newValue));
+				.addListener((observable, oldValue, newValue) -> reference.set(newValue));
 		lazyScope2.someProperty
-				.addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> reference.set(newValue));
+				.addListener((observable, oldValue, newValue) -> reference.set(newValue));
 		lazyScope3.someProperty
-				.addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> reference.set(newValue));
+				.addListener((observable, oldValue, newValue) -> reference.set(newValue));
 	}
 	
 }
