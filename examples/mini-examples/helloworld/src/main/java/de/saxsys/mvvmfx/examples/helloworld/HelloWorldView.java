@@ -11,15 +11,15 @@ import de.saxsys.mvvmfx.InjectViewModel;
 
 public class HelloWorldView implements FxmlView<HelloWorldViewModel>, Initializable {
 
-    @FXML
-    private Label helloLabel;
+	@FXML
+	private Label helloLabel;
 
-    @InjectViewModel
-    private HelloWorldViewModel viewModel;
+	@InjectViewModel
+	private HelloWorldViewModel viewModel;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        helloLabel.textProperty().bind(viewModel.helloMessage());
-    }
-    
+	@Override
+	public void initialize(URL url, ResourceBundle resourceBundle) {
+		helloLabel.textProperty().bind(viewModel.helloMessage());
+	}
+
 }
