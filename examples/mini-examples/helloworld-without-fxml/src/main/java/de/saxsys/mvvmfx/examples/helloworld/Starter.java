@@ -10,19 +10,19 @@ import de.saxsys.mvvmfx.ViewTuple;
 
 public class Starter extends Application {
 
-    public static void main(String... args) {
-        Application.launch(args);
-    }
+	public static void main(String... args) {
+		Application.launch(args);
+	}
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        stage.setTitle("Hello World Application");
+	@Override
+	public void start(Stage stage) throws Exception {
+		stage.setTitle("Hello World Application");
 
-        final ViewTuple<HelloWorldView, HelloWorldViewModel> viewTuple = FluentViewLoader.javaView(HelloWorldView.class).load();
+		final ViewTuple<HelloWorldView, HelloWorldViewModel> viewTuple = FluentViewLoader.javaView(HelloWorldView.class).load();
 
-        final Parent root = viewTuple.getView();
-        stage.setScene(new Scene(root));
-        stage.show();
-    }
-    
+		final Parent root = viewTuple.getView();
+		stage.setScene(new Scene(root));
+		stage.show();
+	}
+
 }

@@ -12,19 +12,19 @@ import de.saxsys.mvvmfx.JavaView;
 
 public class HelloWorldView extends VBox implements JavaView<HelloWorldViewModel>, Initializable {
 
-    private final Label helloLabel = new Label();
+	private final Label helloLabel = new Label();
 
-    @InjectViewModel
-    private HelloWorldViewModel viewModel;
+	@InjectViewModel
+	private HelloWorldViewModel viewModel;
 
-    public HelloWorldView() {
-        getChildren().add(helloLabel);
-        setPadding(new Insets(10, 10, 10, 10));
-    }
+	public HelloWorldView() {
+		getChildren().add(helloLabel);
+		setPadding(new Insets(10, 10, 10, 10));
+	}
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        helloLabel.textProperty().bind(viewModel.helloMessage());
-    }
-    
+	@Override
+	public void initialize(URL url, ResourceBundle resourceBundle) {
+		helloLabel.textProperty().bind(viewModel.helloMessage());
+	}
+
 }
