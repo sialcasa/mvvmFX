@@ -15,71 +15,71 @@ import javafx.scene.layout.HBox;
  */
 public class ItemView implements FxmlView<ItemViewModel> {
 
-    public static final String STRIKETHROUGH_CSS_CLASS = "strikethrough";
-    
-    @FXML
-    public CheckBox completed;
-    @FXML
-    public TextField contentInput;
+	public static final String STRIKETHROUGH_CSS_CLASS = "strikethrough";
 
-    @FXML
-    public HBox contentBox;
+	@FXML
+	public CheckBox completed;
+	@FXML
+	public TextField contentInput;
 
-    @FXML
-    public Label contentLabel;
+	@FXML
+	public HBox contentBox;
 
-    @FXML
-    public Button deleteButton;
-    @FXML
-    public HBox root;
+	@FXML
+	public Label contentLabel;
 
-    @InjectViewModel
-    private ItemViewModel viewModel;
+	@FXML
+	public Button deleteButton;
+	@FXML
+	public HBox root;
 
-    public void initialize() {
-        deleteButton.setVisible(false);
-        root.setOnMouseEntered(event -> {
-            deleteButton.setVisible(true);
-        });
+	@InjectViewModel
+	private ItemViewModel viewModel;
 
-        root.setOnMouseExited(event -> {
-            deleteButton.setVisible(false);
-        });
+	public void initialize() {
+		deleteButton.setVisible(false);
+		root.setOnMouseEntered(event -> {
+			deleteButton.setVisible(true);
+		});
 
-        completed.selectedProperty().bindBidirectional(viewModel.completedProperty());
+		root.setOnMouseExited(event -> {
+			deleteButton.setVisible(false);
+		});
 
-        contentInput.textProperty().bindBidirectional(viewModel.contentProperty());
-        contentInput.visibleProperty().bind(viewModel.editModeProperty());
-        contentInput.setOnAction(event -> viewModel.editModeProperty().set(false));
-        contentInput.focusedProperty().addListener((obs, oldV, newV) -> {
-            if (!newV) {
-                viewModel.editModeProperty().set(false);
-            }
-        });
+		completed.selectedProperty().bindBidirectional(viewModel.completedProperty());
 
-        contentBox.visibleProperty().bind(viewModel.editModeProperty().not());
-        completed.visibleProperty().bind(viewModel.editModeProperty().not());
+		contentInput.textProperty().bindBidirectional(viewModel.contentProperty());
+		contentInput.visibleProperty().bind(viewModel.editModeProperty());
+		contentInput.setOnAction(event -> viewModel.editModeProperty().set(false));
+		contentInput.focusedProperty().addListener((obs, oldV, newV) -> {
+			if (!newV) {
+				viewModel.editModeProperty().set(false);
+			}
+		});
 
-        contentLabel.textProperty().bind(viewModel.contentProperty());
-        contentLabel.setOnMouseClicked(event -> {
-            if (event.getClickCount() > 1) {
-                viewModel.editModeProperty().set(true);
-                contentInput.requestFocus();
-            }
-        });
+		contentBox.visibleProperty().bind(viewModel.editModeProperty().not());
+		completed.visibleProperty().bind(viewModel.editModeProperty().not());
 
-        viewModel.textStrikeThrough().addListener((obs, oldV, newV) -> {
-            if (newV) {
-                contentLabel.getStyleClass().add(STRIKETHROUGH_CSS_CLASS);
-            } else {
-                contentLabel.getStyleClass().remove(STRIKETHROUGH_CSS_CLASS);
-            }
-        });
+		contentLabel.textProperty().bind(viewModel.contentProperty());
+		contentLabel.setOnMouseClicked(event -> {
+			if (event.getClickCount() > 1) {
+				viewModel.editModeProperty().set(true);
+				contentInput.requestFocus();
+			}
+		});
 
-    }
+		viewModel.textStrikeThrough().addListener((obs, oldV, newV) -> {
+			if (newV) {
+				contentLabel.getStyleClass().add(STRIKETHROUGH_CSS_CLASS);
+			} else {
+				contentLabel.getStyleClass().remove(STRIKETHROUGH_CSS_CLASS);
+			}
+		});
 
-    public void delete() {
-        viewModel.delete();
-    }
-    
+	}
+
+	public void delete() {
+		viewModel.delete();
+	}
+
 }

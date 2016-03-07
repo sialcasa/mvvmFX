@@ -15,41 +15,41 @@ import de.saxsys.mvvmfx.examples.todomvc.model.TodoItem;
  */
 public class ItemViewModel implements ViewModel {
 
-    private final BooleanProperty completed = new SimpleBooleanProperty();
-    private final BooleanProperty editMode = new SimpleBooleanProperty();
+	private final BooleanProperty completed = new SimpleBooleanProperty();
+	private final BooleanProperty editMode = new SimpleBooleanProperty();
 
-    private final StringProperty content = new SimpleStringProperty();
+	private final StringProperty content = new SimpleStringProperty();
 
-    private TodoItem item;
+	private TodoItem item;
 
-    public ItemViewModel(TodoItem item) {
-        this.item = item;
-        content.bindBidirectional(item.textProperty());
-        completed.bindBidirectional(item.completedProperty());
-    }
+	public ItemViewModel(TodoItem item) {
+		this.item = item;
+		content.bindBidirectional(item.textProperty());
+		completed.bindBidirectional(item.completedProperty());
+	}
 
-    public void delete() {
-        TodoItemStore.getInstance().getItems().remove(item);
-    }
+	public void delete() {
+		TodoItemStore.getInstance().getItems().remove(item);
+	}
 
-    public StringProperty contentProperty() {
-        return content;
-    }
+	public StringProperty contentProperty() {
+		return content;
+	}
 
-    public BooleanProperty completedProperty() {
-        return completed;
-    }
+	public BooleanProperty completedProperty() {
+		return completed;
+	}
 
-    public boolean isCompleted() {
-        return completed.get();
-    }
+	public boolean isCompleted() {
+		return completed.get();
+	}
 
-    public BooleanProperty editModeProperty() {
-        return editMode;
-    }
+	public BooleanProperty editModeProperty() {
+		return editMode;
+	}
 
-    public ReadOnlyBooleanProperty textStrikeThrough() {
-        return completed;
-    }
-    
+	public ReadOnlyBooleanProperty textStrikeThrough() {
+		return completed;
+	}
+
 }

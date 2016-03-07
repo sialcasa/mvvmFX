@@ -10,26 +10,26 @@ import javafx.scene.control.Label;
  */
 public class ControlsView implements FxmlView<ControlsViewModel> {
 
-    @FXML
-    public Label itemsLeftLabel;
+	@FXML
+	public Label itemsLeftLabel;
 
-    @InjectViewModel
-    private ControlsViewModel viewModel;
+	@InjectViewModel
+	private ControlsViewModel viewModel;
 
-    public void initialize() {
-        itemsLeftLabel.textProperty().bind(viewModel.itemsLeftLabelTextProperty());
-    }
+	public void initialize() {
+		itemsLeftLabel.textProperty().bind(viewModel.itemsLeftLabelTextProperty());
+	}
 
-    public void all() {
-        viewModel.all();
-    }
+	public void all() {
+		viewModel.all();
+	}
 
-    public void active() {
-        viewModel.active();
-    }
+	public void active() {
+		viewModel.active();
+	}
 
-    public void completed() {
-        viewModel.completed();
-    }
-    
+	public void completed() {
+		viewModel.completed();
+	}
+
 }

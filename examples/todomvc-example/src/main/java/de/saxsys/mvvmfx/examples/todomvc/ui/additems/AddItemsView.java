@@ -12,22 +12,22 @@ import de.saxsys.mvvmfx.InjectViewModel;
  */
 public class AddItemsView implements FxmlView<AddItemsViewModel> {
 
-    @FXML
-    public CheckBox selectAll;
-    @FXML
-    public TextField addInput;
+	@FXML
+	public CheckBox selectAll;
+	@FXML
+	public TextField addInput;
 
-    @InjectViewModel
-    private AddItemsViewModel viewModel;
+	@InjectViewModel
+	private AddItemsViewModel viewModel;
 
-    public void initialize() {
-        addInput.textProperty().bindBidirectional(viewModel.newItemValueProperty());
+	public void initialize() {
+		addInput.textProperty().bindBidirectional(viewModel.newItemValueProperty());
 
-        addInput.setOnAction(event -> viewModel.addItem());
+		addInput.setOnAction(event -> viewModel.addItem());
 
-        selectAll.selectedProperty().bindBidirectional(viewModel.allSelectedProperty());
+		selectAll.selectedProperty().bindBidirectional(viewModel.allSelectedProperty());
 
-        selectAll.visibleProperty().bind(viewModel.allSelectedVisibleProperty());
-    }
-    
+		selectAll.visibleProperty().bind(viewModel.allSelectedVisibleProperty());
+	}
+
 }

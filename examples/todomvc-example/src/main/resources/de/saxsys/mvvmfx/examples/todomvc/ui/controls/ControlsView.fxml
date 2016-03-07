@@ -6,25 +6,25 @@
 <?import javafx.scene.layout.*?>
 
 <HBox fx:controller="de.saxsys.mvvmfx.examples.todomvc.ui.controls.ControlsView" alignment="CENTER" spacing="20.0"
-      xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-    <children>
-        <Label fx:id="itemsLeftLabel" text="X items left"/>
-        <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
-            <children>
-                <ToggleButton mnemonicParsing="false" onAction="#all" selected="true" text="All">
-                    <toggleGroup>
-                        <ToggleGroup fx:id="stateGroup"/>
-                    </toggleGroup>
-                </ToggleButton>
-                <ToggleButton mnemonicParsing="false" onAction="#active" text="Active" toggleGroup="$stateGroup"/>
-                <ToggleButton mnemonicParsing="false" onAction="#completed" text="Completed" toggleGroup="$stateGroup"/>
-            </children>
-            <padding>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </padding>
-        </HBox>
-    </children>
-    <padding>
-        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-    </padding>
+	  xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<Label fx:id="itemsLeftLabel" text="X items left"/>
+		<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
+			<children>
+				<ToggleButton mnemonicParsing="false" onAction="#all" selected="true" text="All">
+					<toggleGroup>
+						<ToggleGroup fx:id="stateGroup"/>
+					</toggleGroup>
+				</ToggleButton>
+				<ToggleButton mnemonicParsing="false" onAction="#active" text="Active" toggleGroup="$stateGroup"/>
+				<ToggleButton mnemonicParsing="false" onAction="#completed" text="Completed" toggleGroup="$stateGroup"/>
+			</children>
+			<padding>
+				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+			</padding>
+		</HBox>
+	</children>
+	<padding>
+		<Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+	</padding>
 </HBox>
