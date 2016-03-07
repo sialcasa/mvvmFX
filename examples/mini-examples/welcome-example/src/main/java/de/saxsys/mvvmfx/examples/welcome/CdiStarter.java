@@ -17,20 +17,20 @@ import de.saxsys.mvvmfx.ViewTuple;
  */
 public class CdiStarter extends MvvmfxCdiApplication {
 
-    public static void main(String... args) {
-        launch(args);
-    }
+	public static void main(String... args) {
+		launch(args);
+	}
 
-    @Override
-    public void startMvvmfx(Stage stage) {
-        final ViewTuple<MainContainerView, MainContainerViewModel> tuple
-                = FluentViewLoader.fxmlView(MainContainerView.class).load();
+	@Override
+	public void startMvvmfx(Stage stage) {
+		final ViewTuple<MainContainerView, MainContainerViewModel> tuple
+				= FluentViewLoader.fxmlView(MainContainerView.class).load();
 
-        Parent view = tuple.getView();
+		Parent view = tuple.getView();
 
-        final Scene scene = new Scene(view);
-        stage.setScene(scene);
-        stage.show();
-    }
-    
+		final Scene scene = new Scene(view);
+		stage.setScene(scene);
+		stage.show();
+	}
+
 }

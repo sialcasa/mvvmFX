@@ -28,72 +28,72 @@ import de.saxsys.mvvmfx.utils.itemlist.SelectableStringList;
  */
 public class PersonLoginViewModel implements ViewModel {
 
-    // Properties which are used by the view.
-    private SelectableItemList<Person> selectablePersons;
-    private ReadOnlyIntegerWrapper loggedInPersonId;
-    private Command loginCommand;
+	// Properties which are used by the view.
+	private SelectableItemList<Person> selectablePersons;
+	private ReadOnlyIntegerWrapper loggedInPersonId;
+	private Command loginCommand;
 
-    // Repo
-    private final Repository repository;
+	// Repo
+	private final Repository repository;
 
-    @Inject
-    public PersonLoginViewModel(Repository repository) {
-        this.repository = repository;
-    }
+	@Inject
+	public PersonLoginViewModel(Repository repository) {
+		this.repository = repository;
+	}
 
-    private BooleanBinding createLoginPossibleBinding() {
-        return selectablePersonsProperty().selectedIndexProperty().isNotEqualTo(-1);
-    }
+	private BooleanBinding createLoginPossibleBinding() {
+		return selectablePersonsProperty().selectedIndexProperty().isNotEqualTo(-1);
+	}
 
-    /**
-     * Persons in string representation.
-     *
-     * @return persons
-     */
-    public SelectableStringList selectablePersonsProperty() {
-        if (selectablePersons == null) {
-            selectablePersons  = new SelectableItemList<>(
-                    FXCollections.observableArrayList(repository.getPersons()),
-                    person -> person.getFirstName() + " " + person.getLastName());
-        }
-        return selectablePersons;
-    }
+	/**
+	 * Persons in string representation.
+	 *
+	 * @return persons
+	 */
+	public SelectableStringList selectablePersonsProperty() {
+		if (selectablePersons == null) {
+			selectablePersons = new SelectableItemList<>(
+					FXCollections.observableArrayList(repository.getPersons()),
+					person -> person.getFirstName() + " " + person.getLastName());
+		}
+		return selectablePersons;
+	}
 
-    /**
-     * Person which is logged in.
-     *
-     * @return person
-     */
-    public ReadOnlyIntegerProperty loggedInPersonIdProperty() {
-        if (loggedInPersonId == null) {
-            loggedInPersonId = new ReadOnlyIntegerWrapper();
-        }
-        return loggedInPersonId.getReadOnlyProperty();
-    }
+	/**
+	 * Person which is logged in.
+	 *
+	 * @return person
+	 */
+	public ReadOnlyIntegerProperty loggedInPersonIdProperty() {
+		if (loggedInPersonId == null) {
+			loggedInPersonId = new ReadOnlyIntegerWrapper();
+		}
+		return loggedInPersonId.getReadOnlyProperty();
+	}
 
-    public Command getLoginCommand() {
-        if (loginCommand == null) {
-            loginCommand = new DelegateCommand(() -> new Action() {
-                @Override
-                protected void action() throws Exception {
-                    performLogin();
-                }
-            }, createLoginPossibleBinding(), true);
-        }
-        return loginCommand;
-    }
+	public Command getLoginCommand() {
+		if (loginCommand == null) {
+			loginCommand = new DelegateCommand(() -> new Action() {
+				@Override
+				protected void action() throws Exception {
+					performLogin();
+				}
+			}, createLoginPossibleBinding(), true);
+		}
+		return loginCommand;
+	}
 
-    private void performLogin() {
-        try {
-            // fakesleep, simulating latency
-            Thread.sleep(2000);
-        } catch (Exception e) {
-        }
+	private void performLogin() {
+		try {
+			// fakesleep, simulating latency
+			Thread.sleep(2000);
+		} catch (Exception e) {
+		}
 
-        Platform.runLater(() -> {
-            loggedInPersonId.set(selectablePersons.getSelectedItem().getId());
-        });
-        publish(PersonLoginViewModelNotifications.OK.getId(), PersonLoginViewModelNotifications.OK.getMessage());
-    }
-    
+		Platform.runLater(() -> {
+			loggedInPersonId.set(selectablePersons.getSelectedItem().getId());
+		});
+		publish(PersonLoginViewModelNotifications.OK.getId(), PersonLoginViewModelNotifications.OK.getMessage());
+	}
+
 }

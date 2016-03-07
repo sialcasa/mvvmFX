@@ -17,21 +17,21 @@ import de.saxsys.mvvmfx.guice.MvvmfxGuiceApplication;
  */
 public class GuiceStarter extends MvvmfxGuiceApplication {
 
-    public static void main(final String[] args) {
-        launch(args);
-    }
+	public static void main(final String[] args) {
+		launch(args);
+	}
 
-    @Override
-    public void startMvvmfx(final Stage stage) throws Exception {
-        final ViewTuple<MainContainerView, MainContainerViewModel> tuple
-                = FluentViewLoader.fxmlView(MainContainerView.class).load();
+	@Override
+	public void startMvvmfx(final Stage stage) throws Exception {
+		final ViewTuple<MainContainerView, MainContainerViewModel> tuple
+				= FluentViewLoader.fxmlView(MainContainerView.class).load();
 
-        // Locate View for loaded FXML file
-        final Parent view = tuple.getView();
+		// Locate View for loaded FXML file
+		final Parent view = tuple.getView();
 
-        final Scene scene = new Scene(view);
-        stage.setScene(scene);
-        stage.show();
-    }
-    
+		final Scene scene = new Scene(view);
+		stage.setScene(scene);
+		stage.show();
+	}
+
 }

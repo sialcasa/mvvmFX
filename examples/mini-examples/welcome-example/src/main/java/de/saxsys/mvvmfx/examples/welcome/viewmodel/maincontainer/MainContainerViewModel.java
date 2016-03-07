@@ -8,15 +8,15 @@ import de.saxsys.mvvmfx.ViewModel;
 
 public class MainContainerViewModel implements ViewModel {
 
-    private ListProperty<Integer> displayedPersons = new SimpleListProperty<>(
-            FXCollections.<Integer>observableArrayList());
+	private ListProperty<Integer> displayedPersons = new SimpleListProperty<>(
+			FXCollections.<Integer>observableArrayList());
 
-    public MainContainerViewModel() {
+	public MainContainerViewModel() {
 
-    }
+	}
 
-    public ListProperty<Integer> displayedPersonsProperty() {
-        return displayedPersons;
-    }
+	public ListProperty<Integer> displayedPersonsProperty() {
+		return displayedPersons;
+	}
 
 }

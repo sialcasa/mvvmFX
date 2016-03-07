@@ -33,70 +33,70 @@ import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
  */
 public class MainContainerView implements FxmlView<MainContainerViewModel>, Initializable {
 
-    @FXML
-    // Injection of the login which is declared in the FXML File
-    private StackPane loginView; // Value injected by FXMLLoader
+	@FXML
+	// Injection of the login which is declared in the FXML File
+	private StackPane loginView; // Value injected by FXMLLoader
 
-    @FXML
+	@FXML
 	// Inject the Code behind instance of the loginView by using the
-    // nameconvention ...Controller
-    private PersonLoginView loginViewController;
+	// nameconvention ...Controller
+	private PersonLoginView loginViewController;
 
-    @FXML
-    // Inject the Code behind instance of the ListView
-    private ListView<Integer> personWelcomeListView;
+	@FXML
+	// Inject the Code behind instance of the ListView
+	private ListView<Integer> personWelcomeListView;
 
-    @Inject
-    // Notification Center
-    private NotificationCenter notificationCenter;
+	@Inject
+	// Notification Center
+	private NotificationCenter notificationCenter;
 
-    @InjectViewModel
-    private MainContainerViewModel viewModel;
+	@InjectViewModel
+	private MainContainerViewModel viewModel;
 
-    private Map<Integer, ViewTuple<PersonWelcomeView, PersonWelcomeViewModel>> viewMap = new HashMap<>();
+	private Map<Integer, ViewTuple<PersonWelcomeView, PersonWelcomeViewModel>> viewMap = new HashMap<>();
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Listen for close notifications
-        notificationCenter.subscribe("hidePersonWelcome",
-                (key, payload) -> {
-                    int personIdToHide = (int) payload[0];
-                    viewModel.displayedPersonsProperty().remove(
-                            new Integer(personIdToHide));
-                });
+	@Override
+	public void initialize(URL url, ResourceBundle resourceBundle) {
+		// Listen for close notifications
+		notificationCenter.subscribe("hidePersonWelcome",
+				(key, payload) -> {
+					int personIdToHide = (int) payload[0];
+					viewModel.displayedPersonsProperty().remove(
+							new Integer(personIdToHide));
+				});
 
 		// When the login button of the loginView, the pickedPersonProperty is
-        // going to have the index of the selected person
-        loginViewController.getViewModel().loggedInPersonIdProperty()
-                .addListener(new ChangeListener<Number>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Number> arg0,
-                            Number oldValue, Number newValue) {
-                        int id = newValue.intValue();
-                        viewModel.displayedPersonsProperty().add(id);
-                    }
-                });
+		// going to have the index of the selected person
+		loginViewController.getViewModel().loggedInPersonIdProperty()
+				.addListener(new ChangeListener<Number>() {
+					@Override
+					public void changed(ObservableValue<? extends Number> arg0,
+							Number oldValue, Number newValue) {
+						int id = newValue.intValue();
+						viewModel.displayedPersonsProperty().add(id);
+					}
+				});
 
-        // Configure List with views
-        final ViewListCellFactory<Integer> cellFactory = element -> {
-            if (!viewMap.containsKey(element)) {
-                ViewTuple<PersonWelcomeView, PersonWelcomeViewModel> loadedViewTuple
-                        = FluentViewLoader.fxmlView(PersonWelcomeView.class).load();
+		// Configure List with views
+		final ViewListCellFactory<Integer> cellFactory = element -> {
+			if (!viewMap.containsKey(element)) {
+				ViewTuple<PersonWelcomeView, PersonWelcomeViewModel> loadedViewTuple
+						= FluentViewLoader.fxmlView(PersonWelcomeView.class).load();
 
-                PersonWelcomeView codeBehind = loadedViewTuple.getCodeBehind();
+				PersonWelcomeView codeBehind = loadedViewTuple.getCodeBehind();
 
-                codeBehind.getViewModel()
-                        .setPersonId(element);
+				codeBehind.getViewModel()
+						.setPersonId(element);
 
-                viewMap.put(element, loadedViewTuple);
-            }
+				viewMap.put(element, loadedViewTuple);
+			}
 
-            return viewMap.get(element);
-        };
-        personWelcomeListView.setCellFactory(cellFactory);
+			return viewMap.get(element);
+		};
+		personWelcomeListView.setCellFactory(cellFactory);
 
-        // Bind list
-        personWelcomeListView.itemsProperty().bind(viewModel.displayedPersonsProperty());
-    }
-    
+		// Bind list
+		personWelcomeListView.itemsProperty().bind(viewModel.displayedPersonsProperty());
+	}
+
 }

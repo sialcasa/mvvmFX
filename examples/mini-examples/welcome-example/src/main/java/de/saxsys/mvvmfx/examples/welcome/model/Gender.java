@@ -6,8 +6,8 @@ package de.saxsys.mvvmfx.examples.welcome.model;
  */
 public enum Gender {
 
-    MALE,
-    FEMALE,
-    NOT_SPECIFIED
+	MALE,
+	FEMALE,
+	NOT_SPECIFIED
 
 }

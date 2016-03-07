@@ -23,33 +23,33 @@ import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
  */
 public class PersonWelcomeView implements FxmlView<PersonWelcomeViewModel>, Initializable {
 
-    @FXML
+	@FXML
     // Injection of the label which is declared in the FXML File and shows the
-    // welcome message
-    private Label welcomeLabel;
+	// welcome message
+	private Label welcomeLabel;
 
-    @Inject
-    private NotificationCenter notificationCenter;
+	@Inject
+	private NotificationCenter notificationCenter;
 
-    @InjectViewModel
-    private PersonWelcomeViewModel viewModel;
+	@InjectViewModel
+	private PersonWelcomeViewModel viewModel;
 
-    @FXML
-    // Handler for Button[Button[id=null, styleClass=button]] onAction
-    public void closeApplicationButtonPressed(ActionEvent event) {
-        // MainContainerView.java will handle it
-        notificationCenter.publish("hidePersonWelcome", viewModel
-                .getPersonId());
-    }
+	@FXML
+	// Handler for Button[Button[id=null, styleClass=button]] onAction
+	public void closeApplicationButtonPressed(ActionEvent event) {
+		// MainContainerView.java will handle it
+		notificationCenter.publish("hidePersonWelcome", viewModel
+				.getPersonId());
+	}
 
-    public PersonWelcomeViewModel getViewModel() {
-        return viewModel;
-    }
+	public PersonWelcomeViewModel getViewModel() {
+		return viewModel;
+	}
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        welcomeLabel.textProperty()
-                .bind(viewModel.welcomeStringProperty());
-    }
-    
+	@Override
+	public void initialize(URL url, ResourceBundle resourceBundle) {
+		welcomeLabel.textProperty()
+				.bind(viewModel.welcomeStringProperty());
+	}
+
 }
