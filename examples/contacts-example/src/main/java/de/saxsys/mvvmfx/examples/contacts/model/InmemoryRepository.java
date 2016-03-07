@@ -13,37 +13,37 @@ import java.util.Set;
 @Singleton
 public class InmemoryRepository implements Repository {
 
-    private final Set<Contact> contacts = new HashSet<>();
+	private final Set<Contact> contacts = new HashSet<>();
 
-    @Inject
-    private Event<ContactsUpdatedEvent> contactsUpdatedEvent;
+	@Inject
+	private Event<ContactsUpdatedEvent> contactsUpdatedEvent;
 
-    @Override
-    public Set<Contact> findAll() {
-        return Collections.unmodifiableSet(contacts);
-    }
+	@Override
+	public Set<Contact> findAll() {
+		return Collections.unmodifiableSet(contacts);
+	}
 
-    @Override
-    public Optional<Contact> findById(String id) {
-        return contacts.stream().filter(contact -> contact.getId().equals(id)).findFirst();
-    }
+	@Override
+	public Optional<Contact> findById(String id) {
+		return contacts.stream().filter(contact -> contact.getId().equals(id)).findFirst();
+	}
 
-    @Override
-    public void save(Contact contact) {
-        contacts.add(contact);
-        fireUpdateEvent();
-    }
+	@Override
+	public void save(Contact contact) {
+		contacts.add(contact);
+		fireUpdateEvent();
+	}
 
-    @Override
-    public void delete(Contact contact) {
-        contacts.remove(contact);
-        fireUpdateEvent();
-    }
+	@Override
+	public void delete(Contact contact) {
+		contacts.remove(contact);
+		fireUpdateEvent();
+	}
 
-    private void fireUpdateEvent() {
-        if (contactsUpdatedEvent != null) {
-            contactsUpdatedEvent.fire(new ContactsUpdatedEvent());
-        }
-    }
-    
+	private void fireUpdateEvent() {
+		if (contactsUpdatedEvent != null) {
+			contactsUpdatedEvent.fire(new ContactsUpdatedEvent());
+		}
+	}
+
 }

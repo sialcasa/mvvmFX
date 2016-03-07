@@ -5,58 +5,58 @@ package de.saxsys.mvvmfx.examples.contacts.model;
  */
 public class Address extends Identity {
 
-    private Country country;
+	private Country country;
 
-    private Subdivision subdivision;
+	private Subdivision subdivision;
 
-    private String street;
+	private String street;
 
-    private String postalcode;
+	private String postalcode;
 
-    private String city;
+	private String city;
 
-    Address() {
-        
-    }
+	Address() {
 
-    public Subdivision getSubdivision() {
-        return subdivision;
-    }
+	}
 
-    public void setSubdivision(Subdivision subdivision) {
-        this.subdivision = subdivision;
-    }
+	public Subdivision getSubdivision() {
+		return subdivision;
+	}
 
-    public Country getCountry() {
-        return country;
-    }
+	public void setSubdivision(Subdivision subdivision) {
+		this.subdivision = subdivision;
+	}
 
-    public void setCountry(Country country) {
-        this.country = country;
-    }
+	public Country getCountry() {
+		return country;
+	}
 
-    public String getStreet() {
-        return street;
-    }
+	public void setCountry(Country country) {
+		this.country = country;
+	}
 
-    public void setStreet(String street) {
-        this.street = street;
-    }
+	public String getStreet() {
+		return street;
+	}
 
-    public String getPostalcode() {
-        return postalcode;
-    }
+	public void setStreet(String street) {
+		this.street = street;
+	}
 
-    public void setPostalcode(String postalcode) {
-        this.postalcode = postalcode;
-    }
+	public String getPostalcode() {
+		return postalcode;
+	}
 
-    public String getCity() {
-        return city;
-    }
+	public void setPostalcode(String postalcode) {
+		this.postalcode = postalcode;
+	}
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
 
 }

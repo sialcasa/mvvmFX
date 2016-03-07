@@ -15,20 +15,20 @@ import de.saxsys.mvvmfx.examples.contacts.util.CentralClock;
 
 public class MasterTableViewModelTest {
 
-    @Test
-    public void testCalculationOfAge() {
+	@Test
+	public void testCalculationOfAge() {
 
-        ZonedDateTime now = ZonedDateTime
-                .of(LocalDate.of(2010, Month.JANUARY, 1), LocalTime.of(0, 0), ZoneId.systemDefault()); // 2010-01-01T00:00
+		ZonedDateTime now = ZonedDateTime
+				.of(LocalDate.of(2010, Month.JANUARY, 1), LocalTime.of(0, 0), ZoneId.systemDefault()); // 2010-01-01T00:00
 
-        CentralClock.setFixedClock(now);
+		CentralClock.setFixedClock(now);
 
-        Contact contact = new Contact();
-        contact.setBirthday(LocalDate.of(1987, Month.DECEMBER, 13));
+		Contact contact = new Contact();
+		contact.setBirthday(LocalDate.of(1987, Month.DECEMBER, 13));
 
-        MasterTableViewModel tableViewModel = new MasterTableViewModel(contact);
+		MasterTableViewModel tableViewModel = new MasterTableViewModel(contact);
 
-        assertThat(tableViewModel.ageProperty().get()).isEqualTo(22);
-    }
+		assertThat(tableViewModel.ageProperty().get()).isEqualTo(22);
+	}
 
 }

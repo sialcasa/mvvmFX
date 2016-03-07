@@ -21,23 +21,23 @@ import java.time.ZonedDateTime;
  */
 public class CentralClock {
 
-    private static Clock clock = Clock.systemUTC();
+	private static Clock clock = Clock.systemUTC();
 
-    public static Clock getClock() {
-        return clock;
-    }
+	public static Clock getClock() {
+		return clock;
+	}
 
-    public static void setClock(Clock clock) {
-        CentralClock.clock = clock;
-    }
+	public static void setClock(Clock clock) {
+		CentralClock.clock = clock;
+	}
 
-    /**
-     * This method is used to set the clock to a fixed time. This is useful for
-     * tests. This way it's possible to create date/time instances with a
-     * predictable value for your tests.
-     */
-    public static void setFixedClock(ZonedDateTime zonedDateTime) {
-        CentralClock.clock = Clock.fixed(zonedDateTime.toInstant(), ZoneId.systemDefault());
-    }
+	/**
+	 * This method is used to set the clock to a fixed time. This is useful for
+	 * tests. This way it's possible to create date/time instances with a
+	 * predictable value for your tests.
+	 */
+	public static void setFixedClock(ZonedDateTime zonedDateTime) {
+		CentralClock.clock = Clock.fixed(zonedDateTime.toInstant(), ZoneId.systemDefault());
+	}
 
 }

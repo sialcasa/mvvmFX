@@ -13,10 +13,10 @@ import java.util.function.Predicate;
  */
 public class BirthdayValidator extends FunctionBasedValidator<LocalDate> {
 
-    private static final Predicate<LocalDate> birthdayPredicate = date
-            -> date == null || date.isBefore(LocalDate.now(CentralClock.getClock()));
+	private static final Predicate<LocalDate> birthdayPredicate = date
+			-> date == null || date.isBefore(LocalDate.now(CentralClock.getClock()));
 
-    public BirthdayValidator(ObservableValue<LocalDate> date) {
-        super(date, birthdayPredicate, ValidationMessage.error("Birthday can't be set in the future"));
-    }
+	public BirthdayValidator(ObservableValue<LocalDate> date) {
+		super(date, birthdayPredicate, ValidationMessage.error("Birthday can't be set in the future"));
+	}
 }

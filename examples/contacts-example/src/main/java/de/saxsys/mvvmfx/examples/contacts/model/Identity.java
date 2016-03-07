@@ -10,37 +10,37 @@ import java.util.UUID;
  */
 public abstract class Identity {
 
-    private String id;
+	private String id;
 
-    public Identity() {
-        id = UUID.randomUUID().toString();
-    }
+	public Identity() {
+		id = UUID.randomUUID().toString();
+	}
 
-    public String getId() {
-        return id;
-    }
+	public String getId() {
+		return id;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        Identity identity = (Identity) o;
+		Identity identity = (Identity) o;
 
-        if (!id.equals(identity.id)) {
-            return false;
-        }
+		if (!id.equals(identity.id)) {
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
-    
+	@Override
+	public int hashCode() {
+		return id.hashCode();
+	}
+
 }

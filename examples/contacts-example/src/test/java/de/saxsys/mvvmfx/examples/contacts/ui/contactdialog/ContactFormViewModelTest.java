@@ -10,45 +10,45 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ContactFormViewModelTest {
 
-    private ContactFormViewModel viewModel;
+	private ContactFormViewModel viewModel;
 
-    @Before
-    public void setup() {
-        viewModel = new ContactFormViewModel();
-    }
+	@Before
+	public void setup() {
+		viewModel = new ContactFormViewModel();
+	}
 
-    @Test
-    public void testFirstname() {
+	@Test
+	public void testFirstname() {
 
-        assertThat(viewModel.firstnameValidation().getErrorMessages()).hasSize(1);
-        assertThat(viewModel.firstnameValidation().validProperty()).isFalse();
+		assertThat(viewModel.firstnameValidation().getErrorMessages()).hasSize(1);
+		assertThat(viewModel.firstnameValidation().validProperty()).isFalse();
 
-        viewModel.firstnameProperty().set("Horst");
+		viewModel.firstnameProperty().set("Horst");
 
-        assertThat(viewModel.firstnameValidation().validProperty()).isTrue();
-        assertThat(viewModel.firstnameValidation().getErrorMessages()).isEmpty();
+		assertThat(viewModel.firstnameValidation().validProperty()).isTrue();
+		assertThat(viewModel.firstnameValidation().getErrorMessages()).isEmpty();
 
-        viewModel.firstnameProperty().setValue("");
-        assertThat(viewModel.firstnameValidation().getErrorMessages()).hasSize(1);
-        assertThat(viewModel.firstnameValidation().validProperty()).isFalse();
-    }
+		viewModel.firstnameProperty().setValue("");
+		assertThat(viewModel.firstnameValidation().getErrorMessages()).hasSize(1);
+		assertThat(viewModel.firstnameValidation().validProperty()).isFalse();
+	}
 
-    @Test
-    public void testEmail() {
-        GCVerifier.forceGC();
+	@Test
+	public void testEmail() {
+		GCVerifier.forceGC();
 
-        assertThat(viewModel.emailValidation().getMessages()).hasSize(2);
-        assertThat(viewModel.emailValidation().validProperty()).isFalse();
+		assertThat(viewModel.emailValidation().getMessages()).hasSize(2);
+		assertThat(viewModel.emailValidation().validProperty()).isFalse();
 
-        viewModel.emailProperty().set("Something");
+		viewModel.emailProperty().set("Something");
 
-        assertThat(viewModel.emailValidation().getMessages()).hasSize(1);
-        assertThat(viewModel.emailValidation().validProperty()).isFalse();
+		assertThat(viewModel.emailValidation().getMessages()).hasSize(1);
+		assertThat(viewModel.emailValidation().validProperty()).isFalse();
 
-        viewModel.emailProperty().set("test@example.org");
+		viewModel.emailProperty().set("test@example.org");
 
-        assertThat(viewModel.emailValidation().getMessages()).isEmpty();
-        assertThat(viewModel.emailValidation().validProperty()).isTrue();
-    }
+		assertThat(viewModel.emailValidation().getMessages()).isEmpty();
+		assertThat(viewModel.emailValidation().validProperty()).isTrue();
+	}
 
 }

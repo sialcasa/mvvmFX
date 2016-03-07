@@ -11,10 +11,10 @@ import java.util.ResourceBundle;
 @Singleton
 public class ResourceProvider {
 
-    /*
-     * Due to the @Produces annotation this resource bundle can be injected in all views.
-     */
-    @Produces
-    private ResourceBundle defaultResourceBundle = ResourceBundle.getBundle("default");
+	/*
+	 * Due to the @Produces annotation this resource bundle can be injected in all views.
+	 */
+	@Produces
+	private ResourceBundle defaultResourceBundle = ResourceBundle.getBundle("default");
 
 }

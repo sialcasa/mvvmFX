@@ -12,44 +12,44 @@ import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 
 public class AddContactDialogViewModel implements ViewModel {
 
-    public static final String CLOSE_DIALOG_NOTIFICATION = "closeDialog";
+	public static final String CLOSE_DIALOG_NOTIFICATION = "closeDialog";
 
-    static final String TITLE_LABEL_KEY = "dialog.addcontact.title";
+	static final String TITLE_LABEL_KEY = "dialog.addcontact.title";
 
-    @Inject
-    private Repository repository;
+	@Inject
+	private Repository repository;
 
-    @InjectScope
-    private ContactDialogScope dialogScope;
+	@InjectScope
+	private ContactDialogScope dialogScope;
 
-    @Inject
-    private ResourceBundle defaultResourceBundle;
+	@Inject
+	private ResourceBundle defaultResourceBundle;
 
-    public void initialize() {
-        dialogScope.subscribe(ContactDialogScope.OK_BEFORE_COMMIT, (key, payload) -> {
-            addContactAction();
-        });
+	public void initialize() {
+		dialogScope.subscribe(ContactDialogScope.OK_BEFORE_COMMIT, (key, payload) -> {
+			addContactAction();
+		});
 
-        dialogScope.dialogTitleProperty().set(defaultResourceBundle.getString(TITLE_LABEL_KEY));
-        dialogScope.publish(ContactDialogScope.RESET_FORMS);
-        Contact contact = new Contact();
-        dialogScope.setContactToEdit(contact);
-    }
+		dialogScope.dialogTitleProperty().set(defaultResourceBundle.getString(TITLE_LABEL_KEY));
+		dialogScope.publish(ContactDialogScope.RESET_FORMS);
+		Contact contact = new Contact();
+		dialogScope.setContactToEdit(contact);
+	}
 
-    public void addContactAction() {
-        if (dialogScope.isContactFormValid()) {
+	public void addContactAction() {
+		if (dialogScope.isContactFormValid()) {
 
-            dialogScope.publish(ContactDialogScope.COMMIT);
+			dialogScope.publish(ContactDialogScope.COMMIT);
 
-            Contact contact = dialogScope.getContactToEdit();
+			Contact contact = dialogScope.getContactToEdit();
 
-            repository.save(contact);
+			repository.save(contact);
 
-            dialogScope.publish(ContactDialogScope.RESET_DIALOG_PAGE);
-            dialogScope.setContactToEdit(null);
+			dialogScope.publish(ContactDialogScope.RESET_DIALOG_PAGE);
+			dialogScope.setContactToEdit(null);
 
-            publish(CLOSE_DIALOG_NOTIFICATION);
-        }
-    }
-    
+			publish(CLOSE_DIALOG_NOTIFICATION);
+		}
+	}
+
 }

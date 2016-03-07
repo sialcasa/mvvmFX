@@ -1,23 +1,23 @@
 <configuration>
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
 
-    <logger name="org.jboss.weld" level="INFO"/>
+	<logger name="org.jboss.weld" level="INFO"/>
 
-    <!-- log level for the mvvmfx framework-->
-    <logger name="de.saxsys.mvvmfx" level="INFO"/>
+	<!-- log level for the mvvmfx framework-->
+	<logger name="de.saxsys.mvvmfx" level="INFO"/>
 
-    <!-- log level for our application -->
-    <logger name="de.saxsys.mvvmfx.contacts" level="DEBUG"/>
+	<!-- log level for our application -->
+	<logger name="de.saxsys.mvvmfx.contacts" level="DEBUG"/>
 
-    <!-- Strictly speaking, the level attribute is not necessary since -->
-    <!-- the level of the root level is set to DEBUG by default.       -->
-    <root level="DEBUG">
-        <appender-ref ref="STDOUT"/>
-    </root>
+	<!-- Strictly speaking, the level attribute is not necessary since -->
+	<!-- the level of the root level is set to DEBUG by default.       -->
+	<root level="DEBUG">
+		<appender-ref ref="STDOUT"/>
+	</root>
 
 </configuration>

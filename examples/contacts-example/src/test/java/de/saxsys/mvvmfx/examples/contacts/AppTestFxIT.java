@@ -13,34 +13,34 @@ import static org.testfx.matcher.control.TableViewMatchers.hasTableCell;
 @Ignore
 public class AppTestFxIT extends FxRobot {
 
-    @Before
-    public void setupApp() throws Exception {
+	@Before
+	public void setupApp() throws Exception {
 
-        FxToolkit.registerPrimaryStage();
+		FxToolkit.registerPrimaryStage();
 
-        FxToolkit.setupApplication(App.class);
-    }
+		FxToolkit.setupApplication(App.class);
+	}
 
-    @Test
-    public void testAddNewContact() {
+	@Test
+	public void testAddNewContact() {
 
-        clickOn("#addNewContactButton");
+		clickOn("#addNewContactButton");
 
-        clickOn("#firstnameInput");
-        write("luke");
+		clickOn("#firstnameInput");
+		write("luke");
 
-        clickOn("#lastnameInput");
-        write("skywalker");
+		clickOn("#lastnameInput");
+		write("skywalker");
 
-        clickOn("#emailInput");
-        write("luke.skywalker@example.org");
+		clickOn("#emailInput");
+		write("luke.skywalker@example.org");
 
-        clickOn("#nextButton");
+		clickOn("#nextButton");
 
-        clickOn("#okButton");
+		clickOn("#okButton");
 
-        verifyThat("#masterContactTable", hasTableCell("luke"));
-        verifyThat("#masterContactTable", hasTableCell("skywalker"));
-        verifyThat("#masterContactTable", hasTableCell("luke.skywalker@example.org"));
-    }
+		verifyThat("#masterContactTable", hasTableCell("luke"));
+		verifyThat("#masterContactTable", hasTableCell("skywalker"));
+		verifyThat("#masterContactTable", hasTableCell("luke.skywalker@example.org"));
+	}
 }

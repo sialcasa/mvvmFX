@@ -5,12 +5,12 @@ import java.util.Set;
 
 public interface Repository {
 
-    Set<Contact> findAll();
+	Set<Contact> findAll();
 
-    Optional<Contact> findById(String id);
+	Optional<Contact> findById(String id);
 
-    void save(Contact contact);
+	void save(Contact contact);
 
-    void delete(Contact contact);
-    
+	void delete(Contact contact);
+
 }

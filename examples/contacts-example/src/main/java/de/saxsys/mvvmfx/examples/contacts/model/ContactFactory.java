@@ -11,84 +11,84 @@ import java.util.Random;
  */
 public class ContactFactory {
 
-    /**
-     * @return a contact with random generated demo content.
-     */
-    public static Contact createRandomContact() {
-        Contact contact = new Contact();
+	/**
+	 * @return a contact with random generated demo content.
+	 */
+	public static Contact createRandomContact() {
+		Contact contact = new Contact();
 
-        contact.setFirstname(new Random().nextBoolean() ? getFemaleFirstname() : getMaleFirstname());
-        contact.setLastname(getLastname());
+		contact.setFirstname(new Random().nextBoolean() ? getFemaleFirstname() : getMaleFirstname());
+		contact.setLastname(getLastname());
 
-        contact.setBirthday(getBirthday());
+		contact.setBirthday(getBirthday());
 
-        contact.setEmailAddress(getEmailAddress(contact.getFirstname()));
-        contact.setPhoneNumber(getPhoneNumber());
-        contact.setMobileNumber(getPhoneNumber());
+		contact.setEmailAddress(getEmailAddress(contact.getFirstname()));
+		contact.setPhoneNumber(getPhoneNumber());
+		contact.setMobileNumber(getPhoneNumber());
 
-        return contact;
-    }
+		return contact;
+	}
 
-    private static LocalDate getBirthday() {
-        int year = (2014 - 50) + new Random().nextInt(50);
+	private static LocalDate getBirthday() {
+		int year = (2014 - 50) + new Random().nextInt(50);
 
-        int month = new Random().nextInt(12) + 1;
+		int month = new Random().nextInt(12) + 1;
 
-        int day = new Random().nextInt(27) + 1;
+		int day = new Random().nextInt(27) + 1;
 
-        return LocalDate.of(year, month, day);
-    }
+		return LocalDate.of(year, month, day);
+	}
 
-    private static String getPhoneNumber() {
-        StringBuilder number = new StringBuilder();
+	private static String getPhoneNumber() {
+		StringBuilder number = new StringBuilder();
 
-        number.append("+49 ");
+		number.append("+49 ");
 
-        for (int i = 0; i < 11; i++) {
-            number.append(getRandomNumber());
-        }
+		for (int i = 0; i < 11; i++) {
+			number.append(getRandomNumber());
+		}
 
-        return number.toString();
-    }
+		return number.toString();
+	}
 
-    private static String getEmailAddress(String firstname) {
-        StringBuilder emailAddress = new StringBuilder();
+	private static String getEmailAddress(String firstname) {
+		StringBuilder emailAddress = new StringBuilder();
 
-        emailAddress.append(firstname);
-        emailAddress.append(getRandomNumber());
-        emailAddress.append(getRandomNumber());
-        emailAddress.append("@");
+		emailAddress.append(firstname);
+		emailAddress.append(getRandomNumber());
+		emailAddress.append(getRandomNumber());
+		emailAddress.append("@");
 
-        List<String> domains = Arrays.asList("example.com", "example.org", "mail.example.com");
-        emailAddress.append(domains.get(new Random().nextInt(domains.size())));
+		List<String> domains = Arrays.asList("example.com", "example.org", "mail.example.com");
+		emailAddress.append(domains.get(new Random().nextInt(domains.size())));
 
-        return emailAddress.toString();
-    }
+		return emailAddress.toString();
+	}
 
-    private static String getLastname() {
+	private static String getLastname() {
 
-        List<String> names = Arrays.asList("Smith", "Brown", "Lee", "Johnson", "Williams", "Müller", "Schmidt",
-                "Schneider");
+		List<String> names = Arrays.asList("Smith", "Brown", "Lee", "Johnson", "Williams", "Müller", "Schmidt",
+				"Schneider");
 
-        return names.get(new Random().nextInt(names.size()));
-    }
+		return names.get(new Random().nextInt(names.size()));
+	}
 
-    private static String getMaleFirstname() {
+	private static String getMaleFirstname() {
 
-        List<String> names = Arrays.asList("Max", "Paul", "Leon", "Lucas", "Jonas", "Ben", "Tim", "David");
+		List<String> names = Arrays.asList("Max", "Paul", "Leon", "Lucas", "Jonas", "Ben", "Tim", "David");
 
-        return names.get(new Random().nextInt(names.size()));
-    }
+		return names.get(new Random().nextInt(names.size()));
+	}
 
-    private static String getFemaleFirstname() {
+	private static String getFemaleFirstname() {
 
-        List<String> names = Arrays.asList("Marie", "Julia", "Anne", "Laura", "Lisa", "Sarah", "Michelle", "Sophie");
+		List<String> names = Arrays.asList("Marie", "Julia", "Anne", "Laura", "Lisa", "Sarah", "Michelle", "Sophie");
 
-        return names.get(new Random().nextInt(names.size()));
-    }
+		return names.get(new Random().nextInt(names.size()));
+	}
 
-    private static int getRandomNumber() {
-        return new Random().nextInt(10);
-    }
+	private static int getRandomNumber() {
+		return new Random().nextInt(10);
+	}
 
 }

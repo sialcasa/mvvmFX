@@ -5,27 +5,27 @@
 <?import javafx.scene.layout.*?>
 
 <VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.saxsys.mvvmfx.examples.contacts.ui.main.MainView">
-    <children>
-        <fx:include source="../menu/MenuView.fxml" resources="menu"/>
-        <fx:include source="../toolbar/ToolbarView.fxml"/>
-        <SplitPane dividerPositions="0.7" VBox.vgrow="ALWAYS">
-            <items>
-                <AnchorPane>
-                    <children>
-                        <fx:include source="../master/MasterView.fxml" AnchorPane.bottomAnchor="0.0"
-                                                            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                            AnchorPane.topAnchor="0.0"/>
-                    </children>
-                </AnchorPane>
-                <AnchorPane>
-                    <children>
-                        <fx:include source="../detail/DetailView.fxml" AnchorPane.bottomAnchor="0.0"
-                                                            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                            AnchorPane.topAnchor="0.0"/>
-                    </children>
-                </AnchorPane>
-            </items>
-        </SplitPane>
-    </children>
+	  fx:controller="de.saxsys.mvvmfx.examples.contacts.ui.main.MainView">
+	<children>
+		<fx:include source="../menu/MenuView.fxml" resources="menu"/>
+		<fx:include source="../toolbar/ToolbarView.fxml"/>
+		<SplitPane dividerPositions="0.7" VBox.vgrow="ALWAYS">
+			<items>
+				<AnchorPane>
+					<children>
+						<fx:include source="../master/MasterView.fxml" AnchorPane.bottomAnchor="0.0"
+									AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+									AnchorPane.topAnchor="0.0"/>
+					</children>
+				</AnchorPane>
+				<AnchorPane>
+					<children>
+						<fx:include source="../detail/DetailView.fxml" AnchorPane.bottomAnchor="0.0"
+									AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+									AnchorPane.topAnchor="0.0"/>
+					</children>
+				</AnchorPane>
+			</items>
+		</SplitPane>
+	</children>
 </VBox>

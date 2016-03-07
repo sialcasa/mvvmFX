@@ -48,204 +48,204 @@ import org.slf4j.LoggerFactory;
  */
 public class CountrySelector {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CountrySelector.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CountrySelector.class);
 
-    public static final String ISO_3166_LOCATION = "/countries/iso_3166.xml";
-    public static final String ISO_3166_2_LOCATION = "/countries/iso_3166_2.xml";
-    private ObservableList<Country> countries = FXCollections.observableArrayList();
-    private ObservableList<Subdivision> subdivisions = FXCollections.observableArrayList();
+	public static final String ISO_3166_LOCATION = "/countries/iso_3166.xml";
+	public static final String ISO_3166_2_LOCATION = "/countries/iso_3166_2.xml";
+	private ObservableList<Country> countries = FXCollections.observableArrayList();
+	private ObservableList<Subdivision> subdivisions = FXCollections.observableArrayList();
 
-    private ReadOnlyStringWrapper subdivisionLabel = new ReadOnlyStringWrapper();
+	private ReadOnlyStringWrapper subdivisionLabel = new ReadOnlyStringWrapper();
 
-    private ReadOnlyBooleanWrapper inProgress = new ReadOnlyBooleanWrapper(false);
+	private ReadOnlyBooleanWrapper inProgress = new ReadOnlyBooleanWrapper(false);
 
-    private Map<Country, List<Subdivision>> countryCodeSubdivisionMap = new HashMap<>();
-    private Map<Country, String> countryCodeSubdivisionNameMap = new HashMap<>();
+	private Map<Country, List<Subdivision>> countryCodeSubdivisionMap = new HashMap<>();
+	private Map<Country, String> countryCodeSubdivisionNameMap = new HashMap<>();
 
-    /**
-     * This method triggers the loading of the available countries and
-     * subdivisions.
-     */
-    public void init() {
-        inProgress.set(true);
-        loadCountries();
-    }
+	/**
+	 * This method triggers the loading of the available countries and
+	 * subdivisions.
+	 */
+	public void init() {
+		inProgress.set(true);
+		loadCountries();
+	}
 
-    /**
-     * Set the currently selected country. This will lead to an update of the
-     * {@link #subdivisions()} observable list and the
-     * {@link #subdivisionLabel()}.
-     *
-     * @param country the country that will be selected or <code>null</code> if
-     * no country is selected.
-     */
-    public void setCountry(Country country) {
-        if (country == null) {
-            subdivisionLabel.set(null);
-            subdivisions.clear();
-            return;
-        }
+	/**
+	 * Set the currently selected country. This will lead to an update of the
+	 * {@link #subdivisions()} observable list and the
+	 * {@link #subdivisionLabel()}.
+	 *
+	 * @param country the country that will be selected or <code>null</code> if
+	 * no country is selected.
+	 */
+	public void setCountry(Country country) {
+		if (country == null) {
+			subdivisionLabel.set(null);
+			subdivisions.clear();
+			return;
+		}
 
-        subdivisionLabel.set(countryCodeSubdivisionNameMap.get(country));
+		subdivisionLabel.set(countryCodeSubdivisionNameMap.get(country));
 
-        subdivisions.clear();
-        if (countryCodeSubdivisionMap.containsKey(country)) {
-            subdivisions.addAll(countryCodeSubdivisionMap.get(country));
-        }
-    }
+		subdivisions.clear();
+		if (countryCodeSubdivisionMap.containsKey(country)) {
+			subdivisions.addAll(countryCodeSubdivisionMap.get(country));
+		}
+	}
 
-    /**
-     * Load all countries from the XML file source with DataFX.
-     */
-    void loadCountries() {
-        URL iso3166Resource = this.getClass().getResource(ISO_3166_LOCATION);
-        if (iso3166Resource == null) {
-            throw new IllegalStateException("Can't find the list of countries! Expected location was:"
-                    + ISO_3166_LOCATION);
-        }
+	/**
+	 * Load all countries from the XML file source with DataFX.
+	 */
+	void loadCountries() {
+		URL iso3166Resource = this.getClass().getResource(ISO_3166_LOCATION);
+		if (iso3166Resource == null) {
+			throw new IllegalStateException("Can't find the list of countries! Expected location was:"
+					+ ISO_3166_LOCATION);
+		}
 
-        XmlConverter<Country> countryConverter = new XmlConverter<>("iso_3166_entry", Country.class);
+		XmlConverter<Country> countryConverter = new XmlConverter<>("iso_3166_entry", Country.class);
 
-        try {
-            FileSource<Country> dataSource = new FileSource<>(new File(iso3166Resource.getFile()), countryConverter);
-            ListDataProvider<Country> listDataProvider = new ListDataProvider<>(dataSource);
+		try {
+			FileSource<Country> dataSource = new FileSource<>(new File(iso3166Resource.getFile()), countryConverter);
+			ListDataProvider<Country> listDataProvider = new ListDataProvider<>(dataSource);
 
-            listDataProvider.setResultObservableList(countries);
+			listDataProvider.setResultObservableList(countries);
 
-            Worker<ObservableList<Country>> worker = listDataProvider.retrieve();
-            // when the countries are loaded we start the loading of the subdivisions.
-            worker.stateProperty().addListener(obs -> {
-                if (worker.getState() == Worker.State.SUCCEEDED) {
-                    loadSubdivisions();
-                }
-            });
-        } catch (IOException e) {
-            LOG.error("A problem was detected while loading the XML file with the available countries.", e);
-        }
-    }
+			Worker<ObservableList<Country>> worker = listDataProvider.retrieve();
+			// when the countries are loaded we start the loading of the subdivisions.
+			worker.stateProperty().addListener(obs -> {
+				if (worker.getState() == Worker.State.SUCCEEDED) {
+					loadSubdivisions();
+				}
+			});
+		} catch (IOException e) {
+			LOG.error("A problem was detected while loading the XML file with the available countries.", e);
+		}
+	}
 
-    /**
-     * Load all subdivisions from the XML file source with DataFX.
-     */
-    void loadSubdivisions() {
+	/**
+	 * Load all subdivisions from the XML file source with DataFX.
+	 */
+	void loadSubdivisions() {
 
-        URL iso3166_2Resource = this.getClass().getResource(ISO_3166_2_LOCATION);
+		URL iso3166_2Resource = this.getClass().getResource(ISO_3166_2_LOCATION);
 
-        if (iso3166_2Resource == null) {
-            throw new IllegalStateException("Can't find the list of subdivisions! Expected location was:"
-                    + ISO_3166_2_LOCATION);
-        }
+		if (iso3166_2Resource == null) {
+			throw new IllegalStateException("Can't find the list of subdivisions! Expected location was:"
+					+ ISO_3166_2_LOCATION);
+		}
 
-        XmlConverter<ISO3166_2_CountryEntity> converter = new XmlConverter<>("iso_3166_country",
-                ISO3166_2_CountryEntity.class);
+		XmlConverter<ISO3166_2_CountryEntity> converter = new XmlConverter<>("iso_3166_country",
+				ISO3166_2_CountryEntity.class);
 
-        ObservableList<ISO3166_2_CountryEntity> subdivisionsEntities = FXCollections.observableArrayList();
+		ObservableList<ISO3166_2_CountryEntity> subdivisionsEntities = FXCollections.observableArrayList();
 
-        try {
-            FileSource<ISO3166_2_CountryEntity> dataSource = new FileSource<>(new File(iso3166_2Resource.getFile()),
-                    converter);
-            ListDataProvider<ISO3166_2_CountryEntity> listDataProvider = new ListDataProvider<>(dataSource);
+		try {
+			FileSource<ISO3166_2_CountryEntity> dataSource = new FileSource<>(new File(iso3166_2Resource.getFile()),
+					converter);
+			ListDataProvider<ISO3166_2_CountryEntity> listDataProvider = new ListDataProvider<>(dataSource);
 
-            listDataProvider.setResultObservableList(subdivisionsEntities);
+			listDataProvider.setResultObservableList(subdivisionsEntities);
 
-            Worker<ObservableList<ISO3166_2_CountryEntity>> worker = listDataProvider.retrieve();
-            worker.stateProperty().addListener(obs -> {
-                if (worker.getState() == Worker.State.SUCCEEDED) {
+			Worker<ObservableList<ISO3166_2_CountryEntity>> worker = listDataProvider.retrieve();
+			worker.stateProperty().addListener(obs -> {
+				if (worker.getState() == Worker.State.SUCCEEDED) {
 
-                    subdivisionsEntities.forEach(entity -> {
-                        if (entity.subsets != null && !entity.subsets.isEmpty()) {
+					subdivisionsEntities.forEach(entity -> {
+						if (entity.subsets != null && !entity.subsets.isEmpty()) {
 
-                            Country country = findCountryByCode(entity.code);
+							Country country = findCountryByCode(entity.code);
 
-                            if (!countryCodeSubdivisionMap.containsKey(country)) {
-                                countryCodeSubdivisionMap.put(country, new ArrayList<>());
-                            }
+							if (!countryCodeSubdivisionMap.containsKey(country)) {
+								countryCodeSubdivisionMap.put(country, new ArrayList<>());
+							}
 
-                            List<Subdivision> subdivisionList = countryCodeSubdivisionMap.get(country);
+							List<Subdivision> subdivisionList = countryCodeSubdivisionMap.get(country);
 
-                            entity.subsets.get(0).entryList.forEach(entry -> {
-                                subdivisionList.add(new Subdivision(entry.name, entry.code, country));
-                            });
+							entity.subsets.get(0).entryList.forEach(entry -> {
+								subdivisionList.add(new Subdivision(entry.name, entry.code, country));
+							});
 
-                            countryCodeSubdivisionNameMap.put(country, entity.subsets.get(0).subdivisionType);
-                        }
-                    });
+							countryCodeSubdivisionNameMap.put(country, entity.subsets.get(0).subdivisionType);
+						}
+					});
 
-                    inProgress.set(false);
-                }
-            });
-        } catch (IOException e) {
-            LOG.error("A problem was detected while loading the XML file with the available subdivisions.", e);
-        }
+					inProgress.set(false);
+				}
+			});
+		} catch (IOException e) {
+			LOG.error("A problem was detected while loading the XML file with the available subdivisions.", e);
+		}
 
-    }
+	}
 
-    private Country findCountryByCode(String code) {
-        return countries.stream().filter(country -> country.getCountryCode().equals(code)).findFirst().orElse(null);
-    }
+	private Country findCountryByCode(String code) {
+		return countries.stream().filter(country -> country.getCountryCode().equals(code)).findFirst().orElse(null);
+	}
 
-    /**
-     * XML entity class. These classes represent the structure of the XML files
-     * to be loaded.
-     */
-    @XmlRootElement(name = "iso_3166_subset")
-    @XmlAccessorType(XmlAccessType.FIELD)
-    static class ISO3166_2_EntryEntity {
+	/**
+	 * XML entity class. These classes represent the structure of the XML files
+	 * to be loaded.
+	 */
+	@XmlRootElement(name = "iso_3166_subset")
+	@XmlAccessorType(XmlAccessType.FIELD)
+	static class ISO3166_2_EntryEntity {
 
-        @XmlAttribute(name = "code")
-        public String code;
-        @XmlAttribute(name = "name")
-        public String name;
-    }
+		@XmlAttribute(name = "code")
+		public String code;
+		@XmlAttribute(name = "name")
+		public String name;
+	}
 
-    /**
-     * XML entity class. These classes represent the structure of the XML files
-     * to be loaded.
-     */
-    @XmlRootElement(name = "iso_3166_subset")
-    @XmlAccessorType(XmlAccessType.FIELD)
-    static class ISO3166_2_SubsetEntity {
+	/**
+	 * XML entity class. These classes represent the structure of the XML files
+	 * to be loaded.
+	 */
+	@XmlRootElement(name = "iso_3166_subset")
+	@XmlAccessorType(XmlAccessType.FIELD)
+	static class ISO3166_2_SubsetEntity {
 
-        @XmlElement(name = "iso_3166_2_entry")
-        public List<ISO3166_2_EntryEntity> entryList;
+		@XmlElement(name = "iso_3166_2_entry")
+		public List<ISO3166_2_EntryEntity> entryList;
 
-        @XmlAttribute(name = "type")
-        public String subdivisionType;
-    }
+		@XmlAttribute(name = "type")
+		public String subdivisionType;
+	}
 
-    /**
-     * XML entity class. These classes represent the structure of the XML files
-     * to be loaded.
-     */
-    @XmlRootElement(name = "iso_3166_country")
-    @XmlAccessorType(XmlAccessType.FIELD)
-    static class ISO3166_2_CountryEntity {
+	/**
+	 * XML entity class. These classes represent the structure of the XML files
+	 * to be loaded.
+	 */
+	@XmlRootElement(name = "iso_3166_country")
+	@XmlAccessorType(XmlAccessType.FIELD)
+	static class ISO3166_2_CountryEntity {
 
-        @XmlAttribute(name = "code")
-        public String code;
+		@XmlAttribute(name = "code")
+		public String code;
 
-        @XmlElement(name = "iso_3166_subset")
-        public List<ISO3166_2_SubsetEntity> subsets;
+		@XmlElement(name = "iso_3166_subset")
+		public List<ISO3166_2_SubsetEntity> subsets;
 
-        @Override
-        public String toString() {
-            return "CountryEntity " + code;
-        }
-    }
+		@Override
+		public String toString() {
+			return "CountryEntity " + code;
+		}
+	}
 
-    public ObservableList<Country> availableCountries() {
-        return countries;
-    }
+	public ObservableList<Country> availableCountries() {
+		return countries;
+	}
 
-    public ReadOnlyStringProperty subdivisionLabel() {
-        return subdivisionLabel.getReadOnlyProperty();
-    }
+	public ReadOnlyStringProperty subdivisionLabel() {
+		return subdivisionLabel.getReadOnlyProperty();
+	}
 
-    public ObservableList<Subdivision> subdivisions() {
-        return FXCollections.unmodifiableObservableList(subdivisions);
-    }
+	public ObservableList<Subdivision> subdivisions() {
+		return FXCollections.unmodifiableObservableList(subdivisions);
+	}
 
-    public ReadOnlyBooleanProperty inProgressProperty() {
-        return inProgress.getReadOnlyProperty();
-    }
+	public ReadOnlyBooleanProperty inProgressProperty() {
+		return inProgress.getReadOnlyProperty();
+	}
 }

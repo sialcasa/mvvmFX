@@ -7,18 +7,18 @@ import javafx.beans.property.SimpleObjectProperty;
 
 public class MasterDetailScope implements Scope {
 
-    private final ObjectProperty<Contact> selectedContact = new SimpleObjectProperty<>(this, "selectedContact");
+	private final ObjectProperty<Contact> selectedContact = new SimpleObjectProperty<>(this, "selectedContact");
 
-    public ObjectProperty<Contact> selectedContactProperty() {
-        return this.selectedContact;
-    }
+	public ObjectProperty<Contact> selectedContactProperty() {
+		return this.selectedContact;
+	}
 
-    public final Contact getSelectedContact() {
-        return this.selectedContactProperty().get();
-    }
+	public final Contact getSelectedContact() {
+		return this.selectedContactProperty().get();
+	}
 
-    public final void setSelectedContact(final Contact selectedContact) {
-        this.selectedContactProperty().set(selectedContact);
-    }
+	public final void setSelectedContact(final Contact selectedContact) {
+		this.selectedContactProperty().set(selectedContact);
+	}
 
 }

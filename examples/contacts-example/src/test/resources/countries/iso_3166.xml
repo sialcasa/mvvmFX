@@ -23,22 +23,22 @@
 		]>
 
 <iso_3166_entries>
-    <iso_3166_entry
-        alpha_2_code="AT"
-        alpha_3_code="AUT"
-        numeric_code="040"
-        name="Austria"
-        official_name="Republic of Austria"/>
-    <iso_3166_entry
-        alpha_2_code="DE"
-        alpha_3_code="DEU"
-        numeric_code="276"
-        name="Germany"
-        official_name="Federal Republic of Germany"/>
-    <iso_3166_entry
-        alpha_2_code="CH"
-        alpha_3_code="CHE"
-        numeric_code="756"
-        name="Switzerland"
-        official_name="Swiss Confederation"/>
+	<iso_3166_entry
+		alpha_2_code="AT"
+		alpha_3_code="AUT"
+		numeric_code="040"
+		name="Austria"
+		official_name="Republic of Austria"/>
+	<iso_3166_entry
+		alpha_2_code="DE"
+		alpha_3_code="DEU"
+		numeric_code="276"
+		name="Germany"
+		official_name="Federal Republic of Germany"/>
+	<iso_3166_entry
+		alpha_2_code="CH"
+		alpha_3_code="CHE"
+		numeric_code="756"
+		name="Switzerland"
+		official_name="Swiss Confederation"/>
 </iso_3166_entries>

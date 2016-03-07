@@ -11,34 +11,34 @@ import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 
 public class EditContactDialogViewModel implements ViewModel {
 
-    static final String TITLE_LABEL_KEY = "dialog.editcontact.title";
-    public static final String CLOSE_DIALOG_NOTIFICATION = "CLOSE_DIALOG_NOT";
+	static final String TITLE_LABEL_KEY = "dialog.editcontact.title";
+	public static final String CLOSE_DIALOG_NOTIFICATION = "CLOSE_DIALOG_NOT";
 
-    @Inject
-    Repository repository;
+	@Inject
+	Repository repository;
 
-    @InjectScope
-    ContactDialogScope dialogScope;
+	@InjectScope
+	ContactDialogScope dialogScope;
 
-    @Inject
-    ResourceBundle defaultResourceBundle;
+	@Inject
+	ResourceBundle defaultResourceBundle;
 
-    public void initialize() {
-        dialogScope.publish(ContactDialogScope.RESET_FORMS);
-        dialogScope.publish(ContactDialogScope.RESET_DIALOG_PAGE);
-        dialogScope.subscribe(ContactDialogScope.OK_BEFORE_COMMIT, (key, payload) -> {
-            applyAction();
-        });
+	public void initialize() {
+		dialogScope.publish(ContactDialogScope.RESET_FORMS);
+		dialogScope.publish(ContactDialogScope.RESET_DIALOG_PAGE);
+		dialogScope.subscribe(ContactDialogScope.OK_BEFORE_COMMIT, (key, payload) -> {
+			applyAction();
+		});
 
-        dialogScope.dialogTitleProperty().set(defaultResourceBundle.getString(TITLE_LABEL_KEY));
-    }
+		dialogScope.dialogTitleProperty().set(defaultResourceBundle.getString(TITLE_LABEL_KEY));
+	}
 
-    public void applyAction() {
-        if (dialogScope.bothFormsValidProperty().get()) {
-            dialogScope.publish(ContactDialogScope.COMMIT);
-            repository.save(dialogScope.contactToEditProperty().get());
-            publish(CLOSE_DIALOG_NOTIFICATION);
-        }
-    }
-    
+	public void applyAction() {
+		if (dialogScope.bothFormsValidProperty().get()) {
+			dialogScope.publish(ContactDialogScope.COMMIT);
+			repository.save(dialogScope.contactToEditProperty().get());
+			publish(CLOSE_DIALOG_NOTIFICATION);
+		}
+	}
+
 }

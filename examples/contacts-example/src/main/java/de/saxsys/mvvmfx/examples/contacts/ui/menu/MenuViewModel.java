@@ -14,34 +14,34 @@ import javafx.beans.property.ReadOnlyBooleanWrapper;
 
 public class MenuViewModel implements ViewModel {
 
-    @Inject
-    private Event<TriggerShutdownEvent> shouldCloseEvent;
+	@Inject
+	private Event<TriggerShutdownEvent> shouldCloseEvent;
 
-    @InjectScope
-    private MasterDetailScope mdScope;
+	@InjectScope
+	private MasterDetailScope mdScope;
 
-    @Inject
-    private Repository repository;
+	@Inject
+	private Repository repository;
 
-    private final ReadOnlyBooleanWrapper removeItemDisabled = new ReadOnlyBooleanWrapper();
+	private final ReadOnlyBooleanWrapper removeItemDisabled = new ReadOnlyBooleanWrapper();
 
-    public void initialize() {
-        removeItemDisabled.bind(mdScope.selectedContactProperty().isNull());
-    }
+	public void initialize() {
+		removeItemDisabled.bind(mdScope.selectedContactProperty().isNull());
+	}
 
-    public void closeAction() {
-        shouldCloseEvent.fire(new TriggerShutdownEvent());
-    }
+	public void closeAction() {
+		shouldCloseEvent.fire(new TriggerShutdownEvent());
+	}
 
-    public void removeAction() {
-        Contact selectedContact = mdScope.selectedContactProperty().get();
-        if (selectedContact != null) {
-            repository.delete(mdScope.selectedContactProperty().get());
-        }
-    }
+	public void removeAction() {
+		Contact selectedContact = mdScope.selectedContactProperty().get();
+		if (selectedContact != null) {
+			repository.delete(mdScope.selectedContactProperty().get());
+		}
+	}
 
-    public ReadOnlyBooleanProperty removeItemDisabledProperty() {
-        return removeItemDisabled.getReadOnlyProperty();
-    }
+	public ReadOnlyBooleanProperty removeItemDisabledProperty() {
+		return removeItemDisabled.getReadOnlyProperty();
+	}
 
 }

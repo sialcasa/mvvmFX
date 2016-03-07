@@ -14,56 +14,56 @@ import org.junit.Test;
 
 public class AboutViewModelTest {
 
-    private static final String MY_COOL_LIB_NAME = "my cool library";
-    private static final String MY_COOL_LIB_URL = "http://my-cool-library.example.org";
+	private static final String MY_COOL_LIB_NAME = "my cool library";
+	private static final String MY_COOL_LIB_URL = "http://my-cool-library.example.org";
 
-    private static final String OTHER_FX_NAME = "otherFX";
-    private static final String OTHER_FX_URL = "http://otherfx.example.org";
+	private static final String OTHER_FX_NAME = "otherFX";
+	private static final String OTHER_FX_URL = "http://otherfx.example.org";
 
-    private AboutViewModel viewModel;
+	private AboutViewModel viewModel;
 
-    private Consumer<String> onLinkClickedHandler;
+	private Consumer<String> onLinkClickedHandler;
 
-    @SuppressWarnings("unchecked")
-    @Before
-    public void setup() {
-        viewModel = new AboutViewModel();
+	@SuppressWarnings("unchecked")
+	@Before
+	public void setup() {
+		viewModel = new AboutViewModel();
 
-        onLinkClickedHandler = mock(Consumer.class);
-        viewModel.onLinkClickedHandler = onLinkClickedHandler;
-    }
+		onLinkClickedHandler = mock(Consumer.class);
+		viewModel.onLinkClickedHandler = onLinkClickedHandler;
+	}
 
-    @Test
-    public void testLibrariesLabel() {
+	@Test
+	public void testLibrariesLabel() {
 
-        ReadOnlyStringProperty libraries = viewModel.librariesLabelTextProperty();
+		ReadOnlyStringProperty libraries = viewModel.librariesLabelTextProperty();
 
-        assertThat(libraries).hasValue("");
+		assertThat(libraries).hasValue("");
 
-        viewModel.libraryLinkMap.put(MY_COOL_LIB_NAME, MY_COOL_LIB_URL);
+		viewModel.libraryLinkMap.put(MY_COOL_LIB_NAME, MY_COOL_LIB_URL);
 
-        assertThat(libraries).hasValue("- [my cool library]\n");
+		assertThat(libraries).hasValue("- [my cool library]\n");
 
-        viewModel.libraryLinkMap.put(OTHER_FX_NAME, OTHER_FX_URL);
-        assertThat(libraries).hasValue("- [my cool library]\n- [otherFX]\n");
-    }
+		viewModel.libraryLinkMap.put(OTHER_FX_NAME, OTHER_FX_URL);
+		assertThat(libraries).hasValue("- [my cool library]\n- [otherFX]\n");
+	}
 
-    @Test
-    public void testOnLinkClicked() {
+	@Test
+	public void testOnLinkClicked() {
 
-        viewModel.libraryLinkMap.put(MY_COOL_LIB_NAME, MY_COOL_LIB_URL);
-        viewModel.libraryLinkMap.put(OTHER_FX_NAME, OTHER_FX_URL);
+		viewModel.libraryLinkMap.put(MY_COOL_LIB_NAME, MY_COOL_LIB_URL);
+		viewModel.libraryLinkMap.put(OTHER_FX_NAME, OTHER_FX_URL);
 
-        viewModel.onLinkClicked(MY_COOL_LIB_NAME);
+		viewModel.onLinkClicked(MY_COOL_LIB_NAME);
 
-        verify(onLinkClickedHandler).accept(MY_COOL_LIB_URL);
+		verify(onLinkClickedHandler).accept(MY_COOL_LIB_URL);
 
-        viewModel.onLinkClicked(OTHER_FX_NAME);
-        verify(onLinkClickedHandler).accept(OTHER_FX_URL);
+		viewModel.onLinkClicked(OTHER_FX_NAME);
+		verify(onLinkClickedHandler).accept(OTHER_FX_URL);
 
-        viewModel.onLinkClicked("something else");
+		viewModel.onLinkClicked("something else");
 
-        verifyNoMoreInteractions(onLinkClickedHandler);
-    }
-    
+		verifyNoMoreInteractions(onLinkClickedHandler);
+	}
+
 }

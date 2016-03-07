@@ -12,13 +12,13 @@ import java.util.regex.Pattern;
  */
 public class EmailValidator extends ObservableRuleBasedValidator {
 
-    private static final Pattern SIMPLE_EMAIL_PATTERN = Pattern
-            .compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
+	private static final Pattern SIMPLE_EMAIL_PATTERN = Pattern
+			.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
 
-    public EmailValidator(ObservableValue<String> source) {
-        addRule(ObservableRules.notEmpty(source), ValidationMessage.error("Email may not be empty"));
-        addRule(ObservableRules.matches(source, SIMPLE_EMAIL_PATTERN),
-                ValidationMessage.warning("Maybe a wrong email format"));
-    }
-    
+	public EmailValidator(ObservableValue<String> source) {
+		addRule(ObservableRules.notEmpty(source), ValidationMessage.error("Email may not be empty"));
+		addRule(ObservableRules.matches(source, SIMPLE_EMAIL_PATTERN),
+				ValidationMessage.warning("Maybe a wrong email format"));
+	}
+
 }

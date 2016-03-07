@@ -14,33 +14,33 @@ import javafx.stage.Stage;
 
 public class MenuView implements FxmlView<MenuViewModel> {
 
-    @FXML
-    private MenuItem removeMenuItem;
+	@FXML
+	private MenuItem removeMenuItem;
 
-    @InjectViewModel
-    private MenuViewModel viewModel;
+	@InjectViewModel
+	private MenuViewModel viewModel;
 
-    @Inject
-    private Stage primaryStage;
+	@Inject
+	private Stage primaryStage;
 
-    public void initialize() {
-        removeMenuItem.disableProperty().bind(viewModel.removeItemDisabledProperty());
-    }
+	public void initialize() {
+		removeMenuItem.disableProperty().bind(viewModel.removeItemDisabledProperty());
+	}
 
-    @FXML
-    public void close() {
-        viewModel.closeAction();
-    }
+	@FXML
+	public void close() {
+		viewModel.closeAction();
+	}
 
-    @FXML
-    public void remove() {
-        viewModel.removeAction();
-    }
+	@FXML
+	public void remove() {
+		viewModel.removeAction();
+	}
 
-    @FXML
-    public void about() {
-        Parent view = FluentViewLoader.fxmlView(AboutView.class).load().getView();
-        DialogHelper.showDialog(view, primaryStage, "/contacts.css");
-    }
-    
+	@FXML
+	public void about() {
+		Parent view = FluentViewLoader.fxmlView(AboutView.class).load().getView();
+		DialogHelper.showDialog(view, primaryStage, "/contacts.css");
+	}
+
 }

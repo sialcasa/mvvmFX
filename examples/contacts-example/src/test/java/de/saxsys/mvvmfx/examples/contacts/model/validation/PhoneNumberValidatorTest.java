@@ -14,34 +14,34 @@ import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 
 public class PhoneNumberValidatorTest {
 
-    private ValidationStatus result;
-    private StringProperty value = new SimpleStringProperty();
+	private ValidationStatus result;
+	private StringProperty value = new SimpleStringProperty();
 
-    @Before
-    public void setup() {
-        Validator validator = new PhoneValidator(value, "error message");
+	@Before
+	public void setup() {
+		Validator validator = new PhoneValidator(value, "error message");
 
-        result = validator.getValidationStatus();
-    }
+		result = validator.getValidationStatus();
+	}
 
-    @Test
-    public void testPhoneNumber() {
-        // phone number is not mandatory
-        value.set("");
-        assertThat(result.isValid()).isTrue();
-        value.set(null);
-        assertThat(result.isValid()).isTrue();
-        value.set("   ");
-        assertThat(result.isValid()).isTrue();
+	@Test
+	public void testPhoneNumber() {
+		// phone number is not mandatory
+		value.set("");
+		assertThat(result.isValid()).isTrue();
+		value.set(null);
+		assertThat(result.isValid()).isTrue();
+		value.set("   ");
+		assertThat(result.isValid()).isTrue();
 
-        value.set("012345678");
-        assertThat(result.isValid()).isTrue();
+		value.set("012345678");
+		assertThat(result.isValid()).isTrue();
 
-        value.set("+49 1234 324541");
-        assertThat(result.isValid()).isTrue();
+		value.set("+49 1234 324541");
+		assertThat(result.isValid()).isTrue();
 
-        value.set("abc");
-        assertThat(result.isValid()).isFalse();
-    }
-    
+		value.set("abc");
+		assertThat(result.isValid()).isFalse();
+	}
+
 }

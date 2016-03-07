@@ -10,50 +10,50 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane minHeight="50.0" minWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="de.saxsys.mvvmfx.examples.contacts.ui.master.MasterView">
-    <children>
-        <TableView id="masterContactTable" fx:id="contactTable" AnchorPane.bottomAnchor="0.0"
-                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <columns>
-                <TableColumn prefWidth="75.0" text="%master.table.firstname">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="firstname"/>
-                    </cellValueFactory>
-                </TableColumn>
-                <TableColumn prefWidth="75.0" text="%master.table.lastname">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="lastname"/>
-                    </cellValueFactory>
-                </TableColumn>
-                <TableColumn text="%master.table.email">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="emailAddress"/>
-                    </cellValueFactory>
-                </TableColumn>
-                <TableColumn text="%master.table.age">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="age"/>
-                    </cellValueFactory>
-                </TableColumn>
-                <TableColumn prefWidth="75.0" text="%master.table.city">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="city"/>
-                    </cellValueFactory>
-                </TableColumn>
-                <TableColumn prefWidth="75.0" text="%master.table.postalcode">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="postalCode"/>
-                    </cellValueFactory>
-                </TableColumn>
-                <TableColumn prefWidth="75.0" text="%master.table.street">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="street"/>
-                    </cellValueFactory>
-                </TableColumn>
-            </columns>
-            <columnResizePolicy>
-                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-            </columnResizePolicy>
-        </TableView>
-    </children>
+			fx:controller="de.saxsys.mvvmfx.examples.contacts.ui.master.MasterView">
+	<children>
+		<TableView id="masterContactTable" fx:id="contactTable" AnchorPane.bottomAnchor="0.0"
+				   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+			<columns>
+				<TableColumn prefWidth="75.0" text="%master.table.firstname">
+					<cellValueFactory>
+						<PropertyValueFactory property="firstname"/>
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn prefWidth="75.0" text="%master.table.lastname">
+					<cellValueFactory>
+						<PropertyValueFactory property="lastname"/>
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn text="%master.table.email">
+					<cellValueFactory>
+						<PropertyValueFactory property="emailAddress"/>
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn text="%master.table.age">
+					<cellValueFactory>
+						<PropertyValueFactory property="age"/>
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn prefWidth="75.0" text="%master.table.city">
+					<cellValueFactory>
+						<PropertyValueFactory property="city"/>
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn prefWidth="75.0" text="%master.table.postalcode">
+					<cellValueFactory>
+						<PropertyValueFactory property="postalCode"/>
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn prefWidth="75.0" text="%master.table.street">
+					<cellValueFactory>
+						<PropertyValueFactory property="street"/>
+					</cellValueFactory>
+				</TableColumn>
+			</columns>
+			<columnResizePolicy>
+				<TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+			</columnResizePolicy>
+		</TableView>
+	</children>
 </AnchorPane>
