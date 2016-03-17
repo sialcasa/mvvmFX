@@ -20,7 +20,6 @@ public class ItemOverviewView implements FxmlView<ItemOverviewViewModel> {
 
 	public void initialize() {
 		items.setItems(viewModel.itemsProperty());
-
 		items.setCellFactory(CachedViewModelCellFactory.createForFxmlView(ItemView.class));
 	}
 

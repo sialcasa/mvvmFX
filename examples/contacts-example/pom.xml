@@ -106,11 +106,11 @@
 			<scope>test</scope>
 		</dependency>
 
-        <dependency>
-            <groupId>de.saxsys</groupId>
-            <artifactId>mvvmfx-testing-utils</artifactId>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>de.saxsys</groupId>
+			<artifactId>mvvmfx-testing-utils</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 </project>

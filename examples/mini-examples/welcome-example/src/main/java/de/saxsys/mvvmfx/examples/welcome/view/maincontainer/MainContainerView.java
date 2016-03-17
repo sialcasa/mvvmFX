@@ -26,35 +26,35 @@ import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
 
 /**
- * Main View which creates the necessary subviews, and manages them. Does not need a concrete Viewmodel, so it is typed
- * with the inferface. Have a careful look on the FXML file to see, how to include different views into a MasterView.
+ * Main View which creates the necessary subviews, and manages them. Does not
+ * need a concrete Viewmodel, so it is typed with the inferface. Have a careful
+ * look on the FXML file to see, how to include different views into a
+ * MasterView.
  */
 public class MainContainerView implements FxmlView<MainContainerViewModel>, Initializable {
-	
+
 	@FXML
 	// Injection of the login which is declared in the FXML File
 	private StackPane loginView; // Value injected by FXMLLoader
-	
+
 	@FXML
 	// Inject the Code behind instance of the loginView by using the
 	// nameconvention ...Controller
 	private PersonLoginView loginViewController;
-	
+
 	@FXML
 	// Inject the Code behind instance of the ListView
 	private ListView<Integer> personWelcomeListView;
-	
+
 	@Inject
 	// Notification Center
 	private NotificationCenter notificationCenter;
-	
-	
+
 	@InjectViewModel
 	private MainContainerViewModel viewModel;
-	
-	
+
 	private Map<Integer, ViewTuple<PersonWelcomeView, PersonWelcomeViewModel>> viewMap = new HashMap<>();
-	
+
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		// Listen for close notifications
@@ -64,7 +64,7 @@ public class MainContainerView implements FxmlView<MainContainerViewModel>, Init
 					viewModel.displayedPersonsProperty().remove(
 							new Integer(personIdToHide));
 				});
-		
+
 		// When the login button of the loginView, the pickedPersonProperty is
 		// going to have the index of the selected person
 		loginViewController.getViewModel().loggedInPersonIdProperty()
@@ -76,27 +76,27 @@ public class MainContainerView implements FxmlView<MainContainerViewModel>, Init
 						viewModel.displayedPersonsProperty().add(id);
 					}
 				});
-		
+
 		// Configure List with views
 		final ViewListCellFactory<Integer> cellFactory = element -> {
 			if (!viewMap.containsKey(element)) {
 				ViewTuple<PersonWelcomeView, PersonWelcomeViewModel> loadedViewTuple
-				= FluentViewLoader.fxmlView(PersonWelcomeView.class).load();
-				
+						= FluentViewLoader.fxmlView(PersonWelcomeView.class).load();
+
 				PersonWelcomeView codeBehind = loadedViewTuple.getCodeBehind();
-				
+
 				codeBehind.getViewModel()
 						.setPersonId(element);
-				
+
 				viewMap.put(element, loadedViewTuple);
 			}
-			
+
 			return viewMap.get(element);
 		};
 		personWelcomeListView.setCellFactory(cellFactory);
-		
+
 		// Bind list
-		personWelcomeListView.itemsProperty().bind(
-				viewModel.displayedPersonsProperty());
+		personWelcomeListView.itemsProperty().bind(viewModel.displayedPersonsProperty());
 	}
+
 }

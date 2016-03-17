@@ -27,8 +27,7 @@
 						</FXCollections>
 					</items>
 				</ChoiceBox>
-				<Button fx:id="loginButton" alignment="CENTER" mnemonicParsing="false" onAction="#loginButtonPressed"
-						text="Login"/>
+				<Button fx:id="loginButton" alignment="CENTER" mnemonicParsing="false" onAction="#loginButtonPressed" text="Login"/>
 			</children>
 		</VBox>
 		<ProgressIndicator fx:id="loginProgressIndicator"/>

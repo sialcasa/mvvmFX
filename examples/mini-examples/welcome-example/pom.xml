@@ -24,7 +24,6 @@
 			<version>1</version>
 		</dependency>
 
-
 		<!-- CDI specific libraries -->
 		<dependency>
 			<groupId>de.saxsys</groupId>
@@ -41,7 +40,6 @@
 			<groupId>de.saxsys</groupId>
 			<artifactId>mvvmfx-guice</artifactId>
 		</dependency>
-
 
 		<dependency>
 			<groupId>junit</groupId>

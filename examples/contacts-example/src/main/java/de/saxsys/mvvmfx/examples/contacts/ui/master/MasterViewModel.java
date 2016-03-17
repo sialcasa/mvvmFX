@@ -24,59 +24,56 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class MasterViewModel implements ViewModel {
-	
+
 	private static final Logger LOG = LoggerFactory.getLogger(MasterViewModel.class);
-	
+
 	private final ObservableList<MasterTableViewModel> contacts = FXCollections.observableArrayList();
-	
+
 	private final ReadOnlyObjectWrapper<Contact> selectedContact = new ReadOnlyObjectWrapper<>();
-	
+
 	private final ObjectProperty<MasterTableViewModel> selectedTableRow = new SimpleObjectProperty<>();
-	
+
 	private Optional<Consumer<MasterTableViewModel>> onSelect = Optional.empty();
-	
+
 	@Inject
 	Repository repository;
-	
+
 	@InjectScope
 	MasterDetailScope mdScope;
-	
-	
+
 	public void initialize() {
 		updateContactList();
-		
+
 		mdScope.selectedContactProperty().bind(selectedContact);
-		
+
 		selectedContact.bind(Bindings.createObjectBinding(() -> {
 			if (selectedTableRow.get() == null) {
 				return null;
 			} else {
 				return repository.findById(selectedTableRow.get().getId()).orElse(null);
 			}
-		} , selectedTableRow));
+		}, selectedTableRow));
 	}
-	
+
 	public void onContactsUpdateEvent(@Observes ContactsUpdatedEvent event) {
 		updateContactList();
 	}
-	
+
 	private void updateContactList() {
 		LOG.debug("update contact list");
-		
-		
+
 		// when there is a selected row, persist the id of this row, otherwise use null
 		final String selectedContactId = (selectedTableRow.get() == null) ? null : selectedTableRow.get().getId();
-		
-		
+
 		Set<Contact> allContacts = repository.findAll();
-		
+
 		contacts.clear();
 		allContacts.forEach(contact -> contacts.add(new MasterTableViewModel(contact)));
-		
+
 		if (selectedContactId != null) {
 			Optional<MasterTableViewModel> selectedRow = contacts.stream()
 					.filter(row -> row.getId().equals(selectedContactId)).findFirst();
-					
+
 			if (selectedRow.isPresent()) {
 				onSelect.ifPresent(consumer -> consumer.accept(selectedRow.get()));
 			} else {
@@ -84,21 +81,17 @@ public class MasterViewModel implements ViewModel {
 			}
 		}
 	}
-	
+
 	public ObservableList<MasterTableViewModel> getContactList() {
 		return contacts;
 	}
-	
-	
+
 	public void setOnSelect(Consumer<MasterTableViewModel> consumer) {
 		onSelect = Optional.of(consumer);
 	}
-	
+
 	public ObjectProperty<MasterTableViewModel> selectedTableRowProperty() {
 		return selectedTableRow;
 	}
-	
-	
-	
-	
+
 }
