@@ -527,7 +527,7 @@ public class ModelWrapperTest {
 		final StringProperty nameField = cut.field(Person::getName, Person::setName, person.getName());
 		nameField.set("test");
 		cut.commit();
-		cut.updateDefaults();
+		cut.useCurrentValuesAsDefaults();
 		cut.reset();
 		assertThat(person.getName()).isEqualTo("test");
 		assertThat(nameField.get()).isEqualTo("test");
@@ -535,7 +535,7 @@ public class ModelWrapperTest {
 		final IntegerProperty ageField = cut.field(Person::getAge, Person::setAge, person.getAge());
 		ageField.set(42);
 		cut.commit();
-		cut.updateDefaults();
+		cut.useCurrentValuesAsDefaults();
 		cut.reset();
 		assertThat(person.getAge()).isEqualTo(42);
 		assertThat(ageField.get()).isEqualTo(42);
@@ -544,11 +544,10 @@ public class ModelWrapperTest {
 		nicknames.add("myname");
 		nicknames.remove("captain");
 		cut.commit();
-		cut.updateDefaults();
+		cut.useCurrentValuesAsDefaults();
 		cut.reset();
 		assertThat(person.getNicknames()).containsExactly("myname");
 		assertThat(nicknames.get()).containsExactly("myname");
 	}
-
 
 }
