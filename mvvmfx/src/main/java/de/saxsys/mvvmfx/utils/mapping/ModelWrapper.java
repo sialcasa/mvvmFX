@@ -592,8 +592,8 @@ public class ModelWrapper<M> {
 	}
 
 	/**
-	 * Loads values from wrapped object again and sets the current value s default. Subsequent calls to {@link #reset()}
-	 * will rest the values to this new default.
+	 * Loads values from wrapped object again and sets the current value as default. Subsequent calls to {@link #reset()}
+	 * will reset the values to this new default.
 	 */
 	public void updateDefaults() {
 		for (final PropertyField<?, M, ?> field : fields) {
