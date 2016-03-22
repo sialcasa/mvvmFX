@@ -15,18 +15,6 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.mapping;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.BooleanGetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.BooleanPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.BooleanSetter;
@@ -51,6 +39,20 @@ import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringGetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringSetter;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import eu.lestard.doc.Beta;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -252,8 +254,7 @@ public class ModelWrapper<M> {
 	
 	private final ReadOnlyBooleanWrapper dirtyFlag = new ReadOnlyBooleanWrapper();
 	private final ReadOnlyBooleanWrapper diffFlag = new ReadOnlyBooleanWrapper();
-	
-	
+
 	/**
 	 * This interface defines the operations that are possible for each field of a wrapped class.
 	 * 
@@ -271,14 +272,16 @@ public class ModelWrapper<M> {
 		void reload(M wrappedObject);
 		
 		void resetToDefault();
-		
+
+		void updateDefault(final M wrappedObject);
+
 		R getProperty();
-		
+
 		/**
 		 * Determines if the value in the model object and the property field are different or not.
-		 * 
+		 *
 		 * This method is used to implement the {@link #differentProperty()} flag.
-		 * 
+		 *
 		 * @param wrappedObject
 		 *            the wrapped model object
 		 * @return <code>false</code> if both the wrapped model object and the property field have the same value,
@@ -295,7 +298,7 @@ public class ModelWrapper<M> {
 	 */
 	private class FxPropertyField<T, R extends Property<T>> implements PropertyField<T, M, R> {
 		
-		private final T defaultValue;
+		private T defaultValue;
 		private final Function<M, Property<T>> accessor;
 		private final R targetProperty;
 		
@@ -327,7 +330,12 @@ public class ModelWrapper<M> {
 		public void resetToDefault() {
 			targetProperty.setValue(defaultValue);
 		}
-		
+
+		@Override
+		public void updateDefault(final M wrappedObject) {
+			defaultValue = accessor.apply(wrappedObject).getValue();
+		}
+
 		@Override
 		public R getProperty() {
 			return targetProperty;
@@ -351,7 +359,7 @@ public class ModelWrapper<M> {
 	private class BeanPropertyField<T, R extends Property<T>> implements PropertyField<T, M, R> {
 		
 		private final R targetProperty;
-		private final T defaultValue;
+		private T defaultValue;
 		
 		private final Function<M, T> getter;
 		private final BiConsumer<M, T> setter;
@@ -385,7 +393,12 @@ public class ModelWrapper<M> {
 		public void resetToDefault() {
 			targetProperty.setValue(defaultValue);
 		}
-		
+
+		@Override
+		public void updateDefault(final M wrappedObject) {
+  		defaultValue = getter.apply(wrappedObject);
+		}
+
 		@Override
 		public R getProperty() {
 			return targetProperty;
@@ -411,7 +424,7 @@ public class ModelWrapper<M> {
 	private class FxListPropertyField<E, T extends ObservableList<E>, R extends Property<T>>
 			implements PropertyField<T, M, R> {
 			
-		private final List<E> defaultValue;
+		private List<E> defaultValue;
 		private final ListPropertyAccessor<M, E> accessor;
 		private final ListProperty<E> targetProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
 		
@@ -440,7 +453,12 @@ public class ModelWrapper<M> {
 		public void resetToDefault() {
 			targetProperty.setAll(defaultValue);
 		}
-		
+
+		@Override
+		public void updateDefault(final M wrappedObject) {
+			defaultValue = new ArrayList<>(accessor.apply(wrappedObject).getValue());
+		}
+
 		@Override
 		public R getProperty() {
 			return (R) targetProperty;
@@ -470,7 +488,7 @@ public class ModelWrapper<M> {
 		private final ListGetter<M, E> getter;
 		private final ListSetter<M, E> setter;
 		
-		private final List<E> defaultValue;
+		private List<E> defaultValue;
 		private final ListProperty<E> targetProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
 		
 		public BeanListPropertyField(ListGetter<M, E> getter, ListSetter<M, E> setter) {
@@ -499,7 +517,12 @@ public class ModelWrapper<M> {
 		public void resetToDefault() {
 			targetProperty.setAll(defaultValue);
 		}
-		
+
+		@Override
+		public void updateDefault(final M wrappedObject) {
+			defaultValue = new ArrayList<>(getter.apply(wrappedObject));
+		}
+
 		@Override
 		public R getProperty() {
 			return (R) targetProperty;
@@ -567,7 +590,17 @@ public class ModelWrapper<M> {
 		
 		calculateDifferenceFlag();
 	}
-	
+
+	/**
+	 * Loads values from wrapped object again and sets the current value s default. Subsequent calls to {@link #reset()}
+	 * will rest the values to this new default.
+	 */
+	public void updateDefaults() {
+		for (final PropertyField<?, M, ?> field : fields) {
+			field.updateDefault(model);
+		}
+	}
+
 	/**
 	 * Take the current value of each property field and write it into the wrapped model element.
 	 * <p>
