@@ -30,7 +30,7 @@ import java.util.List;
  * @author sialcasa
  * 
  */
-class DefaultNotificationCenter implements NotificationCenter {
+public class DefaultNotificationCenter implements NotificationCenter {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultNotificationCenter.class);
 	
