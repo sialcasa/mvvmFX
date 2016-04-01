@@ -11,6 +11,15 @@
 
 	<artifactId>todomvc-example</artifactId>
 
+	<!-- use resource files (fxml, css) from the java directory -->
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+			</resource>
+		</resources>
+	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>de.saxsys</groupId>
