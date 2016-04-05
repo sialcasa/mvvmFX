@@ -540,7 +540,7 @@ public class ModelWrapper<M> {
 	private final Set<PropertyField<?, M, ?>> fields = new HashSet<>();
 	private final Map<String, PropertyField<?, M, ?>> identifiedFields = new HashMap<>();
 	
-	private ObjectProperty<M> model;
+	private final ObjectProperty<M> model;
 
 
 	/**
@@ -566,7 +566,7 @@ public class ModelWrapper<M> {
 	 *            the element of the model that will be wrapped.
 	 */
 	public ModelWrapper(M model) {
-		this(new SimpleObjectProperty<M>(model));
+		this(new SimpleObjectProperty<>(model));
 	}
 	
 	/**
@@ -574,7 +574,7 @@ public class ModelWrapper<M> {
 	 * that should be wrapped afterwards with the {@link #set(Object)} method.
 	 */
 	public ModelWrapper() {
-		this(new SimpleObjectProperty<M>());
+		this(new SimpleObjectProperty<>());
 	}
 	
 	/**
