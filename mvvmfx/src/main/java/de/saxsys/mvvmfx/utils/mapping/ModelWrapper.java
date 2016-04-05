@@ -555,7 +555,7 @@ public class ModelWrapper<M> {
 		reload();
 		this.model.addListener((observable, oldValue, newValue) -> {
 			reload();
-			updateDefaults();
+			useCurrentValuesAsDefaults();
 		});
 	}
 
