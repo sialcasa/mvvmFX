@@ -545,10 +545,10 @@ public class ModelWrapper<M> {
 
 	/**
 	 * Create a new instance of {@link ModelWrapper} that wraps the instance of the Model class wrapped by the property.
-	 * Updates all data when the model isntance changes.
+	 * Updates all data when the model instance changes.
 	 *
 	 * @param model
-	 *            the element of the model that will be wrapped.
+	 *            the property of the model element that will be wrapped.
 	 */
 	public ModelWrapper(ObjectProperty<M> model) {
 		this.model = model;
