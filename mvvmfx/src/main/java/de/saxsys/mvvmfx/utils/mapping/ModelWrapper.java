@@ -615,10 +615,44 @@ public class ModelWrapper<M> {
 	}
 
 	/**
-	 * Loads values from wrapped object again and sets the current value as default. Subsequent calls to {@link #reset()}
-	 * will reset the values to this new default.
+	 * Use all values that are currently present in the wrapped model object as new default values for respective field.
+	 * This overrides/updates the values that were set during the initialization of the field mappings.
+	 * <p>
+	 * Subsequent calls to {@link #reset()} will reset the values to this new default values.
+	 * <p>
+	 * Usage example:
+	 * <pre>
+	 * ModelWrapper{@code<Person>} wrapper = new ModelWrapper{@code<>}();
+	 * 
+	 * wrapper.field(Person::getName, Person::setName, "oldDefault");
+	 * 
+	 * Person p = new Person();
+	 * wrapper.set(p);
+	 * 
+	 * 
+	 * p.setName("Luise");
+	 * 
+	 * wrapper.useCurrentValuesAsDefaults(); // now "Luise" is the default value for the name field.
+	 *  
+	 * 
+	 * name.set("Hugo");
+	 * wrapper.commit();
+	 * 
+	 * name.get(); // Hugo
+	 * p.getName(); // Hugo
+	 * 
+	 * 
+	 * wrapper.reset(); // reset to the new defaults
+	 * name.get(); // Luise
+	 * 
+	 * wrapper.commit(); // put values from properties to the wrapped model object
+	 * p.getName(); // Luise
+	 *   
+	 *      
+	 * </pre>
+	 * 
 	 */
-	public void updateDefaults() {
+	public void useCurrentValuesAsDefaults() {
 		for (final PropertyField<?, M, ?> field : fields) {
 			field.updateDefault(model.get());
 		}

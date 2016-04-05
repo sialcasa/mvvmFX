@@ -15,6 +15,8 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.validation;
 
+import java.util.Objects;
+
 /**
  * This class represents a single validation message for an error or a warning. It consists of a string message and a
  * {@link Severity}.
@@ -28,8 +30,8 @@ public class ValidationMessage {
 	private final Severity severity;
 	
 	public ValidationMessage(Severity severity, String message) {
-		this.message = message;
-		this.severity = severity;
+		this.severity = Objects.requireNonNull(severity);
+		this.message = Objects.requireNonNull(message);
 	}
 	
 	
@@ -55,5 +57,25 @@ public class ValidationMessage {
 				"message='" + message + '\'' +
 				", severity=" + severity +
 				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || !(o instanceof ValidationMessage))
+			return false;
+
+		ValidationMessage that = (ValidationMessage) o;
+
+		return message.equals(that.message) && severity == that.severity;
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = message.hashCode();
+		result = 31 * result + severity.hashCode();
+		return result;
 	}
 }
