@@ -43,7 +43,7 @@ import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringSetter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -537,7 +537,7 @@ public class ModelWrapper<M> {
 		}
 	}
 	
-	private final Set<PropertyField<?, M, ?>> fields = new HashSet<>();
+	private final Set<PropertyField<?, M, ?>> fields = new LinkedHashSet<>();
 	private final Map<String, PropertyField<?, M, ?>> identifiedFields = new HashMap<>();
 	
 	private M model;
