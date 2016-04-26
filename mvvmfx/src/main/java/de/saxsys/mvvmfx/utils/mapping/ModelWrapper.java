@@ -540,9 +540,25 @@ public class ModelWrapper<M> {
 	private final Set<PropertyField<?, M, ?>> fields = new LinkedHashSet<>();
 	private final Map<String, PropertyField<?, M, ?>> identifiedFields = new HashMap<>();
 	
-	private M model;
-	
-	
+	private final ObjectProperty<M> model;
+
+
+	/**
+	 * Create a new instance of {@link ModelWrapper} that wraps the instance of the Model class wrapped by the property.
+	 * Updates all data when the model instance changes.
+	 *
+	 * @param model
+	 *            the property of the model element that will be wrapped.
+	 */
+	public ModelWrapper(ObjectProperty<M> model) {
+		this.model = model;
+		reload();
+		this.model.addListener((observable, oldValue, newValue) -> {
+			reload();
+			useCurrentValuesAsDefaults();
+		});
+	}
+
 	/**
 	 * Create a new instance of {@link ModelWrapper} that wraps the given instance of the Model class.
 	 * 
@@ -550,8 +566,7 @@ public class ModelWrapper<M> {
 	 *            the element of the model that will be wrapped.
 	 */
 	public ModelWrapper(M model) {
-		set(model);
-		reload();
+		this(new SimpleObjectProperty<>(model));
 	}
 	
 	/**
@@ -559,6 +574,7 @@ public class ModelWrapper<M> {
 	 * that should be wrapped afterwards with the {@link #set(Object)} method.
 	 */
 	public ModelWrapper() {
+		this(new SimpleObjectProperty<>());
 	}
 	
 	/**
@@ -568,16 +584,23 @@ public class ModelWrapper<M> {
 	 *            the element of the model that will be wrapped.
 	 */
 	public void set(M model) {
-		this.model = model;
+		this.model.set(model);
 	}
 	
 	/**
 	 * @return the wrapped model element if one was defined, otherwise <code>null</code>.
 	 */
 	public M get() {
+		return model.get();
+	}
+
+	/**
+	 * @return property holding the model instance wrapped by this model wrapper instance.
+   */
+	public ObjectProperty<M> modelProperty() {
 		return model;
 	}
-	
+
 	/**
 	 * Resets all defined fields to their default values. If no default value was defined <code>null</code> will be used
 	 * instead.
@@ -631,7 +654,7 @@ public class ModelWrapper<M> {
 	 */
 	public void useCurrentValuesAsDefaults() {
 		for (final PropertyField<?, M, ?> field : fields) {
-			field.updateDefault(model);
+			field.updateDefault(model.get());
 		}
 	}
 
@@ -644,8 +667,8 @@ public class ModelWrapper<M> {
 	 * state of the wrapped model element.
 	 */
 	public void commit() {
-		if (model != null) {
-			fields.forEach(field -> field.commit(model));
+		if (model.get() != null) {
+			fields.forEach(field -> field.commit(model.get()));
 			
 			dirtyFlag.set(false);
 			
@@ -662,8 +685,8 @@ public class ModelWrapper<M> {
 	 * defined property fields.
 	 */
 	public void reload() {
-		if (model != null) {
-			fields.forEach(field -> field.reload(model));
+		if (model.get() != null) {
+			fields.forEach(field -> field.reload(model.get()));
 			
 			dirtyFlag.set(false);
 			calculateDifferenceFlag();
@@ -678,9 +701,9 @@ public class ModelWrapper<M> {
 	}
 	
 	private void calculateDifferenceFlag() {
-		if (model != null) {
+		if (model.get() != null) {
 			final Optional<PropertyField<?, M, ?>> optional = fields.stream()
-					.filter(field -> field.isDifferent(model))
+					.filter(field -> field.isDifferent(model.get()))
 					.findAny();
 					
 			diffFlag.set(optional.isPresent());
@@ -1174,8 +1197,8 @@ public class ModelWrapper<M> {
 	
 	private <T, R extends Property<T>> R add(PropertyField<T, M, R> field) {
 		fields.add(field);
-		if (model != null) {
-			field.reload(model);
+		if (model.get() != null) {
+			field.reload(model.get());
 		}
 		return field.getProperty();
 	}
