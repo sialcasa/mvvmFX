@@ -17,7 +17,7 @@ package de.saxsys.mvvmfx.scopes;
 
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-
+import javafx.fxml.FXML;
 
 /**
  * This class is used as example View class that uses FXML.
@@ -25,6 +25,10 @@ import de.saxsys.mvvmfx.InjectViewModel;
  * @author alexander.casall
  */
 public class ScopedFxmlViewA implements FxmlView<ScopedViewModelA> {
-	@InjectViewModel
-	public ScopedViewModelA viewModel;
+
+    @InjectViewModel
+    public ScopedViewModelA viewModel;
+
+    @FXML
+    public ScopedFxmlViewC subviewCController;
 }

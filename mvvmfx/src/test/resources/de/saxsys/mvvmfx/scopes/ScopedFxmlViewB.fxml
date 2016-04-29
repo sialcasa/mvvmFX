@@ -3,4 +3,8 @@
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="de.saxsys.mvvmfx.scopes.ScopedFxmlViewB">
 
+<children>
+        <fx:include fx:id="subviewC" source="ScopedFxmlViewC.fxml"/>
+</children>
+
 </VBox>

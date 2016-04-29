@@ -16,56 +16,25 @@
 package de.saxsys.mvvmfx.scopes;
 
 import de.saxsys.mvvmfx.InjectScope;
-import de.saxsys.mvvmfx.ScopeStore;
 import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.internal.viewloader.example.TestScope;
+import de.saxsys.mvvmfx.internal.viewloader.example.TestScope1;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
 
 /**
  * 
  * @author alexander.casall
  */
 public class ScopedViewModelA implements ViewModel {
-	
-	@InjectScope
-	public TestScope injectedScope1;
-	
-	@InjectScope("coolId2")
-	public TestScope injectedScope2;
-	
-	@InjectScope("coolId3")
-	public TestScope injectedScope3;
-	
-	public final TestScope lazyScope1;
-	public final TestScope lazyScope2;
-	public final TestScope lazyScope3;
 
+    @InjectScope
+    public TestScope1 injectedScope1;
 
-	private final BooleanProperty reference = new SimpleBooleanProperty();
-	
-	public ScopedViewModelA() {
-		ScopeStore scopeStore = ScopeStore.getInstance();
-		lazyScope1 = scopeStore.getScope(TestScope.class);
-		lazyScope2 = scopeStore.getScope(TestScope.class, "coolId2");
-		lazyScope3 = scopeStore.getScope(TestScope.class, "coolId3");
-	}
-	
-	public void initialize() {
-		// Create Potential Memory Leaks
-		injectedScope1.someProperty
-				.addListener((observable, oldValue, newValue) -> reference.set(newValue));
-		injectedScope2.someProperty
-				.addListener((observable, oldValue, newValue) -> reference.set(newValue));
-		injectedScope3.someProperty
-				.addListener((observable, oldValue, newValue) -> reference.set(newValue));
-		lazyScope1.someProperty
-				.addListener((observable, oldValue, newValue) -> reference.set(newValue));
-		lazyScope2.someProperty
-				.addListener((observable, oldValue, newValue) -> reference.set(newValue));
-		lazyScope3.someProperty
-				.addListener((observable, oldValue, newValue) -> reference.set(newValue));
-	}
-	
+    private final BooleanProperty reference = new SimpleBooleanProperty();
+
+    public void initialize() {
+        // Create Potential Memory Leaks
+        injectedScope1.someProperty.addListener((observable, oldValue, newValue) -> reference.set(newValue));
+    }
+
 }
