@@ -46,13 +46,22 @@ public class ScopeTest {
             ScopedViewModelC viewModelCinB, ScopedViewModelD viewModelDinA, ScopedViewModelD viewModelDinB,
             ScopedViewModelD viewModelDinAWithoutContext, ScopedViewModelD viewModelDinBWithoutContext) {
 
-        Assert.assertNotEquals(viewModelA.injectedScope1, viewModelDinAWithoutContext.injectedScope1);
+        Assert.assertNotNull(viewModelA);
+        Assert.assertNotNull(viewModelB);
+        Assert.assertNotNull(viewModelCinA);
+        Assert.assertNotNull(viewModelCinB);
+        Assert.assertNotNull(viewModelDinA);
+        Assert.assertNotNull(viewModelDinB);
+        Assert.assertNotNull(viewModelDinAWithoutContext);
+        Assert.assertNotNull(viewModelDinBWithoutContext);
+
         Assert.assertEquals(viewModelA.injectedScope1, viewModelCinA.injectedScope1);
         Assert.assertEquals(viewModelA.injectedScope1, viewModelDinA.injectedScope1);
+        Assert.assertNotEquals(viewModelA.injectedScope1, viewModelDinAWithoutContext.injectedScope1);
 
-        Assert.assertNotEquals(viewModelA.injectedScope1, viewModelDinBWithoutContext.injectedScope1);
         Assert.assertEquals(viewModelB.injectedScope1, viewModelCinB.injectedScope1);
         Assert.assertEquals(viewModelB.injectedScope1, viewModelDinB.injectedScope1);
+        Assert.assertNotEquals(viewModelA.injectedScope1, viewModelDinBWithoutContext.injectedScope1);
 
         Assert.assertNotEquals(viewModelA.injectedScope1, viewModelCinB);
         Assert.assertNotEquals(viewModelB.injectedScope1, viewModelCinA);
