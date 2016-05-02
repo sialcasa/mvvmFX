@@ -7,7 +7,7 @@ import de.saxsys.mvvmfx.Scope;
 
 public class Context {
 
-    private Map<Class<? extends Scope>, Object> scopeContext;
+    private final Map<Class<? extends Scope>, Object> scopeContext;
 
     /**
      * Gets private in future
@@ -28,18 +28,16 @@ public class Context {
     /**
      * @return the scopeBottich
      */
-    public Map<Class<? extends Scope>, Object> getScopeBottich() {
+    public Map<Class<? extends Scope>, Object> getScopeContext() {
         return scopeContext;
     }
 
     /**
-     * @param scopeBottich
-     *            the scopeBottich to set
+     * Private!
+     * 
+     * @return
      */
-    public void setScopeBottich(Map<Class<? extends Scope>, Object> scopeBottich) {
-        this.scopeContext = scopeBottich;
-    }
-
+    @Deprecated
     public Context copy() {
         Map<Class<? extends Scope>, Object> scopeContextCopy = new HashMap<>();
         scopeContextCopy.putAll(scopeContext);
