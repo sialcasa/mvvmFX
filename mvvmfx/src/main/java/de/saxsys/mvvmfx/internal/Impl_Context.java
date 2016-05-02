@@ -3,31 +3,21 @@ package de.saxsys.mvvmfx.internal;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.saxsys.mvvmfx.Context;
 import de.saxsys.mvvmfx.Scope;
 
-public class Context {
+public class Impl_Context implements Context {
 
     private final Map<Class<? extends Scope>, Object> scopeContext;
 
-    /**
-     * Gets private in future
-     */
-    @Deprecated
-    public Context() {
+    public Impl_Context() {
         this(new HashMap<>());
     }
 
-    /**
-     * Gets private in future
-     */
-    @Deprecated
-    public Context(Map<Class<? extends Scope>, Object> scopeContext) {
+    protected Impl_Context(Map<Class<? extends Scope>, Object> scopeContext) {
         this.scopeContext = scopeContext;
     }
 
-    /**
-     * @return the scopeBottich
-     */
     public Map<Class<? extends Scope>, Object> getScopeContext() {
         return scopeContext;
     }
@@ -37,11 +27,10 @@ public class Context {
      * 
      * @return
      */
-    @Deprecated
-    public Context copy() {
+    public Impl_Context copy() {
         Map<Class<? extends Scope>, Object> scopeContextCopy = new HashMap<>();
         scopeContextCopy.putAll(scopeContext);
-        Context contextCopy = new Context(scopeContextCopy);
+        Impl_Context contextCopy = new Impl_Context(scopeContextCopy);
         return contextCopy;
     }
 

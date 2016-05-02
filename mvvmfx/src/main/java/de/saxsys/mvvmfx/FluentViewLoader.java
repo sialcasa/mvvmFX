@@ -1,8 +1,9 @@
 package de.saxsys.mvvmfx;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
-import de.saxsys.mvvmfx.internal.Context;
 import de.saxsys.mvvmfx.internal.viewloader.FxmlViewLoader;
 import de.saxsys.mvvmfx.internal.viewloader.JavaViewLoader;
 import de.saxsys.mvvmfx.internal.viewloader.ResourceBundleManager;
@@ -64,6 +65,7 @@ public class FluentViewLoader {
         private ViewModelType viewModel;
         private ViewType codeBehind;
         private Context context;
+        private List<Scope> providedScopes;
 
         JavaViewStep(Class<? extends ViewType> viewType) {
             this.viewType = viewType;
@@ -71,6 +73,11 @@ public class FluentViewLoader {
 
         public JavaViewStep<ViewType, ViewModelType> context(Context context) {
             this.context = context;
+            return this;
+        }
+
+        public JavaViewStep<ViewType, ViewModelType> providedScopes(Scope... providedScopes) {
+            this.providedScopes = Arrays.asList(providedScopes);
             return this;
         }
 
@@ -138,8 +145,8 @@ public class FluentViewLoader {
             JavaViewLoader javaViewLoader = new JavaViewLoader();
 
             return javaViewLoader.loadJavaViewTuple(viewType,
-                    ResourceBundleManager.getInstance().mergeWithGlobal(resourceBundle), viewModel, codeBehind,
-                    context);
+                    ResourceBundleManager.getInstance().mergeWithGlobal(resourceBundle), viewModel, codeBehind, context,
+                    providedScopes);
         }
 
     }
@@ -164,6 +171,7 @@ public class FluentViewLoader {
         private ViewType codeBehind;
         private ViewModelType viewModel;
         private Context context;
+        private List<Scope> providedScopes;
 
         FxmlViewStep(Class<? extends ViewType> viewType) {
             this.viewType = viewType;
@@ -171,6 +179,11 @@ public class FluentViewLoader {
 
         public FxmlViewStep<ViewType, ViewModelType> context(Context context) {
             this.context = context;
+            return this;
+        }
+
+        public FxmlViewStep<ViewType, ViewModelType> providedScopes(Scope... providedScopes) {
+            this.providedScopes = Arrays.asList(providedScopes);
             return this;
         }
 
@@ -256,7 +269,7 @@ public class FluentViewLoader {
 
             return fxmlViewLoader.loadFxmlViewTuple(viewType,
                     ResourceBundleManager.getInstance().mergeWithGlobal(resourceBundle), codeBehind, root, viewModel,
-                    context);
+                    context, providedScopes);
         }
     }
 

@@ -26,9 +26,11 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.saxsys.mvvmfx.Context;
+import de.saxsys.mvvmfx.Scope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
-import de.saxsys.mvvmfx.internal.Context;
+import de.saxsys.mvvmfx.internal.Impl_Context;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 
@@ -77,10 +79,28 @@ public class JavaViewLoader {
      */
     public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadJavaViewTuple(
             Class<? extends ViewType> viewType, ResourceBundle resourceBundle, final ViewModelType existingViewModel,
-            ViewType codeBehind, Context parentContext) {
+            ViewType codeBehind, Context parentContext, List<Scope> providedScopes) {
 
-        // FIXME woanders hin
-        Context context = parentContext == null ? new Context() : parentContext.copy();
+        // FIXME REFACTORING + DUPLICATED CODE IN FXMLVIEWLOADER!!!!!!!
+        Impl_Context context = null;
+
+        if (parentContext == null) {
+            context = new Impl_Context();
+        } else {
+            if (parentContext instanceof Impl_Context) {
+                context = (Impl_Context) parentContext;
+            }
+        }
+
+        final Impl_Context finalContext = context;
+
+        if (providedScopes != null) {
+            providedScopes.forEach(scope -> {
+                finalContext.getScopeContext().put(scope.getClass(), scope);
+            });
+        }
+        //////////////
+        ////////////////////////////
 
         DependencyInjector injectionFacade = DependencyInjector.getInstance();
 

@@ -67,6 +67,9 @@ public class ScopeTest {
 
         Assert.assertNotEquals(viewModelA.injectedScope1, viewModelCinB);
         Assert.assertNotEquals(viewModelB.injectedScope1, viewModelCinA);
+
+        Assert.assertNotNull(viewModelDinB.injectedScope2);
+
     }
 
 }

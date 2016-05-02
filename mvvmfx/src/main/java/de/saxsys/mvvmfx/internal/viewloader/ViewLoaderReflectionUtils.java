@@ -27,13 +27,14 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import de.saxsys.mvvmfx.Context;
 import de.saxsys.mvvmfx.InjectContext;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.Scope;
 import de.saxsys.mvvmfx.ScopeProvider;
 import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.internal.Context;
+import de.saxsys.mvvmfx.internal.Impl_Context;
 import net.jodah.typetools.TypeResolver;
 
 /**
@@ -270,7 +271,7 @@ public class ViewLoaderReflectionUtils {
         }
     }
 
-    static void createAndInjectScopes(Object viewModel, Context context) {
+    static void createAndInjectScopes(Object viewModel, Impl_Context context) {
 
         // FIXME CLEANUP!!!
         Class<? extends Object> viewModelClass = viewModel.getClass();
@@ -282,7 +283,7 @@ public class ViewLoaderReflectionUtils {
                 for (int i = 0; i < scopes.length; i++) {
                     Class<? extends Scope> scopeType = scopes[i];
                     // Overrides existing scopes!!!!
-                    context.getScopeBottich().put(scopeType, DependencyInjector.getInstance().getInstanceOf(scopeType));
+                    context.getScopeContext().put(scopeType, DependencyInjector.getInstance().getInstanceOf(scopeType));
                 }
             }
         }
@@ -296,7 +297,7 @@ public class ViewLoaderReflectionUtils {
         });
     }
 
-    public static void injectContext(View codeBehind, Context context) {
+    public static void injectContext(View codeBehind, Impl_Context context) {
 
         Optional<Field> contextField = getContextField(codeBehind.getClass());
 
@@ -308,7 +309,7 @@ public class ViewLoaderReflectionUtils {
         }
     }
 
-    static Object injectScopeIntoField(Field scopeField, Object viewModel, Context context)
+    static Object injectScopeIntoField(Field scopeField, Object viewModel, Impl_Context context)
             throws IllegalAccessException {
         Class<? extends Scope> scopeType = (Class<? extends Scope>) scopeField.getType();
 
@@ -321,7 +322,7 @@ public class ViewLoaderReflectionUtils {
                     + "but the viewModel <" + viewModel + "> has a field that violates this rule.");
         }
 
-        Map<Class<? extends Scope>, Object> scopeBottich = context.getScopeBottich();
+        Map<Class<? extends Scope>, Object> scopeBottich = context.getScopeContext();
         Object newScope = scopeBottich.get(scopeType);
 
         if (newScope == null) {

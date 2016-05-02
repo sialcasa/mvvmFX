@@ -1,5 +1,7 @@
 package de.saxsys.mvvmfx.internal.viewloader.example;
 
-public class TestScope2 {
+import de.saxsys.mvvmfx.Scope;
+
+public class TestScope2 implements Scope {
 
 }
