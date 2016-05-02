@@ -27,12 +27,13 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import de.saxsys.mvvmfx.InjectContext;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.Scope;
+import de.saxsys.mvvmfx.ScopeProvider;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.internal.Context;
-import de.saxsys.mvvmfx.internal.InjectContext;
 import net.jodah.typetools.TypeResolver;
 
 /**
@@ -269,10 +270,24 @@ public class ViewLoaderReflectionUtils {
         }
     }
 
-    static void injectScope(Object viewModel, Context context) {
+    static void createAndInjectScopes(Object viewModel, Context context) {
 
-        // FIXME
+        // FIXME CLEANUP!!!
+        Class<? extends Object> viewModelClass = viewModel.getClass();
 
+        for (Annotation annotation : viewModelClass.getDeclaredAnnotations()) {
+            if (annotation.annotationType().isAssignableFrom(ScopeProvider.class)) {
+                ScopeProvider provider = (ScopeProvider) annotation;
+                Class<? extends Scope>[] scopes = provider.scopes();
+                for (int i = 0; i < scopes.length; i++) {
+                    Class<? extends Scope> scopeType = scopes[i];
+                    // Overrides existing scopes!!!!
+                    context.getScopeBottich().put(scopeType, DependencyInjector.getInstance().getInstanceOf(scopeType));
+                }
+            }
+        }
+
+        // Inject
         List<Field> scopeFields = getScopeFields(viewModel.getClass());
 
         scopeFields.forEach(scopeField -> {
@@ -310,8 +325,10 @@ public class ViewLoaderReflectionUtils {
         Object newScope = scopeBottich.get(scopeType);
 
         if (newScope == null) {
-            scopeBottich.put(scopeType, DependencyInjector.getInstance().getInstanceOf(scopeType));
-            newScope = scopeBottich.get(scopeType);
+            // TODO Modify Stacktrace to get the Injectionpoint of the Scope
+            throw new IllegalStateException(
+                    "A scope was requested but no @ScopeProvider found in the hirarchy. Declare it like this: @ScopeProvider("
+                            + scopeType.getName() + ")");
         }
 
         if (!newScope.getClass().equals(scopeType)) {

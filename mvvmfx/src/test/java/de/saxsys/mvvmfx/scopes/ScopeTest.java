@@ -32,19 +32,25 @@ public class ScopeTest {
 
         ScopedViewModelC viewModelCinA = parentView.subviewAController.subviewCController.viewModel;
         ScopedViewModelD viewModelDinA = parentView.subviewAController.subviewCController.subViewDController.viewModel;
-        ScopedViewModelD viewModelDinAWithoutContext = parentView.subviewAController.subviewCController.subViewDWithoutContextController.viewModel;
 
         ScopedViewModelC viewModelCinB = parentView.subviewBController.subviewCController.viewModel;
         ScopedViewModelD viewModelDinB = parentView.subviewBController.subviewCController.subViewDController.viewModel;
-        ScopedViewModelD viewModelDinBWithoutContext = parentView.subviewBController.subviewCController.subViewDWithoutContextController.viewModel;
 
-        verifyScopes(viewModelA, viewModelB, viewModelCinA, viewModelCinB, viewModelDinA, viewModelDinB,
-                viewModelDinAWithoutContext, viewModelDinBWithoutContext);
+        verifyScopes(viewModelA, viewModelB, viewModelCinA, viewModelCinB, viewModelDinA, viewModelDinB);
+    }
+
+    @Test(expected = Exception.class)
+    public void testErrorWhenNoScopeProviderFound() {
+
+        final ScopesFxmlParentView parentView = FluentViewLoader.fxmlView(ScopesFxmlParentView.class)
+                .load()
+                .getCodeBehind();
+
+        parentView.subviewAController.subviewCController.loadWrongScopedView();
     }
 
     private void verifyScopes(ScopedViewModelA viewModelA, ScopedViewModelB viewModelB, ScopedViewModelC viewModelCinA,
-            ScopedViewModelC viewModelCinB, ScopedViewModelD viewModelDinA, ScopedViewModelD viewModelDinB,
-            ScopedViewModelD viewModelDinAWithoutContext, ScopedViewModelD viewModelDinBWithoutContext) {
+            ScopedViewModelC viewModelCinB, ScopedViewModelD viewModelDinA, ScopedViewModelD viewModelDinB) {
 
         Assert.assertNotNull(viewModelA);
         Assert.assertNotNull(viewModelB);
@@ -52,16 +58,12 @@ public class ScopeTest {
         Assert.assertNotNull(viewModelCinB);
         Assert.assertNotNull(viewModelDinA);
         Assert.assertNotNull(viewModelDinB);
-        Assert.assertNotNull(viewModelDinAWithoutContext);
-        Assert.assertNotNull(viewModelDinBWithoutContext);
 
         Assert.assertEquals(viewModelA.injectedScope1, viewModelCinA.injectedScope1);
         Assert.assertEquals(viewModelA.injectedScope1, viewModelDinA.injectedScope1);
-        Assert.assertNotEquals(viewModelA.injectedScope1, viewModelDinAWithoutContext.injectedScope1);
 
         Assert.assertEquals(viewModelB.injectedScope1, viewModelCinB.injectedScope1);
         Assert.assertEquals(viewModelB.injectedScope1, viewModelDinB.injectedScope1);
-        Assert.assertNotEquals(viewModelA.injectedScope1, viewModelDinBWithoutContext.injectedScope1);
 
         Assert.assertNotEquals(viewModelA.injectedScope1, viewModelCinB);
         Assert.assertNotEquals(viewModelB.injectedScope1, viewModelCinA);

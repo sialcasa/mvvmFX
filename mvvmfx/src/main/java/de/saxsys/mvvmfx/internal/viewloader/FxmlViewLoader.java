@@ -178,7 +178,7 @@ public class FxmlViewLoader {
                 actualViewModel = viewModel;
             }
             if (actualViewModel != null) {
-                ViewLoaderReflectionUtils.injectScope(actualViewModel, context);
+                ViewLoaderReflectionUtils.createAndInjectScopes(actualViewModel, context);
             }
 
             return new ViewTuple<>(loadedController, loadedRoot, actualViewModel);
@@ -260,7 +260,7 @@ public class FxmlViewLoader {
 
         Consumer<ViewModel> newVmConsumer = viewModel -> {
             ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
-            ViewLoaderReflectionUtils.injectScope(viewModel, context);
+            ViewLoaderReflectionUtils.createAndInjectScopes(viewModel, context);
             ViewLoaderReflectionUtils.initializeViewModel(viewModel);
         };
 
@@ -274,7 +274,7 @@ public class FxmlViewLoader {
 
         if (viewModel != null) {
             ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
-            ViewLoaderReflectionUtils.injectScope(viewModel, context);
+            ViewLoaderReflectionUtils.createAndInjectScopes(viewModel, context);
             ViewLoaderReflectionUtils.injectViewModel(codeBehind, viewModel);
             ViewLoaderReflectionUtils.injectContext(codeBehind, context);
         }

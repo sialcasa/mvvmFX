@@ -9,11 +9,19 @@ public class Context {
 
     private Map<Class<? extends Scope>, Object> scopeContext;
 
+    /**
+     * Gets private in future
+     */
+    @Deprecated
     public Context() {
         this(new HashMap<>());
     }
 
-    protected Context(Map<Class<? extends Scope>, Object> scopeContext) {
+    /**
+     * Gets private in future
+     */
+    @Deprecated
+    public Context(Map<Class<? extends Scope>, Object> scopeContext) {
         this.scopeContext = scopeContext;
     }
 

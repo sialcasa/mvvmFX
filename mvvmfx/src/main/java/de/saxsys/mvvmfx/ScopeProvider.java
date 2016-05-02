@@ -1,16 +1,12 @@
-package de.saxsys.mvvmfx.internal;
+package de.saxsys.mvvmfx;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * 
- * @author alexander.casall
- *
- */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface InjectContext {
+@Target(ElementType.TYPE)
+public @interface ScopeProvider {
+    Class<? extends Scope>[] scopes();
 }
