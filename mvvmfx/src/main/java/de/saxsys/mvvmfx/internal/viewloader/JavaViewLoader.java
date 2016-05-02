@@ -81,25 +81,8 @@ public class JavaViewLoader {
             Class<? extends ViewType> viewType, ResourceBundle resourceBundle, final ViewModelType existingViewModel,
             ViewType codeBehind, Context parentContext, List<Scope> providedScopes) {
 
-        // FIXME REFACTORING + DUPLICATED CODE IN FXMLVIEWLOADER!!!!!!!
-        Impl_Context context = null;
-
-        if (parentContext == null) {
-            context = new Impl_Context();
-        } else {
-            if (parentContext instanceof Impl_Context) {
-                context = (Impl_Context) parentContext;
-            }
-        }
-
-        final Impl_Context finalContext = context;
-
-        if (providedScopes != null) {
-            providedScopes.forEach(scope -> {
-                finalContext.getScopeContext().put(scope.getClass(), scope);
-            });
-        }
-        //////////////
+        // FIXME Woanders hin?!
+        Impl_Context context = ViewLoaderScopeUtils.prepareContext(parentContext, providedScopes);
         ////////////////////////////
 
         DependencyInjector injectionFacade = DependencyInjector.getInstance();

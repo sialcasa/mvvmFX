@@ -136,26 +136,8 @@ public class FxmlViewLoader {
             ViewModelType viewModel, Context parentContext, List<Scope> providedScopes) {
         try {
 
-            // FIXME Refactoring + woanders hin --> Duplicated Code in
-            // JavaViewLoader
-            Impl_Context context = null;
-
-            if (parentContext == null) {
-                context = new Impl_Context();
-            } else {
-                if (parentContext instanceof Impl_Context) {
-                    context = (Impl_Context) parentContext;
-                }
-            }
-
-            final Impl_Context finalContext = context;
-
-            if (providedScopes != null) {
-                providedScopes.forEach(scope -> {
-                    finalContext.getScopeContext().put(scope.getClass(), scope);
-                });
-            }
-
+            // FIXME Woanders hin?
+            Impl_Context context = ViewLoaderScopeUtils.prepareContext(parentContext, providedScopes);
             //////////////////////////////////////////////////////////////////////
 
             final FXMLLoader loader = createFxmlLoader(resource, resourceBundle, codeBehind, root, viewModel, context);
