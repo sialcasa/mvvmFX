@@ -16,7 +16,6 @@
 package de.saxsys.mvvmfx.scopes;
 
 import de.saxsys.mvvmfx.InjectScope;
-import de.saxsys.mvvmfx.ScopeProvider;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestScope1;
 import javafx.beans.property.BooleanProperty;
@@ -26,7 +25,6 @@ import javafx.beans.property.SimpleBooleanProperty;
  * 
  * @author alexander.casall
  */
-@ScopeProvider(scopes = { TestScope1.class })
 public class ScopedViewModelA implements ViewModel {
 
     @InjectScope

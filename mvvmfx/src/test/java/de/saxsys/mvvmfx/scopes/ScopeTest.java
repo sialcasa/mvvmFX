@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.internal.viewloader.example.TestScope1;
 
 public class ScopeTest {
 
@@ -24,6 +25,7 @@ public class ScopeTest {
     public void testFxmlScopedView() throws Exception {
 
         final ScopesFxmlParentView parentView = FluentViewLoader.fxmlView(ScopesFxmlParentView.class)
+                .providedScopes(new TestScope1())
                 .load()
                 .getCodeBehind();
 

@@ -1,9 +1,8 @@
 package de.saxsys.mvvmfx.scopes;
 
-import javafx.fxml.FXML;
-
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.ViewModel;
+import javafx.fxml.FXML;
 
 public class ScopesFxmlParentView implements FxmlView<ViewModel> {
     @FXML
