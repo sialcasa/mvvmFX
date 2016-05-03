@@ -33,9 +33,6 @@ public class App extends Application {
 		MvvmFX.setCustomDependencyInjector(easyDI::getInstance);
 
 		Parent root = FluentViewLoader.fxmlView(MainView.class)
-
-				// TODO: Not very nice.
-				.providedScopes(new OverviewScope())
 				.load().getView();
 
 

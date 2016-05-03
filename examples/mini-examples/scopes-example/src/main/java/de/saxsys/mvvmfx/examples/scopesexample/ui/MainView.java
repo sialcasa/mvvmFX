@@ -1,10 +1,8 @@
 package de.saxsys.mvvmfx.examples.scopesexample.ui;
 
-import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.Scope;
+import de.saxsys.mvvmfx.*;
 import de.saxsys.mvvmfx.examples.scopesexample.ui.documentdetails.DocumentDetailsView;
+import de.saxsys.mvvmfx.examples.scopesexample.ui.overview.OverviewScope;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -12,12 +10,17 @@ import javafx.scene.Parent;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
+
+
 public class MainView implements FxmlView<MainViewModel> {
 	@FXML
 	public TabPane mainTabPane;
 
 	@InjectViewModel
 	private MainViewModel viewModel;
+
+	@InjectContext
+	private Context context;
 
 	public void initialize() {
 
@@ -39,10 +42,12 @@ public class MainView implements FxmlView<MainViewModel> {
 			}
 		});
 
+
+
 		viewModel.onOpenDocument((title, scopes) -> {
 
-
 			Parent root = FluentViewLoader.fxmlView(DocumentDetailsView.class)
+					.context(context)
 					.providedScopes(scopes.toArray(new Scope[]{}))
 					.load()
 					.getView();

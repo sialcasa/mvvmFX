@@ -1,9 +1,6 @@
 package de.saxsys.mvvmfx.examples.scopesexample.ui;
 
-import de.saxsys.mvvmfx.InjectScope;
-import de.saxsys.mvvmfx.MvvmFX;
-import de.saxsys.mvvmfx.Scope;
-import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.*;
 import de.saxsys.mvvmfx.examples.scopesexample.model.Document;
 import de.saxsys.mvvmfx.examples.scopesexample.model.DocumentRepository;
 import de.saxsys.mvvmfx.examples.scopesexample.ui.documentdetails.DetailsScope;
@@ -16,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
+@ScopeProvider(scopes = {OverviewScope.class})
 public class MainViewModel implements ViewModel {
 
 	public static final String MESSAGE_OPEN_DOCUMENT = "MainViewModel.open_document";
@@ -24,10 +22,6 @@ public class MainViewModel implements ViewModel {
 
 	private NotificationCenter notificationCenter = MvvmFX.getNotificationCenter();
 	private BiConsumer<String, List<Scope>> openTabConsumer;
-
-
-	@InjectScope
-	private OverviewScope overviewScope;
 
 	public MainViewModel(DocumentRepository repository, Provider<DetailsScope> detailsScopeProvider) {
 		this.repository = repository;
@@ -51,7 +45,7 @@ public class MainViewModel implements ViewModel {
 				final DetailsScope detailScope = detailsScopeProvider.get();
 				detailScope.documentProperty().setValue(document);
 
-				openTabConsumer.accept(document.getTitle(), Arrays.asList(detailScope, overviewScope));
+				openTabConsumer.accept(document.getTitle(), Arrays.asList(detailScope));
 			}
 		});
 	}
