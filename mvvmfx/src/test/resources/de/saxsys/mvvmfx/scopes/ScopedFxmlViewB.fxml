@@ -5,6 +5,7 @@
 
 <children>
         <fx:include fx:id="subviewC" source="ScopedFxmlViewC.fxml"/>
+        <fx:include fx:id="subviewE" source="ScopedFxmlViewE.fxml"/>
 </children>
 
 </VBox>

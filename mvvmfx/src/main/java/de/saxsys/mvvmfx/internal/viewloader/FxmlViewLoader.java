@@ -183,7 +183,12 @@ public class FxmlViewLoader {
                 actualViewModel = viewModel;
             }
             if (actualViewModel != null) {
-                ViewLoaderReflectionUtils.createAndInjectScopes(actualViewModel, context);
+                // TODO: Create Testcase for this corner case:
+                // If this view is the root view (the one that is loaded with the FluentViewLoader)
+                // but in the view there is no injection of the ViewModel
+                // only in this case the scope has to be injected here,
+                // If the viewModel was already injected in the View, it has it's scopes already injected
+//                ViewLoaderReflectionUtils.createAndInjectScopes(actualViewModel, context);
             }
 
             return new ViewTuple<>(loadedController, loadedRoot, actualViewModel);

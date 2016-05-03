@@ -4,5 +4,6 @@
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="de.saxsys.mvvmfx.scopes.ScopedFxmlViewA">
 <children>
         <fx:include fx:id="subviewC" source="ScopedFxmlViewC.fxml"/>
+        <fx:include fx:id="subviewE" source="ScopedFxmlViewE.fxml"/>
 </children>
 </VBox>

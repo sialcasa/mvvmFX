@@ -16,6 +16,7 @@
 package de.saxsys.mvvmfx.scopes;
 
 import de.saxsys.mvvmfx.InjectScope;
+import de.saxsys.mvvmfx.ScopeProvider;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestScope1;
 import javafx.beans.property.BooleanProperty;
@@ -26,6 +27,7 @@ import javafx.beans.property.SimpleBooleanProperty;
  * @author alexander.casall
  * 
  */
+@ScopeProvider(scopes = {TestScope1.class})
 public class ScopedViewModelB implements ViewModel {
 
     @InjectScope
@@ -33,7 +35,13 @@ public class ScopedViewModelB implements ViewModel {
 
     private final BooleanProperty reference = new SimpleBooleanProperty();
 
+    public ScopedViewModelB() {
+        System.out.println("new " + this.getClass().getSimpleName() + "()");
+    }
+
     public void initialize() {
+        System.out.println(this.getClass().getSimpleName() + ".initialize()");
+
         // Create Potential Memory Leaks
         injectedScope1.someProperty.addListener((observable, oldValue, newValue) -> reference.set(newValue));
     }

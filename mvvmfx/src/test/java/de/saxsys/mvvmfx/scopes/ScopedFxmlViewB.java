@@ -31,4 +31,16 @@ public class ScopedFxmlViewB implements FxmlView<ScopedViewModelB> {
 
     @FXML
     public ScopedFxmlViewC subviewCController;
+
+    @FXML
+    public ScopedFxmlViewE subviewEController;
+
+
+    public ScopedFxmlViewB() {
+        System.out.println("new " + this.getClass().getSimpleName() + "()");
+    }
+
+    public void initialize() {
+        System.out.println(this.getClass().getSimpleName() + ".initialize()");
+    }
 }

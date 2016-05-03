@@ -34,7 +34,14 @@ public class ScopedViewModelA implements ViewModel {
 
     private final BooleanProperty reference = new SimpleBooleanProperty();
 
+
+    public ScopedViewModelA() {
+        System.out.println("new " + this.getClass().getSimpleName() + "()");
+    }
+
     public void initialize() {
+        System.out.println(this.getClass().getSimpleName() + ".initialize()");
+
         // Create Potential Memory Leaks
         injectedScope1.someProperty.addListener((observable, oldValue, newValue) -> reference.set(newValue));
     }

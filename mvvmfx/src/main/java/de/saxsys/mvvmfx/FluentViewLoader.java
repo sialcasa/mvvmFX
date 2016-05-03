@@ -183,6 +183,8 @@ public class FluentViewLoader {
         }
 
         public FxmlViewStep<ViewType, ViewModelType> providedScopes(Scope... providedScopes) {
+
+            // TODO: add scopes instead of reinitialization
             this.providedScopes = Arrays.asList(providedScopes);
             return this;
         }
