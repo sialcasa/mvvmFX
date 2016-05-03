@@ -26,6 +26,7 @@ public class ViewLoaderScopeUtils {
                 finalContext.getScopeContext().put(scope.getClass(), scope);
             });
         }
+
         return context;
     }
 

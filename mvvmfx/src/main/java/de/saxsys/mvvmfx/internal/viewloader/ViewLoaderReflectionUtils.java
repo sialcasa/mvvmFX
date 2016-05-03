@@ -32,6 +32,7 @@ import de.saxsys.mvvmfx.InjectContext;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.Scope;
+import de.saxsys.mvvmfx.ScopeProvider;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.internal.Impl_Context;
 import net.jodah.typetools.TypeResolver;
@@ -271,6 +272,21 @@ public class ViewLoaderReflectionUtils {
     }
 
     static void createAndInjectScopes(Object viewModel, Impl_Context context) {
+
+        // FIXME CLEANUP!!!
+        Class<? extends Object> viewModelClass = viewModel.getClass();
+
+        for (Annotation annotation : viewModelClass.getDeclaredAnnotations()) {
+            if (annotation.annotationType().isAssignableFrom(ScopeProvider.class)) {
+                ScopeProvider provider = (ScopeProvider) annotation;
+                Class<? extends Scope>[] scopes = provider.scopes();
+                for (int i = 0; i < scopes.length; i++) {
+                    Class<? extends Scope> scopeType = scopes[i];
+                    // Overrides existing scopes!!!!
+                    context.getScopeContext().put(scopeType, DependencyInjector.getInstance().getInstanceOf(scopeType));
+                }
+            }
+        }
 
         // Inject
         List<Field> scopeFields = getScopeFields(viewModel.getClass());
