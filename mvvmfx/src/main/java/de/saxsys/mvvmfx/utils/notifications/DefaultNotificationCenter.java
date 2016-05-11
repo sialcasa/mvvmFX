@@ -34,9 +34,6 @@ public class DefaultNotificationCenter implements NotificationCenter {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultNotificationCenter.class);
 	
-	DefaultNotificationCenter() {
-	}
-	
 	private final ObserverMap globalObservers = new ObserverMap();
 	private final ChannelObserverMap channelObserverMap = new ChannelObserverMap();
 	
