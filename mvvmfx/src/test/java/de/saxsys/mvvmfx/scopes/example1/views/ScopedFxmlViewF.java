@@ -1,16 +1,15 @@
-package de.saxsys.mvvmfx.scopes;
+package de.saxsys.mvvmfx.scopes.example1.views;
 
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 
-public class ScopedFxmlViewG implements FxmlView<ScopedViewModelG> {
-
+public class ScopedFxmlViewF implements FxmlView<ScopedViewModelF> {
 
 	@InjectViewModel
-	public ScopedViewModelG viewModel;
+	public ScopedViewModelF viewModel;
 
 
-	public ScopedFxmlViewG() {
+	public ScopedFxmlViewF() {
 		System.out.println("new " + this.getClass().getSimpleName() + "()");
 	}
 

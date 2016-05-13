@@ -1,4 +1,4 @@
-package de.saxsys.mvvmfx.scopes;
+package de.saxsys.mvvmfx.scopes.example1.views;
 
 import javafx.fxml.FXML;
 

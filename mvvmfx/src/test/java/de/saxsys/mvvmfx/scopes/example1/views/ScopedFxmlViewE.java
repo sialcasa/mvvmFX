@@ -1,7 +1,6 @@
-package de.saxsys.mvvmfx.scopes;
+package de.saxsys.mvvmfx.scopes.example1.views;
 
 import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectContext;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
 

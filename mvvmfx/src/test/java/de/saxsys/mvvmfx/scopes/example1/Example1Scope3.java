@@ -1,10 +1,10 @@
-package de.saxsys.mvvmfx.scopes;
+package de.saxsys.mvvmfx.scopes.example1;
 
 import de.saxsys.mvvmfx.Scope;
 
-public class TestScope3 implements Scope {
+public class Example1Scope3 implements Scope {
 
-	public TestScope3() {
+	public Example1Scope3() {
 		System.out.println("new " + this.getClass().getSimpleName() + "(), "+ System.identityHashCode(this));
 	}
 }

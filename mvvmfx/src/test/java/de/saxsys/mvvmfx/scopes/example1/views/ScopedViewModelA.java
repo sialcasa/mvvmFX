@@ -13,34 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package de.saxsys.mvvmfx.scopes;
+package de.saxsys.mvvmfx.scopes.example1.views;
 
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.fxml.FXML;
+import de.saxsys.mvvmfx.InjectScope;
+import de.saxsys.mvvmfx.ScopeProvider;
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.scopes.example1.Example1Scope1;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 /**
- * This class is used as example View class that uses FXML.
  * 
  * @author alexander.casall
  */
-public class ScopedFxmlViewB implements FxmlView<ScopedViewModelB> {
+@ScopeProvider(scopes = { Example1Scope1.class })
+public class ScopedViewModelA implements ViewModel {
 
-    @InjectViewModel
-    public ScopedViewModelB viewModel;
+    @InjectScope
+    public Example1Scope1 injectedScope1;
 
-    @FXML
-    public ScopedFxmlViewC subviewCController;
-
-    @FXML
-    public ScopedFxmlViewE subviewEController;
+    private final BooleanProperty reference = new SimpleBooleanProperty();
 
 
-    public ScopedFxmlViewB() {
+    public ScopedViewModelA() {
         System.out.println("new " + this.getClass().getSimpleName() + "()");
     }
 
     public void initialize() {
         System.out.println(this.getClass().getSimpleName() + ".initialize()");
+
+        // Create Potential Memory Leaks
+        injectedScope1.someProperty.addListener((observable, oldValue, newValue) -> reference.set(newValue));
     }
+
 }

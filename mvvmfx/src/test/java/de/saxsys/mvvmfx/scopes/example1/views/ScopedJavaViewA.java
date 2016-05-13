@@ -13,34 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package de.saxsys.mvvmfx.scopes;
+package de.saxsys.mvvmfx.scopes.example1.views;
 
-import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.fxml.FXML;
+import de.saxsys.mvvmfx.JavaView;
+import javafx.scene.layout.VBox;
 
 /**
- * This class is used as example View class that uses FXML.
+ * This class is used as example View class that is written in pure java.
  * 
  * @author alexander.casall
  */
-public class ScopedFxmlViewA implements FxmlView<ScopedViewModelA> {
+public class ScopedJavaViewA extends VBox implements JavaView<ScopedViewModelA> {
 
-    @InjectViewModel
-    public ScopedViewModelA viewModel;
-
-    @FXML
-    public ScopedFxmlViewC subviewCController;
-
-    @FXML
-    public ScopedFxmlViewE subviewEController;
-
-
-    public ScopedFxmlViewA() {
-        System.out.println("new " + this.getClass().getSimpleName() + "()");
-    }
-
-    public void initialize() {
-        System.out.println(this.getClass().getSimpleName() + ".initialize()");
-    }
+	@InjectViewModel
+	public ScopedViewModelA viewModel;
+	
 }

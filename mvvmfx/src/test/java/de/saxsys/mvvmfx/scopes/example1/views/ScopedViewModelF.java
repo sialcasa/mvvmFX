@@ -1,17 +1,15 @@
-package de.saxsys.mvvmfx.scopes;
+package de.saxsys.mvvmfx.scopes.example1.views;
 
 import de.saxsys.mvvmfx.InjectScope;
-import de.saxsys.mvvmfx.ScopeProvider;
 import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.scopes.example1.Example1Scope3;
 
-@ScopeProvider(scopes = {TestScope3.class})
-public class ScopedViewModelE implements ViewModel{
+public class ScopedViewModelF implements ViewModel{
 
 	@InjectScope
-	public TestScope3 testScope3;
+	public Example1Scope3 testScope3;
 
-
-	public ScopedViewModelE() {
+	public ScopedViewModelF() {
 		System.out.println("new " + this.getClass().getSimpleName() + "()");
 	}
 
