@@ -26,7 +26,9 @@ public class ScopedFxmlViewC implements FxmlView<ScopedViewModelC> {
     ScopedFxmlViewD subViewDWithoutContextController;
 
     public void initialize() {
+        ScopedViewModelD scopedViewModelD = new ScopedViewModelD();
         ViewTuple<ScopedFxmlViewD, ScopedViewModelD> load = FluentViewLoader.fxmlView(ScopedFxmlViewD.class)
+                .viewModel(scopedViewModelD)
                 .context(context)
                 .providedScopes(new TestScope2())
                 .load();
