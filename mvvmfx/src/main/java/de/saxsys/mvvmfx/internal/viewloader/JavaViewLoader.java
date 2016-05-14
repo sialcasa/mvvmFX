@@ -122,8 +122,8 @@ public class JavaViewLoader {
 
             // if the user has provided an existing ViewModel, we will not
             // (re-)initialize this existing instance
+            ViewLoaderReflectionUtils.createAndInjectScopes(viewModel, context);
             if (existingViewModel == null) {
-                ViewLoaderReflectionUtils.createAndInjectScopes(viewModel, context);
                 ViewLoaderReflectionUtils.initializeViewModel(viewModel);
             }
 

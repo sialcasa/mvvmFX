@@ -9,6 +9,23 @@ public class Example1ScopesTest {
 
 
 	@Test
+	public void testJavaScopedView() throws Exception {
+
+		// FIXME JAVA TESTS
+
+		// Muss äquivalent zum FXML-Test sein und auch den Concern des Manuell
+		// erstellten ViewModels testen
+
+		// final ScopedViewModelA viewModelA =
+		// FluentViewLoader.javaView(ScopedJavaViewA.class).load().getViewModel();
+		// final ScopedViewModelB viewModelB =
+		// FluentViewLoader.javaView(ScopedJavaViewB.class).load().getViewModel();
+		//
+		// verifyScopes(viewModelA, viewModelB);
+	}
+
+
+	@Test
 	public void testFxmlScopedView() throws Exception {
 
 		final ScopesFxmlParentView parentView = FluentViewLoader.fxmlView(ScopesFxmlParentView.class)
