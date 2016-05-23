@@ -18,9 +18,11 @@ package de.saxsys.mvvmfx.utils.commands;
 import java.util.function.Supplier;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import eu.lestard.doc.Beta;
@@ -74,19 +76,19 @@ public class DelegateCommand extends Service<Void> implements Command {
 	}
 	
 	/**
-	 * Creates a command with a condition about the executability by using the #executableBinding parameter.
+	 * Creates a command with a condition about the executability by using the 'executableObservable' parameter.
 	 *
 	 * @param actionSupplier
 	 *            a function that returns a new Action which should be executed
-	 * @param executableBinding
+	 * @param executableObservable
 	 *            which defines whether the {@link Command} can execute
 	 */
-	public DelegateCommand(final Supplier<Action> actionSupplier, ObservableBooleanValue executableBinding) {
-		this(actionSupplier, executableBinding, false);
+	public DelegateCommand(final Supplier<Action> actionSupplier, ObservableValue<Boolean> executableObservable) {
+		this(actionSupplier, executableObservable, false);
 	}
 	
 	/**
-	 * Creates a command with a condition about the executability by using the #executableBinding parameter. Pass a
+	 * Creates a command with a condition about the executability by using the 'executableObservable' parameter. Pass a
 	 * <code>true</code> to the #inBackground parameter to run the {@link Command} in a background thread.
 	 * 
 	 * <b>IF YOU USE THE BACKGROUND THREAD: </b> don't forget to return to the UI-thread by using
@@ -94,17 +96,22 @@ public class DelegateCommand extends Service<Void> implements Command {
 	 *
 	 * @param actionSupplier
 	 *            a function that returns a new Action which should be executed
-	 * @param executableBinding
+	 * @param executableObservable
 	 *            which defines whether the {@link Command} can execute
 	 * @param inBackground
 	 *            defines whether the execution {@link #execute()} is performed in a background thread or not
 	 */
-	public DelegateCommand(final Supplier<Action> actionSupplier, ObservableBooleanValue executableBinding,
+	public DelegateCommand(final Supplier<Action> actionSupplier, ObservableValue<Boolean> executableObservable,
 			boolean inBackground) {
 		this.actionSupplier = actionSupplier;
 		this.inBackground = inBackground;
-		if (executableBinding != null) {
-			executable.bind(runningProperty().not().and(executableBinding));
+		if (executableObservable != null) {
+			executable.bind(Bindings.createBooleanBinding(() -> {
+				final boolean isRunning = runningProperty().get();
+				final boolean isExecutable = executableObservable.getValue();
+
+				return !isRunning && isExecutable;
+			}, runningProperty(), executableObservable));
 		}
 		
 	}
