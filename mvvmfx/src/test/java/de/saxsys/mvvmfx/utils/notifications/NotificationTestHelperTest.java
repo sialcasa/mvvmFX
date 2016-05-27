@@ -78,7 +78,7 @@ public class NotificationTestHelperTest {
 	
 	@Test
 	public void publishOnOtherThread() {
-		NotificationTestHelper helper = new NotificationTestHelper(50l);
+		NotificationTestHelper helper = new NotificationTestHelper(150l);
 		
 		NotificationCenter notificationCenter = new DefaultNotificationCenter();
 		
