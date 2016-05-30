@@ -61,7 +61,7 @@ public interface ViewModel {
 	 *            to be send
 	 */
 	default void publish(String messageName, Object... payload) {
-		MvvmFX.getNotificationCenter().publish(this, messageName, payload);
+		MvvmFX.getNotificationCenter().publish(System.identityHashCode(this), messageName, payload);
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public interface ViewModel {
 	 *            which should execute when the notification occurs
 	 */
 	default void subscribe(String messageName, NotificationObserver observer) {
-		MvvmFX.getNotificationCenter().subscribe(this, messageName, observer);
+		MvvmFX.getNotificationCenter().subscribe(System.identityHashCode(this), messageName, observer);
 	}
 	
 	/**
@@ -86,7 +86,7 @@ public interface ViewModel {
 	 *            to remove
 	 */
 	default void unsubscribe(String messageName, NotificationObserver observer) {
-		MvvmFX.getNotificationCenter().unsubscribe(this, messageName, observer);
+		MvvmFX.getNotificationCenter().unsubscribe(System.identityHashCode(this), messageName, observer);
 	}
 	
 	/**
@@ -96,6 +96,6 @@ public interface ViewModel {
 	 *            to be removed
 	 */
 	default void unsubscribe(NotificationObserver observer) {
-		MvvmFX.getNotificationCenter().unsubscribe(this, observer);
+		MvvmFX.getNotificationCenter().unsubscribe(System.identityHashCode(this), observer);
 	}
 }

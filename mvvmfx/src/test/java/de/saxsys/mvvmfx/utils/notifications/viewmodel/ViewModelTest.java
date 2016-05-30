@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package de.saxsys.mvvmfx.utils.notifications;
+package de.saxsys.mvvmfx.utils.notifications.viewmodel;
 
 import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
+import de.saxsys.mvvmfx.utils.notifications.DefaultNotificationCenter;
+import de.saxsys.mvvmfx.utils.notifications.DefaultNotificationCenterTest;
+import de.saxsys.mvvmfx.utils.notifications.NotificationCenterFactory;
+import de.saxsys.mvvmfx.utils.notifications.NotificationObserver;
 import javafx.application.Platform;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +33,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * This test verifies the communication via notifications between the View and ViewModel.
+ */
 @RunWith(JfxRunner.class)
 public class ViewModelTest {
 	
@@ -47,6 +54,8 @@ public class ViewModelTest {
 		observer3 = Mockito.mock(DummyNotificationObserver.class);
 		viewModel = new ViewModel() {
 		};
+
+		NotificationCenterFactory.setNotificationCenter(new DefaultNotificationCenter());
 	}
 
 	@Test
