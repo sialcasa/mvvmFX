@@ -48,10 +48,19 @@ public class GCVerifier {
 	
 	public void verify(String message) {
 		forceGC();
-		
-		if (reference.get() != null) {
+
+		if (!isAvailableForGC()) {
 			throw new AssertionError(message);
 		}
+	}
+
+	/**
+	 * @return <code>true</code> if the object is available
+	 */
+	public boolean isAvailableForGC() {
+		forceGC();
+
+		return reference.get() == null;
 	}
 	
 	public void verify() {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package de.saxsys.mvvmfx.utils.notifications;
+package de.saxsys.mvvmfx.utils.notifications.viewmodel;
 
 import de.saxsys.mvvmfx.ViewModel;
 import org.junit.Test;
