@@ -121,7 +121,7 @@ public class DefaultNotificationCenter implements NotificationCenter {
 	 * Helper
 	 */
 
-	private void publish(String messageName, Object[] payload, ObserverMap observerMap) {
+	private static void publish(String messageName, Object[] payload, ObserverMap observerMap) {
 		Collection<NotificationObserver> notificationReceivers = observerMap.get(messageName);
 		if (notificationReceivers != null) {
 
@@ -133,7 +133,7 @@ public class DefaultNotificationCenter implements NotificationCenter {
 		}
 	}
 
-	private void addObserver(String messageName, NotificationObserver observer, ObserverMap observerMap) {
+	private static void addObserver(String messageName, NotificationObserver observer, ObserverMap observerMap) {
 		if (!observerMap.containsKey(messageName)) {
 			// use CopyOnWriteArrayList to prevent ConcurrentModificationException if inside of an observer a new observer is subscribed.
 			observerMap.put(messageName, new CopyOnWriteArrayList<>());
@@ -149,20 +149,41 @@ public class DefaultNotificationCenter implements NotificationCenter {
 	}
 
 
-	private void removeObserverFromObserverMap(NotificationObserver observer, ObserverMap observerMap) {
+	private static void removeObserverFromObserverMap(NotificationObserver observer, ObserverMap observerMap) {
 		for (String key : observerMap.keySet()) {
 			final List<NotificationObserver> observers = observerMap.get(key);
 
-			observers.removeIf(actualObserver -> actualObserver.equals(observer));
+			removeObserverFromObserverList(observer, observers);
 		}
 	}
 
-	private void removeObserversForMessageName(String messageName, NotificationObserver observer,
+	private static void removeObserverFromObserverList(NotificationObserver observer, List<NotificationObserver> observerList) {
+		observerList.removeIf(actualObserver -> actualObserver.equals(observer));
+
+		observerList.removeIf(actualObserver -> {
+			if(actualObserver instanceof WeakNotificationObserver) {
+				WeakNotificationObserver weakObserver = (WeakNotificationObserver) actualObserver;
+
+				NotificationObserver wrappedObserver = weakObserver.getWrappedObserver();
+
+				if(wrappedObserver == null) { // if reference was GCed we can remove the weakObserver
+					return true;
+				} else {
+					return wrappedObserver.equals(observer);
+				}
+			}
+
+			return false;
+		});
+	}
+
+	private static void removeObserversForMessageName(String messageName, NotificationObserver observer,
 											   ObserverMap observerMap) {
 
 		if (observerMap.containsKey(messageName)) {
 			final List<NotificationObserver> observers = observerMap.get(messageName);
-			observers.removeIf(actualObserver -> actualObserver.equals(observer));
+			removeObserverFromObserverList(observer, observers);
+
 			if (observers.size() == 0) {
 				observerMap.remove(messageName);
 			}
