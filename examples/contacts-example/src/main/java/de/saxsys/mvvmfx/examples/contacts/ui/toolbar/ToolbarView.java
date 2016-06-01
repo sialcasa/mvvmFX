@@ -34,7 +34,9 @@ public class ToolbarView implements FxmlView<ToolbarViewModel> {
 	@FXML
 	public void addNewContact() {
 		ViewTuple<AddContactDialogView, AddContactDialogViewModel> load = FluentViewLoader
-				.fxmlView(AddContactDialogView.class).load();
+				.fxmlView(AddContactDialogView.class)
+				.providedScopes(viewModel.getScopesForAddDialog())
+				.load();
 		Parent view = load.getView();
 		Stage showDialog = DialogHelper.showDialog(view, primaryStage, "/contacts.css");
 		load.getCodeBehind().setDisplayingStage(showDialog);

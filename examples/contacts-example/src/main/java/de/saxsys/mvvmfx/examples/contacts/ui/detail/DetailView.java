@@ -4,8 +4,10 @@ import javax.inject.Inject;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
+import de.saxsys.mvvmfx.Context;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectContext;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.examples.contacts.ui.editcontact.EditContactDialogView;
@@ -40,6 +42,9 @@ public class DetailView implements FxmlView<DetailViewModel> {
 	private Command removeCommand;
 	private Command editCommand;
 	private Command mailCommand;
+
+	@InjectContext
+	private Context context;
 
 	public void initialize() {
 		removeCommand = viewModel.getRemoveCommand();
@@ -77,6 +82,7 @@ public class DetailView implements FxmlView<DetailViewModel> {
 		viewModel.subscribe(DetailViewModel.OPEN_EDIT_CONTACT_DIALOG, (key, payload) -> {
 			ViewTuple<EditContactDialogView, EditContactDialogViewModel> load = FluentViewLoader
 					.fxmlView(EditContactDialogView.class)
+					.context(context)
 					.load();
 			Parent view = load.getView();
 			Stage showDialog = DialogHelper.showDialog(view, primaryStage, "/contacts.css");

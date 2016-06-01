@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.examples.scopesexample.ui.documentdetails.DocumentDetailsView">
+    <children>
+      <Label maxWidth="1.7976931348623157E308" text="Document Details" textAlignment="CENTER">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Separator maxWidth="1.7976931348623157E308" />
+        <Label fx:id="titleLabel" maxWidth="1.7976931348623157E308" text="Title">
+            <font>
+                <Font size="36.0" />
+            </font>
+        </Label>
+        <Label fx:id="descriptionLabel" maxWidth="1.7976931348623157E308" text="Description">
+            <font>
+                <Font size="36.0" />
+            </font>
+        </Label>
+        <Label fx:id="isSelectedLabel" maxWidth="1.7976931348623157E308" text="">
+            <font>
+                <Font size="36.0" />
+            </font>
+        </Label>
+        <fx:include source="descriptionedit/DescriptionEditView.fxml" />
+        <Separator maxWidth="1.7976931348623157E308" />
+        <fx:include source="../overview/OverviewView.fxml" />
+    </children>
+</VBox>

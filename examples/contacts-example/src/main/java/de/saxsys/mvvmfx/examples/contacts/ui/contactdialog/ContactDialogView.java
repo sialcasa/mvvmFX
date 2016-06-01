@@ -2,8 +2,10 @@ package de.saxsys.mvvmfx.examples.contacts.ui.contactdialog;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
+import de.saxsys.mvvmfx.Context;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectContext;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.examples.contacts.ui.addressform.AddressFormView;
@@ -36,12 +38,19 @@ public class ContactDialogView implements FxmlView<ContactDialogViewModel> {
 	@InjectViewModel
 	private ContactDialogViewModel viewModel;
 
+	@InjectContext
+	private Context context;
+
 	public void initialize() {
 		ViewTuple<ContactFormView, ContactFormViewModel> contactFormTuple = FluentViewLoader
-				.fxmlView(ContactFormView.class).load();
+				.fxmlView(ContactFormView.class)
+				.context(context)
+				.load();
 
 		ViewTuple<AddressFormView, AddressFormViewModel> addressFormTuple = FluentViewLoader
-				.fxmlView(AddressFormView.class).load();
+				.fxmlView(AddressFormView.class)
+				.context(context)
+				.load();
 
 		formPagination.getStyleClass().add("invisible-pagination-control");
 
