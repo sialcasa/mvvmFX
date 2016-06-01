@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import javax.inject.Inject;
 
 import de.saxsys.mvvmfx.InjectScope;
+import de.saxsys.mvvmfx.ScopeProvider;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.contacts.model.Address;
 import de.saxsys.mvvmfx.examples.contacts.model.Contact;
@@ -26,6 +27,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 
+@ScopeProvider(scopes = ContactDialogScope.class)
 public class DetailViewModel implements ViewModel {
 
 	public static final String OPEN_EDIT_CONTACT_DIALOG = "open_edit_contact";
