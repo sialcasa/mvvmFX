@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -30,7 +31,7 @@ import de.saxsys.mvvmfx.Context;
 import de.saxsys.mvvmfx.Scope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
-import de.saxsys.mvvmfx.internal.Impl_Context;
+import de.saxsys.mvvmfx.internal.ContextImpl;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 
@@ -79,10 +80,10 @@ public class JavaViewLoader {
      */
     public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadJavaViewTuple(
             Class<? extends ViewType> viewType, ResourceBundle resourceBundle, final ViewModelType existingViewModel,
-            ViewType codeBehind, Context parentContext, List<Scope> providedScopes) {
+            ViewType codeBehind, Context parentContext, Collection<Scope> providedScopes) {
 
         // FIXME Woanders hin?!
-        Impl_Context context = ViewLoaderScopeUtils.prepareContext(parentContext, providedScopes);
+        ContextImpl context = ViewLoaderScopeUtils.prepareContext(parentContext, providedScopes);
         ////////////////////////////
 
         DependencyInjector injectionFacade = DependencyInjector.getInstance();

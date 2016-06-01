@@ -34,7 +34,7 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.Scope;
 import de.saxsys.mvvmfx.ScopeProvider;
 import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.internal.Impl_Context;
+import de.saxsys.mvvmfx.internal.ContextImpl;
 import net.jodah.typetools.TypeResolver;
 
 /**
@@ -271,7 +271,7 @@ public class ViewLoaderReflectionUtils {
         }
     }
 
-    static void createAndInjectScopes(Object viewModel, Impl_Context context) {
+    static void createAndInjectScopes(Object viewModel, ContextImpl context) {
 
         // FIXME CLEANUP!!!
         Class<? extends Object> viewModelClass = viewModel.getClass();
@@ -283,7 +283,7 @@ public class ViewLoaderReflectionUtils {
                 for (int i = 0; i < scopes.length; i++) {
                     Class<? extends Scope> scopeType = scopes[i];
                     // Overrides existing scopes!!!!
-                    context.getScopeContext().put(scopeType, DependencyInjector.getInstance().getInstanceOf(scopeType));
+                    context.addScopeToContext(DependencyInjector.getInstance().getInstanceOf(scopeType));
                 }
             }
         }
@@ -297,7 +297,7 @@ public class ViewLoaderReflectionUtils {
         });
     }
 
-    public static void injectContext(View codeBehind, Impl_Context context) {
+    public static void injectContext(View codeBehind, ContextImpl context) {
 
         Optional<Field> contextField = getContextField(codeBehind.getClass());
 
@@ -309,7 +309,7 @@ public class ViewLoaderReflectionUtils {
         }
     }
 
-    static Object injectScopeIntoField(Field scopeField, Object viewModel, Impl_Context context)
+    static Object injectScopeIntoField(Field scopeField, Object viewModel, ContextImpl context)
             throws IllegalAccessException {
         Class<? extends Scope> scopeType = (Class<? extends Scope>) scopeField.getType();
 
@@ -322,8 +322,7 @@ public class ViewLoaderReflectionUtils {
                     + "but the viewModel <" + viewModel + "> has a field that violates this rule.");
         }
 
-        Map<Class<? extends Scope>, Object> scopeBottich = context.getScopeContext();
-        Object newScope = scopeBottich.get(scopeType);
+        Object newScope = context.getScope(scopeType);
 
         if (newScope == null) {
             // TODO Modify Stacktrace to get the Injectionpoint of the Scope

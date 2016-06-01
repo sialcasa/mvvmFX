@@ -1,6 +1,7 @@
 package de.saxsys.mvvmfx;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -65,7 +66,7 @@ public class FluentViewLoader {
         private ViewModelType viewModel;
         private ViewType codeBehind;
         private Context context;
-        private List<Scope> providedScopes;
+        private Collection<Scope> providedScopes;
 
         JavaViewStep(Class<? extends ViewType> viewType) {
             this.viewType = viewType;
@@ -80,6 +81,13 @@ public class FluentViewLoader {
             this.providedScopes = Arrays.asList(providedScopes);
             return this;
         }
+
+        public JavaViewStep<ViewType, ViewModelType> providedScopes(Collection<Scope> providedScopes) {
+            this.providedScopes = providedScopes;
+            return this;
+        }
+
+
 
         /**
          * Provide a {@link ResourceBundle} that is used while loading this
@@ -171,7 +179,7 @@ public class FluentViewLoader {
         private ViewType codeBehind;
         private ViewModelType viewModel;
         private Context context;
-        private List<Scope> providedScopes;
+        private Collection<Scope> providedScopes;
 
         FxmlViewStep(Class<? extends ViewType> viewType) {
             this.viewType = viewType;
@@ -186,6 +194,11 @@ public class FluentViewLoader {
 
             // TODO: add scopes instead of reinitialization
             this.providedScopes = Arrays.asList(providedScopes);
+            return this;
+        }
+
+        public FxmlViewStep<ViewType, ViewModelType> providedScopes(Collection<Scope> providedScopes) {
+            this.providedScopes = providedScopes;
             return this;
         }
 

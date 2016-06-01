@@ -1,30 +1,27 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
-import java.util.List;
+import java.util.Collection;
 
 import de.saxsys.mvvmfx.Context;
 import de.saxsys.mvvmfx.Scope;
-import de.saxsys.mvvmfx.internal.Impl_Context;
+import de.saxsys.mvvmfx.internal.ContextImpl;
 
-public class ViewLoaderScopeUtils {
+class ViewLoaderScopeUtils {
 
-    public static Impl_Context prepareContext(Context parentContext, List<Scope> providedScopes) {
-        Impl_Context context = null;
+    static ContextImpl prepareContext(Context parentContext, Collection<Scope> providedScopes) {
+        ContextImpl context = null;
 
-        if (parentContext == null) {
-            context = new Impl_Context();
+        if (parentContext == null || !(parentContext instanceof ContextImpl)) {
+            context = new ContextImpl();
         } else {
-            if (parentContext instanceof Impl_Context) {
-                context = (Impl_Context) parentContext;
-            }
+            context = (ContextImpl) parentContext;
         }
 
-        final Impl_Context finalContext = context;
-
         if (providedScopes != null) {
-            providedScopes.forEach(scope -> {
-                finalContext.getScopeContext().put(scope.getClass(), scope);
-            });
+
+            for (Scope scope : providedScopes) {
+                context.addScopeToContext(scope);
+            }
         }
 
         return context;

@@ -17,7 +17,7 @@ package de.saxsys.mvvmfx.internal.viewloader;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
+import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
@@ -28,7 +28,7 @@ import de.saxsys.mvvmfx.Context;
 import de.saxsys.mvvmfx.Scope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
-import de.saxsys.mvvmfx.internal.Impl_Context;
+import de.saxsys.mvvmfx.internal.ContextImpl;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.util.Callback;
@@ -68,7 +68,7 @@ public class FxmlViewLoader {
      */
     public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
             Class<? extends ViewType> viewType, ResourceBundle resourceBundle, ViewType codeBehind, Object root,
-            ViewModelType viewModel, Context context, List<Scope> providedScopes) {
+            ViewModelType viewModel, Context context, Collection<Scope> providedScopes) {
 
         final String pathToFXML = createFxmlPath(viewType);
         return loadFxmlViewTuple(pathToFXML, resourceBundle, codeBehind, root, viewModel, context, providedScopes);
@@ -133,11 +133,11 @@ public class FxmlViewLoader {
      */
     public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
             final String resource, ResourceBundle resourceBundle, final ViewType codeBehind, final Object root,
-            ViewModelType viewModel, Context parentContext, List<Scope> providedScopes) {
+            ViewModelType viewModel, Context parentContext, Collection<Scope> providedScopes) {
         try {
 
             // FIXME Woanders hin?
-            Impl_Context context = ViewLoaderScopeUtils.prepareContext(parentContext, providedScopes);
+            ContextImpl context = ViewLoaderScopeUtils.prepareContext(parentContext, providedScopes);
             //////////////////////////////////////////////////////////////////////
 
             final FXMLLoader loader = createFxmlLoader(resource, resourceBundle, codeBehind, root, viewModel, context);
@@ -203,7 +203,7 @@ public class FxmlViewLoader {
     }
 
     private FXMLLoader createFxmlLoader(String resource, ResourceBundle resourceBundle, View codeBehind, Object root,
-            ViewModel viewModel, Impl_Context context) throws IOException {
+            ViewModel viewModel, ContextImpl context) throws IOException {
         // Load FXML file
         final URL location = FxmlViewLoader.class.getResource(resource);
         if (location == null) {
@@ -248,9 +248,9 @@ public class FxmlViewLoader {
      */
     private static class DefaultControllerFactory implements Callback<Class<?>, Object> {
         private final ResourceBundle resourceBundle;
-        private final Impl_Context context;
+        private final ContextImpl context;
 
-        public DefaultControllerFactory(ResourceBundle resourceBundle, Impl_Context context) {
+        public DefaultControllerFactory(ResourceBundle resourceBundle, ContextImpl context) {
             this.resourceBundle = resourceBundle;
             this.context = context;
         }
@@ -269,7 +269,7 @@ public class FxmlViewLoader {
         }
     }
 
-    private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, Impl_Context context) {
+    private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, ContextImpl context) {
         ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
 
         Consumer<ViewModel> newVmConsumer = viewModel -> {
@@ -283,7 +283,7 @@ public class FxmlViewLoader {
     }
 
     private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, ViewModel viewModel,
-            Impl_Context context) {
+            ContextImpl context) {
         ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
 
         if (viewModel != null) {
@@ -330,10 +330,10 @@ public class FxmlViewLoader {
 
         private final ResourceBundle resourceBundle;
 
-        private final Impl_Context context;
+        private final ContextImpl context;
 
         public ControllerFactoryForCustomViewModel(ViewModel customViewModel, ResourceBundle resourceBundle,
-                Impl_Context context) {
+                ContextImpl context) {
             this.customViewModel = customViewModel;
             this.resourceBundle = resourceBundle;
             this.context = context;
