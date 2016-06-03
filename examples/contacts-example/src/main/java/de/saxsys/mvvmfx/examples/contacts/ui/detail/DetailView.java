@@ -1,112 +1,124 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.detail;
 
+import javax.inject.Inject;
+
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
-import javafx.beans.property.SimpleBooleanProperty;
+import de.saxsys.mvvmfx.Context;
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectContext;
+import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.examples.contacts.ui.editcontact.EditContactDialogView;
+import de.saxsys.mvvmfx.examples.contacts.ui.editcontact.EditContactDialogViewModel;
+import de.saxsys.mvvmfx.examples.contacts.util.DialogHelper;
+import de.saxsys.mvvmfx.utils.commands.Command;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.scene.control.Labeled;
+import javafx.stage.Stage;
 
 public class DetailView implements FxmlView<DetailViewModel> {
+
 	@FXML
-	public Label nameLabel;
-	@FXML
-	public Label birthdayLabel;
-	@FXML
-	public Label roleDepartmentLabel;
+	public Label nameLabel, birthdayLabel, roleDepartmentLabel, phoneLabel, mobileLabel, cityPostalCodeLabel,
+			streetLabel, countrySubdivisionLabel;
 	@FXML
 	public Hyperlink emailHyperlink;
+
 	@FXML
-	public Label phoneLabel;
-	@FXML
-	public Label mobileLabel;
-	
-	@FXML
-	public Label cityPostalCodeLabel;
-	@FXML
-	public Label streetLabel;
-	@FXML
-	public Label countrySubdivisionLabel;
-	
-	
-	@FXML
-	public Button editButton;
-	@FXML
-	public Button removeButton;
-	
-	
+	public Button editButton, removeButton;
+
+	@Inject
+	private Stage primaryStage;
+
 	@InjectViewModel
 	private DetailViewModel viewModel;
-	
+
+	private Command removeCommand;
+	private Command editCommand;
+	private Command mailCommand;
+
+	@InjectContext
+	private Context context;
+
 	public void initialize() {
-		removeButton.disableProperty().bind(viewModel.removeButtonDisabledProperty());
-		editButton.disableProperty().bind(viewModel.editButtonDisabledProperty());
-		
-		
+		removeCommand = viewModel.getRemoveCommand();
+		editCommand = viewModel.getEditCommand();
+		mailCommand = viewModel.getEmailLinkCommand();
+
+		removeButton.disableProperty().bind(removeCommand.notExecutableProperty());
+		editButton.disableProperty().bind(editCommand.notExecutableProperty());
+
+		nameLabel.setText("");
 		nameLabel.textProperty().bind(viewModel.nameLabelTextProperty());
-		initVisibilityBindings(nameLabel);
-		
+
+		nameLabel.textProperty().bind(viewModel.nameLabelTextProperty());
 		birthdayLabel.textProperty().bind(viewModel.birthdayLabelTextProperty());
-		initVisibilityBindings(birthdayLabel);
-		
 		roleDepartmentLabel.textProperty().bind(viewModel.roleDepartmentLabelTextProperty());
-		initVisibilityBindings(roleDepartmentLabel);
-		
 		emailHyperlink.textProperty().bind(viewModel.emailLabelTextProperty());
-		emailHyperlink.setOnAction(event -> viewModel.onEmailLinkClicked());
-		initVisibilityBindings(emailHyperlink);
-		
 		phoneLabel.textProperty().bind(viewModel.phoneLabelTextProperty());
-		initVisibilityBindings(phoneLabel);
-		
 		mobileLabel.textProperty().bind(viewModel.mobileLabelTextProperty());
-		initVisibilityBindings(mobileLabel);
-		
-		
-		// the email hyperlink should always look "unvisited".
-		emailHyperlink.visitedProperty().bind(new SimpleBooleanProperty(false));
-		
-		
 		cityPostalCodeLabel.textProperty().bind(viewModel.cityPostalcodeLabelTextProperty());
-		initVisibilityBindings(cityPostalCodeLabel);
-		
 		streetLabel.textProperty().bind(viewModel.streetLabelTextProperty());
-		initVisibilityBindings(streetLabel);
-		
 		countrySubdivisionLabel.textProperty().bind(viewModel.countrySubdivisionLabelTextProperty());
+
+		initVisibilityBindings(nameLabel);
+		initVisibilityBindings(birthdayLabel);
+		initVisibilityBindings(roleDepartmentLabel);
+		initVisibilityBindings(emailHyperlink);
+		initVisibilityBindings(phoneLabel);
+		initVisibilityBindings(mobileLabel);
+		initVisibilityBindings(cityPostalCodeLabel);
+		initVisibilityBindings(streetLabel);
 		initVisibilityBindings(countrySubdivisionLabel);
-		
+
 		initIcons();
+
+		viewModel.subscribe(DetailViewModel.OPEN_EDIT_CONTACT_DIALOG, (key, payload) -> {
+			ViewTuple<EditContactDialogView, EditContactDialogViewModel> load = FluentViewLoader
+					.fxmlView(EditContactDialogView.class)
+					.context(context)
+					.load();
+			Parent view = load.getView();
+			Stage showDialog = DialogHelper.showDialog(view, primaryStage, "/contacts.css");
+			load.getCodeBehind().setOwningStage(showDialog);
+		});
+
 	}
-	
+
 	private void initVisibilityBindings(Labeled label) {
-		label.visibleProperty().bind(label.textProperty().isNotEmpty());
+		label.visibleProperty().bind(editCommand.executableProperty());
 		label.managedProperty().bind(label.visibleProperty());
 	}
-	
+
 	private void initIcons() {
 		AwesomeDude.setIcon(birthdayLabel, AwesomeIcon.BIRTHDAY_CAKE);
 		AwesomeDude.setIcon(roleDepartmentLabel, AwesomeIcon.USERS);
 		AwesomeDude.setIcon(emailHyperlink, AwesomeIcon.AT);
 		AwesomeDude.setIcon(mobileLabel, AwesomeIcon.MOBILE_PHONE);
 		AwesomeDude.setIcon(phoneLabel, AwesomeIcon.PHONE);
-		
 		AwesomeDude.setIcon(editButton, AwesomeIcon.EDIT);
 		AwesomeDude.setIcon(removeButton, AwesomeIcon.TRASH_ALT);
 	}
-	
+
 	@FXML
-	public void edit() {
-		viewModel.editAction();
+	public void editAction() {
+		editCommand.execute();
 	}
-	
+
 	@FXML
-	public void remove() {
-		viewModel.removeAction();
+	public void removeAction() {
+		removeCommand.execute();
 	}
+
+	@FXML
+	public void mailAction() {
+		mailCommand.execute();
+	}
+
 }

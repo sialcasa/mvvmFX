@@ -6,7 +6,6 @@
 		</encoder>
 	</appender>
 
-
 	<logger name="org.jboss.weld" level="INFO"/>
 
 	<!-- log level for the mvvmfx framework-->

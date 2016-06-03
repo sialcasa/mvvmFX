@@ -24,23 +24,22 @@ import de.saxsys.mvvmfx.examples.contacts.ui.main.MainView;
 import de.saxsys.mvvmfx.examples.contacts.ui.main.MainViewModel;
 
 public class App extends MvvmfxCdiApplication {
-	
+
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
-	
+
 	public static void main(String... args) {
-		
+
 		Locale.setDefault(Locale.ENGLISH);
-		
+
 		launch(args);
 	}
-	
-	
+
 	@Inject
 	private ResourceBundle resourceBundle;
-	
+
 	@Inject
 	private Repository repository;
-	
+
 	@Override
 	public void initMvvmfx() throws Exception {
 		int numberOfContacts = 30;
@@ -48,30 +47,31 @@ public class App extends MvvmfxCdiApplication {
 			repository.save(ContactFactory.createRandomContact());
 		}
 	}
-	
+
 	@Override
 	public void startMvvmfx(Stage stage) throws Exception {
 		LOG.info("Starting the Application");
 		MvvmFX.setGlobalResourceBundle(resourceBundle);
-		
+
 		stage.setTitle(resourceBundle.getString("window.title"));
-		
+
 		ViewTuple<MainView, MainViewModel> main = FluentViewLoader.fxmlView(MainView.class).load();
-		
-		
+
 		Scene rootScene = new Scene(main.getView());
-		
+
 		rootScene.getStylesheets().add("/contacts.css");
-		
+
 		stage.setScene(rootScene);
 		stage.show();
 	}
-	
+
 	/**
-	 * The shutdown of the application can be triggered by firing the {@link TriggerShutdownEvent} CDI event.
+	 * The shutdown of the application can be triggered by firing the
+	 * {@link TriggerShutdownEvent} CDI event.
 	 */
 	public void triggerShutdown(@Observes TriggerShutdownEvent event) {
 		LOG.info("Application will now shut down");
 		Platform.exit();
 	}
+
 }

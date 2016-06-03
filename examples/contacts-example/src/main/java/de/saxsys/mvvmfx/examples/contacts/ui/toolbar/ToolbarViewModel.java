@@ -1,17 +1,15 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.toolbar;
 
+import de.saxsys.mvvmfx.Scope;
 import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.examples.contacts.events.OpenAddContactDialogEvent;
+import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
+import java.util.Collections;
+import java.util.List;
 
 public class ToolbarViewModel implements ViewModel {
-	
-	@Inject
-	private Event<OpenAddContactDialogEvent> openPopupEvent;
-	
-	public void addNewContactAction() {
-		openPopupEvent.fire(new OpenAddContactDialogEvent());
+
+	public List<Scope> getScopesForAddDialog() {
+		return Collections.singletonList(new ContactDialogScope());
 	}
 }

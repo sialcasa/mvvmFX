@@ -22,9 +22,9 @@ import java.lang.ref.WeakReference;
  * 
  */
 public class GCVerifier {
-	private WeakReference reference;
+	private final WeakReference reference;
 	
-	private String objectName;
+	private final String objectName;
 	
 	GCVerifier(WeakReference reference, String objectName) {
 		this.reference = reference;
@@ -36,7 +36,7 @@ public class GCVerifier {
 	 * 
 	 * @param instance
 	 *            the instance that is verified.
-	 * 
+	 * 			
 	 * @return an instance of the {@link GCVerifier} that can be used to verify the garbage collection of the given
 	 *         instance.
 	 */
@@ -48,10 +48,19 @@ public class GCVerifier {
 	
 	public void verify(String message) {
 		forceGC();
-		
-		if (reference.get() != null) {
+
+		if (!isAvailableForGC()) {
 			throw new AssertionError(message);
 		}
+	}
+
+	/**
+	 * @return <code>true</code> if the object is available
+	 */
+	public boolean isAvailableForGC() {
+		forceGC();
+
+		return reference.get() == null;
 	}
 	
 	public void verify() {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.examples.scopesexample.ui.overview.master.OverviewMasterView">
+    <children>
+        <ListView fx:id="documentList" maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="50.0" VBox.vgrow="ALWAYS" />
+        <HBox>
+            <Button mnemonicParsing="false" onAction="#newDocument" text="New" />
+            <Button mnemonicParsing="false" onAction="#refresh" text="Refresh" />
+        </HBox>
+    </children>
+</VBox>
