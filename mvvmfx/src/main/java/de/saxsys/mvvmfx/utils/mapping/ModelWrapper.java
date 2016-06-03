@@ -811,7 +811,7 @@ public class ModelWrapper<M> {
 	 * @return The wrapped property instance.
 	 */
 	public StringProperty field(StringPropertyAccessor<M> accessor, String defaultValue) {
-		return add(new FxPropertyField<>(accessor::apply, SimpleStringProperty::new));
+		return add(new FxPropertyField<>(accessor::apply, defaultValue, SimpleStringProperty::new));
 	}
 	
 	
