@@ -702,11 +702,12 @@ public class ModelWrapper<M> {
 	
 	private void calculateDifferenceFlag() {
 		if (model.get() != null) {
-			final Optional<PropertyField<?, M, ?>> optional = fields.stream()
-					.filter(field -> field.isDifferent(model.get()))
-					.findAny();
-					
-			diffFlag.set(optional.isPresent());
+			for (final PropertyField<?, M, ?> field : fields) {
+                            if (field.isDifferent(model.get())) {
+                                diffFlag.set(true);
+                                break;
+                            }
+                        }
 		}
 	}
 	
