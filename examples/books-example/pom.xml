@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>de.saxsys.mvvmfx</groupId>
 		<artifactId>examples</artifactId>
-		<version>1.4.2-SNAPSHOT</version>
+		<version>1.5.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -16,6 +16,18 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
+
+	<!-- use resource files (fxml, css) from the java directory -->
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+	</build>
 
 	<dependencies>
 		<dependency>

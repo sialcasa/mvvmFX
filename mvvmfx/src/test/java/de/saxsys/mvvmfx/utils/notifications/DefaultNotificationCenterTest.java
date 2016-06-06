@@ -40,15 +40,15 @@ public class DefaultNotificationCenterTest {
 	
 	private NotificationCenter defaultCenter;
 	
-	DummyNotificationObserver observer1;
-	DummyNotificationObserver observer2;
-	DummyNotificationObserver observer3;
+	NotificationObserver observer1;
+	NotificationObserver observer2;
+	NotificationObserver observer3;
 	
 	@Before
 	public void init() {
-		observer1 = Mockito.mock(DummyNotificationObserver.class);
-		observer2 = Mockito.mock(DummyNotificationObserver.class);
-		observer3 = Mockito.mock(DummyNotificationObserver.class);
+		observer1 = Mockito.mock(NotificationObserver.class);
+		observer2 = Mockito.mock(NotificationObserver.class);
+		observer3 = Mockito.mock(NotificationObserver.class);
 		defaultCenter = new DefaultNotificationCenter();
 	}
 	
@@ -177,12 +177,5 @@ public class DefaultNotificationCenterTest {
 
 		assertThat(wasCalledOnUiThread).isTrue();
 	}
-	
-	private class DummyNotificationObserver implements NotificationObserver {
-		@Override
-		public void receivedNotification(String key, Object... payload) {
-			
-		}
-	}
-	
+
 }

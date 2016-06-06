@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+			xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.examples.contacts.ui.about.AboutAuthorView">
+	<children>
+		<HBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+			  AnchorPane.topAnchor="0.0">
+			<children>
+				<ImageView fitHeight="200.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true"
+						   HBox.hgrow="ALWAYS">
+					<image>
+						<Image url="@profile_manuel.png"/>
+					</image>
+				</ImageView>
+				<VBox alignment="CENTER" layoutX="184.0" layoutY="50.0" spacing="10.0" AnchorPane.bottomAnchor="0.0"
+					  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+					<children>
+						<Label text="Manuel Mauky">
+							<font>
+								<Font size="24.0"/>
+							</font>
+						</Label>
+						<Hyperlink onAction="#openBlog" text="www.lestard.eu">
+							<font>
+								<Font size="14.0"/>
+							</font>
+						</Hyperlink>
+						<Hyperlink onAction="#openTwitter" text="\@manuel_mauky">
+							<font>
+								<Font size="14.0"/>
+							</font>
+						</Hyperlink>
+					</children>
+					<padding>
+						<Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+					</padding>
+				</VBox>
+			</children>
+			<padding>
+				<Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+			</padding>
+		</HBox>
+	</children>
+</AnchorPane>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import org.controlsfx.control.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.examples.contacts.ui.about.AboutView">
+	<children>
+		<VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+			<children>
+				<HBox>
+					<children>
+						<Text fill="DIMGREY" strokeType="OUTSIDE" strokeWidth="0.0" text="%about.title">
+							<font>
+								<Font size="24.0" />
+							</font>
+						</Text>
+					</children>
+					<padding>
+						<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+					</padding>
+				</HBox>
+				<Separator />
+				<VBox spacing="10.0" style="-fx-background-color: white;" VBox.vgrow="ALWAYS">
+					<children>
+						<Label maxHeight="-Infinity" maxWidth="-Infinity" text="%about.description" wrapText="true" VBox.vgrow="ALWAYS" />
+						<Label text="%about.libraries.label" />
+						<HyperlinkLabel fx:id="librariesLabel" />
+					</children>
+					<padding>
+						<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+					</padding>
+					<VBox.margin>
+						<Insets />
+					</VBox.margin>
+				</VBox>
+				<Hyperlink onAction="#openAuthorPage" text="About the Author" />
+			</children>
+		</VBox>
+	</children>
+</AnchorPane>

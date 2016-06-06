@@ -19,45 +19,43 @@ import org.junit.Test;
 import de.saxsys.mvvmfx.examples.contacts.util.CentralClock;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 
-
 public class BirthdayValidatorTest {
-	
+
 	private ValidationStatus result;
 	private ObjectProperty<LocalDate> value = new SimpleObjectProperty<>();
-	
-	
+
 	@Before
 	public void setup() {
 		ZonedDateTime now = ZonedDateTime
 				.of(LocalDate.of(2014, Month.JANUARY, 1), LocalTime.of(0, 0), ZoneId.systemDefault());
-		
+
 		CentralClock.setFixedClock(now);
-		
+
 		Validator validator = new BirthdayValidator(value);
-		
+
 		result = validator.getValidationStatus();
 	}
-	
-	
+
 	@Test
 	public void testBirthdayInThePast() {
 		LocalDate now = LocalDate.now(CentralClock.getClock());
 		LocalDate birthday = now.minusYears(20);
-		
+
 		value.set(birthday);
-		
+
 		assertThat(result.isValid()).isTrue();
 	}
-	
+
 	@Test
 	public void testBirthdayInTheFuture() {
-		
+
 		LocalDate now = LocalDate.now(CentralClock.getClock());
-		
+
 		LocalDate birthday = now.plusDays(1);
-		
+
 		value.set(birthday);
 		assertThat(result.isValid()).isFalse();
 		assertThat(result.getErrorMessages()).hasSize(1);
 	}
+
 }

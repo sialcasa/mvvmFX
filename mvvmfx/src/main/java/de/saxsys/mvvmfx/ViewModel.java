@@ -15,11 +15,10 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx;
 
-import de.saxsys.mvvmfx.utils.notifications.NotificationTestHelper;
-import javafx.application.Platform;
 import de.saxsys.mvvmfx.internal.viewloader.View;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import de.saxsys.mvvmfx.utils.notifications.NotificationObserver;
+import de.saxsys.mvvmfx.utils.notifications.NotificationTestHelper;
 
 /**
  * <p>
@@ -51,7 +50,7 @@ public interface ViewModel {
 	 *     
 	 * This notification mechanism uses the {@link NotificationCenter} internally with the difference that messages send
 	 * by this method aren't globally available. Instead they can only be received by this viewModels {@link #subscribe(String, NotificationObserver)}
-	 * method or when using this viewModel instance as argument to the {@link NotificationCenter#subscribe(ViewModel, String, NotificationObserver)} method.
+	 * method or when using this viewModel instance as argument to the {@link NotificationCenter#subscribe(Object, String, NotificationObserver)} method.
 	 * <p>
 	 *     
 	 * See {@link NotificationTestHelper} for a utility that's purpose is to simplify unit tests with notifications.
@@ -62,7 +61,7 @@ public interface ViewModel {
 	 *            to be send
 	 */
 	default void publish(String messageName, Object... payload) {
-		MvvmFX.getNotificationCenter().publish(this, messageName, payload);
+		MvvmFX.getNotificationCenter().publish(System.identityHashCode(this), messageName, payload);
 	}
 	
 	/**
@@ -75,7 +74,7 @@ public interface ViewModel {
 	 *            which should execute when the notification occurs
 	 */
 	default void subscribe(String messageName, NotificationObserver observer) {
-		MvvmFX.getNotificationCenter().subscribe(this, messageName, observer);
+		MvvmFX.getNotificationCenter().subscribe(System.identityHashCode(this), messageName, observer);
 	}
 	
 	/**
@@ -87,7 +86,7 @@ public interface ViewModel {
 	 *            to remove
 	 */
 	default void unsubscribe(String messageName, NotificationObserver observer) {
-		MvvmFX.getNotificationCenter().unsubscribe(this, messageName, observer);
+		MvvmFX.getNotificationCenter().unsubscribe(System.identityHashCode(this), messageName, observer);
 	}
 	
 	/**
@@ -97,6 +96,6 @@ public interface ViewModel {
 	 *            to be removed
 	 */
 	default void unsubscribe(NotificationObserver observer) {
-		MvvmFX.getNotificationCenter().unsubscribe(this, observer);
+		MvvmFX.getNotificationCenter().unsubscribe(System.identityHashCode(this), observer);
 	}
 }

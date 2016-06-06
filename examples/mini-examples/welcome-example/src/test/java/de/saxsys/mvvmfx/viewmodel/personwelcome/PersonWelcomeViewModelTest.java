@@ -11,10 +11,10 @@ import de.saxsys.mvvmfx.examples.welcome.model.Repository;
 import de.saxsys.mvvmfx.examples.welcome.viewmodel.personwelcome.PersonWelcomeViewModel;
 
 public class PersonWelcomeViewModelTest {
-	
+
 	private Repository repository;
 	private PersonWelcomeViewModel personWelcomeViewModel;
-	
+
 	@Before
 	public void setup() {
 		// TODO: this should be mocked
@@ -22,7 +22,7 @@ public class PersonWelcomeViewModelTest {
 		personWelcomeViewModel = new PersonWelcomeViewModel(
 				repository);
 	}
-	
+
 	@Test
 	public void testWelcomeStringInViewModel() throws Exception {
 		personWelcomeViewModel.setPersonId(repository.getPersons().get(0)
@@ -30,11 +30,11 @@ public class PersonWelcomeViewModelTest {
 		assertEquals(
 				"Willkommen Herr Alexander Casall",
 				personWelcomeViewModel.welcomeStringProperty().get());
-		
+
 		assertEquals(repository.getPersons().get(0).getId(),
 				personWelcomeViewModel.getPersonId());
 	}
-	
+
 	@Test
 	public void welcomeStringForFemalePersonIsDifferent() throws Exception {
 		personWelcomeViewModel.setPersonId(repository.getPersons().get(2)
@@ -42,11 +42,11 @@ public class PersonWelcomeViewModelTest {
 		assertEquals(
 				"Willkommen Frau Anna Schulze",
 				personWelcomeViewModel.welcomeStringProperty().get());
-		
+
 		assertEquals(repository.getPersons().get(2).getId(),
 				personWelcomeViewModel.getPersonId());
 	}
-	
+
 	@Test
 	public void changeFirstNameOfPersonIsReflectedInViewModel() throws Exception {
 		final Person person = repository.getPersons().get(0);
@@ -56,7 +56,7 @@ public class PersonWelcomeViewModelTest {
 				"Willkommen Herr AlexanderX Casall",
 				personWelcomeViewModel.welcomeStringProperty().get());
 	}
-	
+
 	@Test
 	public void changeLastNameOfPersonIsReflectedInViewModel() throws Exception {
 		final Person person = repository.getPersons().get(0);
@@ -66,7 +66,7 @@ public class PersonWelcomeViewModelTest {
 				"Willkommen Herr Alexander CasallX",
 				personWelcomeViewModel.welcomeStringProperty().get());
 	}
-	
+
 	@Test
 	public void changeGenderOfPersonIsReflectedInViewModel() throws Exception {
 		final Person person = repository.getPersons().get(0);
@@ -76,4 +76,5 @@ public class PersonWelcomeViewModelTest {
 				"Willkommen Frau Alexander Casall",
 				personWelcomeViewModel.welcomeStringProperty().get());
 	}
+
 }

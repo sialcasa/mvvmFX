@@ -22,33 +22,68 @@ With a dialog you can add new contacts or edit existing ones.
 
 ### Highlights and interesting parts
 
-#### Dialogs opened with CDI-Events
+#### Usage of Scopes
 
-- The application uses CDI-Events to decouple the *add*/*edit* dialogs from the places where they are opened. Instead, when a
- button is clicked to open a dialog, an CDI-Event is fired. The dialog reacts to this event and will open up itself.
+[mvvmFX Scopes](https://github.com/sialcasa/mvvmFX/wiki/Scopes) are used for two scenarios in this example:
 
-[ToolbarViewModel.java:](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/toolbar/ToolbarViewModel.java)
+* Communication between the Master and the Detail View
+* Dialog to add or edit a contact
 
-```java
-@Inject
-private Event<OpenAddContactDialogEvent> openPopupEvent;
+##### Scope for Master Detail View
 
-public void addNewContactAction(){
-    openPopupEvent.fire(new OpenAddContactDialogEvent());
+In this scenario the [MasterDetailScope](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/scopes/MasterDetailScope.java) is used to provide a property where the [MasterViewModel.java](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/master/MasterViewModel.java) signals which contact should be displayed in the [DetailViewModel.java](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/detail/DetailViewModel.java).
+
+```Java
+public class MasterDetailScope implements Scope {
+	private final ObjectProperty<Contact> selectedContact = new SimpleObjectProperty<>(this, "selectedContact");
 }
 ```
 
-[AddContactDialog.java:](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/addcontact/AddContactDialog.java)
-
-```java
-public class AddContactDialog implements FxmlView<AddContactDialogViewModel> {
-    ...
-
-    public void open(@Observes OpenAddContactDialogEvent event) {
-      viewModel.openDialog();
-    }
+```Java
+public class MasterViewModel implements ViewModel {
+	@InjectScope
+	MasterDetailScope mdScope;
+	
+	public void initialize() {
+		mdScope.selectedContactProperty().bind(selectedContact);
+	}
 }
 ```
+
+```Java
+public class DetailViewModel implements ViewModel {
+	@InjectScope
+	MasterDetailScope mdScope;
+	
+	...//Create all bindings to the information of the mdScope.selectedContactProperty()
+}
+
+```
+
+
+##### Scope for Dialog Wizard
+
+In this case the scope is used to handle the state of a multi paged dialog.
+
+To understand the machanism of the implemented dialogs, you should check the following classes: 
+
+* [EditContactDialogView](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/editcontact/EditContactDialog.java) and [AddContactDialog](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/addcontact/AddContactDialog.java)
+
+* Both of them are using the [ContactDialogView](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/contactdialog/ContactDialogView.java) with different configurations. 
+
+* [AddressFormViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/addressform/AddressFormViewModel.java) and [ContactFormViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/contactform/ContactFormViewModel.java) are the dialog pages (1 and 2) that are displayed in the EditContactDialog and the AddContactDialog
+
+* Also check the Views where the dialogs are created ([ToolbarView.java](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/toolbar/ToolbarView) and [DetailView](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/detail/DetailView.java)).
+
+######Scope usages######
+The used scope is called [ContactDialogScope](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/scopes/ContactDialogScope.java) and it has three use cases:
+
+1. Configuration (eg. title) of the [ContactDialogViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/contactdialog/ContactDialogViewModel.java) from the [EditContactDialogViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/editcontact/EditContactDialogViewModel.java) and [AddContactDialogViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/addcontact/AddContactDialogViewModel.java).
+
+2. [DetailViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/detail/DetailViewModel) sets the Contact object that will be edited into the scope. This information is used by the dialog pages: [AddressFormViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/addressform/AddressFormViewModel.java) and [ContactFormViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/contactform/ContactFormViewModel.java)    
+
+3. [ContactDialogViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/contactdialog/ContactDialogViewModel.java) binds the *disableProperty()* of the navigation buttons to the validation state in the scope. This validation state is bound to the validation state of the dialog pages (AddressFormView and ContactFormView).
+
 
 #### ResourceBundles and I18N
 

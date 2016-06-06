@@ -1,0 +1,28 @@
+package de.saxsys.mvvmfx.scopes.example5;
+
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@RunWith(JfxRunner.class)
+public class Example5Test {
+
+	@Test
+	public void test() {
+
+		Example5Scope scope = new Example5Scope();
+
+		ViewTuple<MyView, MyViewModel> viewTuple = FluentViewLoader.fxmlView(MyView.class)
+				.providedScopes(scope)
+				.load();
+
+		assertThat(viewTuple.getViewModel().scope).isEqualTo(scope);
+
+
+	}
+
+}

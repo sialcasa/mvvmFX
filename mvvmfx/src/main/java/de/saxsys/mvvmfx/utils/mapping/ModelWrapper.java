@@ -1,16 +1,19 @@
+/*******************************************************************************
+ * Copyright 2015 Alexander Casall, Manuel Mauky
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package de.saxsys.mvvmfx.utils.mapping;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.BooleanGetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.BooleanPropertyAccessor;
@@ -36,6 +39,20 @@ import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringGetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringSetter;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import eu.lestard.doc.Beta;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -237,8 +254,7 @@ public class ModelWrapper<M> {
 	
 	private final ReadOnlyBooleanWrapper dirtyFlag = new ReadOnlyBooleanWrapper();
 	private final ReadOnlyBooleanWrapper diffFlag = new ReadOnlyBooleanWrapper();
-	
-	
+
 	/**
 	 * This interface defines the operations that are possible for each field of a wrapped class.
 	 * 
@@ -256,14 +272,16 @@ public class ModelWrapper<M> {
 		void reload(M wrappedObject);
 		
 		void resetToDefault();
-		
+
+		void updateDefault(final M wrappedObject);
+
 		R getProperty();
-		
+
 		/**
 		 * Determines if the value in the model object and the property field are different or not.
-		 * 
+		 *
 		 * This method is used to implement the {@link #differentProperty()} flag.
-		 * 
+		 *
 		 * @param wrappedObject
 		 *            the wrapped model object
 		 * @return <code>false</code> if both the wrapped model object and the property field have the same value,
@@ -280,7 +298,7 @@ public class ModelWrapper<M> {
 	 */
 	private class FxPropertyField<T, R extends Property<T>> implements PropertyField<T, M, R> {
 		
-		private final T defaultValue;
+		private T defaultValue;
 		private final Function<M, Property<T>> accessor;
 		private final R targetProperty;
 		
@@ -312,7 +330,12 @@ public class ModelWrapper<M> {
 		public void resetToDefault() {
 			targetProperty.setValue(defaultValue);
 		}
-		
+
+		@Override
+		public void updateDefault(final M wrappedObject) {
+			defaultValue = accessor.apply(wrappedObject).getValue();
+		}
+
 		@Override
 		public R getProperty() {
 			return targetProperty;
@@ -336,7 +359,7 @@ public class ModelWrapper<M> {
 	private class BeanPropertyField<T, R extends Property<T>> implements PropertyField<T, M, R> {
 		
 		private final R targetProperty;
-		private final T defaultValue;
+		private T defaultValue;
 		
 		private final Function<M, T> getter;
 		private final BiConsumer<M, T> setter;
@@ -370,7 +393,12 @@ public class ModelWrapper<M> {
 		public void resetToDefault() {
 			targetProperty.setValue(defaultValue);
 		}
-		
+
+		@Override
+		public void updateDefault(final M wrappedObject) {
+  		defaultValue = getter.apply(wrappedObject);
+		}
+
 		@Override
 		public R getProperty() {
 			return targetProperty;
@@ -396,7 +424,7 @@ public class ModelWrapper<M> {
 	private class FxListPropertyField<E, T extends ObservableList<E>, R extends Property<T>>
 			implements PropertyField<T, M, R> {
 			
-		private final List<E> defaultValue;
+		private List<E> defaultValue;
 		private final ListPropertyAccessor<M, E> accessor;
 		private final ListProperty<E> targetProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
 		
@@ -425,7 +453,12 @@ public class ModelWrapper<M> {
 		public void resetToDefault() {
 			targetProperty.setAll(defaultValue);
 		}
-		
+
+		@Override
+		public void updateDefault(final M wrappedObject) {
+			defaultValue = new ArrayList<>(accessor.apply(wrappedObject).getValue());
+		}
+
 		@Override
 		public R getProperty() {
 			return (R) targetProperty;
@@ -455,7 +488,7 @@ public class ModelWrapper<M> {
 		private final ListGetter<M, E> getter;
 		private final ListSetter<M, E> setter;
 		
-		private final List<E> defaultValue;
+		private List<E> defaultValue;
 		private final ListProperty<E> targetProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
 		
 		public BeanListPropertyField(ListGetter<M, E> getter, ListSetter<M, E> setter) {
@@ -484,7 +517,12 @@ public class ModelWrapper<M> {
 		public void resetToDefault() {
 			targetProperty.setAll(defaultValue);
 		}
-		
+
+		@Override
+		public void updateDefault(final M wrappedObject) {
+			defaultValue = new ArrayList<>(getter.apply(wrappedObject));
+		}
+
 		@Override
 		public R getProperty() {
 			return (R) targetProperty;
@@ -499,12 +537,28 @@ public class ModelWrapper<M> {
 		}
 	}
 	
-	private final Set<PropertyField<?, M, ?>> fields = new HashSet<>();
+	private final Set<PropertyField<?, M, ?>> fields = new LinkedHashSet<>();
 	private final Map<String, PropertyField<?, M, ?>> identifiedFields = new HashMap<>();
 	
-	private M model;
-	
-	
+	private final ObjectProperty<M> model;
+
+
+	/**
+	 * Create a new instance of {@link ModelWrapper} that wraps the instance of the Model class wrapped by the property.
+	 * Updates all data when the model instance changes.
+	 *
+	 * @param model
+	 *            the property of the model element that will be wrapped.
+	 */
+	public ModelWrapper(ObjectProperty<M> model) {
+		this.model = model;
+		reload();
+		this.model.addListener((observable, oldValue, newValue) -> {
+			reload();
+			useCurrentValuesAsDefaults();
+		});
+	}
+
 	/**
 	 * Create a new instance of {@link ModelWrapper} that wraps the given instance of the Model class.
 	 * 
@@ -512,8 +566,7 @@ public class ModelWrapper<M> {
 	 *            the element of the model that will be wrapped.
 	 */
 	public ModelWrapper(M model) {
-		set(model);
-		reload();
+		this(new SimpleObjectProperty<>(model));
 	}
 	
 	/**
@@ -521,6 +574,7 @@ public class ModelWrapper<M> {
 	 * that should be wrapped afterwards with the {@link #set(Object)} method.
 	 */
 	public ModelWrapper() {
+		this(new SimpleObjectProperty<>());
 	}
 	
 	/**
@@ -530,16 +584,23 @@ public class ModelWrapper<M> {
 	 *            the element of the model that will be wrapped.
 	 */
 	public void set(M model) {
-		this.model = model;
+		this.model.set(model);
 	}
 	
 	/**
 	 * @return the wrapped model element if one was defined, otherwise <code>null</code>.
 	 */
 	public M get() {
+		return model.get();
+	}
+
+	/**
+	 * @return property holding the model instance wrapped by this model wrapper instance.
+   */
+	public ObjectProperty<M> modelProperty() {
 		return model;
 	}
-	
+
 	/**
 	 * Resets all defined fields to their default values. If no default value was defined <code>null</code> will be used
 	 * instead.
@@ -552,7 +613,51 @@ public class ModelWrapper<M> {
 		
 		calculateDifferenceFlag();
 	}
-	
+
+	/**
+	 * Use all values that are currently present in the wrapped model object as new default values for respective field.
+	 * This overrides/updates the values that were set during the initialization of the field mappings.
+	 * <p>
+	 * Subsequent calls to {@link #reset()} will reset the values to this new default values.
+	 * <p>
+	 * Usage example:
+	 * <pre>
+	 * ModelWrapper{@code<Person>} wrapper = new ModelWrapper{@code<>}();
+	 * 
+	 * wrapper.field(Person::getName, Person::setName, "oldDefault");
+	 * 
+	 * Person p = new Person();
+	 * wrapper.set(p);
+	 * 
+	 * 
+	 * p.setName("Luise");
+	 * 
+	 * wrapper.useCurrentValuesAsDefaults(); // now "Luise" is the default value for the name field.
+	 *  
+	 * 
+	 * name.set("Hugo");
+	 * wrapper.commit();
+	 * 
+	 * name.get(); // Hugo
+	 * p.getName(); // Hugo
+	 * 
+	 * 
+	 * wrapper.reset(); // reset to the new defaults
+	 * name.get(); // Luise
+	 * 
+	 * wrapper.commit(); // put values from properties to the wrapped model object
+	 * p.getName(); // Luise
+	 *   
+	 *      
+	 * </pre>
+	 * 
+	 */
+	public void useCurrentValuesAsDefaults() {
+		for (final PropertyField<?, M, ?> field : fields) {
+			field.updateDefault(model.get());
+		}
+	}
+
 	/**
 	 * Take the current value of each property field and write it into the wrapped model element.
 	 * <p>
@@ -562,8 +667,8 @@ public class ModelWrapper<M> {
 	 * state of the wrapped model element.
 	 */
 	public void commit() {
-		if (model != null) {
-			fields.forEach(field -> field.commit(model));
+		if (model.get() != null) {
+			fields.forEach(field -> field.commit(model.get()));
 			
 			dirtyFlag.set(false);
 			
@@ -580,8 +685,8 @@ public class ModelWrapper<M> {
 	 * defined property fields.
 	 */
 	public void reload() {
-		if (model != null) {
-			fields.forEach(field -> field.reload(model));
+		if (model.get() != null) {
+			fields.forEach(field -> field.reload(model.get()));
 			
 			dirtyFlag.set(false);
 			calculateDifferenceFlag();
@@ -596,9 +701,9 @@ public class ModelWrapper<M> {
 	}
 	
 	private void calculateDifferenceFlag() {
-		if (model != null) {
+		if (model.get() != null) {
 			final Optional<PropertyField<?, M, ?>> optional = fields.stream()
-					.filter(field -> field.isDifferent(model))
+					.filter(field -> field.isDifferent(model.get()))
 					.findAny();
 					
 			diffFlag.set(optional.isPresent());
@@ -1092,8 +1197,8 @@ public class ModelWrapper<M> {
 	
 	private <T, R extends Property<T>> R add(PropertyField<T, M, R> field) {
 		fields.add(field);
-		if (model != null) {
-			field.reload(model);
+		if (model.get() != null) {
+			field.reload(model.get());
 		}
 		return field.getProperty();
 	}
