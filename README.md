@@ -56,9 +56,9 @@ If you need help you can use the forums on [Google Groups](https://groups.google
 ### Links
 
 - [Project Page](http://sialcasa.github.io/mvvmFX/)
-- [javadoc mvvmfx core](http://sialcasa.github.io/mvvmFX/javadoc/1.4.0/mvvmfx/)
-- [javadoc mvvmfx-cdi](http://sialcasa.github.io/mvvmFX/javadoc/1.4.0/mvvmfx-cdi/)
-- [javadoc mvvmfx-guice](http://sialcasa.github.io/mvvmFX/javadoc/1.4.0/mvvmfx-guice/)
-- [javadoc mvvmfx-utils](http://sialcasa.github.io/mvvmFX/javadoc/1.4.0/mvvmfx-utils/)
-- [javadoc mvvmfx-testing-utils](http://sialcasa.github.io/mvvmFX/javadoc/1.4.0/mvvmfx-testing-utils/)
+- [javadoc mvvmfx core](http://sialcasa.github.io/mvvmFX/javadoc/1.5.0/mvvmfx/)
+- [javadoc mvvmfx-cdi](http://sialcasa.github.io/mvvmFX/javadoc/1.5.0/mvvmfx-cdi/)
+- [javadoc mvvmfx-guice](http://sialcasa.github.io/mvvmFX/javadoc/1.5.0/mvvmfx-guice/)
+- [javadoc mvvmfx-utils](http://sialcasa.github.io/mvvmFX/javadoc/1.5.0/mvvmfx-utils/)
+- [javadoc mvvmfx-testing-utils](http://sialcasa.github.io/mvvmFX/javadoc/1.5.0/mvvmfx-testing-utils/)
 
