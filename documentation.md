@@ -7,6 +7,11 @@ permalink: /docs/
 
 # Documentation
 
+The project documentation can be found in the wiki of the github project:
+
+[https://github.com/sialcasa/mvvmFX/wiki](https://github.com/sialcasa/mvvmFX/wiki)
+
+
 ### JavaDoc:
 
 
