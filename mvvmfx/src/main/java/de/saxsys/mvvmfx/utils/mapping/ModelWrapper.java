@@ -1233,7 +1233,7 @@ public class ModelWrapper<M> {
 	 * change the data of the model instance directly, this property won't turn to <code>true</code>.
 	 *
 	 *
-	 * @return a reay-only property indicating a difference between model and wrapper.
+	 * @return a read-only property indicating a difference between model and wrapper.
 	 */
 	public ReadOnlyBooleanProperty differentProperty() {
 		return diffFlag.getReadOnlyProperty();
