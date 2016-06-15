@@ -43,7 +43,12 @@ public class ValidationStatus {
 			new FilteredList<>(messages, message -> message.getSeverity().equals(Severity.ERROR)));
 	private ObservableList<ValidationMessage> warningMessages = FXCollections.unmodifiableObservableList(
 			new FilteredList<>(messages, message -> message.getSeverity().equals(Severity.WARNING)));
-	
+
+
+	ListProperty<ValidationMessage> getMessagesInternal() {
+		return messages;
+	}
+
 	
 	void addMessage(ValidationMessage message) {
 		messages.add(message);
@@ -64,16 +69,26 @@ public class ValidationStatus {
 	void clearMessages() {
 		messages.clear();
 	}
-	
-	
+
+
+	/**
+	 * @return an <strong>unmodifiable</strong> observable list of all messages.
+	 */
 	public ObservableList<ValidationMessage> getMessages() {
 		return unmodifiableMessages;
 	}
-	
+
+
+	/**
+	 * @return an <strong>unmodifiable</strong> observable list of all messages of severity {@link Severity#ERROR}.
+	 */
 	public ObservableList<ValidationMessage> getErrorMessages() {
 		return errorMessages;
 	}
-	
+
+	/**
+	 * @return an <strong>unmodifiable</strong> observable list of all messages of severity {@link Severity#WARNING}.
+	 */
 	public ObservableList<ValidationMessage> getWarningMessages() {
 		return warningMessages;
 	}
