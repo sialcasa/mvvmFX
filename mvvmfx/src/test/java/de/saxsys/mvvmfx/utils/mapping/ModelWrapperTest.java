@@ -580,8 +580,8 @@ public class ModelWrapperTest {
     assertThat(nicknames.get()).containsExactlyElementsOf(person2.getNicknames());
 
     cut.reset();
-    assertThat(nameField.get()).isEqualTo(person2.getName());
-    assertThat(ageField.get()).isEqualTo(person2.getAge());
-    assertThat(nicknames.get()).containsExactlyElementsOf(person2.getNicknames());
+    assertThat(nameField.get()).isEqualTo(person1.getName());
+    assertThat(ageField.get()).isEqualTo(person1.getAge());
+    assertThat(nicknames.get()).containsExactlyElementsOf(person1.getNicknames());
   }
 }
