@@ -601,20 +601,30 @@ public class ModelWrapper<M> {
 	}
 
 	/**
-	 * Resets all defined fields to their default values. If no default value was defined <code>null</code> will be used
-	 * instead.
+	 * Resets all defined fields to their default values.
+	 * <p>
+	 * Default values can be defined as last argument of the overloaded "field" methods
+	 * (see {@link #field(StringGetter, StringSetter, String)})
+	 * or by using the {@link #useCurrentValuesAsDefaults()} method.
+	 *
+	 * <p>
+	 *
+	 * If no special default value was defined for a field the default value of the actual Property type will be used
+	 * (e.g. 0 for {@link IntegerProperty}, <code>null</code> for {@link StringProperty} and {@link ObjectProperty} ...).
+	 *
+	 *
 	 * <p>
 	 * <b>Note:</b> This method has no effects on the wrapped model element but will only change the values of the
 	 * defined property fields.
 	 */
 	public void reset() {
-		fields.forEach(field -> field.resetToDefault());
+		fields.forEach(PropertyField::resetToDefault);
 		
 		calculateDifferenceFlag();
 	}
 
 	/**
-	 * Use all values that are currently present in the wrapped model object as new default values for respective field.
+	 * Use all values that are currently present in the wrapped model object as new default values for respective fields.
 	 * This overrides/updates the values that were set during the initialization of the field mappings.
 	 * <p>
 	 * Subsequent calls to {@link #reset()} will reset the values to this new default values.
@@ -650,10 +660,16 @@ public class ModelWrapper<M> {
 	 *      
 	 * </pre>
 	 * 
+	 *
+	 * If no model instance is set to be wrapped by the ModelWrapper, nothing will happen when this method is invoked.
+	 * Instead the old default values will still be available.
+	 * 
 	 */
 	public void useCurrentValuesAsDefaults() {
-		for (final PropertyField<?, M, ?> field : fields) {
-			field.updateDefault(model.get());
+		if(model.get() != null) {
+			for (final PropertyField<?, M, ?> field : fields) {
+				field.updateDefault(model.get());
+			}
 		}
 	}
 
@@ -729,10 +745,10 @@ public class ModelWrapper<M> {
 	 * ModelWrapper{@code<Person>} personWrapper = new ModelWrapper{@code<>}();
 	 * 
 	 * StringProperty wrappedNameProperty = personWrapper.field(person -> person.getName(), (person, value)
-	 * 	 -> person.setName(value), "empty");
+	 * 	 -> person.setName(value));
 	 * 
 	 * // or with a method reference
-	 * StringProperty wrappedNameProperty = personWrapper.field(Person::getName, Person::setName, "empty");
+	 * StringProperty wrappedNameProperty = personWrapper.field(Person::getName, Person::setName);
 	 *
 	 * </pre>
 	 *
