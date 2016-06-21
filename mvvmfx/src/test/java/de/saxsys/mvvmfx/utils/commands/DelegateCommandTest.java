@@ -24,6 +24,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -72,11 +73,14 @@ public class DelegateCommandTest {
 		assertFalse(delegateCommand.isNotExecutable());
 	}
 	
+	
 	@Test
-	public void firePositive() throws InterruptedException, ExecutionException, TimeoutException {
+	public void executeSynchronousSucceeded() throws Exception {
 		BooleanProperty condition = new SimpleBooleanProperty(true);
 		BooleanProperty called = new SimpleBooleanProperty();
-		
+		BooleanProperty succeeded = new SimpleBooleanProperty();
+		BooleanProperty failed = new SimpleBooleanProperty();
+
 		DelegateCommand delegateCommand = new DelegateCommand(() -> new Action() {
 			@Override
 			protected void action() {
@@ -84,23 +88,67 @@ public class DelegateCommandTest {
 			}
 		}, condition);
 		
-		assertFalse(called.get());
-		delegateCommand.execute();
-		assertTrue(called.get());
-		
-		CompletableFuture<State> stateFromFxThread = new CompletableFuture<>();
-		Platform.runLater(() -> {
-			delegateCommand.stateProperty().addListener((b, o, n) -> {
-				if (n == State.SUCCEEDED) {
-					stateFromFxThread.complete(n);
-				}
-			});
+		delegateCommand.setOnSucceeded(workerStateEvent -> {
+			succeeded.set(true);
 		});
-		assertThat(stateFromFxThread.get(3, TimeUnit.SECONDS)).isEqualTo(State.SUCCEEDED);
+		
+		delegateCommand.setOnFailed(workerStateEvent -> {
+			failed.set(true);
+		});
+
+		// given
+		assertThat(called.get()).isFalse();
+		assertThat(succeeded.get()).isFalse();
+		assertThat(failed.get()).isFalse();
+		
+		// when
+		delegateCommand.execute();
+		
+		// then
+		assertThat(called.get()).isTrue();
+		assertThat(succeeded.get()).isTrue();
+		assertThat(failed.get()).isFalse();
+	}
+
+	@Test
+	public void executeSynchronousFailed() throws Exception {
+		BooleanProperty condition = new SimpleBooleanProperty(true);
+		BooleanProperty called = new SimpleBooleanProperty();
+		BooleanProperty succeeded = new SimpleBooleanProperty();
+		BooleanProperty failed = new SimpleBooleanProperty();
+
+		DelegateCommand delegateCommand = new DelegateCommand(() -> new Action() {
+			@Override
+			protected void action() {
+				called.set(true);
+				throw new RuntimeException("Some reason");
+			}
+		}, condition);
+
+		delegateCommand.setOnSucceeded(workerStateEvent -> {
+			succeeded.set(true);
+		});
+
+		delegateCommand.setOnFailed(workerStateEvent -> {
+			failed.set(true);
+		});
+
+		// given
+		assertThat(called.get()).isFalse();
+		assertThat(succeeded.get()).isFalse();
+		assertThat(failed.get()).isFalse();
+
+		// when
+		delegateCommand.execute();
+
+		// then
+		assertThat(called.get()).isTrue();
+		assertThat(succeeded.get()).isFalse();
+		assertThat(failed.get()).isTrue();
 	}
 	
 	@Test(expected = RuntimeException.class)
-	public void fireNegative() {
+	public void commandNotExecutable() {
 		BooleanProperty condition = new SimpleBooleanProperty(false);
 		
 		DelegateCommand delegateCommand = new DelegateCommand(() -> new Action() {
@@ -111,46 +159,6 @@ public class DelegateCommandTest {
 		
 		delegateCommand.execute();
 	}
-	
-	@Test
-	public void firePositiveWithExc() throws InterruptedException, ExecutionException, TimeoutException {
-		BooleanProperty throwExc = new SimpleBooleanProperty(true);
-		
-		DelegateCommand delegateCommand = new DelegateCommand(() -> new Action() {
-			@Override
-			protected void action() {
-				if (throwExc.get())
-					throw new RuntimeException("Someerror");
-			}
-		}, new SimpleBooleanProperty(true));
-		
-		
-		
-		CompletableFuture<State> stateFromFxThread1 = new CompletableFuture<>();
-		Platform.runLater(() -> {
-			delegateCommand.stateProperty().addListener((b, o, n) -> {
-				if (n == State.FAILED) {
-					stateFromFxThread1.complete(n);
-				}
-			});
-		});
-		Platform.runLater(() -> delegateCommand.execute());
-		assertThat(stateFromFxThread1.get(3, TimeUnit.SECONDS)).isEqualTo(State.FAILED);
-		
-		throwExc.set(false);
-		CompletableFuture<State> stateFromFxThread2 = new CompletableFuture<>();
-		Platform.runLater(() -> {
-			delegateCommand.stateProperty().addListener((b, o, n) -> {
-				if (n == State.SUCCEEDED) {
-					stateFromFxThread2.complete(n);
-				}
-			});
-		});
-		Platform.runLater(() -> delegateCommand.execute());
-		assertThat(stateFromFxThread2.get(3, TimeUnit.SECONDS)).isEqualTo(State.SUCCEEDED);
-		
-	}
-	
 	
 	@Test
 	public void longRunningAsync() throws Exception {
