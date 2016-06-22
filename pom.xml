@@ -83,6 +83,7 @@
 		<module>mvvmfx-archetype</module>
 		<module>mvvmfx-utils</module>
 		<module>mvvmfx-testing-utils</module>
+		<module>mvvmfx-easydi</module>
 	</modules>
 
 	<dependencyManagement>
