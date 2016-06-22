@@ -33,7 +33,7 @@ import eu.lestard.doc.Beta;
 public interface Command {
 	
 	/**
-	 * This method will be called when the command is invoked.
+	 * This method will be called when the command is invoked. This has to get called from FX Thread
 	 */
 	void execute();
 	
