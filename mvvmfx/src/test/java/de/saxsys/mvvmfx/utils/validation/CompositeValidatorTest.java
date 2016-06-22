@@ -17,6 +17,7 @@ package de.saxsys.mvvmfx.utils.validation;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,6 +50,19 @@ public class CompositeValidatorTest {
 		
 		compositeValidator = new CompositeValidator();
 		status = compositeValidator.getValidationStatus();
+	}
+
+	/**
+	 * Test that the composite validator also works when the base validators are passed to the constructor.
+	 */
+	@Test
+	public void testValidatorConstructor() {
+		valid1.setValue(false);
+		valid2.setValue(false);
+
+		CompositeValidator newValidator = new CompositeValidator(validator1, validator2);
+		assertThat(newValidator.getValidationStatus().isValid()).isFalse();
+		assertThat(newValidator.getValidationStatus().getMessages()).hasSize(2);
 	}
 	
 	@Test
@@ -103,8 +117,97 @@ public class CompositeValidatorTest {
 		compositeValidator.removeValidators(validator1);
 		assertThat(status.isValid()).isTrue();
 	}
-	
-	
+
+
+	/**
+	 * This test is used to verify a previously existing bug
+	 * (<a href="https://github.com/sialcasa/mvvmFX/issues/398">398</a>) is fixed.
+	 *
+	 * The wrong behaviour was happening when two validators where using the a ValidationMessage
+	 * with the same values (for example {@link Severity#ERROR} and a string message "error").
+	 * In this case when one of the validators was removed the message for the second validator
+	 * was also gone.
+	 */
+	@Test
+	public void testUpdateResultWhenValidatorsAreRemoved() {
+		final SimpleStringProperty stringPropertyOne = new SimpleStringProperty("");
+
+		final FunctionBasedValidator<String> validatorOne = new FunctionBasedValidator<>(stringPropertyOne, s -> {
+			if (s.isEmpty()) {
+				return new ValidationMessage(Severity.ERROR, "empty1");
+			} else {
+				return null;
+			}
+		});
+
+		final SimpleStringProperty stringPropertyTwo = new SimpleStringProperty("");
+
+		final FunctionBasedValidator<String> validatorTwo = new FunctionBasedValidator<>(stringPropertyTwo, s -> {
+			if (s.isEmpty()) {
+				return new ValidationMessage(Severity.ERROR, "empty1");
+			} else {
+				return null;
+			}
+		});
+
+		final CompositeValidator compositeValidator = new CompositeValidator();
+
+
+		assertThat(compositeValidator.getValidationStatus().isValid()).isTrue();
+		assertThat(compositeValidator.getValidationStatus().getErrorMessages()).isEmpty();
+
+
+		compositeValidator.addValidators(validatorOne);
+
+		assertThat(compositeValidator.getValidationStatus().isValid()).isFalse();
+		assertThat(compositeValidator.getValidationStatus().getErrorMessages()).hasSize(1);
+
+		compositeValidator.addValidators(validatorTwo);
+
+		assertThat(compositeValidator.getValidationStatus().isValid()).isFalse();
+		assertThat(compositeValidator.getValidationStatus().getErrorMessages()).hasSize(2);
+
+
+		compositeValidator.removeValidators(validatorTwo);
+		assertThat(compositeValidator.getValidationStatus().isValid()).isFalse();
+		assertThat(compositeValidator.getValidationStatus().getErrorMessages()).hasSize(1);
+
+
+		compositeValidator.removeValidators(validatorOne);
+		assertThat(compositeValidator.getValidationStatus().isValid()).isTrue();
+		assertThat(compositeValidator.getValidationStatus().getErrorMessages()).isEmpty();
+	}
+
+	/**
+	 * Verify that it's easy possible to assert on existing validation messages
+	 * by creating new ValidationMessage instances with the expected values on the fly.
+	 * This is needed to write useful unit tests for users.
+	 */
+	@Test
+	public void testTestability() {
+
+		final SimpleStringProperty stringPropertyOne = new SimpleStringProperty("");
+
+		final FunctionBasedValidator<String> validatorOne = new FunctionBasedValidator<>(stringPropertyOne, s -> {
+			if (s.isEmpty()) {
+				return new ValidationMessage(Severity.ERROR, "empty1");
+			} else {
+				return null;
+			}
+		});
+
+
+		CompositeValidator compositeValidator = new CompositeValidator();
+		compositeValidator.addValidators(validatorOne);
+
+		// It's possible to write an assert for the existing of a test by creating a new validation message object with the same values.
+		// This makes writing unit tests easier and more readable.
+		assertThat(compositeValidator.getValidationStatus().getMessages()).contains(ValidationMessage.error("empty1"));
+
+
+	}
+
+
 	private List<String> asStrings(List<ValidationMessage> messages) {
 		return messages
 				.stream()

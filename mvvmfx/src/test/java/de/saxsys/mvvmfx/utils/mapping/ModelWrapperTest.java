@@ -16,7 +16,9 @@
 package de.saxsys.mvvmfx.utils.mapping;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.setAllowExtractingPrivateFields;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -580,8 +582,90 @@ public class ModelWrapperTest {
     assertThat(nicknames.get()).containsExactlyElementsOf(person2.getNicknames());
 
     cut.reset();
-    assertThat(nameField.get()).isEqualTo(person2.getName());
-    assertThat(ageField.get()).isEqualTo(person2.getAge());
-    assertThat(nicknames.get()).containsExactlyElementsOf(person2.getNicknames());
+    assertThat(nameField.get()).isEqualTo(person1.getName());
+    assertThat(ageField.get()).isEqualTo(person1.getAge());
+    assertThat(nicknames.get()).containsExactlyElementsOf(person1.getNicknames());
   }
+
+	@Test
+	public void testUseCurrentValuesAsDefaultWhenModelIsNull() {
+
+		ModelWrapper<Person> wrapper = new ModelWrapper<>();
+
+		StringProperty name = wrapper.field("name", Person::getName, Person::setName, "empty");
+		IntegerProperty age = wrapper.field("age", Person::getAge, Person::setAge, 12);
+
+		wrapper.reset();
+
+		assertThat(name.get()).isEqualTo("empty");
+		assertThat(age.get()).isEqualTo(12);
+
+		wrapper.useCurrentValuesAsDefaults();
+
+
+		wrapper.reset();
+
+		// still the old default values
+		assertThat(name.get()).isEqualTo("empty");
+		assertThat(age.get()).isEqualTo(12);
+
+	}
+
+	@Test
+	public void testDefaultValues() {
+		final Person person = new Person();
+		person.setName("horst");
+		person.setAge(32);
+		person.setNicknames(Arrays.asList("captain"));
+
+		ModelWrapper<Person> wrapperWithDefaults = new ModelWrapper<>();
+		ModelWrapper<Person> wrapperWithoutDefaults = new ModelWrapper<>();
+
+		StringProperty nameWithDefault = wrapperWithDefaults.field("name", Person::getName, Person::setName, "empty");
+		IntegerProperty ageWithDefault = wrapperWithDefaults.field("age", Person::getAge, Person::setAge, 12);
+
+
+		StringProperty nameWithoutDefault = wrapperWithoutDefaults.field("name", Person::getName, Person::setName);
+		IntegerProperty ageWithoutDefault = wrapperWithoutDefaults.field("age", Person::getAge, Person::setAge);
+
+		// default values are only used when #reset is called.
+		assertThat(nameWithDefault.get()).isNull();
+		assertThat(ageWithDefault.get()).isEqualTo(0);
+
+		assertThat(nameWithoutDefault.get()).isNull();
+		assertThat(ageWithoutDefault.get()).isEqualTo(0);
+
+
+
+		wrapperWithDefaults.reset();
+		wrapperWithoutDefaults.reset();
+
+		assertThat(nameWithDefault.get()).isEqualTo("empty");
+		assertThat(ageWithDefault.get()).isEqualTo(12);
+
+		assertThat(nameWithoutDefault.get()).isNull();
+		assertThat(ageWithoutDefault.get()).isEqualTo(0);
+
+
+
+		wrapperWithDefaults.set(person);
+		wrapperWithoutDefaults.set(person);
+
+		assertThat(nameWithDefault.get()).isEqualTo("horst");
+		assertThat(ageWithDefault.get()).isEqualTo(32);
+
+		assertThat(nameWithoutDefault.get()).isEqualTo("horst");
+		assertThat(ageWithoutDefault.get()).isEqualTo(32);
+
+
+
+		wrapperWithDefaults.reset();
+		wrapperWithoutDefaults.reset();
+
+		assertThat(nameWithDefault.get()).isEqualTo("empty");
+		assertThat(ageWithDefault.get()).isEqualTo(12);
+
+		assertThat(nameWithoutDefault.get()).isNull();
+		assertThat(ageWithoutDefault.get()).isEqualTo(0);
+	}
 }

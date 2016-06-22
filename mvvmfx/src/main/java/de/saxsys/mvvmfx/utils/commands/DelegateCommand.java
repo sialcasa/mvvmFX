@@ -17,6 +17,11 @@ package de.saxsys.mvvmfx.utils.commands;
 
 import java.util.function.Supplier;
 
+import javafx.beans.property.ObjectProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.lestard.doc.Beta;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -25,7 +30,6 @@ import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import eu.lestard.doc.Beta;
 
 /**
  * A {@link Command} implementation of a {@link Service<Void>} that encapsulates an {@link Action} ({@link Task<Void>})
@@ -44,9 +48,10 @@ public class DelegateCommand extends Service<Void> implements Command {
 	protected final ReadOnlyBooleanWrapper executable = new ReadOnlyBooleanWrapper(true);
 	protected ReadOnlyBooleanWrapper notExecutable;
 	protected ReadOnlyBooleanWrapper notRunning;
+	private Exception occuredException;
 	
 	
-	
+	Logger LOG = LoggerFactory.getLogger(DelegateCommand.class);
 	
 	/**
 	 * Creates a command without a condition about the executability.
@@ -121,6 +126,8 @@ public class DelegateCommand extends Service<Void> implements Command {
 	 */
 	@Override
 	public void execute() {
+		occuredException = null;
+		
 		if (!isExecutable()) {
 			throw new RuntimeException("The execute()-method of the command was called while it wasn't executable.");
 		} else {
@@ -130,18 +137,43 @@ public class DelegateCommand extends Service<Void> implements Command {
 					start();
 				}
 			} else {
-				try {
-					actionSupplier.get().action();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
+				// When the command is not executed in background, we have to imitate a service execution, so the
+				// service statemachine provides the
+				// correct service state to the command.
+				callActionAndSynthesizeServiceRun();
 			}
+		}
+	}
+
+	/**
+	 * For internal purposes we need to change the state property of the service.
+	 */
+	private ObjectProperty<State> getStateObjectPropertyReadable() {
+		return (ObjectProperty<State>) stateProperty();
+ 	}
+	
+	private void callActionAndSynthesizeServiceRun() {
+		try {
+			getStateObjectPropertyReadable().setValue(State.SCHEDULED);
+			
+			// We call the User Action. If an exception occurs we save it, therefore we can use it in the Test
+			// (createSynthesizedTask) to throw it during the Service invocation.
+			actionSupplier.get().action();
+			
+			getStateObjectPropertyReadable().setValue(State.SUCCEEDED);
+		} catch (Exception e) {
+			LOG.error("Exception in Command Execution", occuredException);
+			this.occuredException = e;
+			getStateObjectPropertyReadable().setValue(State.FAILED);
 		}
 	}
 	
 	@Override
 	protected Task<Void> createTask() {
-		return actionSupplier.get();
+		if (inBackground) {
+			return actionSupplier.get();
+		}
+		return createSynthesizedTask();
 	}
 	
 	@Override
@@ -181,5 +213,17 @@ public class DelegateCommand extends Service<Void> implements Command {
 	@Override
 	public final boolean isNotRunning() {
 		return notRunningProperty().get();
+	}
+	
+	private Task<Void> createSynthesizedTask() {
+		return new Task<Void>() {
+			@Override
+			protected Void call() throws Exception {
+				if (occuredException != null) {
+					throw occuredException;
+				}
+				return null;
+			}
+		};
 	}
 }
