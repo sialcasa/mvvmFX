@@ -15,6 +15,11 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.internal.viewloader;
 
+import de.saxsys.mvvmfx.*;
+import de.saxsys.mvvmfx.internal.ContextImpl;
+import net.jodah.typetools.TypeResolver;
+
+import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -22,20 +27,9 @@ import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import de.saxsys.mvvmfx.Context;
-import de.saxsys.mvvmfx.InjectContext;
-import de.saxsys.mvvmfx.InjectScope;
-import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.Scope;
-import de.saxsys.mvvmfx.ScopeProvider;
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.internal.ContextImpl;
-import net.jodah.typetools.TypeResolver;
 
 /**
  * This class encapsulates reflection related utility operations specific for
@@ -386,6 +380,11 @@ public class ViewLoaderReflectionUtils {
         }
         try {
             final Method initMethod = viewModel.getClass().getMethod("initialize");
+            // if there is a @PostConstruct annotation, throw an exception to prevent double injection
+            if(initMethod.isAnnotationPresent(PostConstruct.class)) {
+                throw new IllegalStateException(String.format("double injection on initialize method of ViewModel [%s]. " +
+                        "Please rename the method or remove the @PostConstruct annotation.", viewModel));
+            }
 
             AccessController.doPrivileged((PrivilegedAction) () -> {
                 try {
