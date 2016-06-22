@@ -20,7 +20,7 @@ This is the stable release that can be used in production.
 <dependency>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx</artifactId>
-		<version>1.5.0</version>
+		<version>1.5.1</version>
 </dependency>
 ```
 
@@ -32,7 +32,7 @@ Here we make bug fixes for the current stable release.
 <dependency>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx</artifactId>
-		<version>1.5.1-SNAPSHOT</version>
+		<version>1.5.2-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -56,9 +56,9 @@ If you need help you can use the forums on [Google Groups](https://groups.google
 ### Links
 
 - [Project Page](http://sialcasa.github.io/mvvmFX/)
-- [javadoc mvvmfx core](http://sialcasa.github.io/mvvmFX/javadoc/1.4.0/mvvmfx/)
-- [javadoc mvvmfx-cdi](http://sialcasa.github.io/mvvmFX/javadoc/1.4.0/mvvmfx-cdi/)
-- [javadoc mvvmfx-guice](http://sialcasa.github.io/mvvmFX/javadoc/1.4.0/mvvmfx-guice/)
-- [javadoc mvvmfx-utils](http://sialcasa.github.io/mvvmFX/javadoc/1.4.0/mvvmfx-utils/)
-- [javadoc mvvmfx-testing-utils](http://sialcasa.github.io/mvvmFX/javadoc/1.4.0/mvvmfx-testing-utils/)
+- [javadoc mvvmfx core](http://sialcasa.github.io/mvvmFX/javadoc/1.5.0/mvvmfx/)
+- [javadoc mvvmfx-cdi](http://sialcasa.github.io/mvvmFX/javadoc/1.5.0/mvvmfx-cdi/)
+- [javadoc mvvmfx-guice](http://sialcasa.github.io/mvvmFX/javadoc/1.5.0/mvvmfx-guice/)
+- [javadoc mvvmfx-utils](http://sialcasa.github.io/mvvmFX/javadoc/1.5.0/mvvmfx-utils/)
+- [javadoc mvvmfx-testing-utils](http://sialcasa.github.io/mvvmFX/javadoc/1.5.0/mvvmfx-testing-utils/)
 
