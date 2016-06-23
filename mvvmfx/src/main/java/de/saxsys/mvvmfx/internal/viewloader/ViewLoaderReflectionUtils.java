@@ -15,6 +15,10 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.internal.viewloader;
 
+import de.saxsys.mvvmfx.*;
+import de.saxsys.mvvmfx.internal.ContextImpl;
+import net.jodah.typetools.TypeResolver;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -22,20 +26,9 @@ import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import de.saxsys.mvvmfx.Context;
-import de.saxsys.mvvmfx.InjectContext;
-import de.saxsys.mvvmfx.InjectScope;
-import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.Scope;
-import de.saxsys.mvvmfx.ScopeProvider;
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.internal.ContextImpl;
-import net.jodah.typetools.TypeResolver;
 
 /**
  * This class encapsulates reflection related utility operations specific for
@@ -385,14 +378,23 @@ public class ViewLoaderReflectionUtils {
             return;
         }
         try {
-            final Method initMethod = viewModel.getClass().getMethod("initialize");
+            // make sure we will also get private and protected methods
+            final Method initMethod = viewModel.getClass().getDeclaredMethod("initialize");
 
             AccessController.doPrivileged((PrivilegedAction) () -> {
+                // method needs to me accessible
+                boolean accessible = initMethod.isAccessible();
                 try {
+                    if(!accessible) {
+                        initMethod.setAccessible(true);
+                    }
                     return initMethod.invoke(viewModel);
                 } catch (InvocationTargetException | IllegalAccessException e) {
                     throw new IllegalStateException(
                             "mvvmFX wasn't able to call the initialize method of ViewModel [" + viewModel + "].", e);
+                } finally {
+                    // make sure we undo any changes made
+                    initMethod.setAccessible(accessible);
                 }
             });
         } catch (NoSuchMethodException e) {
