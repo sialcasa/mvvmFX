@@ -382,8 +382,11 @@ public class ViewLoaderReflectionUtils {
             final Method initMethod = viewModel.getClass().getMethod("initialize");
             // if there is a @PostConstruct annotation, throw an exception to prevent double injection
             if(initMethod.isAnnotationPresent(PostConstruct.class)) {
-                throw new IllegalStateException(String.format("double injection on initialize method of ViewModel [%s]. " +
-                        "Please rename the method or remove the @PostConstruct annotation.", viewModel));
+                throw new IllegalStateException(String.format("initialize method of ViewModel [%s] is annotated with @PostConstruct. " +
+                        "This will lead to unexpected behaviour and duplicate initialization. " +
+                        "Please rename the method or remove the @PostConstruct annotation. " +
+                        "See mvvmFX wiki for more details: " +
+                        "https://github.com/sialcasa/mvvmFX/wiki/Dependency-Injection#livecycle-postconstruct", viewModel));
             }
 
             AccessController.doPrivileged((PrivilegedAction) () -> {
