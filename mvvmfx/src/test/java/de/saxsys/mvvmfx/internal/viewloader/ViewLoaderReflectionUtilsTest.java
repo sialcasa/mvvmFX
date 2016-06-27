@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2015 Alexander Casall, Manuel Mauky
+ * Copyright 2015 Alexander Casall, Manuel Mauky, Sven Lechner
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,12 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.internal.viewloader;
 
-import static org.assertj.core.api.Assertions.*;
-
-import org.junit.Test;
-
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModel;
+import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelWithDoubleInjection;
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ViewLoaderReflectionUtilsTest {
 	
@@ -53,5 +53,13 @@ public class ViewLoaderReflectionUtilsTest {
 		ViewModel viewModel = ViewLoaderReflectionUtils.createViewModel(new TestView());
 		
 		assertThat(viewModel).isNull();
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void testDoubleInjection() {
+		class TestView implements View<TestViewModelWithDoubleInjection> {}
+
+		ViewModel viewModel = ViewLoaderReflectionUtils.createViewModel(new TestView());
+		ViewLoaderReflectionUtils.initializeViewModel(viewModel);
 	}
 }
