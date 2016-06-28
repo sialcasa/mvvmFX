@@ -15,14 +15,8 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.validation;
 
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * This class is used as {@link ValidationStatus} for {@link CompositeValidator}.
@@ -73,25 +67,34 @@ class CompositeValidationStatus extends ValidationStatus {
 	/*
 	 Remove all given messages for the given validator.
 	 */
-	void removeMessage(Validator validator, List<? extends ValidationMessage> messages) {
-		List<CompositeValidationMessageWrapper> messagesToRemove =
-				getMessagesInternal().stream()
-					.filter(messages::contains)  // only the given messages
-					.filter(message -> (message instanceof CompositeValidationMessageWrapper))
-					.map(message -> (CompositeValidationMessageWrapper) message)
-					.filter(message -> message.getValidatorCode().equals(System.identityHashCode(validator)))
-					.collect(Collectors.toList());
+	void removeMessage(final Validator validator, final List<? extends ValidationMessage> messages) {
+    final List<CompositeValidationMessageWrapper> messagesToRemove =
+        getMessagesInternal().stream()
+            .filter(messages::contains)  // only the given messages
+            .filter(message -> (message instanceof CompositeValidationMessageWrapper))
+            .map(message -> (CompositeValidationMessageWrapper)message)
+            .filter(message -> message.getValidatorCode().equals(System.identityHashCode(validator)))
+            .collect(Collectors.toList());
 
-		getMessagesInternal().removeAll(messagesToRemove);
-	}
+    getMessagesInternal().removeIf(validationMessage -> {
+      if (validationMessage instanceof CompositeValidationMessageWrapper) {
+        final CompositeValidationMessageWrapper wrapper = (CompositeValidationMessageWrapper)validationMessage;
+        return messagesToRemove.stream()
+            .filter(m -> m.getValidatorCode().equals(wrapper.getValidatorCode()))
+            .anyMatch(wrapper::equals);
+      }
+
+      return false;
+    });
+  }
 
 	/*
 	 * Remove all messages for this particular validator.
 	 */
-	void removeMessage(Validator validator) {
+	void removeMessage(final Validator validator) {
 		getMessagesInternal().removeIf(validationMessage -> {
 			if(validationMessage instanceof CompositeValidationMessageWrapper) {
-				CompositeValidationMessageWrapper wrapper = (CompositeValidationMessageWrapper) validationMessage;
+				final CompositeValidationMessageWrapper wrapper = (CompositeValidationMessageWrapper) validationMessage;
 
 				return wrapper.getValidatorCode().equals(System.identityHashCode(validator));
 			}
