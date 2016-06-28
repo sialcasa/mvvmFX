@@ -15,16 +15,20 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.validation;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.google.common.base.Strings;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  * @author manuel.mauky
@@ -207,8 +211,36 @@ public class CompositeValidatorTest {
 
 	}
 
+  /**
+   * Issue #413
+   */
+  @Test
+  public void validatorsMayNotDeleteEachOthersValidationMessages() {
+    final StringProperty prop1 = new SimpleStringProperty();
+    final StringProperty prop2 = new SimpleStringProperty();
+    final Validator notEmpty1 = new FunctionBasedValidator<>(prop1, v -> {
+      if (Strings.isNullOrEmpty(v)) {
+        return ValidationMessage.error("msg");
+      }
+      return null;
+    });
+    final Validator notEmpty2 = new FunctionBasedValidator<>(prop2, v -> {
+      if (Strings.isNullOrEmpty(v)) {
+        return ValidationMessage.error("msg");
+      }
+      return null;
+    });
+    final CompositeValidator compositeValidator = new CompositeValidator(notEmpty1, notEmpty2);
+    prop1.set("");
+    prop2.set("");
+    prop1.set("a");
+    assertThat(notEmpty1.getValidationStatus().isValid()).isTrue();
+    assertThat(notEmpty2.getValidationStatus().isValid()).isFalse();
+    assertThat(compositeValidator.getValidationStatus().isValid()).isFalse();
+  }
 
-	private List<String> asStrings(List<ValidationMessage> messages) {
+
+  private List<String> asStrings(List<ValidationMessage> messages) {
 		return messages
 				.stream()
 				.map(ValidationMessage::getMessage)
