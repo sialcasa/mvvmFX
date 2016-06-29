@@ -211,33 +211,33 @@ public class CompositeValidatorTest {
 
 	}
 
-  /**
-   * Issue #413
-   */
-  @Test
-  public void validatorsMayNotDeleteEachOthersValidationMessages() {
-    final StringProperty prop1 = new SimpleStringProperty();
-    final StringProperty prop2 = new SimpleStringProperty();
-    final Validator notEmpty1 = new FunctionBasedValidator<>(prop1, v -> {
-      if (Strings.isNullOrEmpty(v)) {
-        return ValidationMessage.error("msg");
-      }
-      return null;
-    });
-    final Validator notEmpty2 = new FunctionBasedValidator<>(prop2, v -> {
-      if (Strings.isNullOrEmpty(v)) {
-        return ValidationMessage.error("msg");
-      }
-      return null;
-    });
-    final CompositeValidator compositeValidator = new CompositeValidator(notEmpty1, notEmpty2);
-    prop1.set("");
-    prop2.set("");
-    prop1.set("a");
-    assertThat(notEmpty1.getValidationStatus().isValid()).isTrue();
-    assertThat(notEmpty2.getValidationStatus().isValid()).isFalse();
-    assertThat(compositeValidator.getValidationStatus().isValid()).isFalse();
-  }
+	/**
+	 * Issue #413
+	 */
+	@Test
+	public void validatorsMayNotDeleteEachOthersValidationMessages() {
+		final StringProperty prop1 = new SimpleStringProperty();
+		final StringProperty prop2 = new SimpleStringProperty();
+		final Validator notEmpty1 = new FunctionBasedValidator<>(prop1, v -> {
+			if (Strings.isNullOrEmpty(v)) {
+				return ValidationMessage.error("msg");
+			}
+			return null;
+		});
+		final Validator notEmpty2 = new FunctionBasedValidator<>(prop2, v -> {
+			if (Strings.isNullOrEmpty(v)) {
+				return ValidationMessage.error("msg");
+			}
+			return null;
+		});
+		final CompositeValidator compositeValidator = new CompositeValidator(notEmpty1, notEmpty2);
+		prop1.set("");
+		prop2.set("");
+		prop1.set("a");
+		assertThat(notEmpty1.getValidationStatus().isValid()).isTrue();
+		assertThat(notEmpty2.getValidationStatus().isValid()).isFalse();
+		assertThat(compositeValidator.getValidationStatus().isValid()).isFalse();
+	}
 
 
   private List<String> asStrings(List<ValidationMessage> messages) {
