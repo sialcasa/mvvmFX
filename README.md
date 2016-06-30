@@ -20,7 +20,7 @@ This is the stable release that can be used in production.
 <dependency>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx</artifactId>
-		<version>1.5.1</version>
+		<version>1.5.2</version>
 </dependency>
 ```
 
@@ -32,7 +32,7 @@ Here we make bug fixes for the current stable release.
 <dependency>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx</artifactId>
-		<version>1.5.2-SNAPSHOT</version>
+		<version>1.5.3-SNAPSHOT</version>
 </dependency>
 ```
 
