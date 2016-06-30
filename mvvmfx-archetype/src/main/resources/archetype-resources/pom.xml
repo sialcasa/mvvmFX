@@ -16,7 +16,7 @@
 			<dependency>
 				<groupId>de.saxsys</groupId>
 				<artifactId>mvvmfx-parent</artifactId>
-				<version>1.5.2-SNAPSHOT</version>
+				<version>1.5.2</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
