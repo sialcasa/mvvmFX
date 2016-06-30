@@ -15,30 +15,30 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.commands;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.offset;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicBoolean;
-
+import com.cedarsoft.test.utils.CatchAllExceptionsRule;
+import de.saxsys.mvvmfx.testingutils.FxTestingUtils;
+import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.concurrent.Worker.State;
-
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.cedarsoft.test.utils.CatchAllExceptionsRule;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
-import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.offset;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 
@@ -249,8 +249,137 @@ public class DelegateCommandTest {
 		// before eventual assertion errors from the JavaFX Thread are detected
 		sleep(500);
 	}
-	
-	
+
+
+	/**
+	 * This test verifies the behaviour when the delegate command is restarted.
+	 *
+	 * It defines a test that is both executed with a pure JavaFX {@link Service}
+	 * and the mvvmFX {@link DelegateCommand}.
+	 * This way we can verify that both implementations are behaving equally.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testRestartAsync() throws Exception {
+		// these lists are used to keep track which actions are called, succeeded etc.
+		// each action has a number that will be added to these lists
+		List<Integer> called = new ArrayList<>();
+		List<Integer> succeeded = new ArrayList<>();
+		List<Integer> cancelled = new ArrayList<>();
+		List<Integer> interrupted = new ArrayList<>();
+
+
+		// A special action that will do nothing but wait for 500 ms when called.
+		class MyAction extends Action {
+
+			private final int number;
+
+			MyAction(int number) {
+				this.number = number;
+			}
+
+			@Override
+			protected void action() throws Exception {
+				called.add(this.number);
+
+				try{
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// keep track if this action is interrupted
+					interrupted.add(this.number);
+				}
+			}
+
+			@Override
+			protected void succeeded() {
+				succeeded.add(this.number);
+			}
+
+			@Override
+			protected void cancelled() {
+				cancelled.add(this.number);
+			}
+		}
+
+		// A pure JavaFX service that used our test action class as task
+		Service<Void> jfxService = new Service<Void>() {
+			int counter = 0;
+
+			@Override
+			protected Task<Void> createTask() {
+				// as "Action" extends from "Task<Void>" we can use it here
+				MyAction myAction = new MyAction(counter);
+				counter++;
+				return myAction;
+			}
+		};
+
+
+		DelegateCommand command = new DelegateCommand(new Supplier<Action>() {
+			int counter = 0;
+
+			@Override
+			public Action get() {
+				MyAction myAction = new MyAction(counter);
+				counter++;
+				return myAction;
+			}
+		}, true);
+
+
+		// The actual testing steps are encapsulated in a function (BiConsumer) that
+		// takes to runnables as argument. The first runnable starts the service for the first time.
+		// The second runnable restarts the service.
+		// This way we can reuse the same testing steps on
+		BiConsumer<Runnable, Runnable> test = (startService, restartService) -> {
+			called.clear();
+			succeeded.clear();
+			cancelled.clear();
+			interrupted.clear();
+
+			startService.run();
+			sleep(100);
+			FxTestingUtils.waitForUiThread();
+
+			assertThat(called).contains(0); // the first action is called
+			assertThat(succeeded).isEmpty();
+			assertThat(cancelled).isEmpty();
+			assertThat(interrupted).isEmpty();
+
+
+			// restart and all other interactions with the service have to be done
+			// on the UI-thread. Therefore we use Platform.runLater
+			Platform.runLater(restartService);
+			sleep(100);
+			// We need to wait for the UI-Thread to execute all enqueued runnables
+			FxTestingUtils.waitForUiThread();
+
+			assertThat(called).contains(0, 1); // now the second action is called too
+			assertThat(succeeded).isEmpty();
+			assertThat(cancelled).contains(0); // the first one is cancelled ...
+			assertThat(interrupted).contains(0); // and interrupted
+
+			// the normal execution of the action takes 500 ms so we need to wait a little longer
+			sleep(1000);
+			FxTestingUtils.waitForUiThread();
+
+			assertThat(called).contains(0, 1);
+			assertThat(succeeded).contains(1); // now the second action was finished successfully
+			assertThat(cancelled).contains(0);
+			assertThat(interrupted).contains(0);
+		};
+
+		// run the test on both the pure JavaFX service and the delegate command
+
+		// JavaFX Service uses "start" for initial startup and "restart" for the second start
+		test.accept(jfxService::start, jfxService::restart);
+
+		// DelegateCommand uses "execute" both times
+		test.accept(command::execute, command::execute);
+	}
+
+
 	private void sleep(long millis) {
 		try {
 			Thread.sleep(millis);

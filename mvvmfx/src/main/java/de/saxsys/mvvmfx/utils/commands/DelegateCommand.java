@@ -132,10 +132,7 @@ public class DelegateCommand extends Service<Void> implements Command {
 			throw new RuntimeException("The execute()-method of the command was called while it wasn't executable.");
 		} else {
 			if (inBackground) {
-				if (!super.isRunning()) {
-					reset();
-					start();
-				}
+				super.restart();
 			} else {
 				// When the command is not executed in background, we have to imitate a service execution, so the
 				// service statemachine provides the
