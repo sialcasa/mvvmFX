@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2015 Alexander Casall, Manuel Mauky
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,39 +15,43 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.validation;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.google.common.base.Strings;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  * @author manuel.mauky
  */
 public class CompositeValidatorTest {
-	
+
 	private ValidationStatus status;
-	
+
 	private BooleanProperty valid1 = new SimpleBooleanProperty();
 	private BooleanProperty valid2 = new SimpleBooleanProperty();
 	private CompositeValidator compositeValidator;
 	private ObservableRuleBasedValidator validator1;
 	private ObservableRuleBasedValidator validator2;
-	
+
 	@Before
 	public void setup() {
 		validator1 = new ObservableRuleBasedValidator();
 		validator1.addRule(valid1, ValidationMessage.error("error1"));
-		
+
 		validator2 = new ObservableRuleBasedValidator();
 		validator2.addRule(valid2, ValidationMessage.warning("warning2"));
-		
-		
+
+
 		compositeValidator = new CompositeValidator();
 		status = compositeValidator.getValidationStatus();
 	}
@@ -64,56 +68,56 @@ public class CompositeValidatorTest {
 		assertThat(newValidator.getValidationStatus().isValid()).isFalse();
 		assertThat(newValidator.getValidationStatus().getMessages()).hasSize(2);
 	}
-	
+
 	@Test
 	public void testValidation() {
 		compositeValidator.addValidators(validator1, validator2);
-		
+
 		valid1.set(true);
 		valid2.set(true);
-		
+
 		assertThat(status.isValid()).isTrue();
-		
+
 		valid1.setValue(false);
-		
+
 		assertThat(status.isValid()).isFalse();
 		assertThat(asStrings(status.getErrorMessages())).containsOnly("error1");
 		assertThat(asStrings(status.getWarningMessages())).isEmpty();
 		assertThat(asStrings(status.getMessages())).containsOnly("error1");
-		
+
 		valid2.setValue(false);
 		assertThat(status.isValid()).isFalse();
 		assertThat(asStrings(status.getErrorMessages())).containsOnly("error1");
 		assertThat(asStrings(status.getWarningMessages())).containsOnly("warning2");
 		assertThat(asStrings(status.getMessages())).containsOnly("error1", "warning2");
-		
+
 		valid1.setValue(true);
 		assertThat(status.isValid()).isFalse();
 		assertThat(asStrings(status.getErrorMessages())).isEmpty();
 		assertThat(asStrings(status.getWarningMessages())).containsOnly("warning2");
 		assertThat(asStrings(status.getMessages())).containsOnly("warning2");
-		
+
 		valid2.setValue(true);
 		assertThat(status.isValid()).isTrue();
 		assertThat(asStrings(status.getErrorMessages())).isEmpty();
 		assertThat(asStrings(status.getWarningMessages())).isEmpty();
 		assertThat(asStrings(status.getMessages())).isEmpty();
-		
+
 	}
-	
+
 	@Test
 	public void testLazyRegistration() {
 		valid1.set(false);
 		valid2.set(true);
-		
+
 		assertThat(status.isValid()).isTrue(); // no validator is registered at the moment
-		
+
 		compositeValidator.addValidators(validator2);
 		assertThat(status.isValid()).isTrue(); // validator2 is valid
-		
+
 		compositeValidator.addValidators(validator1);
 		assertThat(status.isValid()).isFalse();
-		
+
 		compositeValidator.removeValidators(validator1);
 		assertThat(status.isValid()).isTrue();
 	}
@@ -205,6 +209,34 @@ public class CompositeValidatorTest {
 		assertThat(compositeValidator.getValidationStatus().getMessages()).contains(ValidationMessage.error("empty1"));
 
 
+	}
+
+	/**
+	 * Issue #413
+	 */
+	@Test
+	public void validatorsMayNotDeleteEachOthersValidationMessages() {
+		final StringProperty prop1 = new SimpleStringProperty();
+		final StringProperty prop2 = new SimpleStringProperty();
+		final Validator notEmpty1 = new FunctionBasedValidator<>(prop1, v -> {
+			if (Strings.isNullOrEmpty(v)) {
+				return ValidationMessage.error("msg");
+			}
+			return null;
+		});
+		final Validator notEmpty2 = new FunctionBasedValidator<>(prop2, v -> {
+			if (Strings.isNullOrEmpty(v)) {
+				return ValidationMessage.error("msg");
+			}
+			return null;
+		});
+		final CompositeValidator compositeValidator = new CompositeValidator(notEmpty1, notEmpty2);
+		prop1.set("");
+		prop2.set("");
+		prop1.set("a");
+		assertThat(notEmpty1.getValidationStatus().isValid()).isTrue();
+		assertThat(notEmpty2.getValidationStatus().isValid()).isFalse();
+		assertThat(compositeValidator.getValidationStatus().isValid()).isFalse();
 	}
 
 
