@@ -15,7 +15,11 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.validation;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -31,76 +35,137 @@ import java.util.stream.Collectors;
 class CompositeValidationStatus extends ValidationStatus {
 
 	/**
-	 * This wrapper class is used to additionally store the information of the validator
-	 * that the messages belong to.
+	 * The CompositeValidator needs to be able to add and remove {@link ValidationMessage}s for specific validators only.
 	 *
-	 * Instead of storing the validator instance itself we only store an {@link System#identityHashCode(Object)}
-	 * because we don't need the validator itself but only a way to distinguish validator instances.
-	 * Using an identity hashcode instead of the actual instance can minimize the possibility of memory leaks.
+	 * Because {@link ValidationMessage} is an immutable value type (overrides equals/hashCode for value equality)
+	 * two message instances will be considered to be "equal" when they have the same values even if they are belonging
+	 * to different validators. Simply putting the messages into the message list ({@link #getMessagesInternal()})
+	 * doesn't work because if a message is removed for one validator, messages with the same values for other validators would be removed too.
+	 * <p/>
+	 * For this reason we need a special logic here.
+	 * To get this working we will maintain a Map that keeps track of all messages for each validator.
+	 * Instead of using the actual instances of validator as key and messages as values we will use {@link System#identityHashCode(Object)}
+	 * for both. This way we can distinguish between different instances of {@link ValidationMessage} even if
+	 * they are considered to be "equal" by equals/hashCode methods.
+	 * A second benefit of using identityHashCode is that it minimizes the changes of memory leaks because no references to
+	 * actual objects are stored. This is especially important for the validator instance.
+	 * <p/>
+	 *
+	 * Key: {@link System#identityHashCode(Object)} of the validator
+	 * Values: A list of {@link System#identityHashCode(Object)} of the validation messages.
 	 */
-	private static class CompositeValidationMessageWrapper extends ValidationMessage {
+	private Map<Integer, List<Integer>> validatorToMessagesMap = new HashMap<>();
 
-		private Integer validatorCode;
 
-		CompositeValidationMessageWrapper(ValidationMessage base, Validator validator) {
-			super(base.getSeverity(), base.getMessage());
-			this.validatorCode = System.identityHashCode(validator);
-		}
-
-		Integer getValidatorCode() {
-			return validatorCode;
-		}
+	/**
+	 * This class is package private and only used in the {@link CompositeValidator}.
+	 * For this use case adding and removing messages is only done in combination with a validator instance.
+	 * For this reason the normal methods to add/remove messages are overridden ad no-op methods.
+	 */
+	@Override
+	void addMessage(ValidationMessage message) {
 	}
 
+	@Override
+	void addMessage(Collection<ValidationMessage> messages) {
+	}
 
+	@Override
+	void removeMessage(ValidationMessage message) {
+	}
+
+	@Override
+	void removeMessage(Collection<? extends ValidationMessage> messages) {
+	}
+
+	@Override
+	void clearMessages() {
+	}
+
+	/**
+	 * Add a list of validation messages for the specified validator.
+	 */
 	void addMessage(Validator validator, List<? extends ValidationMessage> messages) {
-		/*
-			Instead of adding the messages directly to the message list ...
-		 */
-		getMessagesInternal().addAll(
-				messages.stream()
-						// ... we wrap them to keep track of the used validator.
-						.map(message -> new CompositeValidationMessageWrapper(message, validator))
-						.collect(Collectors.toList()));
+		if(messages.isEmpty()) {
+			return;
+		}
+
+
+		final int validatorHash = System.identityHashCode(validator);
+
+		if(!validatorToMessagesMap.containsKey(validatorHash)){
+			validatorToMessagesMap.put(validatorHash, new ArrayList<>());
+		}
+
+
+		final List<Integer> messageHashesOfThisValidator = validatorToMessagesMap.get(validatorHash);
+
+		// add the hashCodes of the messages to the internal map
+		messages.stream()
+				.map(System::identityHashCode)
+				.forEach(messageHashesOfThisValidator::add);
+
+		// add the actual messages to the message list so that they are accessible by the user.
+		getMessagesInternal().addAll(messages);
 	}
 
 	/*
 	 Remove all given messages for the given validator.
 	 */
 	void removeMessage(final Validator validator, final List<? extends ValidationMessage> messages) {
-		final List<CompositeValidationMessageWrapper> messagesToRemove =
-				getMessagesInternal().stream()
-						.filter(messages::contains)  // only the given messages
-						.filter(message -> (message instanceof CompositeValidationMessageWrapper))
-						.map(message -> (CompositeValidationMessageWrapper) message)
-						.filter(message -> message.getValidatorCode().equals(System.identityHashCode(validator)))
-						.collect(Collectors.toList());
+		if(messages.isEmpty()) {
+			return;
+		}
 
-		getMessagesInternal().removeIf(validationMessage -> {
-			if (validationMessage instanceof CompositeValidationMessageWrapper) {
-				final CompositeValidationMessageWrapper wrapper = (CompositeValidationMessageWrapper) validationMessage;
-				return messagesToRemove.stream()
-						.filter(m -> m.getValidatorCode().equals(wrapper.getValidatorCode()))
-						.anyMatch(wrapper::equals);
+		final int validatorHash = System.identityHashCode(validator);
+
+		// if the validator is unknown by the map we haven't stored any messages for it yet that could be removed
+		if(validatorToMessagesMap.containsKey(validatorHash)){
+			final List<Integer> messageHashesOfThisValidator = validatorToMessagesMap.get(validatorHash);
+
+
+			final List<Integer> hashesOfMessagesToRemove = messages.stream()
+					.filter(m -> { // only those messages that are stored for this validator
+						int hash = System.identityHashCode(m);
+						return messageHashesOfThisValidator.contains(hash);
+					})
+					.map(System::identityHashCode) // we only need the hashCode here
+					.collect(Collectors.toList());
+
+			// only remove those messages that we have the hashCode stored
+			getMessagesInternal().removeIf(message -> {
+				int hash = System.identityHashCode(message);
+				return hashesOfMessagesToRemove.contains(hash);
+			});
+
+
+			// we need to cleanup our internal map
+			messageHashesOfThisValidator.removeAll(hashesOfMessagesToRemove);
+
+			if(messageHashesOfThisValidator.isEmpty()) {
+				validatorToMessagesMap.remove(validatorHash);
 			}
-
-			return false;
-		});
+		}
 	}
 
 	/*
 	 * Remove all messages for this particular validator.
 	 */
 	void removeMessage(final Validator validator) {
-		getMessagesInternal().removeIf(validationMessage -> {
-			if (validationMessage instanceof CompositeValidationMessageWrapper) {
-				final CompositeValidationMessageWrapper wrapper = (CompositeValidationMessageWrapper) validationMessage;
+		final int validatorHash = System.identityHashCode(validator);
 
-				return wrapper.getValidatorCode().equals(System.identityHashCode(validator));
-			}
+		if(validatorToMessagesMap.containsKey(validatorHash)){
 
-			return false;
-		});
+			final List<Integer> messageHashesOfThisValidator = validatorToMessagesMap.get(validatorHash);
+
+			getMessagesInternal().removeIf(message -> {
+				int hash = System.identityHashCode(message);
+
+				return messageHashesOfThisValidator.contains(hash);
+			});
+
+			validatorToMessagesMap.remove(validatorHash);
+		}
 	}
 
 }
