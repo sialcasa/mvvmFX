@@ -35,9 +35,8 @@
 			<artifactId>mvvmfx</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>eu.lestard</groupId>
-			<artifactId>easy-di</artifactId>
-			<version>0.2.0</version>
+			<groupId>de.saxsys</groupId>
+			<artifactId>mvvmfx-easydi</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>de.jensd</groupId>
