@@ -15,8 +15,10 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.validation;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,36 +40,41 @@ import java.util.Optional;
 public class ValidationStatus {
 	
 	private ListProperty<ValidationMessage> messages = new SimpleListProperty<>(FXCollections.observableArrayList());
+
 	private ObservableList<ValidationMessage> unmodifiableMessages = FXCollections.unmodifiableObservableList(messages);
-	private ObservableList<ValidationMessage> errorMessages = FXCollections.unmodifiableObservableList(
-			new FilteredList<>(messages, message -> message.getSeverity().equals(Severity.ERROR)));
-	private ObservableList<ValidationMessage> warningMessages = FXCollections.unmodifiableObservableList(
-			new FilteredList<>(messages, message -> message.getSeverity().equals(Severity.WARNING)));
+	private ObservableList<ValidationMessage> errorMessages = new FilteredList<>(unmodifiableMessages, message -> message.getSeverity().equals(Severity.ERROR));
+	private ObservableList<ValidationMessage> warningMessages = new FilteredList<>(unmodifiableMessages, message -> message.getSeverity().equals(Severity.WARNING));
 
-
-	ListProperty<ValidationMessage> getMessagesInternal() {
+	/**
+	 * Intended for subclasses used by special validator implementations.
+	 * Such subclasses can access the message list with writing accesses (unlike the {@link #getMessages()}
+	 * which is read-only.
+	 *
+	 * An example for a subclass is {@link CompositeValidationStatus}.
+	 */
+	protected ObservableList<ValidationMessage> getMessagesInternal() {
 		return messages;
 	}
 
 	
 	void addMessage(ValidationMessage message) {
-		messages.add(message);
+		getMessagesInternal().add(message);
 	}
 	
 	void addMessage(Collection<ValidationMessage> messages) {
-		this.messages.addAll(messages);
+		getMessagesInternal().addAll(messages);
 	}
 	
 	void removeMessage(ValidationMessage message) {
-		messages.remove(message);
+		getMessagesInternal().remove(message);
 	}
 	
 	void removeMessage(Collection<? extends ValidationMessage> messages) {
-		this.messages.removeAll(messages);
+		getMessagesInternal().removeAll(messages);
 	}
 	
 	void clearMessages() {
-		messages.clear();
+		getMessagesInternal().clear();
 	}
 
 
@@ -112,14 +119,14 @@ public class ValidationStatus {
 	 * @return an Optional containing the ValidationMessage or an empty Optional.
 	 */
 	public Optional<ValidationMessage> getHighestMessage() {
-		final Optional<ValidationMessage> error = messages.stream()
+		final Optional<ValidationMessage> error = getMessages().stream()
 				.filter(message -> message.getSeverity().equals(Severity.ERROR))
 				.findFirst();
 		
 		if (error.isPresent()) {
 			return error;
 		} else {
-			final Optional<ValidationMessage> warning = messages.stream()
+			final Optional<ValidationMessage> warning = getMessages().stream()
 					.filter(message -> message.getSeverity().equals(Severity.WARNING))
 					.findFirst();
 			

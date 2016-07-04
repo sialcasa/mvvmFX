@@ -18,6 +18,7 @@ package de.saxsys.mvvmfx.utils.validation;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class ValidationStatusTest {
 	
@@ -88,8 +89,54 @@ public class ValidationStatusTest {
 		assertThat(status.getWarningMessages()).isEmpty();
 		assertThat(status.getErrorMessages()).isEmpty();
 		assertThat(status.getHighestMessage().isPresent()).isFalse();
-		
-		
 	}
-	
+
+	@Test
+	public void testUnmodifiableLists() {
+		ValidationStatus status = new ValidationStatus();
+
+		status.addMessage(ValidationMessage.error("test123"));
+		status.addMessage(ValidationMessage.warning("test456"));
+
+		assertThat(status.getMessages()).hasSize(2);
+		assertThat(status.getWarningMessages()).hasSize(1);
+		assertThat(status.getErrorMessages()).hasSize(1);
+
+
+		expectUnsupported(() -> {
+			status.getMessages().add(ValidationMessage.error("test"));
+		});
+		expectUnsupported(() -> {
+			status.getMessages().clear();
+		});
+
+
+		expectUnsupported(() -> {
+			status.getErrorMessages().add(ValidationMessage.error("test"));
+		});
+		expectUnsupported(() -> {
+			status.getErrorMessages().clear();
+		});
+
+		expectUnsupported(() -> {
+			status.getWarningMessages().add(ValidationMessage.warning("test"));
+		});
+		expectUnsupported(() -> {
+			status.getWarningMessages().clear();
+		});
+
+		assertThat(status.getMessages()).hasSize(2);
+		assertThat(status.getWarningMessages()).hasSize(1);
+		assertThat(status.getErrorMessages()).hasSize(1);
+	}
+
+
+	private void expectUnsupported(Runnable code) {
+		try{
+			code.run();
+			fail("expected UnsupportedOperationException");
+		} catch (UnsupportedOperationException e){
+		}
+	}
+
 }
