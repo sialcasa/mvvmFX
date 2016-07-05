@@ -21,6 +21,7 @@
 		<module>helloworld-without-fxml</module>
 		<module>welcome-example</module>
 		<module>scopes-example</module>
+		<module>itemlist-example</module>
 	</modules>
 
 
