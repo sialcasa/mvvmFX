@@ -74,7 +74,7 @@ public class ListTransformation<SourceType, TargetType> {
 	 *            which is used for transformation
 	 */
 	public ListTransformation(final Function<SourceType, TargetType> function) {
-		this(FXCollections.<SourceType> emptyObservableList(), function);
+		this(FXCollections.observableArrayList(), function);
 	}
 	
 	// If the list changed we want the recreate the targetType representation
