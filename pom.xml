@@ -105,6 +105,11 @@
 			</dependency>
 			<dependency>
 				<groupId>de.saxsys</groupId>
+				<artifactId>mvvmfx-easydi</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.saxsys</groupId>
 				<artifactId>mvvmfx-archetype</artifactId>
 				<version>${project.version}</version>
 			</dependency>
