@@ -3,8 +3,12 @@ package de.saxsys.mvvmfx.utils.newitemlist;
 import de.saxsys.mvvmfx.utils.itemlist.ListTransformation;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
@@ -14,6 +18,7 @@ import javafx.scene.control.SelectionModel;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
@@ -29,7 +34,41 @@ public class ItemList<T, K> implements ViewItemList<K>{
 
 	public ItemList(Function<T, K> identifierFunction) {
 		this.identifierFunction = identifierFunction;
-		listTransformation = new ListTransformation<>(identifierFunction);
+		listTransformation = new ListTransformation<>(FXCollections.observableArrayList(), identifierFunction);
+
+		listTransformation.getModelList().addListener(new ListChangeListener<T>() {
+			@Override
+			public void onChanged(Change<? extends T> c) {
+				while(c.next()){
+					if(c.wasRemoved()) {
+						if(c.getList().isEmpty()) {
+							selectedItem.setValue(null);
+						}
+					}
+				}
+			}
+		});
+	}
+
+	public void replaceModelItems(Collection<T> items) {
+		replaceModelItems(items, true);
+	}
+
+	public void replaceModelItems(Collection<T> items, boolean keepSelection) {
+		if(keepSelection) {
+			T oldSelectedElement = selectedItem.get();
+
+			listTransformation.getModelList().clear();
+			listTransformation.getModelList().addAll(items);
+
+			if(listTransformation.getModelList().contains(oldSelectedElement)) {
+				selectedItem.setValue(oldSelectedElement);
+			}
+		} else {
+			listTransformation.getModelList().clear();
+			listTransformation.getModelList().addAll(items);
+		}
+
 	}
 
 	public void setLabelFunction(Function<T, String> labelFunction) {

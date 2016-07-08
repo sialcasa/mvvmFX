@@ -6,7 +6,7 @@ public class IceCreamFlavor {
 
 	private final String id = UUID.randomUUID().toString();
 
-	private final String name;
+	private String name;
 
 	public IceCreamFlavor(String name) {
 		this.name = name;
@@ -18,5 +18,9 @@ public class IceCreamFlavor {
 
 	public String getName() {
 		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

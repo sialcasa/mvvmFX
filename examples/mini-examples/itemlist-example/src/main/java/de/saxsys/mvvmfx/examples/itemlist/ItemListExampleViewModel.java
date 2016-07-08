@@ -6,8 +6,12 @@ import de.saxsys.mvvmfx.examples.itemlist.model.IceCreamRepository;
 import de.saxsys.mvvmfx.utils.newitemlist.ItemList;
 import de.saxsys.mvvmfx.utils.newitemlist.ViewItemList;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+
+import java.util.Objects;
 
 public class ItemListExampleViewModel implements ViewModel {
 
@@ -15,8 +19,11 @@ public class ItemListExampleViewModel implements ViewModel {
 
 	private StringProperty favoriteLabelText = new SimpleStringProperty("");
 
-
 	private ItemList<IceCreamFlavor, String> itemList = new ItemList<>(IceCreamFlavor::getId);
+
+	private StringProperty newValueInput = new SimpleStringProperty();
+
+	private ReadOnlyBooleanWrapper newValueEnabled = new ReadOnlyBooleanWrapper();
 
 	public ItemListExampleViewModel(IceCreamRepository repository) {
 		this.repository = repository;
@@ -33,10 +40,41 @@ public class ItemListExampleViewModel implements ViewModel {
 			}
 		}, itemList.selectedItemProperty()));
 
+		itemList.selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			if(newValue != null) {
+				newValueInput.setValue(newValue.getName());
+			} else {
+				newValueInput.setValue("");
+			}
+		});
+
+
+		newValueEnabled.bind(itemList.selectedItemProperty().isNotNull());
 	}
 
 	public void initialize() {
-		itemList.getModelList().addAll(repository.get());
+		reloadFromRepository();
+	}
+
+	private void reloadFromRepository() {
+		itemList.replaceModelItems(repository.get());
+	}
+
+	public void saveNewValue() {
+		IceCreamFlavor selectedFlavor = itemList.selectedItemProperty().get();
+
+		if(selectedFlavor != null) {
+			String newValue = newValueInput.get();
+
+			String oldValue = selectedFlavor.getName();
+
+			if(!Objects.equals(newValue, oldValue)) {
+				selectedFlavor.setName(newValue);
+
+				repository.persist(selectedFlavor);
+				reloadFromRepository();
+			}
+		}
 	}
 
 	public ViewItemList<String> itemList() {
@@ -45,5 +83,13 @@ public class ItemListExampleViewModel implements ViewModel {
 
 	public StringProperty favoriteLabelTextProperty() {
 		return favoriteLabelText;
+	}
+
+	public StringProperty newValueInputProperty() {
+		return newValueInput;
+	}
+
+	public ReadOnlyBooleanProperty newValueEnabledProperty() {
+		return newValueEnabled.getReadOnlyProperty();
 	}
 }

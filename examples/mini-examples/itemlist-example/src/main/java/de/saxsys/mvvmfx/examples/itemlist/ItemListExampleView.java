@@ -2,11 +2,14 @@ package de.saxsys.mvvmfx.examples.itemlist;
 
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 
 public class ItemListExampleView implements FxmlView<ItemListExampleViewModel> {
 
@@ -22,6 +25,12 @@ public class ItemListExampleView implements FxmlView<ItemListExampleViewModel> {
 	@FXML
 	public Label favoriteLabel;
 
+	@FXML
+	public TextField newValue;
+
+	@FXML
+	public Button saveNewValue;
+
 	@InjectViewModel
 	private ItemListExampleViewModel viewModel;
 
@@ -33,5 +42,18 @@ public class ItemListExampleView implements FxmlView<ItemListExampleViewModel> {
 		viewModel.itemList().connect(listView);
 
 		viewModel.itemList().connect(choiceBox);
+
+
+
+		newValue.textProperty().bindBidirectional(viewModel.newValueInputProperty());
+
+		BooleanBinding newValueDisabled = viewModel.newValueEnabledProperty().not();
+		newValue.disableProperty().bind(newValueDisabled);
+		saveNewValue.disableProperty().bind(newValueDisabled);
+
+	}
+
+	public void saveNewValue() {
+		viewModel.saveNewValue();
 	}
 }
