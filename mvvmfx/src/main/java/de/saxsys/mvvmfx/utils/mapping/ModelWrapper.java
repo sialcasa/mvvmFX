@@ -707,9 +707,23 @@ public class ModelWrapper<M> {
 			calculateDifferenceFlag();
 		}
 	}
-	
-	
-	
+
+
+	/**
+	 * This method can be used to copy all values of this {@link ModelWrapper} instance
+	 * to the model instance provided as argument.
+	 * Existing values in the provided model instance will be overwritten.
+	 * <p>
+	 * This method doesn't change the state of this modelWrapper or the wrapped model instance.
+	 *
+	 * @param model a non-null instance of a model.
+	 */
+	public void copyValuesTo(M model) {
+		Objects.requireNonNull(model);
+		fields.forEach(field -> field.commit(model));
+	}
+
+
 	private void propertyWasChanged() {
 		dirtyFlag.set(true);
 		calculateDifferenceFlag();
