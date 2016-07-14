@@ -15,20 +15,17 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.mapping;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.setAllowExtractingPrivateFields;
-
-import javafx.beans.property.SimpleIntegerProperty;
-import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.Collections;
-
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ModelWrapperTest {
 
@@ -281,6 +278,13 @@ public class ModelWrapperTest {
 		assertThat(nameProperty).isSameAs(nameProperty2);
 		assertThat(ageProperty).isSameAs(ageProperty2);
 		assertThat(nicknamesProperty).isSameAs(nicknamesProperty2);
+
+
+		// with identified fields the "name" of the created properties should be set
+		assertThat(nameProperty.getName()).isEqualTo("name");
+		assertThat(ageProperty.getName()).isEqualTo("age");
+		assertThat(nicknamesProperty.getName()).isEqualTo("nicknames");
+
 	}
 
 
