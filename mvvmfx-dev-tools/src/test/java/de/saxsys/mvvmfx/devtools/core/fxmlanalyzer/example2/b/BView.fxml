@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.layout.VBox?>
+<VBox fx:controller="de.saxsys.mvvmfx.devtools.core.fxmlanalyzer.example2.b.BView"
+	  xmlns="http://javafx.com/javafx/8.0.60"
+	  xmlns:fx="http://javafx.com/fxml/1">
+	<fx:include source="ba/BAView.fxml"/>
+	<fx:include source="bb/BBView.fxml"/>
+	<fx:include source="bc/BCView.fxml"/>
+</VBox>

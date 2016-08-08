@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox fx:controller="de.saxsys.mvvmfx.devtools.core.fxmlanalyzer.example2.a.ab.ABView"
+	  xmlns="http://javafx.com/javafx/8.0.60"
+	  xmlns:fx="http://javafx.com/fxml/1">
+</VBox>
