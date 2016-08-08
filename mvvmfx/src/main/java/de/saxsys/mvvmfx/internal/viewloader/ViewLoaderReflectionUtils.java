@@ -26,10 +26,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This class encapsulates reflection related utility operations specific for
@@ -154,7 +157,7 @@ public class ViewLoaderReflectionUtils {
     @SuppressWarnings("unchecked")
     public static <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewModelType getExistingViewModel(
             ViewType view) {
-        final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
+        final Class<?> viewModelType = resolveViewModelType(view.getClass());
         Optional<Field> fieldOptional = getViewModelField(view.getClass(), viewModelType);
         if (fieldOptional.isPresent()) {
             Field field = fieldOptional.get();
@@ -163,6 +166,19 @@ public class ViewLoaderReflectionUtils {
         } else {
             return null;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Class<? extends ViewModel> resolveViewModelType(Class<? extends View> viewType) {
+        Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, viewType);
+        if(!ViewModel.class.isAssignableFrom(viewModelType)) {
+            // normally this isn't possible.
+            throw new IllegalStateException("Generic type of View <" + viewType + "> is not a subclass of ViewModel");
+        }
+
+        // can't check the type with "instanceof" because of type erasure
+        // however it's checked via reflection
+        return (Class<? extends ViewModel>) viewModelType;
     }
 
     /**
@@ -226,7 +242,6 @@ public class ViewLoaderReflectionUtils {
      *             {@link InjectViewModel} annotation whose type doesn't match
      *             the generic ViewModel type from the View class.
      */
-    @SuppressWarnings("unchecked")
     public static <V extends View<? extends VM>, VM extends ViewModel> void createAndInjectViewModel(final V view,
             Consumer<ViewModel> newVmConsumer) {
         final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
@@ -267,28 +282,29 @@ public class ViewLoaderReflectionUtils {
 
     static void createAndInjectScopes(Object viewModel, ContextImpl context) {
 
-        // FIXME CLEANUP!!!
-        Class<? extends Object> viewModelClass = viewModel.getClass();
+        Class<?> viewModelClass = viewModel.getClass();
 
-        for (Annotation annotation : viewModelClass.getDeclaredAnnotations()) {
-            if (annotation.annotationType().isAssignableFrom(ScopeProvider.class)) {
-                ScopeProvider provider = (ScopeProvider) annotation;
-                Class<? extends Scope>[] scopes = provider.scopes();
-                for (int i = 0; i < scopes.length; i++) {
-                    Class<? extends Scope> scopeType = scopes[i];
-                    // Overrides existing scopes!!!!
-                    context.addScopeToContext(DependencyInjector.getInstance().getInstanceOf(scopeType));
-                }
-            }
-        }
+        Collection<Class<? extends Scope>> providedScopeClasses = resolveScopeProviders(viewModelClass);
+        // Overrides existing scopes!!!!
+        providedScopeClasses.stream()
+                .map(scopeType -> DependencyInjector.getInstance().getInstanceOf(scopeType))
+                .forEach(context::addScopeToContext);
 
         // Inject
         List<Field> scopeFields = getScopeFields(viewModel.getClass());
 
-        scopeFields.forEach(scopeField -> {
-            ReflectionUtils.accessField(scopeField, () -> injectScopeIntoField(scopeField, viewModel, context),
-                    "Can't inject Scope into ViewModel <" + viewModel.getClass() + ">");
-        });
+        scopeFields.forEach(scopeField ->
+                ReflectionUtils.accessField(scopeField, () ->
+                                injectScopeIntoField(scopeField, viewModel, context),
+                        "Can't inject Scope into ViewModel <" + viewModel.getClass() + ">"));
+    }
+
+    public static List<Class<? extends Scope>> resolveScopeProviders(Class<?> viewModelType) {
+        return Stream.of(viewModelType.getDeclaredAnnotations())
+                .filter(annotation -> ScopeProvider.class.isAssignableFrom(annotation.annotationType()))
+                .map(annotation -> (ScopeProvider) annotation)
+                .flatMap(scopeProvider -> Stream.of(scopeProvider.scopes()))
+                .collect(Collectors.toList());
     }
 
     public static void injectContext(View codeBehind, ContextImpl context) {
@@ -303,8 +319,9 @@ public class ViewLoaderReflectionUtils {
         }
     }
 
-    static Object injectScopeIntoField(Field scopeField, Object viewModel, ContextImpl context)
+    private static Object injectScopeIntoField(Field scopeField, Object viewModel, ContextImpl context)
             throws IllegalAccessException {
+
         Class<? extends Scope> scopeType = (Class<? extends Scope>) scopeField.getType();
 
         // FIXME
@@ -400,6 +417,19 @@ public class ViewLoaderReflectionUtils {
         } catch (NoSuchMethodException e) {
             // it's perfectly fine that a ViewModel has no initialize method.
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<Class<? extends Scope>> resolveUsedScopeClasses(Class<? extends ViewModel> viewModelType) {
+        Objects.requireNonNull(viewModelType);
+
+        List<Field> scopeFields = getScopeFields(viewModelType);
+
+        return scopeFields.stream()
+                .map(Field::getType)
+                .filter(Scope.class::isAssignableFrom)
+                .map(type -> (Class<? extends Scope>) type)
+                .collect(Collectors.toList());
     }
 
 }

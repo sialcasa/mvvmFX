@@ -36,7 +36,7 @@ public class ReflectionUtils {
 	 * return anything. Such a callback have to work only by side effects.
 	 */
 	@FunctionalInterface
-	public static interface SideEffect {
+	public interface SideEffect {
 		void call() throws Exception;
 	}
 	
