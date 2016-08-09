@@ -351,6 +351,7 @@ public class FxmlViewLoader {
                     ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
 
                     ViewLoaderReflectionUtils.injectViewModel(codeBehind, customViewModel);
+                    ViewLoaderReflectionUtils.injectContext(codeBehind, context);
 
                     customViewModelInjected = true;
                     return codeBehind;
