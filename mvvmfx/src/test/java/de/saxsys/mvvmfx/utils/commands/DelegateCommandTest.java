@@ -316,6 +316,7 @@ public class DelegateCommandTest {
 		};
 
 
+		// A mvvmFX command that uses the action class as task
 		DelegateCommand command = new DelegateCommand(new Supplier<Action>() {
 			int counter = 0;
 
@@ -329,9 +330,9 @@ public class DelegateCommandTest {
 
 
 		// The actual testing steps are encapsulated in a function (BiConsumer) that
-		// takes to runnables as argument. The first runnable starts the service for the first time.
+		// takes two runnables as argument. The first runnable starts the service for the first time.
 		// The second runnable restarts the service.
-		// This way we can reuse the same testing steps on
+		// This way we can reuse the same testing steps on both variants.
 		BiConsumer<Runnable, Runnable> test = (startService, restartService) -> {
 			called.clear();
 			succeeded.clear();
@@ -342,7 +343,7 @@ public class DelegateCommandTest {
 			sleep(100);
 			FxTestingUtils.waitForUiThread();
 
-			assertThat(called).contains(0); // the first action is called
+			assertThat(called).containsExactly(0); // the first action is called
 			assertThat(succeeded).isEmpty();
 			assertThat(cancelled).isEmpty();
 			assertThat(interrupted).isEmpty();
@@ -351,23 +352,23 @@ public class DelegateCommandTest {
 			// restart and all other interactions with the service have to be done
 			// on the UI-thread. Therefore we use Platform.runLater
 			Platform.runLater(restartService);
-			sleep(100);
+			sleep(300);
 			// We need to wait for the UI-Thread to execute all enqueued runnables
 			FxTestingUtils.waitForUiThread();
 
-			assertThat(called).contains(0, 1); // now the second action is called too
+			assertThat(called).containsExactly(0, 1); // now the second action is called too
 			assertThat(succeeded).isEmpty();
-			assertThat(cancelled).contains(0); // the first one is cancelled ...
-			assertThat(interrupted).contains(0); // and interrupted
+			assertThat(cancelled).containsExactly(0); // the first one is cancelled ...
+			assertThat(interrupted).containsExactly(0); // and interrupted
 
 			// the normal execution of the action takes 500 ms so we need to wait a little longer
 			sleep(1000);
 			FxTestingUtils.waitForUiThread();
 
-			assertThat(called).contains(0, 1);
-			assertThat(succeeded).contains(1); // now the second action was finished successfully
-			assertThat(cancelled).contains(0);
-			assertThat(interrupted).contains(0);
+			assertThat(called).containsExactly(0, 1);
+			assertThat(succeeded).containsExactly(1); // now the second action was finished successfully
+			assertThat(cancelled).containsExactly(0);
+			assertThat(interrupted).containsExactly(0);
 		};
 
 		// run the test on both the pure JavaFX service and the delegate command
