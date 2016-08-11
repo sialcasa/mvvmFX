@@ -15,8 +15,16 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.internal.viewloader;
 
-import de.saxsys.mvvmfx.*;
+import de.saxsys.mvvmfx.Context;
+import de.saxsys.mvvmfx.InjectContext;
+import de.saxsys.mvvmfx.InjectScope;
+import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.Scope;
+import de.saxsys.mvvmfx.ScopeProvider;
+import de.saxsys.mvvmfx.StageLivecycle;
+import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.internal.ContextImpl;
+import javafx.beans.value.ObservableBooleanValue;
 import net.jodah.typetools.TypeResolver;
 
 import javax.annotation.PostConstruct;
@@ -402,4 +410,20 @@ public class ViewLoaderReflectionUtils {
         }
     }
 
+    public static void addLivecylceHooks(ViewModel viewModel, ObservableBooleanValue viewInSceneProperty) {
+        if(viewModel != null) {
+
+            if(viewModel instanceof StageLivecycle) {
+                StageLivecycle livecycleViewModel = (StageLivecycle) viewModel;
+
+                viewInSceneProperty.addListener((observable, oldValue, newValue) -> {
+					if(newValue) {
+						livecycleViewModel.onViewAdded();
+					} else {
+						livecycleViewModel.onViewRemoved();
+					}
+				});
+            }
+        }
+    }
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="de.saxsys.mvvmfx.internal.viewloader.livecycle.LivecycleTestRootView">
+	<fx:include fx:id="sub1" source="LivecycleTestSub1View.fxml"/>
+	<fx:include fx:id="sub2" source="LivecycleTestSub2View.fxml"/>
+</VBox>
