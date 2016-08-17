@@ -142,6 +142,7 @@ public class FxmlViewLoader {
             ContextImpl context = ViewLoaderScopeUtils.prepareContext(parentContext, providedScopes);
             //////////////////////////////////////////////////////////////////////
 
+            // for the SceneLivecylce we need to know when the view is put into the scene
             BooleanProperty viewInSceneProperty = new SimpleBooleanProperty();
 
             final FXMLLoader loader = createFxmlLoader(resource, resourceBundle, codeBehind, root, viewModel, context, viewInSceneProperty);
@@ -285,7 +286,7 @@ public class FxmlViewLoader {
             ViewLoaderReflectionUtils.createAndInjectScopes(viewModel, context);
             ViewLoaderReflectionUtils.initializeViewModel(viewModel);
 
-            ViewLoaderReflectionUtils.addLivecylceHooks(viewModel, viewInSceneProperty);
+            ViewLoaderReflectionUtils.addSceneLivecylceHooks(viewModel, viewInSceneProperty);
         };
 
         ViewLoaderReflectionUtils.createAndInjectViewModel(codeBehind, newVmConsumer);
@@ -302,7 +303,7 @@ public class FxmlViewLoader {
             ViewLoaderReflectionUtils.injectViewModel(codeBehind, viewModel);
             ViewLoaderReflectionUtils.injectContext(codeBehind, context);
 
-            ViewLoaderReflectionUtils.addLivecylceHooks(viewModel, viewInSceneProperty);
+            ViewLoaderReflectionUtils.addSceneLivecylceHooks(viewModel, viewInSceneProperty);
         }
     }
 
@@ -367,7 +368,7 @@ public class FxmlViewLoader {
                     ViewLoaderReflectionUtils.injectViewModel(codeBehind, customViewModel);
                     ViewLoaderReflectionUtils.injectContext(codeBehind, context);
 
-                    ViewLoaderReflectionUtils.addLivecylceHooks(customViewModel, viewInSceneProperty);
+                    ViewLoaderReflectionUtils.addSceneLivecylceHooks(customViewModel, viewInSceneProperty);
 
                     customViewModelInjected = true;
                     return codeBehind;

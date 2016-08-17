@@ -1,4 +1,4 @@
-package de.saxsys.mvvmfx.internal.viewloader.livecycle;
+package de.saxsys.mvvmfx.internal.viewloader.livecycle.example_basic;
 
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;

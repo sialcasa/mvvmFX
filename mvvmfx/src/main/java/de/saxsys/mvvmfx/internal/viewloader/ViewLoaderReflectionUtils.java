@@ -21,7 +21,7 @@ import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.Scope;
 import de.saxsys.mvvmfx.ScopeProvider;
-import de.saxsys.mvvmfx.StageLivecycle;
+import de.saxsys.mvvmfx.SceneLivecycle;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.internal.ContextImpl;
 import javafx.beans.value.ObservableBooleanValue;
@@ -410,17 +410,23 @@ public class ViewLoaderReflectionUtils {
         }
     }
 
-    public static void addLivecylceHooks(ViewModel viewModel, ObservableBooleanValue viewInSceneProperty) {
+    /**
+     * This method adds listeners for the {@link SceneLivecycle}.
+     */
+    static void addSceneLivecylceHooks(ViewModel viewModel, ObservableBooleanValue viewInSceneProperty) {
         if(viewModel != null) {
 
-            if(viewModel instanceof StageLivecycle) {
-                StageLivecycle livecycleViewModel = (StageLivecycle) viewModel;
+            if(viewModel instanceof SceneLivecycle) {
+                SceneLivecycle livecycleViewModel = (SceneLivecycle) viewModel;
+
+                PreventGarbageCollectionStore.getInstance().put(viewInSceneProperty);
 
                 viewInSceneProperty.addListener((observable, oldValue, newValue) -> {
 					if(newValue) {
 						livecycleViewModel.onViewAdded();
 					} else {
 						livecycleViewModel.onViewRemoved();
+                        PreventGarbageCollectionStore.getInstance().remove(viewInSceneProperty);
 					}
 				});
             }

@@ -2,6 +2,6 @@
 
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns:fx="http://javafx.com/fxml"
-	  fx:controller="de.saxsys.mvvmfx.internal.viewloader.livecycle.LivecycleTestSub2View">
+	  fx:controller="de.saxsys.mvvmfx.internal.viewloader.livecycle.example_basic.LivecycleTestSub2View">
 
 </VBox>

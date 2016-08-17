@@ -1,10 +1,8 @@
-package de.saxsys.mvvmfx.internal.viewloader.livecycle;
+package de.saxsys.mvvmfx.internal.viewloader.livecycle.example_basic;
 
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.StageLivecycle;
 import javafx.fxml.FXML;
-import javafx.scene.layout.VBox;
 
 public class LivecycleTestRootView implements FxmlView<LivecycleTestRootViewModel> {
 
