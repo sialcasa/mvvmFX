@@ -1,8 +1,11 @@
 package de.saxsys.mvvmfx.internal.viewloader.prevent_gc;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.PreventGarbageCollection;
+import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.internal.viewloader.prevent_gc.example1.PreventGc2TestView;
 import de.saxsys.mvvmfx.internal.viewloader.prevent_gc.example1.PreventGcTestView;
+import de.saxsys.mvvmfx.internal.viewloader.prevent_gc.example1.PreventGcTestViewModel;
 import de.saxsys.mvvmfx.testingutils.GCVerifier;
 import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
 import de.saxsys.mvvmfx.testingutils.jfxrunner.TestInJfxThread;
@@ -101,6 +104,55 @@ public class PreventGcTest {
 		// then
 		assertThat(output.getText()).isEqualTo("Hello"); // works as expected
 	}
+
+
+	/**
+	 * This test case verifies the {@link PreventGarbageCollection#release} method.
+	 * This method is used to re-enable garbage collection for the codeBehind.
+	 */
+	@Test
+	public void testRelease() {
+		ViewTuple<PreventGc2TestView, PreventGcTestViewModel> viewTuple = FluentViewLoader.fxmlView(PreventGc2TestView.class).load();
+
+		GCVerifier codeBehindVerifier = GCVerifier.create(viewTuple.getCodeBehind());
+		GCVerifier viewModelVerifier = GCVerifier.create(viewTuple.getViewModel());
+		viewTuple = null;
+
+		assertThat(codeBehindVerifier.isAvailableForGC()).isFalse();
+		assertThat(viewModelVerifier.isAvailableForGC()).isFalse();
+
+		// we need a reference to the codeBehind to invoke the release method.
+		PreventGc2TestView codeBehind = (PreventGc2TestView) codeBehindVerifier.get();
+
+		PreventGarbageCollection.release(codeBehind);
+		codeBehind = null;
+
+		assertThat(codeBehindVerifier.isAvailableForGC()).isTrue();
+		assertThat(viewModelVerifier.isAvailableForGC()).isTrue();
+	}
+
+	/**
+	 * In {@link #testRelease()} the garbage collection isn't possible in the first place
+	 * before the {@link PreventGarbageCollection#release} method is invoked.
+	 * However, one could think that this is true only because in the test case
+	 * later a reference to the codeBehind is obtained. To show that this is not the case
+	 * and that instead the garbage collection really is prevented by the framework,
+	 * this test case shows the first steps of {@link #testRelease()} without
+	 * obtaining a reference to the codeBehind.
+	 */
+	@Test
+	public void testRelease2() {
+		ViewTuple<PreventGc2TestView, PreventGcTestViewModel> viewTuple = FluentViewLoader.fxmlView(PreventGc2TestView.class).load();
+
+		GCVerifier codeBehindVerifier = GCVerifier.create(viewTuple.getCodeBehind());
+		GCVerifier viewModelVerifier = GCVerifier.create(viewTuple.getViewModel());
+		viewTuple = null;
+
+
+		assertThat(codeBehindVerifier.isAvailableForGC()).isFalse();
+		assertThat(viewModelVerifier.isAvailableForGC()).isFalse();
+	}
+
 
 	private <T extends Node> T lookup(String id, Parent parent, Class<T> type) {
 		Optional<T> nodeOptional = parent.getChildrenUnmodifiable()

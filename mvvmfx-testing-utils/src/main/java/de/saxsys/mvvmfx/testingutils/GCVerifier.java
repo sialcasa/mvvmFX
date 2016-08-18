@@ -44,8 +44,14 @@ public class GCVerifier {
 	public static GCVerifier create(Object instance) {
 		return new GCVerifier(new WeakReference(instance), instance.toString());
 	}
-	
-	
+
+	/**
+	 * Verify that the wrapped object can be garbage collected.
+	 * If the object is not available for garbage collection
+	 * an assertion error with the given message will be thrown.
+	 *
+	 * @param message the message to be used when the object can't be garbage collected.
+	 */
 	public void verify(String message) {
 		forceGC();
 
@@ -55,14 +61,34 @@ public class GCVerifier {
 	}
 
 	/**
-	 * @return <code>true</code> if the object is available
+	 * This method can be used to check if a wrapped object is available
+	 * for garbage collection or not.
+	 * <p/>
+	 * This method performs a garbage collection. This means that the wrapped
+	 * object (and potentially all other objects) may be collected and therefore aren't
+	 * available afterwards.
+	 *
+	 * @return <code>true</code> if the object is available for garbage collection.
 	 */
 	public boolean isAvailableForGC() {
 		forceGC();
 
 		return reference.get() == null;
 	}
-	
+
+	/**
+	 * Returns the wrapped object if it wasn't garbage collected yet.
+	 * If the object was already collected, this method returns <code>null</code>
+	 */
+	public Object get() {
+		return reference.get();
+	}
+
+	/**
+	 * Verify that the wrapped object can be garbage collected.
+	 * If the object is not available for garbage collection
+	 * an assertion error with the given message will be thrown.
+	 */
 	public void verify() {
 		verify("Expected the given object [" + objectName + "] to be available for Garbage Collection but it isn't");
 	}
