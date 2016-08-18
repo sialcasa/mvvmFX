@@ -19,6 +19,7 @@ import de.saxsys.mvvmfx.Context;
 import de.saxsys.mvvmfx.InjectContext;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.PreventGarbageCollection;
 import de.saxsys.mvvmfx.Scope;
 import de.saxsys.mvvmfx.ScopeProvider;
 import de.saxsys.mvvmfx.SceneLivecycle;
@@ -429,6 +430,17 @@ public class ViewLoaderReflectionUtils {
                         PreventGarbageCollectionStore.getInstance().remove(viewInSceneProperty);
 					}
 				});
+            }
+        }
+    }
+
+    static void initGcPrevention(Object target) {
+        if(target != null) {
+
+            if(target instanceof PreventGarbageCollection) {
+                PreventGarbageCollection preventionTarget = (PreventGarbageCollection) target;
+
+                PreventGarbageCollectionStore.getInstance().put(preventionTarget);
             }
         }
     }

@@ -278,6 +278,10 @@ public class FxmlViewLoader {
         }
     }
 
+
+    /**
+     * Handle injection when no ViewModel instance exists. A new ViewModel instance will be created.
+     */
     private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, ContextImpl context, ObservableBooleanValue viewInSceneProperty) {
         ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
 
@@ -291,8 +295,12 @@ public class FxmlViewLoader {
 
         ViewLoaderReflectionUtils.createAndInjectViewModel(codeBehind, newVmConsumer);
         ViewLoaderReflectionUtils.injectContext(codeBehind, context);
+        ViewLoaderReflectionUtils.initGcPrevention(codeBehind);
     }
 
+    /**
+     * Handle injection when the ViewModel already exists.
+     */
     private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, ViewModel viewModel,
             ContextImpl context, ObservableBooleanValue viewInSceneProperty) {
         ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
@@ -302,6 +310,7 @@ public class FxmlViewLoader {
             ViewLoaderReflectionUtils.createAndInjectScopes(viewModel, context);
             ViewLoaderReflectionUtils.injectViewModel(codeBehind, viewModel);
             ViewLoaderReflectionUtils.injectContext(codeBehind, context);
+            ViewLoaderReflectionUtils.initGcPrevention(codeBehind);
 
             ViewLoaderReflectionUtils.addSceneLivecylceHooks(viewModel, viewInSceneProperty);
         }
@@ -368,6 +377,7 @@ public class FxmlViewLoader {
                     ViewLoaderReflectionUtils.injectViewModel(codeBehind, customViewModel);
                     ViewLoaderReflectionUtils.injectContext(codeBehind, context);
 
+                    ViewLoaderReflectionUtils.initGcPrevention(codeBehind);
                     ViewLoaderReflectionUtils.addSceneLivecylceHooks(customViewModel, viewInSceneProperty);
 
                     customViewModelInjected = true;

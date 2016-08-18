@@ -1,6 +1,7 @@
 package de.saxsys.mvvmfx.internal.viewloader.prevent_gc;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.internal.viewloader.prevent_gc.example1.PreventGc2TestView;
 import de.saxsys.mvvmfx.internal.viewloader.prevent_gc.example1.PreventGcTestView;
 import de.saxsys.mvvmfx.testingutils.GCVerifier;
 import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
@@ -72,6 +73,33 @@ public class PreventGcTest {
 		// then
 		assertThat(output.getText()).isNullOrEmpty(); // still null because VM was collected
 	}
+
+	/**
+	 * This test scenario shows a view with the {@link de.saxsys.mvvmfx.PreventGarbageCollection}
+	 * interface.
+	 * In this example we do force garbage collection but due to the prevention mechanism of the framework,
+	 * the CodeBehind and ViewModel are not removed and everything works as expected.
+	 */
+	@Test
+	@TestInJfxThread
+	public void testWithGcWithPrevention() {
+		Parent root = FluentViewLoader.fxmlView(PreventGc2TestView.class).load().getView();
+		TextField input = lookup("input", root, TextField.class);
+		Label output = lookup("output", root, Label.class);
+
+		// given
+		assertThat(input.getText()).isNullOrEmpty();
+		assertThat(output.getText()).isNullOrEmpty();
+
+
+		// perform garbage collection
+		GCVerifier.forceGC();
+
+		// when
+		input.setText("Hello");
+
+		// then
+		assertThat(output.getText()).isEqualTo("Hello"); // works as expected
 	}
 
 	private <T extends Node> T lookup(String id, Parent parent, Class<T> type) {
