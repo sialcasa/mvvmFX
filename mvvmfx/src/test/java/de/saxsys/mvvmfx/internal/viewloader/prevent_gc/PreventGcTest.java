@@ -21,9 +21,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PreventGcTest {
 
 
+	/**
+	 * This test scenario shows a view without the {@link de.saxsys.mvvmfx.PreventGarbageCollection}
+	 * interface.
+	 * In this example no garbage collection is done so everything works as expected.
+	 */
 	@Test
 	@TestInJfxThread
-	public void testWithoutGC() {
+	public void testWithoutGcWithoutPrevention() {
 		Parent root = FluentViewLoader.fxmlView(PreventGcTestView.class).load().getView();
 		TextField input = lookup("input", root, TextField.class);
 		Label output = lookup("output", root, Label.class);
@@ -40,11 +45,15 @@ public class PreventGcTest {
 		assertThat(output.getText()).isEqualTo("Hello");
 	}
 
-
-	@Ignore("until fixed")
+	/**
+	 * This test scenario shows a view without the {@link de.saxsys.mvvmfx.PreventGarbageCollection}
+	 * interface.
+	 * In this example we do force garbage collection. This leads to unexpected behavior because
+	 * the CodeBehind and the ViewModel are removed and the binding is removed too.
+	 */
 	@Test
 	@TestInJfxThread
-	public void testWithGC() {
+	public void testWithGcWithoutPrevention() {
 		Parent root = FluentViewLoader.fxmlView(PreventGcTestView.class).load().getView();
 		TextField input = lookup("input", root, TextField.class);
 		Label output = lookup("output", root, Label.class);
@@ -53,13 +62,16 @@ public class PreventGcTest {
 		assertThat(input.getText()).isNullOrEmpty();
 		assertThat(output.getText()).isNullOrEmpty();
 
+
+		// perform garbage collection
 		GCVerifier.forceGC();
 
 		// when
 		input.setText("Hello");
 
 		// then
-		assertThat(output.getText()).isEqualTo("Hello");
+		assertThat(output.getText()).isNullOrEmpty(); // still null because VM was collected
+	}
 	}
 
 	private <T extends Node> T lookup(String id, Parent parent, Class<T> type) {
