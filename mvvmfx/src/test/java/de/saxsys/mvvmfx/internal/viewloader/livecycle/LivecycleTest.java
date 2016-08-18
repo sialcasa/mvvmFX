@@ -7,6 +7,10 @@ import de.saxsys.mvvmfx.internal.viewloader.livecycle.example_basic.LivecycleTes
 import de.saxsys.mvvmfx.internal.viewloader.livecycle.example_basic.LivecycleTestRootViewModel;
 import de.saxsys.mvvmfx.internal.viewloader.livecycle.example_basic.LivecycleTestSub1ViewModel;
 import de.saxsys.mvvmfx.internal.viewloader.livecycle.example_basic.LivecycleTestSub2ViewModel;
+import de.saxsys.mvvmfx.internal.viewloader.livecycle.example_gc.LivecycleGCTestRootView;
+import de.saxsys.mvvmfx.internal.viewloader.livecycle.example_gc.LivecycleGCTestRootViewModel;
+import de.saxsys.mvvmfx.internal.viewloader.livecycle.example_gc.LivecycleGCTestSub1ViewModel;
+import de.saxsys.mvvmfx.internal.viewloader.livecycle.example_gc.LivecycleGCTestSub2ViewModel;
 import de.saxsys.mvvmfx.internal.viewloader.livecycle.example_notification.LivecycleNotificationView;
 import de.saxsys.mvvmfx.internal.viewloader.livecycle.example_notification.LivecycleNotificationViewModel;
 import de.saxsys.mvvmfx.internal.viewloader.livecycle.example_notification_without_livecycle.NotificationWithoutLivecycleView;
@@ -131,7 +135,7 @@ public class LivecycleTest {
 		// nothing will be collected yet.
 		GCVerifier.forceGC();
 
-		// the root view is not directly added to the Scene but encapsulated in
+		// the root view is not directly added to the Scene. Instead it is encapsulated in
 		// another container
 		VBox subContainer = new VBox();
 		subContainer.getChildren().add(viewTuple.getView());
@@ -297,4 +301,60 @@ public class LivecycleTest {
 		NotificationCenterFactory.setNotificationCenter(new DefaultNotificationCenter());
 	}
 
+
+	/**
+	 * This test scenario reproduces a misbehavior of the
+	 * first prove-of-concept implementation of the livecylce handling:
+	 * When multiple ViewModels in a view hierarchy implement the {@link SceneLivecycle}
+	 * interface, all viewModel's {@link SceneLivecycle#onViewRemoved()} have to be
+	 * invoked when the root view is removed from the scene.
+	 * The framework guarantees that all methods are invoked before the ViewModels become
+	 * available for garbage collection.
+	 * In the first implementation this guarantee wasn't fulfilled when garbage collection happens
+	 * between two invocations of {@link SceneLivecycle#onViewRemoved()}.
+	 * After the first livecycle method was invoked all following viewModels could be collected
+	 * by the Garbage collector.
+	 * <p/>
+	 *
+	 * To reproduce this wrong behavior the viewModels in this test case are invoking
+	 * {@link GCVerifier#forceGC()} inside of the {@link SceneLivecycle#onViewRemoved()} methods.
+	 * In the previous implementation this resulted in only the first method was invoked.
+	 */
+	@Test
+	@TestInJfxThread
+	public void testGcBetweenLivecycleMethods() {
+		LivecycleGCTestRootViewModel.onViewRemovedCalled = 0;
+		LivecycleGCTestSub1ViewModel.onViewRemovedCalled = 0;
+		LivecycleGCTestSub2ViewModel.onViewRemovedCalled = 0;
+
+
+		ViewTuple<LivecycleGCTestRootView, LivecycleGCTestRootViewModel> viewTuple = FluentViewLoader.fxmlView(LivecycleGCTestRootView.class).load();
+
+		VBox subContainer = new VBox();
+		subContainer.getChildren().add(viewTuple.getView());
+
+		VBox container = new VBox();
+
+		Stage stage = new Stage();
+		Scene scene = new Scene(container);
+		stage.setScene(scene);
+
+		viewTuple = null;
+
+		GCVerifier.forceGC();
+
+		assertThat(LivecycleGCTestRootViewModel.onViewRemovedCalled).isEqualTo(0);
+		assertThat(LivecycleGCTestSub1ViewModel.onViewRemovedCalled).isEqualTo(0);
+		assertThat(LivecycleGCTestSub2ViewModel.onViewRemovedCalled).isEqualTo(0);
+
+		container.getChildren().add(subContainer);
+
+		GCVerifier.forceGC();
+
+		container.getChildren().remove(subContainer);
+
+		assertThat(LivecycleGCTestRootViewModel.onViewRemovedCalled).isEqualTo(1);
+		assertThat(LivecycleGCTestSub1ViewModel.onViewRemovedCalled).isEqualTo(1);
+		assertThat(LivecycleGCTestSub2ViewModel.onViewRemovedCalled).isEqualTo(1);
+	}
 }
