@@ -21,10 +21,14 @@ public abstract aspect ReturnValues extends WithinMVVM {
     pointcut callGenTypeViewModel(): call(*..*<de.saxsys.mvvmfx.ViewModel+> *.*(..));
 
     // VIEW
-    pointcut executionViewReturn(): execution(de.saxsys.mvvmfx.FxmlView+ *.*(..));
-    pointcut executionGenTypeView(): execution(*..*<de.saxsys.mvvmfx.FxmlView+> *.*(..));
-    pointcut callViewReturn(): call(de.saxsys.mvvmfx.FxmlView+ *.*(..));
-    pointcut callGenTypeView(): call(*..*<de.saxsys.mvvmfx.FxmlView+> *.*(..));
+    pointcut executionViewReturn(): execution(de.saxsys.mvvmfx.FxmlView+ *.*(..)) ||
+            execution(de.saxsys.mvvmfx.JavaView+ *.*(..));
+    pointcut executionGenTypeView(): execution(*..*<de.saxsys.mvvmfx.FxmlView+> *.*(..)) ||
+            execution(*..*<de.saxsys.mvvmfx.JavaView+> *.*(..));
+    pointcut callViewReturn(): call(de.saxsys.mvvmfx.FxmlView+ *.*(..)) ||
+            call(de.saxsys.mvvmfx.JavaView+ *.*(..));
+    pointcut callGenTypeView(): call(*..*<de.saxsys.mvvmfx.FxmlView+> *.*(..)) ||
+            call(*..*<de.saxsys.mvvmfx.JavaView+> *.*(..));
 
 
 

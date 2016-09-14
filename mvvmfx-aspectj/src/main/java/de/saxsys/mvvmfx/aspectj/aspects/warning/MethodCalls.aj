@@ -8,7 +8,8 @@ import de.saxsys.mvvmfx.aspectj.aspects.WithinMVVM;
  */
 public abstract aspect MethodCalls extends WithinMVVM {
 
-    pointcut callToView(): call(* de.saxsys.mvvmfx.FxmlView+.*(..));
+    pointcut callToView(): call(* de.saxsys.mvvmfx.FxmlView+.*(..)) ||
+            call(* de.saxsys.mvvmfx.JavaView+.*(..));
     pointcut callToViewModel(): call(* de.saxsys.mvvmfx.ViewModel+.*(..));
     pointcut callToModel(): call(* de.saxsys.mvvmfx.aspectj.aspects.Model+.*(..));
 
@@ -17,7 +18,9 @@ public abstract aspect MethodCalls extends WithinMVVM {
     pointcut callWithGenericArgsModel(): call(* *.*(.., *..*<de.saxsys.mvvmfx.aspectj.aspects.Model+>, ..));
     pointcut callWithViewModelArgs(): call(* *.*(.., de.saxsys.mvvmfx.ViewModel+, ..));
     pointcut callWithGenericArgsViewModel(): call(* *.*(.., *..*<de.saxsys.mvvmfx.ViewModel+>, ..));
-    pointcut callWithViewArgs(): call(* *.*(.., de.saxsys.mvvmfx.FxmlView+, ..));
-    pointcut callWithGenericArgsView(): call(* *.*(.., *..*<de.saxsys.mvvmfx.FxmlView+>, ..));
+    pointcut callWithViewArgs(): call(* *.*(.., de.saxsys.mvvmfx.FxmlView+, ..)) ||
+            call(* *.*(.., de.saxsys.mvvmfx.JavaView+, ..));
+    pointcut callWithGenericArgsView(): call(* *.*(.., *..*<de.saxsys.mvvmfx.FxmlView+>, ..)) ||
+            call(* *.*(.., *..*<de.saxsys.mvvmfx.JavaView+>, ..));
 
 }
