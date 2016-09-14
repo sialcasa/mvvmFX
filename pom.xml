@@ -84,6 +84,7 @@
 		<module>mvvmfx-utils</module>
 		<module>mvvmfx-testing-utils</module>
 		<module>mvvmfx-easydi</module>
+		<module>mvvmfx-aspectj</module>
 	</modules>
 
 	<dependencyManagement>
@@ -123,6 +124,11 @@
 				<artifactId>mvvmfx-testing-utils</artifactId>
 				<version>${project.version}</version>
 				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>de.saxsys</groupId>
+				<artifactId>mvvmfx-aspectj</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
