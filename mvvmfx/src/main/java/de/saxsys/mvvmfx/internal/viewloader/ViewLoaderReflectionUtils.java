@@ -21,7 +21,7 @@ import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.Scope;
 import de.saxsys.mvvmfx.ScopeProvider;
-import de.saxsys.mvvmfx.SceneLivecycle;
+import de.saxsys.mvvmfx.SceneLifecycle;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.internal.ContextImpl;
 import javafx.beans.value.ObservableBooleanValue;
@@ -394,7 +394,7 @@ public class ViewLoaderReflectionUtils {
                         "This will lead to unexpected behaviour and duplicate initialization. " +
                         "Please rename the method or remove the @PostConstruct annotation. " +
                         "See mvvmFX wiki for more details: " +
-                        "https://github.com/sialcasa/mvvmFX/wiki/Dependency-Injection#livecycle-postconstruct", viewModel));
+                        "https://github.com/sialcasa/mvvmFX/wiki/Dependency-Injection#lifecycle-postconstruct", viewModel));
             }
 
             AccessController.doPrivileged((PrivilegedAction) () -> {
@@ -411,21 +411,21 @@ public class ViewLoaderReflectionUtils {
     }
 
     /**
-     * This method adds listeners for the {@link SceneLivecycle}.
+     * This method adds listeners for the {@link SceneLifecycle}.
      */
-    static void addSceneLivecylceHooks(ViewModel viewModel, ObservableBooleanValue viewInSceneProperty) {
+    static void addSceneLifecycleHooks(ViewModel viewModel, ObservableBooleanValue viewInSceneProperty) {
         if(viewModel != null) {
 
-            if(viewModel instanceof SceneLivecycle) {
-                SceneLivecycle livecycleViewModel = (SceneLivecycle) viewModel;
+            if(viewModel instanceof SceneLifecycle) {
+                SceneLifecycle lifecycleViewModel = (SceneLifecycle) viewModel;
 
                 PreventGarbageCollectionStore.getInstance().put(viewInSceneProperty);
 
                 viewInSceneProperty.addListener((observable, oldValue, newValue) -> {
 					if(newValue) {
-						livecycleViewModel.onViewAdded();
+						lifecycleViewModel.onViewAdded();
 					} else {
-						livecycleViewModel.onViewRemoved();
+						lifecycleViewModel.onViewRemoved();
                         PreventGarbageCollectionStore.getInstance().remove(viewInSceneProperty);
 					}
 				});

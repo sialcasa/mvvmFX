@@ -142,7 +142,7 @@ public class FxmlViewLoader {
             ContextImpl context = ViewLoaderScopeUtils.prepareContext(parentContext, providedScopes);
             //////////////////////////////////////////////////////////////////////
 
-            // for the SceneLivecylce we need to know when the view is put into the scene
+            // for the SceneLifecycle we need to know when the view is put into the scene
             BooleanProperty viewInSceneProperty = new SimpleBooleanProperty();
 
             final FXMLLoader loader = createFxmlLoader(resource, resourceBundle, codeBehind, root, viewModel, context, viewInSceneProperty);
@@ -286,7 +286,7 @@ public class FxmlViewLoader {
             ViewLoaderReflectionUtils.createAndInjectScopes(viewModel, context);
             ViewLoaderReflectionUtils.initializeViewModel(viewModel);
 
-            ViewLoaderReflectionUtils.addSceneLivecylceHooks(viewModel, viewInSceneProperty);
+            ViewLoaderReflectionUtils.addSceneLifecycleHooks(viewModel, viewInSceneProperty);
         };
 
         ViewLoaderReflectionUtils.createAndInjectViewModel(codeBehind, newVmConsumer);
@@ -303,7 +303,7 @@ public class FxmlViewLoader {
             ViewLoaderReflectionUtils.injectViewModel(codeBehind, viewModel);
             ViewLoaderReflectionUtils.injectContext(codeBehind, context);
 
-            ViewLoaderReflectionUtils.addSceneLivecylceHooks(viewModel, viewInSceneProperty);
+            ViewLoaderReflectionUtils.addSceneLifecycleHooks(viewModel, viewInSceneProperty);
         }
     }
 
@@ -368,7 +368,7 @@ public class FxmlViewLoader {
                     ViewLoaderReflectionUtils.injectViewModel(codeBehind, customViewModel);
                     ViewLoaderReflectionUtils.injectContext(codeBehind, context);
 
-                    ViewLoaderReflectionUtils.addSceneLivecylceHooks(customViewModel, viewInSceneProperty);
+                    ViewLoaderReflectionUtils.addSceneLifecycleHooks(customViewModel, viewInSceneProperty);
 
                     customViewModelInjected = true;
                     return codeBehind;

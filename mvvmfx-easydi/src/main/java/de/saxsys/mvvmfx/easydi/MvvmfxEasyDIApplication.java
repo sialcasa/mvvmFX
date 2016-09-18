@@ -59,8 +59,8 @@ import javax.inject.Provider;
  * </pre>
  *
  * <p>
- * <b>Livecycle notice.</b>
- * The application class goes through this livecylce:
+ * <b>Lifecycle notice.</b>
+ * The application class goes through this lifecycle:
  * <ol>
  *     <li>{@link #initEasyDi(EasyDI)}</li>
  *     <li>{@link #initMvvmfx()}</li>
@@ -118,7 +118,7 @@ public abstract class MvvmfxEasyDIApplication extends Application implements Mvv
 	 * Additionally this method can be used to get instances of dependencies that are needed
 	 * for the start process of the application (for example in the {@link #startMvvmfx(Stage)} method).
 	 * <p>
-	 * <b>Livecycle notice:</b>
+	 * <b>Lifecycle notice:</b>
 	 * This method is invoked by the framework <b>before</b> the invokation of {@link MvvmfxEasyDIApplication#initMvvmfx()}
 	 * and {@link MvvmfxEasyDIApplication#startMvvmfx(Stage)}.
 	 *
