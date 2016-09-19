@@ -20,7 +20,7 @@ public abstract aspect Instancevariables extends WithinMVVM {
 
     pointcut getViewVarInModel(): get(de.saxsys.mvvmfx.FxmlView+ de.saxsys.mvvmfx.aspectj.aspects.Model+.*) ||
             get(de.saxsys.mvvmfx.JavaView+ de.saxsys.mvvmfx.aspectj.aspects.Model+.*);
-    pointcut getGenViewVarInModel(): get(*..*<de.saxsys.mvvmfx.FxmlView+> de.saxsys.mvvmfx.aspectj.aspects.Model+.*)
+    pointcut getGenViewVarInModel(): get(*..*<de.saxsys.mvvmfx.FxmlView+> de.saxsys.mvvmfx.aspectj.aspects.Model+.*) ||
             get(*..*<de.saxsys.mvvmfx.JavaView+> de.saxsys.mvvmfx.aspectj.aspects.Model+.*);
     pointcut getViewModelVarInModel(): get(de.saxsys.mvvmfx.ViewModel+ de.saxsys.mvvmfx.aspectj.aspects.Model+.*);
     pointcut getGenViewModelVarInModel(): get(*..*<de.saxsys.mvvmfx.ViewModel+> de.saxsys.mvvmfx.aspectj.aspects.Model+.*);
