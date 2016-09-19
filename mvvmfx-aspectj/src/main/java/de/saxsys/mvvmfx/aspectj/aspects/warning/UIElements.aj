@@ -15,6 +15,8 @@ public abstract aspect UIElements extends WithinMVVM {
     pointcut callGenericUIElement(): call(*..*<javafx.scene..*+> *.*(..));
     pointcut executionGenericUIElements(): execution(*..*<javafx.scene..*+> *.*(..));
 
+    pointcut callArgsUIElements(): call(* *.*(.., javafx.scene..*+, ..));
+    pointcut callGenericArgsUIElements(): call(* *.*(.., *..*<javafx.scene..*+>, ..));
 
     
     pointcut setUIElementsOnModel(): set(javafx.scene..*+ de.saxsys.mvvmfx.aspectj.aspects.Model+.*);

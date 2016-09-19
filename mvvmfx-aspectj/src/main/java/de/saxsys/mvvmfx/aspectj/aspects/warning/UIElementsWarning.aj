@@ -25,6 +25,15 @@ public aspect UIElementsWarning extends UIElements {
     declare warning: withinModel() && executionGenericUIElements():
             "Methods returning a generic UI-Element were executed wihtin the Model layer";
 
+    declare warning: withinViewModel() && callArgsUIElements():
+            "Methods taking arguments with UI-elements were called within the ViewModel layer";
+    declare warning: withinModel() && callArgsUIElements():
+            "Methods taking arguments with UI-elements were called within the Model layer";
+    declare warning: withinViewModel() && callGenericArgsUIElements():
+            "Methods taking generic arguments with UI-Elements were executed within the ViewModel layer";
+    declare warning: withinModel() && callGenericArgsUIElements():
+            "Methods taking generic arguments with UI-Elements were executed within the Model layer";
+
 
     declare warning: setUIElementsOnModel():
             "UI-Element was set on the Model layer";
