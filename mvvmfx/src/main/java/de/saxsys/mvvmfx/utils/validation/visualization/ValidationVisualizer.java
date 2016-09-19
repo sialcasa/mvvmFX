@@ -30,7 +30,7 @@ import javafx.scene.control.Control;
  * <p>
  *
  * Instead of directly implementing this interface implementors of custom visualizers should consider to extend from the
- * base class {@link ValidationVisualizerBase}. This base class handles the live cycle of the {@link ValidationStatus}
+ * base class {@link ValidationVisualizerBase}. This base class handles the life cycle of the {@link ValidationStatus}
  * (i.e. listeners on the observable lists of validation messages). The implementor only needs to implement on how a
  * single message should be shown and how a control is marked as mandatory.
  *
