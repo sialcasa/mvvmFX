@@ -1,12 +1,5 @@
 package de.saxsys.mvvmfx.examples.contacts.model;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyStringProperty;
@@ -14,18 +7,21 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
 import org.datafx.provider.ListDataProvider;
-import org.datafx.reader.FileSource;
+import org.datafx.reader.DataReader;
+import org.datafx.reader.InputStreamDataReader;
+import org.datafx.reader.converter.InputStreamConverter;
 import org.datafx.reader.converter.XmlConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.xml.bind.annotation.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class is used to encapsulate the process of loading available countries
@@ -98,7 +94,7 @@ public class CountrySelector {
 	 * Load all countries from the XML file source with DataFX.
 	 */
 	void loadCountries() {
-		URL iso3166Resource = this.getClass().getResource(ISO_3166_LOCATION);
+		InputStream iso3166Resource = this.getClass().getResourceAsStream(ISO_3166_LOCATION);
 		if (iso3166Resource == null) {
 			throw new IllegalStateException("Can't find the list of countries! Expected location was:"
 					+ ISO_3166_LOCATION);
@@ -107,7 +103,8 @@ public class CountrySelector {
 		XmlConverter<Country> countryConverter = new XmlConverter<>("iso_3166_entry", Country.class);
 
 		try {
-			FileSource<Country> dataSource = new FileSource<>(new File(iso3166Resource.getFile()), countryConverter);
+			DataReader<Country> dataSource = new InputStreamSource<>( iso3166Resource, countryConverter );
+
 			ListDataProvider<Country> listDataProvider = new ListDataProvider<>(dataSource);
 
 			listDataProvider.setResultObservableList(countries);
@@ -124,12 +121,19 @@ public class CountrySelector {
 		}
 	}
 
+	static class InputStreamSource<T> extends InputStreamDataReader<T> {
+		public InputStreamSource(InputStream is, InputStreamConverter converter) throws IOException {
+			super(converter);
+			setInputStream(is);
+		}
+	}
+
 	/**
 	 * Load all subdivisions from the XML file source with DataFX.
 	 */
 	void loadSubdivisions() {
 
-		URL iso3166_2Resource = this.getClass().getResource(ISO_3166_2_LOCATION);
+		InputStream iso3166_2Resource = this.getClass().getResourceAsStream(ISO_3166_2_LOCATION);
 
 		if (iso3166_2Resource == null) {
 			throw new IllegalStateException("Can't find the list of subdivisions! Expected location was:"
@@ -142,8 +146,10 @@ public class CountrySelector {
 		ObservableList<ISO3166_2_CountryEntity> subdivisionsEntities = FXCollections.observableArrayList();
 
 		try {
-			FileSource<ISO3166_2_CountryEntity> dataSource = new FileSource<>(new File(iso3166_2Resource.getFile()),
-					converter);
+
+			DataReader<ISO3166_2_CountryEntity> dataSource =
+					new InputStreamSource<>( iso3166_2Resource, converter );
+
 			ListDataProvider<ISO3166_2_CountryEntity> listDataProvider = new ListDataProvider<>(dataSource);
 
 			listDataProvider.setResultObservableList(subdivisionsEntities);
