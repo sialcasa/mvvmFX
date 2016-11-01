@@ -4,10 +4,10 @@ import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.async_todoapp_futures.model.TodoItem;
 import de.saxsys.mvvmfx.examples.async_todoapp_futures.model.TodoItemService;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
+
+import java.util.concurrent.CompletableFuture;
 
 public class ControlsViewModel implements ViewModel {
 
@@ -15,6 +15,8 @@ public class ControlsViewModel implements ViewModel {
 
     private ReadOnlyBooleanWrapper addPossible = new ReadOnlyBooleanWrapper();
     private ReadOnlyBooleanWrapper deletePossible = new ReadOnlyBooleanWrapper();
+
+    private BooleanProperty uiDisabled = new SimpleBooleanProperty(false);
 
     @InjectScope
     private TodoScope todoScope;
@@ -26,8 +28,12 @@ public class ControlsViewModel implements ViewModel {
     }
 
     public void initialize() {
-        deletePossible.bind(todoScope.selectedItemProperty().isNotNull());
-        addPossible.bind(input.isNotNull().and(input.isNotEmpty()));
+        deletePossible.bind(Bindings.and(todoScope.selectedItemProperty().isNotNull(), uiDisabled.not()));
+        addPossible.bind(Bindings.and(
+                Bindings.and(
+                        input.isNotNull(),
+                        input.isNotEmpty()),
+                    uiDisabled.not()));
     }
 
     public StringProperty inputProperty() {
@@ -46,19 +52,41 @@ public class ControlsViewModel implements ViewModel {
         final String inputValue = input.getValue();
 
         if(inputValue != null && !inputValue.trim().isEmpty()) {
-            itemService.createItem(new TodoItem(input.get()));
-
-            input.setValue("");
-            todoScope.publish(TodoScope.UPDATE_MSG);
+            if(!uiDisabled.get()) {
+                CompletableFuture
+                    .runAsync(() -> {
+                        uiDisabled.setValue(true);
+                        itemService.createItem(new TodoItem(input.get()));
+                    })
+                    .thenRun(() -> {
+                        uiDisabled.setValue(false);
+                        input.setValue("");
+                        todoScope.publish(TodoScope.UPDATE_MSG);
+                        todoScope.setError(null);
+                    }).exceptionally(throwable -> {
+                        uiDisabled.setValue(false);
+                        todoScope.setError(throwable.getCause());
+                        return null;
+                    });
+            }
         }
     }
 
     public void removeItem() {
-        if(deletePossible.get()) {
-            itemService.deleteItem(todoScope.selectedItemProperty().get());
-
-            todoScope.selectedItemProperty().setValue(null);
-            todoScope.publish(TodoScope.UPDATE_MSG);
+        if(deletePossible.get() && !uiDisabled.get()) {
+            CompletableFuture.runAsync(() -> {
+                uiDisabled.setValue(true);
+                itemService.deleteItem(todoScope.selectedItemProperty().get());
+            }).thenRun(() -> {
+                uiDisabled.setValue(false);
+                todoScope.selectedItemProperty().setValue(null);
+                todoScope.publish(TodoScope.UPDATE_MSG);
+                todoScope.setError(null);
+            }).exceptionally(throwable -> {
+                uiDisabled.setValue(false);
+                todoScope.setError(throwable.getCause());
+                return null;
+            });
         }
     }
 }

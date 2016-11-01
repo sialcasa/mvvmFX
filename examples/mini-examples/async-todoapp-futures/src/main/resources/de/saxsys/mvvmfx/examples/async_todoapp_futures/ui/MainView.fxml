@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-
-<VBox fx:controller="de.saxsys.mvvmfx.examples.async_todoapp_futures.ui.MainView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
-    <fx:include source="ControlsView.fxml"/>
-    <fx:include source="ItemList.fxml"/>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.examples.async_todoapp_futures.ui.MainView">
+    <fx:include source="ControlsView.fxml" />
+    <fx:include source="ItemList.fxml" />
+    <Label fx:id="errorLabel" style="-fx-text-fill: red;">
+      <padding>
+         <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+      </padding></Label>
 </VBox>

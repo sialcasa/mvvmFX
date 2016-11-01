@@ -4,13 +4,14 @@ import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.async_todoapp_futures.model.TodoItem;
 import de.saxsys.mvvmfx.examples.async_todoapp_futures.model.TodoItemService;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class ItemListViewModel implements ViewModel {
 
@@ -34,10 +35,16 @@ public class ItemListViewModel implements ViewModel {
     }
 
     private void update() {
-        final List<TodoItem> allItems = itemService.getAllItems();
-        Collections.reverse(allItems);
-
-        items.setAll(allItems);
+                CompletableFuture.supplyAsync(() -> {
+                    return itemService.getAllItems();
+                }).thenAccept(allItems -> {
+                    Collections.reverse(allItems);
+                    Platform.runLater(() -> items.setAll(allItems));
+                    todoScope.setError(null);
+                }).exceptionally(throwable -> {
+                    todoScope.setError(throwable.getCause());
+                    return null;
+                });
     }
 
     public ObservableList<TodoItem> itemsProperty() {
