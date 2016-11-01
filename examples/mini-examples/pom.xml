@@ -21,7 +21,8 @@
 		<module>helloworld-without-fxml</module>
 		<module>welcome-example</module>
 		<module>scopes-example</module>
-	</modules>
+        <module>async-todoapp-futures</module>
+    </modules>
 
 
 </project>

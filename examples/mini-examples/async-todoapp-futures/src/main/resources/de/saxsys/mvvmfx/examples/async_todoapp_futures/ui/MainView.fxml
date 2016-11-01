@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox fx:controller="de.saxsys.mvvmfx.examples.async_todoapp_futures.ui.MainView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+    <fx:include source="ControlsView.fxml"/>
+    <fx:include source="ItemList.fxml"/>
+</VBox>
