@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+
+
+<HBox fx:controller="de.saxsys.mvvmfx.examples.async_todoapp_futures.ui.ControlsView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+  <TextField fx:id="input" />
+  <Button fx:id="addButton" mnemonicParsing="false" onAction="#add" text="Add" />
+  <Button fx:id="removeButton" mnemonicParsing="false" onAction="#remove" text="Remove" />
+   <padding>
+      <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+   </padding>
+</HBox>
