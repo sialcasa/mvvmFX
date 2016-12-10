@@ -64,7 +64,36 @@ public class ObservableRuleBasedValidator implements Validator {
     private List<ObservableValue<ValidationMessage>> complexRules = new ArrayList<>();
 	
 	private ValidationStatus validationStatus = new ValidationStatus();
-	
+
+    /**
+     * Creates an instance of the Validator without any rules predefined.
+     */
+    public ObservableRuleBasedValidator() {}
+
+    /**
+     * Creates an instance of the Validator with the given rule predefined.
+     * It's a shortcut for creating an empty validator and
+     * adding a single boolean rule with {@link #addRule(ObservableValue, ValidationMessage)}.
+     *
+     * @param rule
+     * @param message
+     */
+    public ObservableRuleBasedValidator(ObservableValue<Boolean> rule, ValidationMessage message) {
+        addRule(rule, message);
+    }
+
+    /**
+     * Creates an instance of the Validator with the given complex rules predefined.
+     * It's a shortcut for creating an empty validator and
+     * adding one or multiple complex rules with {@link #addRule(ObservableValue)}.
+     * @param rules
+     */
+    public ObservableRuleBasedValidator(ObservableValue<ValidationMessage> ... rules) {
+        for (ObservableValue<ValidationMessage> rule : rules) {
+            addRule(rule);
+        }
+    }
+
 	/**
 	 * Add a rule for this validator.
 	 * <p>
@@ -121,9 +150,10 @@ public class ObservableRuleBasedValidator implements Validator {
         complexRules.add(rule);
 
         rule.addListener((observable, oldValue, newValue) -> {
-            if(newValue == null) {
+            if(oldValue != null) {
                validationStatus.removeMessage(oldValue);
-            } else {
+            }
+            if(newValue != null) {
                 validationStatus.addMessage(newValue);
             }
         });
