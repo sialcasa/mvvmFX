@@ -4,7 +4,8 @@ AspectJ can be used to check MVVM-Architecture errors.
 
 These errors involve mostly on method calls or class-dependencies to unallowed layers within the MVVM pattern, like the View using Model objects or access to the _javafx.scene_ package in the ViewModel or the Model.
 
-Since every project has different packages
+Since every project has different model packages we have built a plugin to ease aspect configurations for the mvvmFX framework.
+These aspects will not change any logic on the project and are only used for architecture checks for the MVVM pattern with mvvmFX.
 
 ## Setting up Maven for mvvmFX architecture checks
 
@@ -59,6 +60,8 @@ Since every project has different packages
 
 ## create the aspects and compile the project
 To create the aspects we have to configure it first. To do this we add the packages or the fully qualified name of the classes in the configuration of the plugin.
+The View and ViewModel classes don't have to be configured.
+
 After this we execute the plugin to create the aspects with "_mvn mvvmfx-aspect-creator:createaspects_".
 
 Compile the project or UI-module with "_mvn clean install_" or "_mvn aspectj:compile_".
@@ -66,16 +69,13 @@ Compile the project or UI-module with "_mvn clean install_" or "_mvn aspectj:com
 If there are some errors found the compiler will then throw error messages with the class, line of code and reason why there is an error.
 If no errors were found, then good job!
 
-These aspects will not change any logic on the project and are only used for architecture checks for the MVVM pattern with mvvmFX.
-
-
 ## For Multi-Module Maven Projects
 If the project has Multi-Modules, where the Layers(View, ViewModel and Model) are in different Modules then the above method won't fully work.
 This is because half of the Aspects won't be applied on the modules because the modules are compiled separately. 
  
 To solve this issue we have to 
 
-Firstgo create a new module for our aspects on the parent module. 
+First create a new module for our aspects on the parent module. 
 It is important to note the "_\<artifactId>_". For the purpose of this example the module name will be "_aspects_"
 In this module we add two plugins to our pom:
 ```xml
