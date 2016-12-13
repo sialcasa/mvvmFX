@@ -120,7 +120,7 @@ In this module we add two plugins to our pom:
 
 We then create the aspects using the plugin with "_mvn mvvmfx-aspect-creator:createaspects_". This will create a folder aspect on src/main of the module.
 We also have to compile this aspects with "_mvn aspectj:compile_" or "_mvn clean install_".
-__NOTE: use this command while inside of the module if not the aspects will be created on the folder where the command was executed and you will have to move them manually__
+__NOTE: use this command while inside of the module if not the aspects will be created on the folder where the command was executed and you will have to move them to the aspects module__
 
 After this we just have to add an aspectj plugin on every module that will apply our created aspects to each module.
 The aspect library tag has to be directed to the module where the aspects where created
