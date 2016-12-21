@@ -15,20 +15,22 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.validation;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.google.common.base.Strings;
-
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author manuel.mauky
@@ -239,6 +241,66 @@ public class CompositeValidatorTest {
 		assertThat(compositeValidator.getValidationStatus().isValid()).isFalse();
 	}
 
+
+    /**
+     * This test case reproduces an issue with the {@link CompositeValidator}
+     * that most likely wouldn't occur with existing validator implementations
+     * but is possible when someone implements a custom validator.
+     *
+     * There are 3 conditions that need to be fulfilled to reproduce the bug:
+     * - the validator uses an {@link javafx.beans.InvalidationListener}
+     * - the validator is added to a {@link CompositeValidator}
+     * - the validator's source observable is depending on the composite validators validation status.
+     *
+     * In this case the previous implementation of the {@link CompositeValidator} can run
+     * into an infinite loop resulting in an {@link StackOverflowError}.
+     *
+     * See <a href="https://github.com/sialcasa/mvvmFX/issues/443">issue 443</a>.
+     */
+    @Test
+    @Ignore("until fixed")
+    public void testCyclicDependencyAndInvalidationListener() {
+
+        // Validator will be "invalid" if the given observable boolean is "true"
+        class InvalidationListenerValidator implements Validator {
+            private ValidationStatus status = new ValidationStatus();
+
+            public InvalidationListenerValidator(ObservableValue<Boolean> source) {
+                validate(source);
+
+                source.addListener(observable -> validate(source));
+            }
+
+            private void validate(ObservableValue<Boolean> source) {
+                if(source.getValue()) {
+                    status.addMessage(ValidationMessage.error("ERROR"));
+                } else {
+                    status.clearMessages();
+                }
+            }
+
+            @Override
+            public ValidationStatus getValidationStatus() {
+                return status;
+            }
+        }
+
+        CompositeValidator validator = new CompositeValidator();
+
+        BooleanProperty source = new SimpleBooleanProperty(false);
+
+        final ObjectBinding<Boolean> binding = Bindings.createObjectBinding(source::getValue, source, validator.getValidationStatus().validProperty());
+
+        Validator validator2 = new InvalidationListenerValidator(binding);
+
+        validator.addValidators(validator2);
+
+        source.set(true);
+        assertThat(validator.getValidationStatus().isValid()).isFalse();
+
+        source.set(false);
+        assertThat(validator.getValidationStatus().isValid()).isTrue();
+    }
 
 	private List<String> asStrings(List<ValidationMessage> messages) {
 		return messages
