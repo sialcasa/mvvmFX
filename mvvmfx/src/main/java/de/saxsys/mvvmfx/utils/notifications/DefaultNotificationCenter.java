@@ -39,6 +39,9 @@ public class DefaultNotificationCenter implements NotificationCenter {
 
 	@Override
 	public void subscribe(String messageName, NotificationObserver observer) {
+		if(observer==null) {
+			throw new IllegalArgumentException("The observer must not be null.");
+		}
 		addObserver(messageName, observer, globalObservers);
 	}
 
