@@ -84,6 +84,7 @@
 		<module>mvvmfx-utils</module>
 		<module>mvvmfx-testing-utils</module>
 		<module>mvvmfx-easydi</module>
+        <module>mvvmfx-validation</module>
 	</modules>
 
 	<dependencyManagement>
