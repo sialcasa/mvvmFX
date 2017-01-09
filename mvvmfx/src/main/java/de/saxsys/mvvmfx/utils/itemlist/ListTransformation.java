@@ -47,7 +47,7 @@ public class ListTransformation<SourceType, TargetType> {
 	// the list
 	private ReadOnlyListWrapper<TargetType> viewModelList = new ReadOnlyListWrapper<>(
 			FXCollections.<TargetType> observableArrayList());
-	private ListProperty<SourceType> modelList = new SimpleListProperty<>();
+	private ListProperty<SourceType> sourceList = new SimpleListProperty<>();
 	
 	// Reference to the listener to use it by a wrapped listChangeListener
 	private ListChangeListener<SourceType> listChangeListener;
@@ -185,7 +185,7 @@ public class ListTransformation<SourceType, TargetType> {
 	 * @return List of elements which should be transformed.
 	 */
 	public ListProperty<SourceType> modelListProperty() {
-		return modelList;
+		return sourceList;
 	}
 	
 	/**
@@ -195,7 +195,7 @@ public class ListTransformation<SourceType, TargetType> {
 	 *            the source list
 	 */
 	public void setModelList(ObservableList<SourceType> modelList) {
-		this.modelList.set(modelList);
+		this.sourceList.set(modelList);
 	}
 	
 	
@@ -203,7 +203,7 @@ public class ListTransformation<SourceType, TargetType> {
 	 * @return the model list that should be synchronized with the target list.
 	 */
 	public ObservableList<SourceType> getModelList() {
-		return modelList.get();
+		return sourceList.get();
 	}
 	
 	/**
