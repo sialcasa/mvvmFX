@@ -23,36 +23,25 @@
 		<version>1.6.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>mvvmfx</artifactId>
+	<artifactId>mvvmfx-validation</artifactId>
 	<packaging>jar</packaging>
 
-	<name>mvvmFX core</name>
-	<description>This module is the core implementation of the framework</description>
-
+	<name>mvvmFX validation</name>
+	<description>This module contains validation utils that can be useful for JavaFX and mvvmFX developers.</description>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
+			<groupId>de.saxsys</groupId>
+			<artifactId>mvvmfx</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>net.jodah</groupId>
-			<artifactId>typetools</artifactId>
+			<groupId>org.controlsfx</groupId>
+			<artifactId>controlsfx</artifactId>
+			<version>8.40.9</version>
 		</dependency>
-		<dependency>
-			<groupId>eu.lestard</groupId>
-			<artifactId>doc-annotations</artifactId>
-		</dependency>
-
-        <dependency>
-            <groupId>org.controlsfx</groupId>
-            <artifactId>controlsfx</artifactId>
-            <version>8.40.9</version>
-			<scope>provided</scope>
-        </dependency>
 
 		<!-- Testing Frameworks -->
-
 		<dependency>
 			<groupId>de.saxsys</groupId>
 			<artifactId>mvvmfx-testing-utils</artifactId>
@@ -64,29 +53,19 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<scope>test</scope>
-		</dependency>
-		
 		<dependency>
 			<groupId>com.cedarsoft.commons</groupId>
 			<artifactId>test-utils</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>nl.jqno.equalsverifier</groupId>
+			<artifactId>equalsverifier</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
-
-
 </project>
