@@ -1,6 +1,6 @@
-# MvvmFX Utils
+# MvvmFX Validation
 
-This module contains some validators that can be useful for JavaFX and mvvmFX developers.
+This module contains validation utils that can be useful for JavaFX and mvvmFX developers.
 
 ```xml
 <dependency>

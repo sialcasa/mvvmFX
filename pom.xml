@@ -84,7 +84,7 @@
 		<module>mvvmfx-utils</module>
 		<module>mvvmfx-testing-utils</module>
 		<module>mvvmfx-easydi</module>
-        <module>mvvmfx-validation</module>
+		<module>mvvmfx-validation</module>
 	</modules>
 
 	<dependencyManagement>
@@ -225,7 +225,6 @@
 				<artifactId>equalsverifier</artifactId>
 				<version>2.0.1</version>
 			</dependency>
-			
 		</dependencies>
 	</dependencyManagement>
 

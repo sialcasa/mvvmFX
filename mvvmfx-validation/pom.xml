@@ -27,7 +27,7 @@
 	<packaging>jar</packaging>
 
 	<name>mvvmFX validation</name>
-	<description>This module contains some validators for JavaFX and mvvmFX</description>
+	<description>This module contains validation utils that can be useful for JavaFX and mvvmFX developers.</description>
 
 	<dependencies>
 		<dependency>
