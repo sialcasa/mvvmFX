@@ -182,6 +182,7 @@ public class ListTransformation<SourceType, TargetType> {
 	}
 	
 	/**
+	 * @deprecated Please use {@link #sourceListProperty()} instead.
 	 * @return List of elements which should be transformed.
 	 */
 	public ListProperty<SourceType> modelListProperty() {
@@ -190,6 +191,7 @@ public class ListTransformation<SourceType, TargetType> {
 	
 	/**
 	 * Set the model list that should be synchronized with the target list.
+	 * @deprecated Please use {@link #setSourceList(ObservableList)} instead.
 	 *
 	 * @param modelList
 	 *            the source list
@@ -200,12 +202,38 @@ public class ListTransformation<SourceType, TargetType> {
 	
 	
 	/**
+	 * @deprecated Please use {@link #getSourceList()} instead.
 	 * @return the model list that should be synchronized with the target list.
 	 */
 	public ObservableList<SourceType> getModelList() {
 		return sourceList.get();
 	}
-	
+
+	/**
+	 *
+	 * @return List of elements which should be transformed.
+	 */
+	public ListProperty<SourceType> sourceListProperty() {
+		return sourceList;
+	}
+
+	/**
+	 * Set the source list that should be synchronized with the target list.
+	 *
+	 * @param sourceList
+	 *            the source list
+	 */
+	public void setSourceList(ObservableList<SourceType> sourceList) {
+		this.sourceList.set(sourceList);
+	}
+
+	/**
+	 * @return the source list that should be synchronized with the target list.
+	 */
+	public ObservableList<SourceType> getSourceList() {
+		return sourceList.get();
+	}
+
 	/**
 	 * @return {@link TargetType} representation of {@link #modelListProperty()}.
 	 */
