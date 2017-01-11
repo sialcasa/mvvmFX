@@ -24,12 +24,14 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
@@ -37,8 +39,7 @@ import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.offset;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 
@@ -48,7 +49,7 @@ public class DelegateCommandTest {
 	// Rule to get exceptions from the JavaFX Thread into the JUnit thread
 	@Rule
 	public CatchAllExceptionsRule catchAllExceptionsRule = new CatchAllExceptionsRule();
-	
+
 	@Test
 	public void executable() {
 		BooleanProperty condition = new SimpleBooleanProperty(true);
@@ -72,8 +73,7 @@ public class DelegateCommandTest {
 		assertTrue(delegateCommand.isExecutable());
 		assertFalse(delegateCommand.isNotExecutable());
 	}
-	
-	
+
 	@Test
 	public void executeSynchronousSucceeded() throws Exception {
 		BooleanProperty condition = new SimpleBooleanProperty(true);
@@ -145,6 +145,7 @@ public class DelegateCommandTest {
 		assertThat(called.get()).isTrue();
 		assertThat(succeeded.get()).isFalse();
 		assertThat(failed.get()).isTrue();
+		assertThat(delegateCommand.exceptionProperty().get()).isNotNull();
 	}
 	
 	@Test(expected = RuntimeException.class)
@@ -250,7 +251,6 @@ public class DelegateCommandTest {
 		sleep(500);
 	}
 
-
 	/**
 	 * This test verifies the behaviour when the delegate command is restarted.
 	 *
@@ -281,6 +281,7 @@ public class DelegateCommandTest {
 
 			@Override
 			protected void action() throws Exception {
+				System.out.println("action called " + number);
 				called.add(this.number);
 
 				try{
@@ -387,5 +388,47 @@ public class DelegateCommandTest {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Test
+	public void testException4SynchronousTask() {
+		Action action= new Action() {
+			@Override protected void action() {
+				throw new RuntimeException("Some reason");
+			}
+		};
+
+		Supplier<Action>actionSupplier = () -> action;
+		DelegateCommand delegateCommand = new DelegateCommand(actionSupplier);
+		delegateCommand.execute();
+
+		assertThat(delegateCommand.exceptionProperty().get()).isNotNull().isInstanceOf(RuntimeException.class);
+	}
+
+	@Test
+	public void testFoo()  {
+		BooleanProperty condition = new SimpleBooleanProperty(true);
+		BooleanProperty called = new SimpleBooleanProperty();
+		BooleanProperty succeeded = new SimpleBooleanProperty();
+		BooleanProperty failed = new SimpleBooleanProperty();
+
+		Action action = new Action() {
+			@Override protected void action() throws Exception {
+				throw new RuntimeException("Some reason");
+			}
+		};
+/*
+
+		DelegateCommand delegateCommand = new DelegateCommand(()-> action);
+*/
+
+		DelegateCommand delegateCommand = new DelegateCommand(() -> new Action() {
+			@Override protected void action() throws Exception {
+				throw new RuntimeException("Some reason");
+			}
+		});
+
+		delegateCommand.execute();
+		assertThat(delegateCommand.exceptionProperty().get()).isNotNull();
 	}
 }
