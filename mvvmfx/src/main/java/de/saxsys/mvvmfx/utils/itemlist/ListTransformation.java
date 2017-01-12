@@ -47,7 +47,7 @@ public class ListTransformation<SourceType, TargetType> {
 	// the list
 	private ReadOnlyListWrapper<TargetType> viewModelList = new ReadOnlyListWrapper<>(
 			FXCollections.<TargetType> observableArrayList());
-	private ListProperty<SourceType> modelList = new SimpleListProperty<>();
+	private ListProperty<SourceType> sourceList = new SimpleListProperty<>();
 	
 	// Reference to the listener to use it by a wrapped listChangeListener
 	private ListChangeListener<SourceType> listChangeListener;
@@ -182,30 +182,61 @@ public class ListTransformation<SourceType, TargetType> {
 	}
 	
 	/**
+	 * @deprecated Please use {@link #sourceListProperty()} instead.
 	 * @return List of elements which should be transformed.
 	 */
+	@Deprecated
 	public ListProperty<SourceType> modelListProperty() {
-		return modelList;
+		return sourceList;
 	}
 	
 	/**
 	 * Set the model list that should be synchronized with the target list.
+	 * @deprecated Please use {@link #setSourceList(ObservableList)} instead.
 	 *
 	 * @param modelList
 	 *            the source list
 	 */
+	@Deprecated
 	public void setModelList(ObservableList<SourceType> modelList) {
-		this.modelList.set(modelList);
+		this.sourceList.set(modelList);
 	}
 	
 	
 	/**
+	 * @deprecated Please use {@link #getSourceList()} instead.
 	 * @return the model list that should be synchronized with the target list.
 	 */
+	@Deprecated
 	public ObservableList<SourceType> getModelList() {
-		return modelList.get();
+		return sourceList.get();
 	}
-	
+
+	/**
+	 *
+	 * @return List of elements which should be transformed.
+	 */
+	public ListProperty<SourceType> sourceListProperty() {
+		return sourceList;
+	}
+
+	/**
+	 * Set the source list that should be synchronized with the target list.
+	 *
+	 * @param sourceList
+	 *            the source list
+	 */
+	public void setSourceList(ObservableList<SourceType> sourceList) {
+		this.sourceList.set(sourceList);
+	}
+
+	/**
+	 * @return the source list that should be synchronized with the target list.
+	 */
+	public ObservableList<SourceType> getSourceList() {
+		return sourceList.get();
+	}
+
 	/**
 	 * @return {@link TargetType} representation of {@link #modelListProperty()}.
 	 */

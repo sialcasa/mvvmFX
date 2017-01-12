@@ -10,19 +10,19 @@ public class ListTransformationTest {
 	public void testListTransformation() {
 		ListTransformation<String, Integer> transformation = new ListTransformation<>(String::length);
 
-		assertThat(transformation.getModelList()).isEmpty();
+		assertThat(transformation.getSourceList()).isEmpty();
 		assertThat(transformation.getTargetList()).isEmpty();
 
-		transformation.getModelList().add("hello");
+		transformation.getSourceList().add("hello");
 
 		assertThat(transformation.getTargetList()).contains(5);
 
 
-		transformation.getModelList().add("world");
+		transformation.getSourceList().add("world");
 		assertThat(transformation.getTargetList()).contains(5, 5);
 
 
-		transformation.getModelList().add("test");
+		transformation.getSourceList().add("test");
 		assertThat(transformation.getTargetList()).contains(5, 5, 4);
 	}
 
