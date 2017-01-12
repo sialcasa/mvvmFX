@@ -17,17 +17,13 @@ package de.saxsys.mvvmfx.utils.commands;
 
 import java.util.function.Supplier;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.lestard.doc.Beta;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
-import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -45,12 +41,12 @@ import javafx.concurrent.Task;
 public class DelegateCommand extends Service<Void> implements Command {
 	
 	private final Supplier<Action> actionSupplier;
-	private Action action;
 	private boolean inBackground = false;
 	protected final ReadOnlyBooleanWrapper executable = new ReadOnlyBooleanWrapper(true);
 	protected ReadOnlyBooleanWrapper notExecutable;
 	protected ReadOnlyBooleanWrapper notRunning;
-
+	private Property<Throwable> writableExceptionProperty;
+	
 	Logger LOG = LoggerFactory.getLogger(DelegateCommand.class);
 	
 	/**
@@ -109,19 +105,18 @@ public class DelegateCommand extends Service<Void> implements Command {
 	public DelegateCommand(final Supplier<Action> actionSupplier, ObservableValue<Boolean> executableObservable,
 			boolean inBackground) {
 		this.actionSupplier = actionSupplier;
-		this.action = actionSupplier.get();
 		this.inBackground = inBackground;
 		if (executableObservable != null) {
 			executable.bind(Bindings.createBooleanBinding(() -> {
 				final boolean isRunning = runningProperty().get();
 				final boolean isExecutable = executableObservable.getValue();
-
+				
 				return !isRunning && isExecutable;
 			}, runningProperty(), executableObservable));
 		}
 		
 	}
-
+	
 	/**
 	 * @see de.saxsys.mvvmfx.utils.commands.Command#execute
 	 */
@@ -136,32 +131,34 @@ public class DelegateCommand extends Service<Void> implements Command {
 				// When the command is not executed in background, we have to imitate a service execution, so the
 				// service statemachine provides the
 				// correct service state to the command.
-				super.reset();
-				bindServiceExceptionToTaskException();
 				callActionAndSynthesizeServiceRun();
 			}
 		}
 	}
-
+	
 	/**
 	 * For internal purposes we need to change the state property of the service.
 	 */
 	private ObjectProperty<State> getStateObjectPropertyReadable() {
 		return (ObjectProperty<State>) stateProperty();
- 	}
+	}
 	
 	private void callActionAndSynthesizeServiceRun() {
 		try {
+			unbindServiceExceptionFromTaskException();
 			getStateObjectPropertyReadable().setValue(State.SCHEDULED);
 			
 			// We call the User Action. If an exception occurs we save it, therefore we can use it in the Test
 			// (createSynthesizedTask) to throw it during the Service invocation.
-			action.action();
+			Action action = actionSupplier.get();
+			setWritableExceptionProperty(action);
+			bindServiceExceptionToTaskException();
 			
+			action.action();
 			getStateObjectPropertyReadable().setValue(State.SUCCEEDED);
 		} catch (Exception e) {
-			LOG.error("Exception in Command Execution", e);
 			setException(e);
+			LOG.error("Exception in Command Execution", writableExceptionProperty.getValue());
 			getStateObjectPropertyReadable().setValue(State.FAILED);
 		}
 	}
@@ -221,23 +218,52 @@ public class DelegateCommand extends Service<Void> implements Command {
 			}
 		};
 	}
-
+	
 	/**
-	 * Binds the {@link Service#exceptionProperty()} to the {@link Action#exceptionProperty()}
-	 * like in Service.start().
+	 * Binds the {@link Service#exceptionProperty()} to the {@link Action#exceptionProperty()} like in Service.start().
 	 */
 	private void bindServiceExceptionToTaskException() {
-		((ObjectProperty<Throwable>) super.exceptionProperty()).bind(action.exceptionProperty());
+		checkExceptionProperty(super.exceptionProperty()).bind(writableExceptionProperty);
 	}
-
+	
 	/**
-	 * Returns the exception from the superclass as writable property.<br>
-	 *     {@link Service#exceptionProperty()} is a readonly property, though not really.
-	 *     Internal its a ObjectProperty&lt;Throwable&gt;.
-	 * @return
-	 * The casted writable exception property.
+	 * Unbinds the {@link Service#exceptionProperty()} from {@link Action#exceptionProperty()}.
+	 */
+	private void unbindServiceExceptionFromTaskException() {
+		checkExceptionProperty(super.exceptionProperty()).unbind();
+	}
+	
+	/**
+	 * Creates a writable exception property based on the exception property of the given action.
+	 */
+	private void setWritableExceptionProperty(Action action) {
+		writableExceptionProperty = checkExceptionProperty(action.exceptionProperty());
+	}
+	
+	/**
+	 * Set the given exception to exception property of the task.
+	 * 
+	 * @param throwable
+	 *            The exception
 	 */
 	private void setException(Throwable throwable) {
-		((SimpleObjectProperty<Throwable>) action.exceptionProperty()).set(throwable);
+		writableExceptionProperty.setValue(throwable);
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected static Property<Throwable> checkExceptionProperty(ReadOnlyObjectProperty<Throwable> exceptionProperty) {
+		if (exceptionProperty instanceof Property) {
+			return (Property<Throwable>) exceptionProperty;
+		} else {
+			// in JavaFX the implementation class of most ReadOnlyProperty<Throwable> instances in Service/Task are
+			// actually of type ObjectProperty<Throwable>
+			// and therefor can be casted so that we are able to bind them. This is a dependency to an implementation
+			// detail of JavaFX but at the moment there is no other
+			// way of achieving the desired behavior.
+			// If for some reason a future update of the JavaFX implementation changes the actual implementation class
+			// we can't use binding anymore and need to find another way to implement our use cases.
+			throw new RuntimeException(
+					"Cannot use DelegateCommand in asynchronous mode because of an incompatible JDK version. Please report this to the mvvmFX developers at https://github.com/sialcasa/mvvmFX.");
+		}
 	}
 }
