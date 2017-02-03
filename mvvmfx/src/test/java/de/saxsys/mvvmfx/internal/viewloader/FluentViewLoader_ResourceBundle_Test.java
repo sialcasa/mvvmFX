@@ -19,15 +19,11 @@ import static de.saxsys.mvvmfx.internal.viewloader.ResourceBundleAssert.assertTh
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.failBecauseExceptionWasNotThrown;
 
-import java.io.StringReader;
 import java.util.ListResourceBundle;
-import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.internal.viewloader.example.*;
-import de.saxsys.mvvmfx.resourcebundle.global.TestView;
-import de.saxsys.mvvmfx.resourcebundle.global.TestViewModel;
 import de.saxsys.mvvmfx.testingutils.ExceptionUtils;
 import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
 import javafx.scene.layout.VBox;
@@ -97,6 +93,30 @@ public class FluentViewLoader_ResourceBundle_Test {
 
 		final TestViewModelWithResourceBundle viewModel = viewTuple.getViewModel();
 		final TestFxmlViewResourceBundle view = viewTuple.getCodeBehind();
+
+		assertThat(view.resources).isNotNull().hasSameContent(resourceBundle);
+		assertThat(view.resourceBundle).isNotNull().hasSameContent(resourceBundle);
+
+		assertThat(viewModel.resourceBundle).isNotNull().hasSameContent(resourceBundle);
+	}
+
+	/**
+	 * This test case is similar to {@link #success_fxml_injectionOfResourceBundles()}
+	 * with the only difference that this time the ViewModel isn't injected into the View.
+	 * <p>
+	 * This test reproduces the bug <a href="https://github.com/sialcasa/mvvmFX/issues/469">#469</a>
+	 */
+	@Test
+	@Ignore("until fixed")
+	public void success_fxml_injectionOfResourceBundlesVMisNotInjectedInView() {
+		final ViewTuple<TestFxmlViewResourceBundleWithoutViewModelInjectedView, TestViewModelWithResourceBundle> viewTuple =
+				FluentViewLoader
+						.fxmlView(TestFxmlViewResourceBundleWithoutViewModelInjectedView.class)
+						.resourceBundle(resourceBundle)
+						.load();
+
+		final TestViewModelWithResourceBundle viewModel = viewTuple.getViewModel();
+		final TestFxmlViewResourceBundleWithoutViewModelInjectedView view = viewTuple.getCodeBehind();
 
 		assertThat(view.resources).isNotNull().hasSameContent(resourceBundle);
 		assertThat(view.resourceBundle).isNotNull().hasSameContent(resourceBundle);

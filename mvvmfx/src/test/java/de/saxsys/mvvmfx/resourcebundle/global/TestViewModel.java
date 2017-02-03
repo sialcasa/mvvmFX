@@ -15,10 +15,17 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.resourcebundle.global;
 
+import de.saxsys.mvvmfx.InjectResourceBundle;
 import de.saxsys.mvvmfx.ViewModel;
+
+import java.util.ResourceBundle;
 
 /**
  * @author manuel.mauky
  */
 public class TestViewModel implements ViewModel {
+
+    @InjectResourceBundle
+    public ResourceBundle resourceBundle;
+
 }

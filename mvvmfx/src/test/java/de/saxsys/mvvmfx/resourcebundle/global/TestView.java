@@ -16,6 +16,7 @@
 package de.saxsys.mvvmfx.resourcebundle.global;
 
 import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
@@ -33,6 +34,17 @@ public class TestView implements FxmlView<TestViewModel> {
 	@FXML
 	public Label label;
 
+	/**
+	 * ResourceBundle injected via default JavaFX behavior. This would also work without mvvmFX
+	 */
 	public ResourceBundle resources;
+
+	/**
+	 * mvvmFX specific resourceBundle injection mechanism. This is redundant in the View class but it's the only
+	 * way to get resourceBundles in the ViewModel and in Java-defined Views.
+	 * Therefore some users may find it convenient to use the same mechanism in all places.
+	 */
+	@InjectResourceBundle
+	public ResourceBundle mvvmFxResourceBundle;
 	
 }

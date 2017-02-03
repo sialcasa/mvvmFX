@@ -17,6 +17,6 @@ package de.saxsys.mvvmfx.internal.viewloader.example;
 
 import de.saxsys.mvvmfx.FxmlView;
 
-public class TestFxmlViewWithWrongController implements FxmlView {
+public class TestFxmlViewWithNotExistingController implements FxmlView {
 	
 }

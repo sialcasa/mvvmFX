@@ -82,7 +82,7 @@ public class FluentViewLoader_FxmlView_Test {
 	
 	
 	@Test
-	public void test_initializeOfViewModel() {
+	public void testViewModelWithResourceBundle() {
 		// given
 		TestViewModelWithResourceBundle.wasInitialized = false;
 		TestViewModelWithResourceBundle.resourceBundleWasAvailableAtInitialize = false;
@@ -91,7 +91,8 @@ public class FluentViewLoader_FxmlView_Test {
 		
 		final ViewTuple<TestFxmlViewResourceBundle, TestViewModelWithResourceBundle> viewTuple = FluentViewLoader
 				.fxmlView(TestFxmlViewResourceBundle.class)
-				.resourceBundle(resourceBundle).load();
+				.resourceBundle(resourceBundle)
+				.load();
 
 		// then
 		assertThat(TestViewModelWithResourceBundle.wasInitialized).isTrue();
@@ -188,11 +189,15 @@ public class FluentViewLoader_FxmlView_Test {
 			assertThat(e).hasCauseInstanceOf(LoadException.class).hasMessageContaining("onAction");
 		}
 	}
-	
+
+
+	/**
+	 * FXML file has a "fx:controller" attribute pointing to a non existing code behind class.
+	 */
 	@Test
-	public void testLoadFxmlFailedWithWrongController() throws IOException {
+	public void testLoadFxmlFailedWithNotExistingController() throws IOException {
 		try {
-			final ViewTuple viewTuple = FluentViewLoader.fxmlView(TestFxmlViewWithWrongController.class).load();
+			final ViewTuple viewTuple = FluentViewLoader.fxmlView(TestFxmlViewWithNotExistingController.class).load();
 			fail("A LoadException from FXMLLoader is expected");
 		} catch (Exception e) {
 			assertThat(e).hasCauseInstanceOf(LoadException.class).hasRootCauseInstanceOf(ClassNotFoundException.class);
@@ -412,7 +417,44 @@ public class FluentViewLoader_FxmlView_Test {
         // when an existing VM is used it should not be re-initialized
         assertThat(TestViewModel.wasInitialized).isFalse();
 	}
-	
+
+	@Test
+	public void testUseExistingViewModelWithResourceBundle() {
+		TestViewModelWithResourceBundle.wasInitialized = false;
+		TestViewModelWithResourceBundle.resourceBundleWasAvailableAtInitialize = false;
+
+		ViewTuple<TestFxmlViewResourceBundle, TestViewModelWithResourceBundle> viewTuple1 =
+				FluentViewLoader
+						.fxmlView(TestFxmlViewResourceBundle.class)
+						.resourceBundle(resourceBundle)
+						.load();
+
+		TestViewModelWithResourceBundle existingViewModel = viewTuple1.getViewModel();
+
+		assertThat(TestViewModelWithResourceBundle.wasInitialized).isTrue();
+		assertThat(TestViewModelWithResourceBundle.resourceBundleWasAvailableAtInitialize).isTrue();
+
+		assertThat(existingViewModel.resourceBundle).hasSameContent(resourceBundle);
+
+
+		// reset state
+		TestViewModelWithResourceBundle.wasInitialized = false;
+		TestViewModelWithResourceBundle.resourceBundleWasAvailableAtInitialize = false;
+
+		// this time we are re-using the existing ViewModel instance
+		ViewTuple<TestFxmlViewResourceBundle, TestViewModelWithResourceBundle> viewTuple2 =
+				FluentViewLoader.fxmlView(TestFxmlViewResourceBundle.class)
+						.viewModel(existingViewModel)
+						.resourceBundle(resourceBundle)
+						.load();
+
+		assertThat(existingViewModel).isEqualTo(viewTuple2.getViewModel());
+
+		// the existing viewModel will not be re-initialized.
+		assertThat(TestViewModelWithResourceBundle.wasInitialized).isFalse();
+		assertThat(TestViewModelWithResourceBundle.resourceBundleWasAvailableAtInitialize).isFalse();
+	}
+
 	/**
 	 * When the ViewModel isn't injected in the view it should still be available in the ViewTuple.
 	 */
