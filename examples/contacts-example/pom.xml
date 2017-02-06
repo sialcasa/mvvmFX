@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>de.saxsys.mvvmfx</groupId>
 		<artifactId>examples</artifactId>
-		<version>1.5.3-SNAPSHOT</version>
+		<version>1.6.0</version>
 	</parent>
 	<artifactId>contacts-example</artifactId>
 
@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>org.controlsfx</groupId>
 			<artifactId>controlsfx</artifactId>
-			<version>8.40.9</version>
+			<version>8.40.12</version>
 		</dependency>
 
 		<dependency>
@@ -120,6 +120,10 @@
 			<groupId>de.saxsys</groupId>
 			<artifactId>mvvmfx-testing-utils</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.saxsys</groupId>
+			<artifactId>mvvmfx-validation</artifactId>
 		</dependency>
 	</dependencies>
 

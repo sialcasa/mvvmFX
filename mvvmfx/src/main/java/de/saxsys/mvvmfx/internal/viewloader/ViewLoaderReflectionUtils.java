@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2015 Alexander Casall, Manuel Mauky
+ * Copyright 2015 Alexander Casall, Manuel Mauky, Sven Lechner
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,19 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.internal.viewloader;
 
+import de.saxsys.mvvmfx.Context;
+import de.saxsys.mvvmfx.InjectContext;
+import de.saxsys.mvvmfx.InjectScope;
+import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.Scope;
+import de.saxsys.mvvmfx.ScopeProvider;
+import de.saxsys.mvvmfx.SceneLifecycle;
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.internal.ContextImpl;
+import javafx.beans.value.ObservableBooleanValue;
+import net.jodah.typetools.TypeResolver;
+
+import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -22,20 +35,9 @@ import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import de.saxsys.mvvmfx.Context;
-import de.saxsys.mvvmfx.InjectContext;
-import de.saxsys.mvvmfx.InjectScope;
-import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.Scope;
-import de.saxsys.mvvmfx.ScopeProvider;
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.internal.ContextImpl;
-import net.jodah.typetools.TypeResolver;
 
 /**
  * This class encapsulates reflection related utility operations specific for
@@ -386,6 +388,14 @@ public class ViewLoaderReflectionUtils {
         }
         try {
             final Method initMethod = viewModel.getClass().getMethod("initialize");
+            // if there is a @PostConstruct annotation, throw an exception to prevent double injection
+            if(initMethod.isAnnotationPresent(PostConstruct.class)) {
+                throw new IllegalStateException(String.format("initialize method of ViewModel [%s] is annotated with @PostConstruct. " +
+                        "This will lead to unexpected behaviour and duplicate initialization. " +
+                        "Please rename the method or remove the @PostConstruct annotation. " +
+                        "See mvvmFX wiki for more details: " +
+                        "https://github.com/sialcasa/mvvmFX/wiki/Dependency-Injection#lifecycle-postconstruct", viewModel));
+            }
 
             AccessController.doPrivileged((PrivilegedAction) () -> {
                 try {
@@ -400,4 +410,26 @@ public class ViewLoaderReflectionUtils {
         }
     }
 
+    /**
+     * This method adds listeners for the {@link SceneLifecycle}.
+     */
+    static void addSceneLifecycleHooks(ViewModel viewModel, ObservableBooleanValue viewInSceneProperty) {
+        if(viewModel != null) {
+
+            if(viewModel instanceof SceneLifecycle) {
+                SceneLifecycle lifecycleViewModel = (SceneLifecycle) viewModel;
+
+                PreventGarbageCollectionStore.getInstance().put(viewInSceneProperty);
+
+                viewInSceneProperty.addListener((observable, oldValue, newValue) -> {
+					if(newValue) {
+						lifecycleViewModel.onViewAdded();
+					} else {
+						lifecycleViewModel.onViewRemoved();
+                        PreventGarbageCollectionStore.getInstance().remove(viewInSceneProperty);
+					}
+				});
+            }
+        }
+    }
 }

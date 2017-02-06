@@ -15,23 +15,25 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.internal.viewloader;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Collection;
-import java.util.ResourceBundle;
-import java.util.function.Consumer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.saxsys.mvvmfx.Context;
 import de.saxsys.mvvmfx.Scope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.internal.ContextImpl;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.util.Callback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 /**
  * This viewLoader is used to load views that are implementing
@@ -140,12 +142,17 @@ public class FxmlViewLoader {
             ContextImpl context = ViewLoaderScopeUtils.prepareContext(parentContext, providedScopes);
             //////////////////////////////////////////////////////////////////////
 
-            final FXMLLoader loader = createFxmlLoader(resource, resourceBundle, codeBehind, root, viewModel, context);
+            // for the SceneLifecycle we need to know when the view is put into the scene
+            BooleanProperty viewInSceneProperty = new SimpleBooleanProperty();
+
+            final FXMLLoader loader = createFxmlLoader(resource, resourceBundle, codeBehind, root, viewModel, context, viewInSceneProperty);
 
             loader.load();
 
             final ViewType loadedController = loader.getController();
             final Parent loadedRoot = loader.getRoot();
+
+            viewInSceneProperty.bind(loadedRoot.sceneProperty().isNotNull());
 
             if (loadedController == null) {
                 throw new IOException("Could not load the controller for the View " + resource
@@ -203,7 +210,7 @@ public class FxmlViewLoader {
     }
 
     private FXMLLoader createFxmlLoader(String resource, ResourceBundle resourceBundle, View codeBehind, Object root,
-            ViewModel viewModel, ContextImpl context) throws IOException {
+                                        ViewModel viewModel, ContextImpl context, ObservableBooleanValue viewInSceneProperty) throws IOException {
         // Load FXML file
         final URL location = FxmlViewLoader.class.getResource(resource);
         if (location == null) {
@@ -221,9 +228,9 @@ public class FxmlViewLoader {
         // in all other cases the default factory can be used.
         if (viewModel != null && codeBehind == null) {
             fxmlLoader
-                    .setControllerFactory(new ControllerFactoryForCustomViewModel(viewModel, resourceBundle, context));
+                    .setControllerFactory(new ControllerFactoryForCustomViewModel(viewModel, resourceBundle, context, viewInSceneProperty));
         } else {
-            fxmlLoader.setControllerFactory(new DefaultControllerFactory(resourceBundle, context));
+            fxmlLoader.setControllerFactory(new DefaultControllerFactory(resourceBundle, context, viewInSceneProperty));
         }
 
         // When the user provides a codeBehind instance we take care of the
@@ -233,9 +240,9 @@ public class FxmlViewLoader {
             fxmlLoader.setController(codeBehind);
 
             if (viewModel == null) {
-                handleInjection(codeBehind, resourceBundle, context);
+                handleInjection(codeBehind, resourceBundle, context, viewInSceneProperty);
             } else {
-                handleInjection(codeBehind, resourceBundle, viewModel, context);
+                handleInjection(codeBehind, resourceBundle, viewModel, context, viewInSceneProperty);
             }
         }
 
@@ -249,10 +256,12 @@ public class FxmlViewLoader {
     private static class DefaultControllerFactory implements Callback<Class<?>, Object> {
         private final ResourceBundle resourceBundle;
         private final ContextImpl context;
+        private ObservableBooleanValue viewInSceneProperty;
 
-        public DefaultControllerFactory(ResourceBundle resourceBundle, ContextImpl context) {
+        public DefaultControllerFactory(ResourceBundle resourceBundle, ContextImpl context, ObservableBooleanValue viewInSceneProperty) {
             this.resourceBundle = resourceBundle;
             this.context = context;
+            this.viewInSceneProperty = viewInSceneProperty;
         }
 
         @Override
@@ -262,20 +271,22 @@ public class FxmlViewLoader {
             if (controller instanceof View) {
                 View codeBehind = (View) controller;
 
-                handleInjection(codeBehind, resourceBundle, context);
+                handleInjection(codeBehind, resourceBundle, context, viewInSceneProperty);
             }
 
             return controller;
         }
     }
 
-    private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, ContextImpl context) {
+    private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, ContextImpl context, ObservableBooleanValue viewInSceneProperty) {
         ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
 
         Consumer<ViewModel> newVmConsumer = viewModel -> {
             ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
             ViewLoaderReflectionUtils.createAndInjectScopes(viewModel, context);
             ViewLoaderReflectionUtils.initializeViewModel(viewModel);
+
+            ViewLoaderReflectionUtils.addSceneLifecycleHooks(viewModel, viewInSceneProperty);
         };
 
         ViewLoaderReflectionUtils.createAndInjectViewModel(codeBehind, newVmConsumer);
@@ -283,7 +294,7 @@ public class FxmlViewLoader {
     }
 
     private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, ViewModel viewModel,
-            ContextImpl context) {
+            ContextImpl context, ObservableBooleanValue viewInSceneProperty) {
         ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
 
         if (viewModel != null) {
@@ -291,6 +302,8 @@ public class FxmlViewLoader {
             ViewLoaderReflectionUtils.createAndInjectScopes(viewModel, context);
             ViewLoaderReflectionUtils.injectViewModel(codeBehind, viewModel);
             ViewLoaderReflectionUtils.injectContext(codeBehind, context);
+
+            ViewLoaderReflectionUtils.addSceneLifecycleHooks(viewModel, viewInSceneProperty);
         }
     }
 
@@ -331,12 +344,14 @@ public class FxmlViewLoader {
         private final ResourceBundle resourceBundle;
 
         private final ContextImpl context;
+        private ObservableBooleanValue viewInSceneProperty;
 
         public ControllerFactoryForCustomViewModel(ViewModel customViewModel, ResourceBundle resourceBundle,
-                ContextImpl context) {
+                ContextImpl context, ObservableBooleanValue viewInSceneProperty) {
             this.customViewModel = customViewModel;
             this.resourceBundle = resourceBundle;
             this.context = context;
+            this.viewInSceneProperty = viewInSceneProperty;
         }
 
         @Override
@@ -351,12 +366,15 @@ public class FxmlViewLoader {
                     ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
 
                     ViewLoaderReflectionUtils.injectViewModel(codeBehind, customViewModel);
+                    ViewLoaderReflectionUtils.injectContext(codeBehind, context);
+
+                    ViewLoaderReflectionUtils.addSceneLifecycleHooks(customViewModel, viewInSceneProperty);
 
                     customViewModelInjected = true;
                     return codeBehind;
                 }
 
-                handleInjection(codeBehind, resourceBundle, context);
+                handleInjection(codeBehind, resourceBundle, context, viewInSceneProperty);
             }
 
             return controller;

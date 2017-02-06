@@ -13,85 +13,50 @@ import javafx.beans.property.StringProperty;
 
 public class MasterTableViewModel {
 
-	private final String id;
-	private final IntegerProperty age = new SimpleIntegerProperty();
-	private final ModelWrapper<Contact> contactWrapper = new ModelWrapper<>();
+	private Contact contact;
 
 	public MasterTableViewModel(Contact contact) {
-		id = contact.getId();
-		contactWrapper.set(contact);
-		contactWrapper.reload();
-
-		if (contact.getBirthday() != null) {
-			age.set((int) ChronoUnit.YEARS.between(contact.getBirthday(), LocalDate.now(CentralClock.getClock())));
-		}
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-
-		if (obj == null) {
-			return false;
-		}
-
-		if (obj == this) {
-			return true;
-		}
-
-		if (!(obj instanceof MasterTableViewModel)) {
-			return false;
-		}
-
-		MasterTableViewModel other = (MasterTableViewModel) obj;
-
-		return other.getId().equals(this.getId());
-	}
-
-	@Override
-	public int hashCode() {
-		return this.getId().hashCode();
+		this.contact = contact;
 	}
 
 	public String getId() {
-		return id;
+		return contact.getId();
 	}
 
-	public StringProperty firstnameProperty() {
-		return contactWrapper.field("firstname", Contact::getFirstname, Contact::setFirstname);
+	public String getFirstname() {
+		return contact.getFirstname();
 	}
 
-	public StringProperty lastnameProperty() {
-		return contactWrapper.field("lastname", Contact::getLastname, Contact::setLastname);
+	public String getLastname() {
+		return contact.getLastname();
 	}
 
-	public StringProperty titleProperty() {
-		return contactWrapper.field("title", Contact::getTitle, Contact::setTitle);
+	public Integer getAge(){
+		if (contact.getBirthday() == null) {
+			return null;
+		} else {
+			return (int) ChronoUnit.YEARS.between(contact.getBirthday(), LocalDate.now(CentralClock.getClock()));
+		}
 	}
 
-	public StringProperty emailAddressProperty() {
-		return contactWrapper.field("emailAddress", Contact::getEmailAddress, Contact::setEmailAddress);
+	public String getTitle() {
+		return contact.getTitle();
 	}
 
-	public IntegerProperty ageProperty() {
-		return age;
+	public String getEmailAddress() {
+		return contact.getEmailAddress();
 	}
 
-	public StringProperty cityProperty() {
-		return contactWrapper.field("city",
-				(StringGetter<Contact>) model -> model.getAddress().getCity(),
-				(model, value) -> model.getAddress().setCity(value));
+	public String getCity() {
+		return contact.getAddress().getCity();
 	}
 
-	public StringProperty streetProperty() {
-		return contactWrapper.field("street",
-				(StringGetter<Contact>) model -> model.getAddress().getStreet(),
-				(model, value) -> model.getAddress().setStreet(value));
+	public String getStreet() {
+		return contact.getAddress().getStreet();
 	}
 
-	public StringProperty postalCodeProperty() {
-		return contactWrapper.field("postalcode",
-				(StringGetter<Contact>) model -> model.getAddress().getPostalcode(),
-				(model, value) -> model.getAddress().setPostalcode(value));
+	public String getPostalCode() {
+		return contact.getAddress().getPostalcode();
 	}
 
 }

@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -33,11 +34,11 @@ public class CountrySelectorIntegrationTest {
 	public void testXmlConverterForCountry() throws FileNotFoundException {
 		XmlConverter<Country> converter = new XmlConverter<>("iso_3166_entry", Country.class);
 
-		String iso_3166_xml = this.getClass().getResource("/countries/iso_3166.xml").getFile();
+		InputStream iso_3166_xml = this.getClass().getResourceAsStream("/countries/iso_3166.xml");
 
 		assertThat(iso_3166_xml).isNotNull();
 
-		converter.initialize(new FileInputStream(iso_3166_xml));
+		converter.initialize(iso_3166_xml);
 
 		Country country = converter.get();
 		assertThat(country).isNotNull();
@@ -48,11 +49,11 @@ public class CountrySelectorIntegrationTest {
 		XmlConverter<CountrySelector.ISO3166_2_CountryEntity> converter = new XmlConverter<>("iso_3166_country",
 				CountrySelector.ISO3166_2_CountryEntity.class);
 
-		String iso_3166_2_xml = this.getClass().getResource("/countries/iso_3166_2.xml").getFile();
+		InputStream iso_3166_2_xml = this.getClass().getResourceAsStream("/countries/iso_3166_2.xml");
 
 		assertThat(iso_3166_2_xml).isNotNull();
 
-		converter.initialize(new FileInputStream(iso_3166_2_xml));
+		converter.initialize(iso_3166_2_xml);
 
 		CountrySelector.ISO3166_2_CountryEntity entity = converter.get();
 

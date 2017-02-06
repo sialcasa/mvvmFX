@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+@Singleton
 public class MasterViewModel implements ViewModel {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MasterViewModel.class);
@@ -33,7 +35,7 @@ public class MasterViewModel implements ViewModel {
 
 	private final ObjectProperty<MasterTableViewModel> selectedTableRow = new SimpleObjectProperty<>();
 
-	private Optional<Consumer<MasterTableViewModel>> onSelect = Optional.empty();
+	private Consumer<MasterTableViewModel> onSelect;
 
 	@Inject
 	Repository repository;
@@ -72,13 +74,10 @@ public class MasterViewModel implements ViewModel {
 
 		if (selectedContactId != null) {
 			Optional<MasterTableViewModel> selectedRow = contacts.stream()
-					.filter(row -> row.getId().equals(selectedContactId)).findFirst();
+					.filter(row -> row.getId().equals(selectedContactId))
+					.findFirst();
 
-			if (selectedRow.isPresent()) {
-				onSelect.ifPresent(consumer -> consumer.accept(selectedRow.get()));
-			} else {
-				onSelect.ifPresent(consumer -> consumer.accept(null));
-			}
+			Optional.of(onSelect).ifPresent(consumer -> consumer.accept(selectedRow.orElse(null)));
 		}
 	}
 
@@ -87,7 +86,7 @@ public class MasterViewModel implements ViewModel {
 	}
 
 	public void setOnSelect(Consumer<MasterTableViewModel> consumer) {
-		onSelect = Optional.of(consumer);
+		onSelect = consumer;
 	}
 
 	public ObjectProperty<MasterTableViewModel> selectedTableRowProperty() {

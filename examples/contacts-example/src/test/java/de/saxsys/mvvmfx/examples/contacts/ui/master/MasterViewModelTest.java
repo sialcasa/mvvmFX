@@ -111,6 +111,8 @@ public class MasterViewModelTest {
 		assertThat(getContactIdsInTable()).contains(contact2.getId(), contact3.getId())
 				.doesNotContain(contact1.getId());
 
+		row2 = findTableViewModelForContact(contact2);
+
 		verify(onSelectConsumer).accept(row2);
 	}
 
