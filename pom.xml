@@ -26,7 +26,7 @@
 	<groupId>de.saxsys</groupId>
 	<artifactId>mvvmfx-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.5.2</version>
+	<version>1.6.0</version>
 	<name>mvvmFX parent</name>
 	<description>Application Framework for MVVM with JavaFX.</description>
 	<url>http://www.saxsys.de</url>
@@ -83,6 +83,8 @@
 		<module>mvvmfx-archetype</module>
 		<module>mvvmfx-utils</module>
 		<module>mvvmfx-testing-utils</module>
+		<module>mvvmfx-easydi</module>
+		<module>mvvmfx-validation</module>
 	</modules>
 
 	<dependencyManagement>
@@ -104,6 +106,11 @@
 			</dependency>
 			<dependency>
 				<groupId>de.saxsys</groupId>
+				<artifactId>mvvmfx-easydi</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.saxsys</groupId>
 				<artifactId>mvvmfx-archetype</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -117,6 +124,11 @@
 				<artifactId>mvvmfx-testing-utils</artifactId>
 				<version>${project.version}</version>
 				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>de.saxsys</groupId>
+				<artifactId>mvvmfx-validation</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
@@ -213,7 +225,6 @@
 				<artifactId>equalsverifier</artifactId>
 				<version>2.0.1</version>
 			</dependency>
-			
 		</dependencies>
 	</dependencyManagement>
 

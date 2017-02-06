@@ -15,21 +15,63 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.mapping;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.setAllowExtractingPrivateFields;
-
-import javafx.beans.property.SimpleIntegerProperty;
-import org.junit.Test;
-
-import java.util.Arrays;
-
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ModelWrapperTest {
+
+	@Test
+	public void testCopyValuesTo() {
+		// given
+		Person personA = new Person();
+		personA.setName("horst");
+		personA.setAge(32);
+		personA.setNicknames(Collections.singletonList("captain"));
+
+		ModelWrapper<Person> personWrapper = new ModelWrapper<>(personA);
+
+		final StringProperty nameProperty = personWrapper.field(Person::getName, Person::setName);
+		final IntegerProperty ageProperty = personWrapper.field(Person::getAge, Person::setAge);
+		final ListProperty<String> nicknamesProperty = personWrapper.field(Person::getNicknames, Person::setNicknames);
+
+		assertThat(nameProperty.getValue()).isEqualTo("horst");
+		assertThat(ageProperty.getValue()).isEqualTo(32);
+		assertThat(nicknamesProperty.getValue()).containsOnly("captain");
+
+		// when
+		Person personB = new Person();
+		personB.setName("Luise");
+		personB.setAge(23);
+		personB.setNicknames(Collections.singletonList("lui"));
+
+		personWrapper.copyValuesTo(personB);
+
+		// then
+		// person b has new values
+		assertThat(personB.getName()).isEqualTo("horst");
+		assertThat(personB.getAge()).isEqualTo(32);
+		assertThat(personB.getNicknames()).containsExactly("captain");
+
+		// the properties have still the old values
+		assertThat(nameProperty.getValue()).isEqualTo("horst");
+		assertThat(ageProperty.getValue()).isEqualTo(32);
+		assertThat(nicknamesProperty.getValue()).containsOnly("captain");
+
+		// and of cause the old person a has it's old values too
+		assertThat(personA.getName()).isEqualTo("horst");
+		assertThat(personA.getAge()).isEqualTo(32);
+		assertThat(personA.getNicknames()).containsExactly("captain");
+
+	}
 
 
 	@Test
@@ -236,6 +278,13 @@ public class ModelWrapperTest {
 		assertThat(nameProperty).isSameAs(nameProperty2);
 		assertThat(ageProperty).isSameAs(ageProperty2);
 		assertThat(nicknamesProperty).isSameAs(nicknamesProperty2);
+
+
+		// with identified fields the "name" of the created properties should be set
+		assertThat(nameProperty.getName()).isEqualTo("name");
+		assertThat(ageProperty.getName()).isEqualTo("age");
+		assertThat(nicknamesProperty.getName()).isEqualTo("nicknames");
+
 	}
 
 

@@ -4,6 +4,9 @@ import static eu.lestard.advanced_bindings.api.ObjectBindings.map;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.StringJoiner;
 
 import javax.inject.Inject;
 
@@ -26,6 +29,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ObservableValue;
 
 @ScopeProvider(scopes = ContactDialogScope.class)
 public class DetailViewModel implements ViewModel {
@@ -101,19 +105,17 @@ public class DetailViewModel implements ViewModel {
 
 	private void createBindingsForLabels(ReadOnlyObjectProperty<Contact> contactProperty) {
 		name.bind(emptyStringOnNull(map(contactProperty, contact -> {
-			StringBuilder result = new StringBuilder();
+			StringJoiner joiner = new StringJoiner(" ");
 
-			String title = contact.getTitle();
-			if (title != null && !title.trim().isEmpty()) {
-				result.append(title);
-				result.append(" ");
-			}
+			Optional.ofNullable(contact.getTitle())
+					.filter(Objects::nonNull)
+					.filter(s -> !s.trim().isEmpty())
+					.ifPresent(joiner::add);
 
-			result.append(contact.getFirstname());
-			result.append(" ");
-			result.append(contact.getLastname());
+			joiner.add(contact.getFirstname());
+			joiner.add(contact.getLastname());
 
-			return result.toString();
+			return joiner.toString();
 		})));
 
 		email.bind(emptyStringOnNull(map(contactProperty, Contact::getEmailAddress)));
@@ -184,12 +186,12 @@ public class DetailViewModel implements ViewModel {
 	 * string is used for the returned binding. Otherwise the value of the
 	 * source binding is used.
 	 */
-	private StringBinding emptyStringOnNull(ObjectBinding<String> source) {
+	private StringBinding emptyStringOnNull(ObservableValue<String> source) {
 		return Bindings.createStringBinding(() -> {
-			if (source.get() == null) {
+			if (source.getValue() == null) {
 				return "";
 			} else {
-				return source.get();
+				return source.getValue();
 			}
 		}, source);
 	}
@@ -240,20 +242,6 @@ public class DetailViewModel implements ViewModel {
 
 	public ReadOnlyStringProperty countrySubdivisionLabelTextProperty() {
 		return countrySubdivision.getReadOnlyProperty();
-	}
-
-	private String trimString(String string) {
-		if (string == null || string.trim().isEmpty()) {
-			return "";
-		}
-		return string;
-	}
-
-	private String trimStringWithPostfix(String string, String append) {
-		if (string == null || string.trim().isEmpty()) {
-			return "";
-		}
-		return string + append;
 	}
 
 	private Contact getSelectedContactFromScope() {

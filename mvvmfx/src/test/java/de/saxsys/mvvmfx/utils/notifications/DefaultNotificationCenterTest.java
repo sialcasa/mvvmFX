@@ -178,4 +178,8 @@ public class DefaultNotificationCenterTest {
 		assertThat(wasCalledOnUiThread).isTrue();
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void subscribeWithNullObserver() {
+		defaultCenter.subscribe(TEST_NOTIFICATION,null);
+	}
 }

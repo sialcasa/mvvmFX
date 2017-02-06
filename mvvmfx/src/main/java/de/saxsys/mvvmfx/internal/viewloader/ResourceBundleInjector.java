@@ -22,6 +22,8 @@ import java.util.ResourceBundle;
 
 import de.saxsys.mvvmfx.InjectResourceBundle;
 
+import static de.saxsys.mvvmfx.internal.viewloader.ResourceBundleManager.EMPTY_RESOURCE_BUNDLE;
+
 /**
  * This helper class is used to encapsulate the logic for injection of {@link ResourceBundle} into fields annotated with
  * {@link InjectResourceBundle} in Views/ViewModels.
@@ -35,16 +37,14 @@ class ResourceBundleInjector {
 	 * @param target
 	 *            the View/ViewModel instance that the ResourceBundle will be injected to. May not be <code>null</code>.
 	 * @param resourceBundle
-	 *            the ResourceBundle instance that is used. Can be <code>null</code> if no ResourceBundle was provided
-	 *            by the user.
+	 *            the ResourceBundle instance that is used.
 	 */
 	static void injectResourceBundle(Object target, ResourceBundle resourceBundle) {
 		final List<Field> fieldsWithAnnotation = ReflectionUtils
 				.getFieldsWithAnnotation(target, InjectResourceBundle.class);
 		
 		final boolean notAssignableFieldPresent = fieldsWithAnnotation.stream()
-				.filter(field -> !field.getType().isAssignableFrom(ResourceBundle.class))
-				.findAny().isPresent();
+				.anyMatch(field -> !field.getType().isAssignableFrom(ResourceBundle.class));
 		
 		if (notAssignableFieldPresent) {
 			throw new IllegalStateException(
@@ -53,15 +53,14 @@ class ResourceBundleInjector {
 							+ "] has at least one field with the annotation @InjectResourceBundle but the field is not of type ResourceBundle.");
 		}
 		
-		
-		if (resourceBundle == null) {
+		// check whether the user has provided any resourceBundle or not
+		if (resourceBundle == null || resourceBundle.equals(EMPTY_RESOURCE_BUNDLE)) {
 			
 			if (!fieldsWithAnnotation.isEmpty()) {
 				
 				final boolean nonOptionalFieldsPresent = fieldsWithAnnotation.stream()
 						.flatMap(field -> Arrays.stream(field.getAnnotationsByType(InjectResourceBundle.class)))
-						.filter(annotation -> !annotation.optional())
-						.findAny().isPresent();
+						.anyMatch(annotation -> !annotation.optional());
 				
 				// if all annotated fields are marked as "optional", no exception has to be thrown.
 				if (nonOptionalFieldsPresent) {

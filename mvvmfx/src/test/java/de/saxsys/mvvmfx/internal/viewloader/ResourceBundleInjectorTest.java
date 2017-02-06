@@ -26,11 +26,13 @@ import org.junit.Test;
 
 import de.saxsys.mvvmfx.InjectResourceBundle;
 
+import de.saxsys.mvvmfx.internal.viewloader.ResourceBundleManager;
+
 public class ResourceBundleInjectorTest {
 	
 	
 	private ResourceBundle resourceBundle;
-	
+
 	@Before
 	public void setup() throws Exception {
 		resourceBundle = new PropertyResourceBundle(new StringReader(""));
@@ -98,7 +100,7 @@ public class ResourceBundleInjectorTest {
 		
 		Example example = new Example();
 		
-		ResourceBundleInjector.injectResourceBundle(example, null);
+		ResourceBundleInjector.injectResourceBundle(example, ResourceBundleManager.EMPTY_RESOURCE_BUNDLE);
 	}
 	
 	/**
@@ -112,7 +114,7 @@ public class ResourceBundleInjectorTest {
 		
 		Example example = new Example();
 		
-		ResourceBundleInjector.injectResourceBundle(example, null);
+		ResourceBundleInjector.injectResourceBundle(example, ResourceBundleManager.EMPTY_RESOURCE_BUNDLE);
 		
 		assertThat(example.resourceBundle).isNull();
 	}
@@ -130,7 +132,7 @@ public class ResourceBundleInjectorTest {
 		
 		Example example = new Example();
 		
-		ResourceBundleInjector.injectResourceBundle(example, null);
+		ResourceBundleInjector.injectResourceBundle(example, ResourceBundleManager.EMPTY_RESOURCE_BUNDLE);
 	}
 	
 	
@@ -163,7 +165,7 @@ public class ResourceBundleInjectorTest {
 		
 		Example example = new Example();
 		
-		ResourceBundleInjector.injectResourceBundle(example, null);
+		ResourceBundleInjector.injectResourceBundle(example, ResourceBundleManager.EMPTY_RESOURCE_BUNDLE);
 		
 		assertThat(example.resourceBundle).isNull();
 	}
