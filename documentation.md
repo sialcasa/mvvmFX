@@ -16,8 +16,9 @@ The project documentation can be found in the wiki of the github project:
 
 
 
-| | | | | | |
-|---|---|---|---|---|---|
+| | | | | | | | |
+|---|---|---|---|---|---|---|---|
+| 1.6.0 | [mvvmfx-core]({{site.baseurl}}/javadoc/1.6.0/mvvmfx/) | [mvvmfx-cdi]({{site.baseurl}}/javadoc/1.6.0/mvvmfx-cdi/) | [mvvmfx-guice]({{site.baseurl}}/javadoc/1.6.0/mvvmfx-guice/)| [mvvmfx-utils]({{site.baseurl}}/javadoc/1.6.0/mvvmfx-utils/) | [mvvmfx-testing-utils]({{site.baseurl}}/javadoc/1.6.0/mvvmfx-testing-utils/) | [mvvmfx-easydi]({{site.baseurl}}/javadoc/1.6.0/mvvmfx-easydi/) | [mvvmfx-validation]({{site.baseurl}}/javadoc/1.6.0/mvvmfx-validation/)
 | 1.5.0 | [mvvmfx-core]({{site.baseurl}}/javadoc/1.5.0/mvvmfx/) | [mvvmfx-cdi]({{site.baseurl}}/javadoc/1.5.0/mvvmfx-cdi/) | [mvvmfx-guice]({{site.baseurl}}/javadoc/1.5.0/mvvmfx-guice/)| [mvvmfx-utils]({{site.baseurl}}/javadoc/1.5.0/mvvmfx-utils/) | [mvvmfx-testing-utils]({{site.baseurl}}/javadoc/1.5.0/mvvmfx-testing-utils/)
 | 1.4.0 | [mvvmfx-core]({{site.baseurl}}/javadoc/1.4.0/mvvmfx/) | [mvvmfx-cdi]({{site.baseurl}}/javadoc/1.4.0/mvvmfx-cdi/) | [mvvmfx-guice]({{site.baseurl}}/javadoc/1.4.0/mvvmfx-guice/)| [mvvmfx-utils]({{site.baseurl}}/javadoc/1.4.0/mvvmfx-utils/) | [mvvmfx-testing-utils]({{site.baseurl}}/javadoc/1.4.0/mvvmfx-testing-utils/)
 | 1.3.1 | [mvvmfx-core]({{site.baseurl}}/javadoc/1.3.1/mvvmfx/) | [mvvmfx-cdi]({{site.baseurl}}/javadoc/1.3.1/mvvmfx-cdi/) | [mvvmfx-guice]({{site.baseurl}}/javadoc/1.3.1/mvvmfx-guice/)| [mvvmfx-utils]({{site.baseurl}}/javadoc/1.3.1/mvvmfx-utils/) | [mvvmfx-testing-utils]({{site.baseurl}}/javadoc/1.3.1/mvvmfx-testing-utils/)
