@@ -16,6 +16,7 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
 import de.saxsys.mvvmfx.Context;
+import de.saxsys.mvvmfx.Initialize;
 import de.saxsys.mvvmfx.InjectContext;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -372,10 +373,10 @@ public class ViewLoaderReflectionUtils {
     }
 
     /**
-     * If a ViewModel has a method with the signature
-     * <code>public void initialize()</code> it will be invoked. If no such
-     * method is available nothing happens.
-     * 
+     * If a ViewModel has a method annotated with {@link Initialize}
+     * or method with the signature <code>public void initialize()</code>
+     * it will be invoked. If no such method is available nothing happens.
+     *
      * @param viewModel
      *            the viewModel that's initialize method (if available) will be
      *            invoked.
@@ -387,7 +388,9 @@ public class ViewLoaderReflectionUtils {
             return;
         }
         try {
-            final Method initMethod = viewModel.getClass().getMethod("initialize");
+            Method annotatedMethod = getInitializeMethod(viewModel);
+            // find method annotated with @Initialize or use initialize() otherwise
+            final Method initMethod = annotatedMethod != null ? annotatedMethod : viewModel.getClass().getMethod("initialize");
             // if there is a @PostConstruct annotation, throw an exception to prevent double injection
             if(initMethod.isAnnotationPresent(PostConstruct.class)) {
                 throw new IllegalStateException(String.format("initialize method of ViewModel [%s] is annotated with @PostConstruct. " +
@@ -408,6 +411,16 @@ public class ViewLoaderReflectionUtils {
         } catch (NoSuchMethodException e) {
             // it's perfectly fine that a ViewModel has no initialize method.
         }
+    }
+
+    private static <ViewModelType extends ViewModel> Method getInitializeMethod(ViewModelType viewModel) {
+        for (Method method : viewModel.getClass().getDeclaredMethods()) {
+            if(method.isAnnotationPresent(Initialize.class)) {
+                method.setAccessible(true);
+                return method;
+            }
+        }
+        return null;
     }
 
     /**
