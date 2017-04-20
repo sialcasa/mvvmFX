@@ -31,7 +31,6 @@ import net.jodah.typetools.TypeResolver;
 import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -167,7 +166,7 @@ public class ViewLoaderReflectionUtils {
         Optional<Field> fieldOptional = getViewModelField(view.getClass(), viewModelType);
         if (fieldOptional.isPresent()) {
             Field field = fieldOptional.get();
-            return ReflectionUtils.accessField(field, () -> (ViewModelType) field.get(view),
+            return ReflectionUtils.accessMember(field, () -> (ViewModelType) field.get(view),
                     "Can't get the viewModel of type <" + viewModelType + ">");
         } else {
             return null;
@@ -190,7 +189,7 @@ public class ViewLoaderReflectionUtils {
         final Optional<Field> fieldOptional = getViewModelField(view.getClass(), viewModel.getClass());
         if (fieldOptional.isPresent()) {
             Field field = fieldOptional.get();
-            ReflectionUtils.accessField(field, () -> {
+            ReflectionUtils.accessMember(field, () -> {
                 Object existingViewModel = field.get(view);
                 if (existingViewModel == null) {
                     field.set(view, viewModel);
@@ -259,7 +258,7 @@ public class ViewLoaderReflectionUtils {
         if (fieldOptional.isPresent()) {
             Field field = fieldOptional.get();
 
-            ReflectionUtils.accessField(field, () -> {
+            ReflectionUtils.accessMember(field, () -> {
                 Object existingViewModel = field.get(view);
 
                 if (existingViewModel == null) {
@@ -295,7 +294,7 @@ public class ViewLoaderReflectionUtils {
         List<Field> scopeFields = getScopeFields(viewModel.getClass());
 
         scopeFields.forEach(scopeField -> {
-            ReflectionUtils.accessField(scopeField, () -> injectScopeIntoField(scopeField, viewModel, context),
+            ReflectionUtils.accessMember(scopeField, () -> injectScopeIntoField(scopeField, viewModel, context),
                     "Can't inject Scope into ViewModel <" + viewModel.getClass() + ">");
         });
     }
@@ -306,7 +305,7 @@ public class ViewLoaderReflectionUtils {
 
         if (contextField.isPresent()) {
             Field field = contextField.get();
-            ReflectionUtils.accessField(field, () -> {
+            ReflectionUtils.accessMember(field, () -> {
                 field.set(codeBehind, context);
             }, "Can't inject Context into the view <" + codeBehind + ">");
         }
@@ -400,14 +399,9 @@ public class ViewLoaderReflectionUtils {
                         "https://github.com/sialcasa/mvvmFX/wiki/Dependency-Injection#lifecycle-postconstruct", viewModel));
             }
 
-            AccessController.doPrivileged((PrivilegedAction) () -> {
-                try {
-                    return initMethod.invoke(viewModel);
-                } catch (InvocationTargetException | IllegalAccessException e) {
-                    throw new IllegalStateException(
-                            "mvvmFX wasn't able to call the initialize method of ViewModel [" + viewModel + "].", e);
-                }
-            });
+            AccessController.doPrivileged((PrivilegedAction<?>) () ->
+                    ReflectionUtils.accessMember(initMethod, () -> initMethod.invoke(viewModel), "mvvmFX wasn't able to call the initialize method of ViewModel [" + viewModel + "]."));
+
         } catch (NoSuchMethodException e) {
             // it's perfectly fine that a ViewModel has no initialize method.
         }
@@ -416,7 +410,6 @@ public class ViewLoaderReflectionUtils {
     private static <ViewModelType extends ViewModel> Method getInitializeMethod(ViewModelType viewModel) {
         for (Method method : viewModel.getClass().getDeclaredMethods()) {
             if(method.isAnnotationPresent(Initialize.class)) {
-                method.setAccessible(true);
                 return method;
             }
         }

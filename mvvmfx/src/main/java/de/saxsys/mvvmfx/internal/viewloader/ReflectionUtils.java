@@ -16,6 +16,7 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -89,13 +90,13 @@ public class ReflectionUtils {
 	
 	
 	/**
-	 * Helper method to execute a callback on a given field. This method encapsulates the error handling logic and the
-	 * handling of accessibility of the field.
+	 * Helper method to execute a callback on a given member. This method encapsulates the error handling logic and the
+	 * handling of accessibility of the member.
 	 *
-	 * After the callback is executed the accessibility of the field will be reset to the originally state.
+	 * After the callback is executed the accessibility of the member will be reset to the originally state.
 	 *
-	 * @param field
-	 *            the field that is made accessible to run the callback
+	 * @param member
+	 *            the member that is made accessible to run the callback
 	 * @param callable
 	 *            the callback that will be executed.
 	 * @param errorMessage
@@ -106,19 +107,19 @@ public class ReflectionUtils {
 	 * @throws IllegalStateException
 	 *             when something went wrong.
 	 */
-	public static <T> T accessField(final Field field, final Callable<T> callable, String errorMessage) {
+	public static <T> T accessMember(final AccessibleObject member, final Callable<T> callable, String errorMessage) {
 		if (callable == null) {
 			return null;
 		}
 		return AccessController.doPrivileged((PrivilegedAction<T>) () -> {
-			boolean wasAccessible = field.isAccessible();
+			boolean wasAccessible = member.isAccessible();
 			try {
-				field.setAccessible(true);
+				member.setAccessible(true);
 				return callable.call();
 			} catch (Exception exception) {
 				throw new IllegalStateException(errorMessage, exception);
 			} finally {
-				field.setAccessible(wasAccessible);
+				member.setAccessible(wasAccessible);
 			}
 		});
 	}
@@ -136,21 +137,21 @@ public class ReflectionUtils {
 	 *            the new value that the field should be set to.
 	 */
 	public static void setField(final Field field, Object target, Object value) {
-		accessField(field, () -> field.set(target, value),
+		accessMember(field, () -> field.set(target, value),
 				"Cannot set the field [" + field.getName() + "] of instance [" + target + "] to value [" + value + "]");
 	}
 	
 	
 	/**
-	 * Helper method to execute a callback on a given field. This method encapsulates the error handling logic and the
-	 * handling of accessibility of the field. The difference to
-	 * {@link ReflectionUtils#accessField(Field, Callable, String)} is that this method takes a callback that doesn't
+	 * Helper method to execute a callback on a given member. This method encapsulates the error handling logic and the
+	 * handling of accessibility of the member. The difference to
+	 * {@link ReflectionUtils#accessMember(AccessibleObject, Callable, String)} is that this method takes a callback that doesn't
 	 * return anything but only creates a sideeffect.
 	 *
-	 * After the callback is executed the accessibility of the field will be reset to the originally state.
+	 * After the callback is executed the accessibility of the member will be reset to the originally state.
 	 *
-	 * @param field
-	 *            the field that is made accessible to run the callback
+	 * @param member
+	 *            the member that is made accessible to run the callback
 	 * @param sideEffect
 	 *            the callback that will be executed.
 	 * @param errorMessage
@@ -159,19 +160,19 @@ public class ReflectionUtils {
 	 * @throws IllegalStateException
 	 *             when something went wrong.
 	 */
-	public static void accessField(final Field field, final SideEffect sideEffect, String errorMessage) {
+	public static void accessMember(final AccessibleObject member, final SideEffect sideEffect, String errorMessage) {
 		if (sideEffect == null) {
 			return;
 		}
-		AccessController.doPrivileged((PrivilegedAction) () -> {
-			boolean wasAccessible = field.isAccessible();
+		AccessController.doPrivileged((PrivilegedAction<?>) () -> {
+			boolean wasAccessible = member.isAccessible();
 			try {
-				field.setAccessible(true);
+				member.setAccessible(true);
 				sideEffect.call();
 			} catch (Exception exception) {
 				throw new IllegalStateException(errorMessage, exception);
 			} finally {
-				field.setAccessible(wasAccessible);
+				member.setAccessible(wasAccessible);
 			}
 			return null;
 		});
