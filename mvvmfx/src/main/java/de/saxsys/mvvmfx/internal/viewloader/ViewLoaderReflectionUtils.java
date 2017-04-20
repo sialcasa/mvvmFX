@@ -399,9 +399,7 @@ public class ViewLoaderReflectionUtils {
                         "https://github.com/sialcasa/mvvmFX/wiki/Dependency-Injection#lifecycle-postconstruct", viewModel));
             }
 
-            AccessController.doPrivileged((PrivilegedAction<?>) () ->
-                    ReflectionUtils.accessMember(initMethod, () -> initMethod.invoke(viewModel), "mvvmFX wasn't able to call the initialize method of ViewModel [" + viewModel + "]."));
-
+            ReflectionUtils.accessMember(initMethod, () -> initMethod.invoke(viewModel), "mvvmFX wasn't able to call the initialize method of ViewModel [" + viewModel + "].");
         } catch (NoSuchMethodException e) {
             // it's perfectly fine that a ViewModel has no initialize method.
         }
