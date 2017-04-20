@@ -15,11 +15,6 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.commands;
 
-import java.util.function.Supplier;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import eu.lestard.doc.Beta;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -27,6 +22,10 @@ import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.function.Supplier;
 
 /**
  * A {@link Command} implementation of a {@link Service<Void>} that encapsulates an {@link Action} ({@link Task<Void>})
@@ -145,13 +144,31 @@ public class DelegateCommand extends Service<Void> implements Command {
 	
 	private void callActionAndSynthesizeServiceRun() {
 		try {
+		    // the service exception property is the one that is accessible via command.exceptionProperty().
+            // If this command was already executed this property is bound to the exceptionProperty of the previous action instance at this point in time
+            // we need to remove this binding if it exists.
 			unbindServiceExceptionFromTaskException();
 			getStateObjectPropertyReadable().setValue(State.SCHEDULED);
 			
-			// We call the User Action. If an exception occurs we save it, therefore we can use it in the Test
-			// (createSynthesizedTask) to throw it during the Service invocation.
-			Action action = actionSupplier.get();
+            Action action;
+
+            // it is possible that an exception is thrown in the actionSupplier that creates the action.
+            // this case we can't create a binding between the exceptionProperty of the action and the command.
+            // for this reason we have to handle this case separately here.
+            try {
+			    action = actionSupplier.get();
+            } catch (Exception e) {
+                // directly fill the exceptionProperty without binding to an action
+                checkExceptionProperty(this.exceptionProperty()).setValue(e);
+                // creation of the action has failed so there is nothing to do here anymore
+                return;
+            }
+
+            // get the exceptionProperty of the action as writable Property
 			setWritableExceptionProperty(action);
+
+            // bind the exeptionProperty of this command to the exceptionProperty of the action.
+            // this way we get notified when an exception is thrown during execution of the action.
 			bindServiceExceptionToTaskException();
 			
 			action.action();
@@ -249,7 +266,16 @@ public class DelegateCommand extends Service<Void> implements Command {
 	private void setException(Throwable throwable) {
 		writableExceptionProperty.setValue(throwable);
 	}
-	
+
+    /**
+     * This method allows us to write to an read-only exception properties if possible.
+     * Both {@link Service} and {@link Task} have read-only properties for exceptions that were thrown during execution.
+     * These properties are read-only because for an actual user of these classes it isn't useful to change the value (the exception).
+     * However, for a framework like mvvmFX that extends these classes it's valuable to be able to change the values internally.
+     *
+     * Internally the JavaFX implementations are using normal writable properties that are only given to the outside world as read-only.
+     * We use this fact here to gain write access.
+     */
 	@SuppressWarnings("unchecked")
 	protected static Property<Throwable> checkExceptionProperty(ReadOnlyObjectProperty<Throwable> exceptionProperty) {
 		if (exceptionProperty instanceof Property) {
