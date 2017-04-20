@@ -470,4 +470,20 @@ public class FluentViewLoader_FxmlView_Test {
 
         assertThat(TestViewModel.wasInitialized).isFalse();
 	}
+
+	/**
+	 * Method annotated with {@link de.saxsys.mvvmfx.Initialize} annotation initializes the ViewModel
+	 * */
+	@Test
+	public void testViewModelIsInitializedWithAnnotatatedMethod() {
+		TestViewModelWithAnnotatedInitialize.wasInitialized = false;
+
+		ViewTuple<TestFxmlViewWithViewModelWithAnnotatedInitialize, TestViewModelWithAnnotatedInitialize> tuple
+				= FluentViewLoader.fxmlView(TestFxmlViewWithViewModelWithAnnotatedInitialize.class).load();
+
+		TestViewModelWithAnnotatedInitialize viewModel = tuple.getViewModel();
+
+		assertThat(TestViewModelWithAnnotatedInitialize.wasInitialized).isTrue();
+
+	}
 }
