@@ -16,6 +16,7 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
 import de.saxsys.mvvmfx.Context;
+import de.saxsys.mvvmfx.Initialize;
 import de.saxsys.mvvmfx.InjectContext;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -30,7 +31,6 @@ import net.jodah.typetools.TypeResolver;
 import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -166,7 +166,7 @@ public class ViewLoaderReflectionUtils {
         Optional<Field> fieldOptional = getViewModelField(view.getClass(), viewModelType);
         if (fieldOptional.isPresent()) {
             Field field = fieldOptional.get();
-            return ReflectionUtils.accessField(field, () -> (ViewModelType) field.get(view),
+            return ReflectionUtils.accessMember(field, () -> (ViewModelType) field.get(view),
                     "Can't get the viewModel of type <" + viewModelType + ">");
         } else {
             return null;
@@ -189,7 +189,7 @@ public class ViewLoaderReflectionUtils {
         final Optional<Field> fieldOptional = getViewModelField(view.getClass(), viewModel.getClass());
         if (fieldOptional.isPresent()) {
             Field field = fieldOptional.get();
-            ReflectionUtils.accessField(field, () -> {
+            ReflectionUtils.accessMember(field, () -> {
                 Object existingViewModel = field.get(view);
                 if (existingViewModel == null) {
                     field.set(view, viewModel);
@@ -258,7 +258,7 @@ public class ViewLoaderReflectionUtils {
         if (fieldOptional.isPresent()) {
             Field field = fieldOptional.get();
 
-            ReflectionUtils.accessField(field, () -> {
+            ReflectionUtils.accessMember(field, () -> {
                 Object existingViewModel = field.get(view);
 
                 if (existingViewModel == null) {
@@ -294,7 +294,7 @@ public class ViewLoaderReflectionUtils {
         List<Field> scopeFields = getScopeFields(viewModel.getClass());
 
         scopeFields.forEach(scopeField -> {
-            ReflectionUtils.accessField(scopeField, () -> injectScopeIntoField(scopeField, viewModel, context),
+            ReflectionUtils.accessMember(scopeField, () -> injectScopeIntoField(scopeField, viewModel, context),
                     "Can't inject Scope into ViewModel <" + viewModel.getClass() + ">");
         });
     }
@@ -305,7 +305,7 @@ public class ViewLoaderReflectionUtils {
 
         if (contextField.isPresent()) {
             Field field = contextField.get();
-            ReflectionUtils.accessField(field, () -> {
+            ReflectionUtils.accessMember(field, () -> {
                 field.set(codeBehind, context);
             }, "Can't inject Context into the view <" + codeBehind + ">");
         }
@@ -372,10 +372,10 @@ public class ViewLoaderReflectionUtils {
     }
 
     /**
-     * If a ViewModel has a method with the signature
-     * <code>public void initialize()</code> it will be invoked. If no such
-     * method is available nothing happens.
-     * 
+     * If a ViewModel has a method annotated with {@link Initialize}
+     * or method with the signature <code>public void initialize()</code>
+     * it will be invoked. If no such method is available nothing happens.
+     *
      * @param viewModel
      *            the viewModel that's initialize method (if available) will be
      *            invoked.
@@ -387,7 +387,9 @@ public class ViewLoaderReflectionUtils {
             return;
         }
         try {
-            final Method initMethod = viewModel.getClass().getMethod("initialize");
+            Method annotatedMethod = getInitializeMethod(viewModel);
+            // find method annotated with @Initialize or use initialize() otherwise
+            final Method initMethod = annotatedMethod != null ? annotatedMethod : viewModel.getClass().getMethod("initialize");
             // if there is a @PostConstruct annotation, throw an exception to prevent double injection
             if(initMethod.isAnnotationPresent(PostConstruct.class)) {
                 throw new IllegalStateException(String.format("initialize method of ViewModel [%s] is annotated with @PostConstruct. " +
@@ -397,17 +399,19 @@ public class ViewLoaderReflectionUtils {
                         "https://github.com/sialcasa/mvvmFX/wiki/Dependency-Injection#lifecycle-postconstruct", viewModel));
             }
 
-            AccessController.doPrivileged((PrivilegedAction) () -> {
-                try {
-                    return initMethod.invoke(viewModel);
-                } catch (InvocationTargetException | IllegalAccessException e) {
-                    throw new IllegalStateException(
-                            "mvvmFX wasn't able to call the initialize method of ViewModel [" + viewModel + "].", e);
-                }
-            });
+            ReflectionUtils.accessMember(initMethod, () -> initMethod.invoke(viewModel), "mvvmFX wasn't able to call the initialize method of ViewModel [" + viewModel + "].");
         } catch (NoSuchMethodException e) {
             // it's perfectly fine that a ViewModel has no initialize method.
         }
+    }
+
+    private static <ViewModelType extends ViewModel> Method getInitializeMethod(ViewModelType viewModel) {
+        for (Method method : viewModel.getClass().getDeclaredMethods()) {
+            if(method.isAnnotationPresent(Initialize.class)) {
+                return method;
+            }
+        }
+        return null;
     }
 
     /**
