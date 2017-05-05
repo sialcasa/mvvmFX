@@ -30,7 +30,7 @@ public class FxmlViewLoaderUtils {
 	 *            the view class type.
 	 * @return the path to the fxml file as string.
 	 */
-	public static String resolveFxmlPath(Class<? extends View> viewType) {
+	public static String resolveFxmlPath(Class<?> viewType) {
 		final StringBuilder pathBuilder = new StringBuilder();
 
 		pathBuilder.append("/");
