@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.devtools.core.gui.nodedetails.NodeDetailView">
+   <children>
+      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+         <children>
+            <VBox>
+               <children>
+                  <Label text="FXML Path:" />
+                  <Label text="Controller" />
+                  <Label text="ViewModel" />
+                  <Label layoutX="10.0" layoutY="27.0" text="Includes" />
+                  <Label layoutX="10.0" layoutY="44.0" text="Total Includes" />
+               </children>
+               <padding>
+                  <Insets right="10.0" />
+               </padding>
+            </VBox>
+            <VBox HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="fxmlNameLabel" text="Label" />
+                  <Label fx:id="controllerLabel" text="Label" />
+                  <Label fx:id="viewModelLabel" text="Label" />
+                  <Label fx:id="directChildrenLabel" layoutX="10.0" layoutY="27.0" text="Label" />
+                  <Label fx:id="totalChildrenLabel" layoutX="10.0" layoutY="44.0" text="Label" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox fx:id="scopesListHBox" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+         <children>
+            <VBox>
+               <children>
+                  <Label text="Uses Scopes:" />
+               </children>
+               <padding>
+                  <Insets right="10.0" />
+               </padding>
+            </VBox>
+            <VBox fx:id="scopeListVBox" HBox.hgrow="ALWAYS" />
+         </children>
+         <padding>
+            <Insets top="10.0" />
+         </padding>
+      </HBox>
+      <HBox fx:id="providedScopeListHBox" layoutX="10.0" layoutY="95.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+         <children>
+            <VBox>
+               <children>
+                  <Label text="Provides Scopes:" />
+               </children>
+               <padding>
+                  <Insets right="10.0" />
+               </padding>
+            </VBox>
+            <VBox fx:id="providedScopeListVBox" HBox.hgrow="ALWAYS" />
+         </children>
+         <padding>
+            <Insets top="10.0" />
+         </padding>
+      </HBox>
+   </children>
+</VBox>
