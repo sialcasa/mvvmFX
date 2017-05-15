@@ -22,8 +22,16 @@ import java.lang.annotation.Target;
 
 /**
  *
- * This annotation is used to mark the method in a ViewModel to be called after all mvvmFx injections.
- * If no method is marked, public <code>initialize()</code> method will be used, if present.<br>
+ * This annotation is used to mark a method in a ViewModel to be called after all mvvmFX injections are finished.
+ * It's possible to use this annotation on multiple methods in the ViewModel and all these methods will be invoked.
+ * However, you may not depend on any invocation order. <br>
+ *
+ * This approach can be combined with the default naming convention of JavaFX. By this convention a method
+ * with the signature <code>public initialize()</code> will be invoked after initialization is finished.<br>
+ *
+ * While the naming convention approach only works with a "public" method, this {@link Initialize} annotation can
+ * also be used on "private"/"protected"/default scope methods.
+ *
  * Example: <br>
  * <br>
  *
@@ -43,7 +51,7 @@ import java.lang.annotation.Target;
  * }
  * </pre>
  *
- * @author Gleb Koval
+ * @author Gleb Koval, Manuel Mauky
  *
  */
 @Retention(RetentionPolicy.RUNTIME)

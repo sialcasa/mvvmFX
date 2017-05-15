@@ -34,6 +34,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -386,33 +389,45 @@ public class ViewLoaderReflectionUtils {
         if (viewModel == null) {
             return;
         }
-        try {
-            Method annotatedMethod = getInitializeMethod(viewModel);
-            // find method annotated with @Initialize or use initialize() otherwise
-            final Method initMethod = annotatedMethod != null ? annotatedMethod : viewModel.getClass().getMethod("initialize");
-            // if there is a @PostConstruct annotation, throw an exception to prevent double injection
-            if(initMethod.isAnnotationPresent(PostConstruct.class)) {
-                throw new IllegalStateException(String.format("initialize method of ViewModel [%s] is annotated with @PostConstruct. " +
-                        "This will lead to unexpected behaviour and duplicate initialization. " +
-                        "Please rename the method or remove the @PostConstruct annotation. " +
-                        "See mvvmFX wiki for more details: " +
-                        "https://github.com/sialcasa/mvvmFX/wiki/Dependency-Injection#lifecycle-postconstruct", viewModel));
-            }
 
-            ReflectionUtils.accessMember(initMethod, () -> initMethod.invoke(viewModel), "mvvmFX wasn't able to call the initialize method of ViewModel [" + viewModel + "].");
-        } catch (NoSuchMethodException e) {
-            // it's perfectly fine that a ViewModel has no initialize method.
-        }
+        final Collection<Method> initializeMethods = getInitializeMethods(viewModel.getClass());
+
+        initializeMethods.forEach(initMethod -> {
+			// if there is a @PostConstruct annotation, throw an exception to prevent double injection
+			if(initMethod.isAnnotationPresent(PostConstruct.class)) {
+				throw new IllegalStateException(String.format("initialize method of ViewModel [%s] is annotated with @PostConstruct. " +
+						"This will lead to unexpected behaviour and duplicate initialization. " +
+						"Please rename the method or remove the @PostConstruct annotation. " +
+						"See mvvmFX wiki for more details: " +
+						"https://github.com/sialcasa/mvvmFX/wiki/Dependency-Injection#lifecycle-postconstruct", viewModel));
+			}
+
+			ReflectionUtils.accessMember(initMethod, () -> initMethod.invoke(viewModel), "mvvmFX wasn't able to call the initialize method of ViewModel [" + viewModel + "].");
+		});
     }
 
-    private static <ViewModelType extends ViewModel> Method getInitializeMethod(ViewModelType viewModel) {
-        for (Method method : viewModel.getClass().getDeclaredMethods()) {
-            if(method.isAnnotationPresent(Initialize.class)) {
-                return method;
-            }
-        }
-        return null;
-    }
+	/**
+	 * Returns a collection of {@link Method}s that represent initializer methods.
+	 * A method is an "initializer method" if it either: <br/>
+	 * <ol>
+	 *     <li>has a signature of "public void initialize()"</li>
+	 *     <li>is annotated with {@link Initialize}</li>
+	 * </ol>
+	 */
+	private static Collection<Method> getInitializeMethods(Class<?> classType) {
+		final List<Method> initializeMethods = new ArrayList<>();
+		Arrays.stream(classType.getMethods())
+				.filter(method -> "initialize".equals(method.getName()))
+				.findAny()
+				.ifPresent(initializeMethods::add);
+
+		Arrays.stream(classType.getDeclaredMethods())
+				.filter(method -> method.isAnnotationPresent(Initialize.class))
+				.forEach(initializeMethods::add);
+
+		return initializeMethods;
+	}
+
 
     /**
      * This method adds listeners for the {@link SceneLifecycle}.
