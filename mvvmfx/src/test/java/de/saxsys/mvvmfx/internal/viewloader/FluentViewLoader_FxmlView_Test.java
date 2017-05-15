@@ -486,4 +486,18 @@ public class FluentViewLoader_FxmlView_Test {
 		assertThat(TestViewModelWithAnnotatedInitialize.wasInitialized).isTrue();
 
 	}
+
+	@Test
+	public void testViewModelHasMultipleInitializeAnnotations() {
+		TestViewModelWithMultipleInitializeAnnotations.init1 = false;
+		TestViewModelWithMultipleInitializeAnnotations.init2 = false;
+		TestViewModelWithMultipleInitializeAnnotations.initialize = false;
+
+		ViewTuple<TestFxmlViewWithViewModelWithMultipleInitializeAnnotations, TestViewModelWithMultipleInitializeAnnotations> viewTuple = FluentViewLoader
+				.fxmlView(TestFxmlViewWithViewModelWithMultipleInitializeAnnotations.class).load();
+
+		assertThat(TestViewModelWithMultipleInitializeAnnotations.init1).isTrue();
+		assertThat(TestViewModelWithMultipleInitializeAnnotations.init2).isTrue();
+		assertThat(TestViewModelWithMultipleInitializeAnnotations.initialize).isTrue();
+	}
 }
