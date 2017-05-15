@@ -44,13 +44,6 @@
 			<artifactId>doc-annotations</artifactId>
 		</dependency>
 
-        <dependency>
-            <groupId>org.controlsfx</groupId>
-            <artifactId>controlsfx</artifactId>
-            <version>8.40.9</version>
-			<scope>provided</scope>
-        </dependency>
-
 		<!-- Testing Frameworks -->
 
 		<dependency>
