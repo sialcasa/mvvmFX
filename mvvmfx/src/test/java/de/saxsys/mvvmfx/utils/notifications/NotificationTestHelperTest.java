@@ -28,81 +28,81 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author manuel.mauky
  */
 public class NotificationTestHelperTest {
-
+	
 	public class MyViewModel implements ViewModel {
 	}
-
+	
 	private MyViewModel viewModel;
-
+	
 	@Before
 	public void setUp() throws Exception {
 		viewModel = new MyViewModel();
 	}
-
+	
 	@Test
 	public void singlePublish() {
 		NotificationTestHelper helper = new NotificationTestHelper();
 		viewModel.subscribe("test", helper);
-
+		
 		viewModel.publish("test");
-
+		
 		assertThat(helper.numberOfReceivedNotifications()).isEqualTo(1);
 	}
-
+	
 	@Test
 	public void multiplePublish() {
 		NotificationTestHelper helper = new NotificationTestHelper();
 		viewModel.subscribe("test", helper);
-
+		
 		int n = 10;
-
+		
 		for (int i = 0; i < n; i++) {
 			viewModel.publish("test");
 		}
-
+		
 		assertThat(helper.numberOfReceivedNotifications()).isEqualTo(n);
 	}
-
+	
 	@Test
 	public void globalNotificationCenter() {
 		NotificationTestHelper helper = new NotificationTestHelper();
-
+		
 		NotificationCenter notificationCenter = new DefaultNotificationCenter();
-
+		
 		notificationCenter.subscribe("OK", helper);
-
-
+		
+		
 		notificationCenter.publish("OK");
-
-
+		
+		
 		assertThat(helper.numberOfReceivedNotifications()).isEqualTo(1);
 	}
-
+	
 	@Test
 	public void publishOnOtherThread() {
 		NotificationTestHelper helper = new NotificationTestHelper(150l);
-
+		
 		NotificationCenter notificationCenter = new DefaultNotificationCenter();
-
+		
 		notificationCenter.subscribe("OK", helper);
-
-
+		
+		
 		Runnable r = () -> notificationCenter.publish("OK");
-
+		
 		new Thread(r).start();
-
+		
 		assertThat(helper.numberOfReceivedNotifications()).isEqualTo(1);
 	}
-
+	
 	@Test
 	public void timeout() {
 		NotificationTestHelper helper = new NotificationTestHelper(300l);
-
+		
 		NotificationCenter notificationCenter = new DefaultNotificationCenter();
-
+		
 		notificationCenter.subscribe("OK", helper);
-
-
+		
+		
 		Runnable r = () -> {
 			try {
 				Thread.sleep(100l);
@@ -111,9 +111,9 @@ public class NotificationTestHelperTest {
 			}
 			notificationCenter.publish("OK");
 		};
-
+		
 		new Thread(r).start();
-
+		
 		assertThat(helper.numberOfReceivedNotifications()).isEqualTo(1);
 	}
 
@@ -155,5 +155,6 @@ public class NotificationTestHelperTest {
 		//message should not be received
 		viewModel.publish("some other message");
 		assertThat(helper.getReceivedNotifications().size()).isEqualTo(3);
+
 	}
 }
