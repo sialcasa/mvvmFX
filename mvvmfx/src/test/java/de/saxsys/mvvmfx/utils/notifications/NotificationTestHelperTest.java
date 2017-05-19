@@ -155,6 +155,5 @@ public class NotificationTestHelperTest {
 		//message should not be received
 		viewModel.publish("some other message");
 		assertThat(helper.getReceivedNotifications().size()).isEqualTo(3);
-
 	}
 }
