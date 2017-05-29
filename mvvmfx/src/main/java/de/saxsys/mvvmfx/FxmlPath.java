@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * This annotation is used to define a {@link FxmlView} custom
- * FXML file path.
+ * FXML file path. An empty file paths will be ignored.
  *
  * Note that the full path to the FXML file must be provided.
  *
