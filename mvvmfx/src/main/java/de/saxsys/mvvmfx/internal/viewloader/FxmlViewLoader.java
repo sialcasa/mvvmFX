@@ -15,10 +15,7 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.internal.viewloader;
 
-import de.saxsys.mvvmfx.Context;
-import de.saxsys.mvvmfx.Scope;
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.*;
 import de.saxsys.mvvmfx.internal.ContextImpl;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -45,9 +42,38 @@ public class FxmlViewLoader {
 
     private static final Logger LOG = LoggerFactory.getLogger(FxmlViewLoader.class);
 
+    private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, ContextImpl context, ObservableBooleanValue viewInSceneProperty) {
+        ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
+
+        Consumer<ViewModel> newVmConsumer = viewModel -> {
+            ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
+            ViewLoaderReflectionUtils.createAndInjectScopes(viewModel, context);
+            ViewLoaderReflectionUtils.initializeViewModel(viewModel);
+
+            ViewLoaderReflectionUtils.addSceneLifecycleHooks(viewModel, viewInSceneProperty);
+        };
+
+        ViewLoaderReflectionUtils.createAndInjectViewModel(codeBehind, newVmConsumer);
+        ViewLoaderReflectionUtils.injectContext(codeBehind, context);
+    }
+
+    private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, ViewModel viewModel,
+                                        ContextImpl context, ObservableBooleanValue viewInSceneProperty) {
+        ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
+
+        if (viewModel != null) {
+            ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
+            ViewLoaderReflectionUtils.createAndInjectScopes(viewModel, context);
+            ViewLoaderReflectionUtils.injectViewModel(codeBehind, viewModel);
+            ViewLoaderReflectionUtils.injectContext(codeBehind, context);
+
+            ViewLoaderReflectionUtils.addSceneLifecycleHooks(viewModel, viewInSceneProperty);
+        }
+    }
+
     /**
      * Load the viewTuple by it`s ViewType.
-     * 
+     *
      * @param viewType
      *            the type of the view to be loaded.
      * @param resourceBundle
@@ -79,40 +105,53 @@ public class FxmlViewLoader {
     /**
      * This method is used to create a String with the path to the FXML file for
      * a given View class.
-     * 
+     *
+     *
      * This is done by taking the package of the view class (if any) and replace
      * "." with "/". After that the Name of the class and the file ending
      * ".fxml" is appended.
-     * 
+     *
+     * If the View class is annotated with @FxmlPath then the String path supplied
+     * in the annotation  value will be used.
+     *
      * Example: de.saxsys.myapp.ui.MainView as view class will be transformed to
      * "/de/saxsys/myapp/ui/MainView.fxml"
-     * 
+     *
      * Example 2: MainView (located in the default package) will be transformed
      * to "/MainView.fxml"
-     * 
+     *
      * @param viewType
      *            the view class type.
      * @return the path to the fxml file as string.
      */
     private String createFxmlPath(Class<?> viewType) {
+        String emptyPath = "";
+
         final StringBuilder pathBuilder = new StringBuilder();
 
-        pathBuilder.append("/");
+        FxmlPath annotation = viewType.getDeclaredAnnotation(FxmlPath.class); //Get annotation from view
+        String path = annotation != null ? annotation.value() : emptyPath; //Extract path  if present
 
-        if (viewType.getPackage() != null) {
-            pathBuilder.append(viewType.getPackage().getName().replaceAll("\\.", "/"));
+        if (!emptyPath.equalsIgnoreCase(path)) {
+            pathBuilder.append(path);
+        } else {
             pathBuilder.append("/");
-        }
 
-        pathBuilder.append(viewType.getSimpleName());
-        pathBuilder.append(".fxml");
+            if (viewType.getPackage() != null) {
+                pathBuilder.append(viewType.getPackage().getName().replaceAll("\\.", "/"));
+                pathBuilder.append("/");
+            }
+
+            pathBuilder.append(viewType.getSimpleName());
+            pathBuilder.append(".fxml");
+        }
 
         return pathBuilder.toString();
     }
 
     /**
      * Load the viewTuple by the path of the fxml file.
-     * 
+     *
      * @param resource
      *            the string path to the fxml file that is loaded.
      * @param resourceBundle
@@ -278,35 +317,6 @@ public class FxmlViewLoader {
         }
     }
 
-    private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, ContextImpl context, ObservableBooleanValue viewInSceneProperty) {
-        ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
-
-        Consumer<ViewModel> newVmConsumer = viewModel -> {
-            ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
-            ViewLoaderReflectionUtils.createAndInjectScopes(viewModel, context);
-            ViewLoaderReflectionUtils.initializeViewModel(viewModel);
-
-            ViewLoaderReflectionUtils.addSceneLifecycleHooks(viewModel, viewInSceneProperty);
-        };
-
-        ViewLoaderReflectionUtils.createAndInjectViewModel(codeBehind, newVmConsumer);
-        ViewLoaderReflectionUtils.injectContext(codeBehind, context);
-    }
-
-    private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, ViewModel viewModel,
-            ContextImpl context, ObservableBooleanValue viewInSceneProperty) {
-        ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
-
-        if (viewModel != null) {
-            ResourceBundleInjector.injectResourceBundle(viewModel, resourceBundle);
-            ViewLoaderReflectionUtils.createAndInjectScopes(viewModel, context);
-            ViewLoaderReflectionUtils.injectViewModel(codeBehind, viewModel);
-            ViewLoaderReflectionUtils.injectContext(codeBehind, context);
-
-            ViewLoaderReflectionUtils.addSceneLifecycleHooks(viewModel, viewInSceneProperty);
-        }
-    }
-
     /**
      * A controller factory that is used for the special case where the user
      * provides an existing viewModel to be used while loading.
@@ -337,13 +347,10 @@ public class FxmlViewLoader {
      */
     private static class ControllerFactoryForCustomViewModel implements Callback<Class<?>, Object> {
 
-        private boolean customViewModelInjected = false;
-
         private final ViewModel customViewModel;
-
         private final ResourceBundle resourceBundle;
-
         private final ContextImpl context;
+        private boolean customViewModelInjected = false;
         private ObservableBooleanValue viewInSceneProperty;
 
         public ControllerFactoryForCustomViewModel(ViewModel customViewModel, ResourceBundle resourceBundle,
