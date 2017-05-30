@@ -500,4 +500,31 @@ public class FluentViewLoader_FxmlView_Test {
 		assertThat(TestViewModelWithMultipleInitializeAnnotations.init2).isTrue();
 		assertThat(TestViewModelWithMultipleInitializeAnnotations.initialize).isTrue();
 	}
+
+	@Test
+	public void testLoadFxmlViewTupleWithCustomPath() throws IOException {
+
+		TestFxmlPathView.instanceCounter = 0;
+		TestViewModel.instanceCounter = 0;
+
+		TestViewModel.wasInitialized = false;
+
+		final ViewTuple<TestFxmlPathView, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlPathView.class)
+				.resourceBundle(resourceBundle).load();
+
+		assertThat(viewTuple).isNotNull();
+
+		assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
+		assertThat(viewTuple.getCodeBehind()).isNotNull();
+
+		final TestFxmlPathView codeBehind = viewTuple.getCodeBehind();
+		assertThat(codeBehind.getViewModel()).isNotNull();
+		assertThat(codeBehind.resourceBundle).hasSameContent(resourceBundle);
+
+		assertThat(codeBehind.viewModelWasNull).isFalse();
+
+		assertThat(TestFxmlPathView.instanceCounter).isEqualTo(1);
+		assertThat(TestViewModel.instanceCounter).isEqualTo(1);
+		assertThat(TestViewModel.wasInitialized).isTrue();
+	}
 }
