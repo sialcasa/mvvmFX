@@ -602,39 +602,40 @@ public class ModelWrapperTest {
 		assertThat(nicknames.get()).containsExactly("myname");
 	}
 
-  @Test
-  public void valuesShouldBeUpdatedWhenModelInstanceChanges() {
-    final Person person1 = new Person();
-    person1.setName("horst");
-    person1.setAge(32);
-    person1.setNicknames(Arrays.asList("captain"));
-    final Person person2 = new Person();
-    person2.setName("dieter");
-    person2.setAge(42);
-    person2.setNicknames(Arrays.asList("robin"));
+	@Test
+	public void valuesShouldBeUpdatedWhenModelInstanceChanges() {
+		final Person person1 = new Person();
+		person1.setName("horst");
+		person1.setAge(32);
+		person1.setNicknames(Arrays.asList("captain"));
+		final Person person2 = new Person();
+		person2.setName("dieter");
+		person2.setAge(42);
+		person2.setNicknames(Arrays.asList("robin"));
 
-    final SimpleObjectProperty<Person> modelProp = new SimpleObjectProperty<>(person1);
+		final SimpleObjectProperty<Person> modelProp = new SimpleObjectProperty<>(person1);
 
-    final ModelWrapper<Person> cut = new ModelWrapper<>(modelProp);
+		final ModelWrapper<Person> cut = new ModelWrapper<>(modelProp);
 
-    final StringProperty nameField = cut.field(Person::getName, Person::setName, person1.getName());
-    final IntegerProperty ageField = cut.field(Person::getAge, Person::setAge, person1.getAge());
-    final ListProperty<String> nicknames = cut.field(Person::getNicknames, Person::setNicknames, person1.getNicknames());
+		final StringProperty nameField = cut.field(Person::getName, Person::setName, person1.getName());
+		final IntegerProperty ageField = cut.field(Person::getAge, Person::setAge, person1.getAge());
+		final ListProperty<String> nicknames = cut
+				.field(Person::getNicknames, Person::setNicknames, person1.getNicknames());
 
-    assertThat(nameField.get()).isEqualTo(person1.getName());
-    assertThat(ageField.get()).isEqualTo(person1.getAge());
-    assertThat(nicknames.get()).containsExactlyElementsOf(person1.getNicknames());
+		assertThat(nameField.get()).isEqualTo(person1.getName());
+		assertThat(ageField.get()).isEqualTo(person1.getAge());
+		assertThat(nicknames.get()).containsExactlyElementsOf(person1.getNicknames());
 
-    modelProp.set(person2);
-    assertThat(nameField.get()).isEqualTo(person2.getName());
-    assertThat(ageField.get()).isEqualTo(person2.getAge());
-    assertThat(nicknames.get()).containsExactlyElementsOf(person2.getNicknames());
+		modelProp.set(person2);
+		assertThat(nameField.get()).isEqualTo(person2.getName());
+		assertThat(ageField.get()).isEqualTo(person2.getAge());
+		assertThat(nicknames.get()).containsExactlyElementsOf(person2.getNicknames());
 
-    cut.reset();
-    assertThat(nameField.get()).isEqualTo(person1.getName());
-    assertThat(ageField.get()).isEqualTo(person1.getAge());
-    assertThat(nicknames.get()).containsExactlyElementsOf(person1.getNicknames());
-  }
+		cut.reset();
+		assertThat(nameField.get()).isEqualTo(person1.getName());
+		assertThat(ageField.get()).isEqualTo(person1.getAge());
+		assertThat(nicknames.get()).containsExactlyElementsOf(person1.getNicknames());
+	}
 
 	@Test
 	public void testUseCurrentValuesAsDefaultWhenModelIsNull() {
