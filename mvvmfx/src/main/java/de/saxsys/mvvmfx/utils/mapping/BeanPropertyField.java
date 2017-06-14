@@ -14,7 +14,7 @@ import java.util.function.Supplier;
  *
  * @param <T>
  */
-class BeanPropertyField<M, T, R extends Property<T>> implements PropertyField<T, M, R> {
+class BeanPropertyField<T, M, R extends Property<T>> implements PropertyField<T, M, R> {
 
 	private final R targetProperty;
 	private T defaultValue;

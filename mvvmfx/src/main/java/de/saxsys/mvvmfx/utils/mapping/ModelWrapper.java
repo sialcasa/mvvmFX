@@ -37,6 +37,7 @@ import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectGetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringImmutableSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringSetter;
 
@@ -250,6 +251,8 @@ public class ModelWrapper<M> {
 	private final Set<PropertyField<?, M, ?>> fields = new LinkedHashSet<>();
 	private final Map<String, PropertyField<?, M, ?>> identifiedFields = new HashMap<>();
 
+	private final Set<ImmutablePropertyField<?, M, ?>> immutableFields = new LinkedHashSet<>();
+
 	private final ObjectProperty<M> model;
 
 
@@ -395,6 +398,11 @@ public class ModelWrapper<M> {
 		if (model.get() != null) {
 			fields.forEach(field -> field.commit(model.get()));
 
+			for (ImmutablePropertyField<?, M, ?> immutableField : immutableFields) {
+				M newModel = immutableField.commitImmutable(model.get());
+				model.setValue(newModel);
+			}
+
 			dirtyFlag.set(false);
 
 			calculateDifferenceFlag();
@@ -468,6 +476,26 @@ public class ModelWrapper<M> {
 		} else {
 			identifiedFields.put(fieldName, field);
 			return add(field);
+		}
+	}
+
+	private <T, R extends Property<T>> R addImmutable(ImmutablePropertyField<T, M, R> field) {
+		immutableFields.add(field);
+
+		if(model.get() != null) {
+			field.reload(model.get());
+		}
+
+		return field.getProperty();
+	}
+
+	private <T, R extends Property<T>> R addIdentifiedImmutable(String fieldName, ImmutablePropertyField<T, M, R> field) {
+		if (identifiedFields.containsKey(fieldName)) {
+			final Property<?> property = identifiedFields.get(fieldName).getProperty();
+			return (R) property;
+		} else {
+			identifiedFields.put(fieldName, field);
+			return addImmutable(field);
 		}
 	}
 
@@ -565,6 +593,11 @@ public class ModelWrapper<M> {
 		return add(new BeanPropertyField<>(this::propertyWasChanged, getter, setter, SimpleStringProperty::new));
 	}
 
+
+	public StringProperty immutableField(StringGetter<M> getter, StringImmutableSetter<M> setter){
+		return addImmutable(new ImmutablePropertyField<>(this::propertyWasChanged, getter, setter, SimpleStringProperty::new));
+	}
+
 	/**
 	 * Add a new field of type String to this instance of the wrapper. See {@link #field(StringGetter, StringSetter)}.
 	 * This method additionally has a parameter to define the default value that is used when the {@link #reset()}
@@ -585,6 +618,10 @@ public class ModelWrapper<M> {
 	public StringProperty field(StringGetter<M> getter, StringSetter<M> setter, String defaultValue) {
 		return add(new BeanPropertyField<>(this::propertyWasChanged, getter, setter, defaultValue,
 				SimpleStringProperty::new));
+	}
+
+	public StringProperty immutableField(StringGetter<M> getter, StringImmutableSetter<M> setter, String defaultValue){
+		return addImmutable(new ImmutablePropertyField<>(this::propertyWasChanged, getter, setter, defaultValue, SimpleStringProperty::new));
 	}
 
 	/**
@@ -660,6 +697,14 @@ public class ModelWrapper<M> {
 			String defaultValue) {
 		return addIdentified(identifier, new BeanPropertyField<>(this::propertyWasChanged, getter, setter, defaultValue,
 				() -> new SimpleStringProperty(null, identifier)));
+	}
+
+	public StringProperty immutableField(String identifier, StringGetter<M> getter, StringImmutableSetter<M> setter){
+		return addIdentifiedImmutable(identifier, new ImmutablePropertyField<>(this::propertyWasChanged, getter, setter, SimpleStringProperty::new));
+	}
+
+	public StringProperty immutableField(String identifier, StringGetter<M> getter, StringImmutableSetter<M> setter, String defaultValue){
+		return addIdentifiedImmutable(identifier, new ImmutablePropertyField<>(this::propertyWasChanged, getter, setter, defaultValue, SimpleStringProperty::new));
 	}
 
 	/**
