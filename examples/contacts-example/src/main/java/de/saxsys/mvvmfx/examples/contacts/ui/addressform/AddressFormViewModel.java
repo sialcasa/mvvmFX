@@ -90,7 +90,6 @@ public class AddressFormViewModel implements ViewModel {
 		});
 
 		loadingInProgress.bind(countrySelector.inProgressProperty());
-		countrySelector.init();
 
 		initSubdivisionLabel();
 		initCountryList();
