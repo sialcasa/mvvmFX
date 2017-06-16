@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Singleton
 public class DomCountrySelector implements CountrySelector {
@@ -68,7 +69,7 @@ public class DomCountrySelector implements CountrySelector {
 		subdivisionsDocument.getDocumentElement().normalize();
 
 		NodeList countryNodes = subdivisionsDocument.getElementsByTagName("iso_3166_country");
-		for(int countryIndex=0 ; countryIndex<countryNodes.getLength() ; countryIndex++) {
+		for (int countryIndex = 0; countryIndex < countryNodes.getLength(); countryIndex++) {
 			Node countryNode = countryNodes.item(countryIndex);
 			String countryCode = countryNode.getAttributes().getNamedItem("code").getNodeValue();
 
@@ -79,19 +80,21 @@ public class DomCountrySelector implements CountrySelector {
 
 			List<Subdivision> subdivisionList = countryCodeSubdivisionMap.get(country);
 
-			if(country != null) {
-				NodeList subsetNodes = ((Element)countryNode).getElementsByTagName("iso_3166_subset");
+			if (country != null) {
+				NodeList subsetNodes = ((Element) countryNode).getElementsByTagName("iso_3166_subset");
 
-				for(int subsetIndex=0 ; subsetIndex < subsetNodes.getLength() ; subsetIndex++) {
+				List<String> subdivisionNames = new ArrayList<>();
+
+				for (int subsetIndex = 0; subsetIndex < subsetNodes.getLength(); subsetIndex++) {
 					Node subsetNode = subsetNodes.item(subsetIndex);
 
+
 					String subsetType = subsetNode.getAttributes().getNamedItem("type").getNodeValue();
-
-					countryCodeSubdivisionNameMap.put(country, subsetType);
-
+					subdivisionNames.add(subsetType);
+					
 					NodeList entryNodes = ((Element) subsetNode).getElementsByTagName("iso_3166_2_entry");
 
-					for(int entryIndex=0 ; entryIndex<entryNodes.getLength() ; entryIndex++) {
+					for (int entryIndex = 0; entryIndex < entryNodes.getLength(); entryIndex++) {
 						Node entryNode = entryNodes.item(entryIndex);
 
 						String entryName = entryNode.getAttributes().getNamedItem("name").getNodeValue();
@@ -100,6 +103,11 @@ public class DomCountrySelector implements CountrySelector {
 						subdivisionList.add(new Subdivision(entryName, entryCode, country));
 					}
 				}
+				
+				String subdivisionName = subdivisionNames.stream()
+						.collect(Collectors.joining("/"));
+
+				countryCodeSubdivisionNameMap.put(country, subdivisionName);
 			}
 		}
 	}
@@ -109,7 +117,7 @@ public class DomCountrySelector implements CountrySelector {
 
 		countriesDocument.getDocumentElement().normalize();
 		NodeList entries = countriesDocument.getElementsByTagName("iso_3166_entry");
-		for(int i=0; i<entries.getLength(); i++) {
+		for (int i = 0; i < entries.getLength(); i++) {
 			Node item = entries.item(i);
 			String name = item.getAttributes().getNamedItem("name").getNodeValue();
 			String alpha2Code = item.getAttributes().getNamedItem("alpha_2_code").getNodeValue();
