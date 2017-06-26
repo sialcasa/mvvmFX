@@ -1,5 +1,8 @@
-package de.saxsys.mvvmfx.examples.contacts.model;
+package de.saxsys.mvvmfx.examples.contacts.model.countries;
 
+import de.saxsys.mvvmfx.examples.contacts.model.Countries;
+import de.saxsys.mvvmfx.examples.contacts.model.Country;
+import de.saxsys.mvvmfx.examples.contacts.model.Subdivision;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyStringProperty;

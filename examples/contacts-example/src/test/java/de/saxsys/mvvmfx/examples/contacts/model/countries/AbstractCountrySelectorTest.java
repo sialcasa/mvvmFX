@@ -1,5 +1,8 @@
-package de.saxsys.mvvmfx.examples.contacts.model;
+package de.saxsys.mvvmfx.examples.contacts.model.countries;
 
+import de.saxsys.mvvmfx.examples.contacts.model.Country;
+import de.saxsys.mvvmfx.examples.contacts.model.Subdivision;
+import de.saxsys.mvvmfx.examples.contacts.model.countries.CountrySelector;
 import javafx.application.Platform;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;

@@ -1,5 +1,8 @@
-package de.saxsys.mvvmfx.examples.contacts.model;
+package de.saxsys.mvvmfx.examples.contacts.model.countries;
 
+import de.saxsys.mvvmfx.examples.contacts.model.countries.AbstractCountrySelectorTest;
+import de.saxsys.mvvmfx.examples.contacts.model.countries.CountrySelector;
+import de.saxsys.mvvmfx.examples.contacts.model.countries.JAXBCountrySelector;
 import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
 import org.junit.Before;
 import org.junit.runner.RunWith;

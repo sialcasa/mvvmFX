@@ -1,5 +1,7 @@
-package de.saxsys.mvvmfx.examples.contacts.model;
+package de.saxsys.mvvmfx.examples.contacts.model.countries;
 
+import de.saxsys.mvvmfx.examples.contacts.model.Country;
+import de.saxsys.mvvmfx.examples.contacts.model.Subdivision;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyStringProperty;
@@ -15,6 +17,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.inject.Alternative;
 import javax.inject.Singleton;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -26,6 +29,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Singleton
+@Alternative
 public class DomCountrySelector implements CountrySelector {
 	private static final Logger LOG = LoggerFactory.getLogger(DomCountrySelector.class);
 

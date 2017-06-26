@@ -1,5 +1,6 @@
-package de.saxsys.mvvmfx.examples.contacts.model;
+package de.saxsys.mvvmfx.examples.contacts.model.countries;
 
+import de.saxsys.mvvmfx.examples.contacts.model.Country;
 import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
 import org.datafx.reader.converter.XmlConverter;
 import org.junit.Before;

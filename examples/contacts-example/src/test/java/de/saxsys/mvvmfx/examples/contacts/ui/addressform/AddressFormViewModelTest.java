@@ -1,7 +1,7 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.addressform;
 
 import de.saxsys.mvvmfx.examples.contacts.model.Country;
-import de.saxsys.mvvmfx.examples.contacts.model.CountrySelector;
+import de.saxsys.mvvmfx.examples.contacts.model.countries.CountrySelector;
 import de.saxsys.mvvmfx.examples.contacts.model.Subdivision;
 import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 import javafx.beans.property.SimpleBooleanProperty;
