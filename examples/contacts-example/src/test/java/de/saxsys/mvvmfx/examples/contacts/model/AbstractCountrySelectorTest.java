@@ -30,6 +30,12 @@ public abstract class AbstractCountrySelectorTest {
 		assertThat(countrySelector.subdivisionLabel()).hasValue("State");
 		Assertions.assertThat(countrySelector.subdivisions()).hasSize(16);
 
+		countrySelector.setCountry(new Country("Australia", "AU"));
+		assertThat(countrySelector.subdivisionLabel()).hasValue("State/Territory");
+		
+		countrySelector.setCountry(new Country("China", "CN"));
+		assertThat(countrySelector.subdivisionLabel()).hasValue("Municipality/Province/Autonomous region/Special administrative region");
+		
 		countrySelector.setCountry(null);
 
 		assertThat(countrySelector.subdivisionLabel()).hasNullValue();
@@ -43,8 +49,8 @@ public abstract class AbstractCountrySelectorTest {
 
 		runBlocked(countrySelector::init);
 
-		Assertions.assertThat(countrySelector.availableCountries()).hasSize(3);
-		Assertions.assertThat(getCountryNames(countrySelector.availableCountries())).contains("Germany", "Austria", "Switzerland");
+		Assertions.assertThat(countrySelector.availableCountries()).hasSize(5);
+		Assertions.assertThat(getCountryNames(countrySelector.availableCountries())).contains("Germany", "Austria", "Switzerland", "Australia", "China");
 
 		Assertions.assertThat(countrySelector.subdivisions()).isEmpty();
 		assertThat(countrySelector.subdivisionLabel()).hasNullValue();

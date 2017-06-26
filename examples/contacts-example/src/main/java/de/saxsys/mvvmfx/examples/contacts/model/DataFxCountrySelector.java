@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This class is used to encapsulate the process of loading available countries
@@ -182,7 +183,11 @@ public class DataFxCountrySelector implements CountrySelector {
 								});
 							});
 
-							countryCodeSubdivisionNameMap.put(country, entity.subsets.get(0).subdivisionType);
+							String subdivisionName = entity.subsets.stream()
+									.map(subset -> subset.subdivisionType)
+									.collect(Collectors.joining("/"));
+
+							countryCodeSubdivisionNameMap.put(country, subdivisionName);
 						}
 					});
 
