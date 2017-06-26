@@ -1,10 +1,9 @@
 package de.saxsys.mvvmfx.utils.newitemlist;
 
 import de.saxsys.mvvmfx.utils.itemlist.ListTransformation;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -32,22 +31,22 @@ public class ItemList<T, K> implements ViewItemList<K>{
 
 	private ListTransformation<T, K> listTransformation;
 
+	private String noSelectionPlaceHolder;
+	private K noSelectionKey;
+
 	public ItemList(Function<T, K> identifierFunction) {
 		this.identifierFunction = identifierFunction;
 		listTransformation = new ListTransformation<>(FXCollections.observableArrayList(), identifierFunction);
 
-		listTransformation.getModelList().addListener(new ListChangeListener<T>() {
-			@Override
-			public void onChanged(Change<? extends T> c) {
-				while(c.next()){
-					if(c.wasRemoved()) {
-						if(c.getList().isEmpty()) {
-							selectedItem.setValue(null);
-						}
-					}
-				}
-			}
-		});
+		listTransformation.getModelList().addListener((ListChangeListener<T>) c -> {
+            while(c.next()){
+                if(c.wasRemoved()) {
+                    if(c.getList().isEmpty()) {
+                        selectedItem.setValue(null);
+                    }
+                }
+            }
+        });
 	}
 
 	public void replaceModelItems(Collection<T> items) {
@@ -72,8 +71,30 @@ public class ItemList<T, K> implements ViewItemList<K>{
 	}
 
 	public void setLabelFunction(Function<T, String> labelFunction) {
-		Objects.requireNonNull(labelFunction);
-		this.labelFunction = labelFunction;
+		this.labelFunction = Objects.requireNonNull(labelFunction);
+	}
+
+
+	/**
+	 * This method can be used to enable the handling of "no selection" use case.
+	 * This is useful for {@link ChoiceBox} and {@link ComboBox}.
+	 *
+	 *
+	 *
+	 * @param placeholder
+	 */
+	public void enableNoSelection(K noSelectionKey, String placeholder) {
+		this.noSelectionKey = Objects.requireNonNull(noSelectionKey);
+		this.noSelectionPlaceHolder = Objects.requireNonNull(placeholder);
+	}
+
+
+	/**
+	 * This method is used to clear the selection.
+	 * It is a shortcut to <code>itemList.selectedItemProperty().setValue(null);</code>.
+	 */
+	public void clearSelection() {
+		selectedItem.setValue(null);
 	}
 
 	public ObservableList<T> getModelList(){
@@ -82,6 +103,10 @@ public class ItemList<T, K> implements ViewItemList<K>{
 
 	public ObjectProperty<T> selectedItemProperty() {
 		return selectedItem;
+	}
+
+	public T getSelectedItem() {
+		return selectedItem.get();
 	}
 
 
@@ -96,11 +121,19 @@ public class ItemList<T, K> implements ViewItemList<K>{
 		@Override
 		public String toString(K item) {
 			if(item == null) {
-				return null;
+				if(noSelectionPlaceHolder == null ){
+					return null;
+				} else {
+					return noSelectionPlaceHolder;
+				}
 			} else {
-				Optional<T> modelOptional = getModelByKey(item);
+				if(noSelectionKey != null && noSelectionKey.equals(item)) {
+					return noSelectionPlaceHolder;
+				} else {
+					Optional<T> modelOptional = getModelByKey(item);
 
-				return modelOptional.map(labelFunction).orElse(null);
+					return modelOptional.map(labelFunction).orElse(null);
+				}
 			}
 		}
 
@@ -110,11 +143,63 @@ public class ItemList<T, K> implements ViewItemList<K>{
 		}
 	};
 
+	/**
+	 * If "no selection" is enabled we need to add a dummy entry
+	 * to the item list that is used by comboBox/choiceBox.
+	 * This dummy entry represents "nothing selected" and can be choosen by the user
+	 * without being a "real" entry in the model list.
+	 */
+	@SuppressWarnings("unchecked")
+	private ObservableList<K> createComboBoxItemList() {
+		if(noSelectionKey == null) {
+			return listTransformation.getTargetList();
+		} else {
+			return FXCollections.concat(
+					FXCollections.singletonObservableList(noSelectionKey),
+					listTransformation.getTargetList());
+		}
+	}
+
 	@Override
 	public Runnable connect(ComboBox<K> comboBox) {
-		comboBox.setItems(listTransformation.getTargetList());
+		comboBox.setItems(createComboBoxItemList());
+
+
+		// we need to "copy" the selected value to the combobox to keep it sync with the ItemList.
+		if(selectedItem.get() == null) {
+			comboBox.setValue(null);
+			comboBox.getSelectionModel().select(null);
+		} else {
+			K selectedKey = identifierFunction.apply(selectedItem.get());
+
+			comboBox.setValue(selectedKey);
+			comboBox.getSelectionModel().select(selectedKey);
+		}
+
+		// We need to patch the buttonCell of the ComboBox (the value that is visible on the combobox itself)
+		// so that it shows the "no selection" placeholder when "no selection" is enabled.
+		comboBox.setButtonCell(new ListCell<K>(){
+			@Override
+			protected void updateItem(K item, boolean empty) {
+				super.updateItem(item, empty);
+
+				// the converter takes care for selecting the "no selection" placeholder if needed.
+				setText(keyItemConverter.toString(item));
+			}
+		});
 
 		comboBox.setConverter(keyItemConverter);
+
+		// if nothing is selected atm and "no selection" is enabled, we need to update the buttonCell
+		// due to a bug (?) in JavaFX. Otherwise, the combobox button would still be empty.
+		if(selectedItem.get() == null && noSelectionKey != null) {
+			Platform.runLater(() -> {
+				int indexOfNoSelectionKey = comboBox.getButtonCell().getListView().getItems().indexOf(noSelectionKey);
+				if(indexOfNoSelectionKey != -1) {
+					comboBox.getButtonCell().updateIndex(indexOfNoSelectionKey);
+				}
+			});
+		}
 
 		Runnable removeSelectionModelListener = initSelectionModelListener(comboBox.getSelectionModel());
 
@@ -126,17 +211,28 @@ public class ItemList<T, K> implements ViewItemList<K>{
 
 	private Runnable initSelectionModelListener(SelectionModel<K> selectionModel) {
 		final ChangeListener<K> selectionModelListener = (observable, oldValue, newValue) -> {
-			if (newValue != null) {
+			if (newValue == null) {
+				selectedItem.setValue(null);
+			} else {
+				if(noSelectionKey != null && newValue.equals(noSelectionKey)) {
+					selectedItem.setValue(null);
+				} else {
+					Optional<T> selectedItemOptional = getModelByKey(newValue);
 
-				Optional<T> selectedItemOptional = getModelByKey(newValue);
-
-				selectedItemOptional.ifPresent(selectedItem::setValue);
+					selectedItemOptional.ifPresent(selectedItem::setValue);
+				}
 			}
 		};
 		selectionModel.selectedItemProperty().addListener(selectionModelListener);
 
 		ChangeListener<T> selectedItemListener = (observable, oldValue, newValue) -> {
-			if (newValue != null) {
+			if (newValue == null) {
+				if(noSelectionKey != null){
+					selectionModel.select(noSelectionKey);
+				} else {
+					selectionModel.clearSelection();
+				}
+			} else {
 				K key = identifierFunction.apply(newValue);
 
 				selectionModel.select(key);
@@ -177,19 +273,47 @@ public class ItemList<T, K> implements ViewItemList<K>{
 		});
 
 
+		if(selectedItem.get() == null) {
+			listView.getSelectionModel().select(null);
+		} else {
+			K selectedKey = identifierFunction.apply(selectedItem.get());
+			listView.getSelectionModel().select(selectedKey);
+		}
+
 		Runnable removeSelectionModelListener = initSelectionModelListener(listView.getSelectionModel());
+
+
+		// in addition to the other listeners we need a special listener on the selectionModel for ListViews.
+		// the reason is that the ListView doesn't show a "no selection" placeholder when "no selection" is enabled.
+		// instead for ListView we have to use "clearSelection" instead.
+		ChangeListener<K> clearSelectionListener = (observable, oldValue, newValue) -> {
+			if (noSelectionKey != null && noSelectionKey.equals(newValue)) {
+				listView.getSelectionModel().clearSelection();
+			}
+		};
+		listView.getSelectionModel().selectedItemProperty().addListener(clearSelectionListener);
 
 		return () -> {
 			removeSelectionModelListener.run();
 			listView.setCellFactory(null);
+			listView.getSelectionModel().selectedItemProperty().removeListener(clearSelectionListener);
 		};
 	}
 
 	@Override
 	public Runnable connect(ChoiceBox<K> choiceBox) {
-		choiceBox.setItems(listTransformation.getTargetList());
+		choiceBox.setItems(createComboBoxItemList());
 
 		choiceBox.setConverter(keyItemConverter);
+
+		if (selectedItem.get() == null) {
+			if(noSelectionKey != null) {
+				choiceBox.setValue(noSelectionKey);
+			}
+		} else {
+			K selectedKey = identifierFunction.apply(selectedItem.get());
+			choiceBox.setValue(selectedKey);
+		}
 
 		Runnable removeSelectionModelListener = initSelectionModelListener(choiceBox.getSelectionModel());
 

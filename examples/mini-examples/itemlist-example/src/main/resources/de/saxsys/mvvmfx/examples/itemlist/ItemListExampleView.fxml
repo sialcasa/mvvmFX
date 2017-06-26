@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox spacing="10.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.examples.itemlist.ItemListExampleView">
+<VBox spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.examples.itemlist.ItemListExampleView">
     <children>
       <Label text="Your Favorite Ice Cream!">
          <font>
@@ -67,10 +67,21 @@
          </children>
       </VBox>
       <Separator prefWidth="200.0" />
-      <HBox spacing="5.0">
+      <VBox spacing="5.0">
          <children>
-            <TextField fx:id="newValue" maxWidth="1.7976931348623157E308" promptText="new Value" HBox.hgrow="ALWAYS" />
-            <Button fx:id="saveNewValue" mnemonicParsing="false" onAction="#saveNewValue" text="Save" />
+            <Label text="Change the Name of the selected Item" />
+            <HBox spacing="5.0">
+               <children>
+                  <TextField fx:id="newValue" maxWidth="1.7976931348623157E308" promptText="new Value" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="saveNewValue" mnemonicParsing="false" onAction="#saveNewValue" text="Save" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <Separator prefWidth="200.0" />
+      <HBox>
+         <children>
+            <Button mnemonicParsing="false" onAction="#clearSelection" text="Clear Selection" />
          </children>
       </HBox>
     </children>

@@ -56,4 +56,8 @@ public class ItemListExampleView implements FxmlView<ItemListExampleViewModel> {
 	public void saveNewValue() {
 		viewModel.saveNewValue();
 	}
+
+	public void clearSelection() {
+		viewModel.clearSelection();
+	}
 }

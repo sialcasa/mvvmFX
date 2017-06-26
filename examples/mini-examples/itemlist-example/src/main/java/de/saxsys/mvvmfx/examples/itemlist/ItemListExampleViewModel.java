@@ -12,6 +12,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class ItemListExampleViewModel implements ViewModel {
 
@@ -27,6 +28,8 @@ public class ItemListExampleViewModel implements ViewModel {
 
 	public ItemListExampleViewModel(IceCreamRepository repository) {
 		this.repository = repository;
+
+		itemList.enableNoSelection(UUID.randomUUID().toString(), "---");
 
 		itemList.setLabelFunction(IceCreamFlavor::getName);
 
@@ -75,6 +78,10 @@ public class ItemListExampleViewModel implements ViewModel {
 				reloadFromRepository();
 			}
 		}
+	}
+
+	public void clearSelection() {
+		itemList.clearSelection();
 	}
 
 	public ViewItemList<String> itemList() {
