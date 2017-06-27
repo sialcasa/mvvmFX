@@ -47,7 +47,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -426,15 +425,18 @@ public class ModelWrapper<M> {
 			
 		private List<E> defaultValue;
 		private final ListPropertyAccessor<M, E> accessor;
-		private final ListProperty<E> targetProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+		private final ListProperty<E> targetProperty;
 		
-		public FxListPropertyField(ListPropertyAccessor<M, E> accessor) {
-			this(accessor, Collections.emptyList());
+		public FxListPropertyField(ListPropertyAccessor<M, E> accessor, Supplier<ListProperty<E>> propertySupplier) {
+			this(accessor, propertySupplier, Collections.emptyList());
 		}
 		
-		public FxListPropertyField(ListPropertyAccessor<M, E> accessor, List<E> defaultValue) {
+		public FxListPropertyField(ListPropertyAccessor<M, E> accessor, Supplier<ListProperty<E>> propertySupplier, List<E> defaultValue) {
 			this.accessor = accessor;
 			this.defaultValue = defaultValue;
+
+			this.targetProperty = propertySupplier.get();
+			this.targetProperty.setValue(FXCollections.observableArrayList());
 			
 			this.targetProperty.addListener((ListChangeListener<E>) change -> ModelWrapper.this.propertyWasChanged());
 		}
@@ -489,16 +491,18 @@ public class ModelWrapper<M> {
 		private final ListSetter<M, E> setter;
 		
 		private List<E> defaultValue;
-		private final ListProperty<E> targetProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+		private final ListProperty<E> targetProperty;
 		
-		public BeanListPropertyField(ListGetter<M, E> getter, ListSetter<M, E> setter) {
-			this(getter, setter, Collections.emptyList());
+		public BeanListPropertyField(ListGetter<M, E> getter, ListSetter<M, E> setter, Supplier<ListProperty<E>> propertySupplier) {
+			this(getter, setter, propertySupplier, Collections.emptyList());
 		}
 		
-		public BeanListPropertyField(ListGetter<M, E> getter, ListSetter<M, E> setter, List<E> defaultValue) {
+		public BeanListPropertyField(ListGetter<M, E> getter, ListSetter<M, E> setter, Supplier<ListProperty<E>> propertySupplier, List<E> defaultValue) {
 			this.defaultValue = defaultValue;
 			this.getter = getter;
 			this.setter = setter;
+			this.targetProperty = propertySupplier.get();
+			this.targetProperty.setValue(FXCollections.observableArrayList());
 			
 			this.targetProperty.addListener((ListChangeListener<E>) change -> propertyWasChanged());
 		}
@@ -707,9 +711,23 @@ public class ModelWrapper<M> {
 			calculateDifferenceFlag();
 		}
 	}
-	
-	
-	
+
+
+	/**
+	 * This method can be used to copy all values of this {@link ModelWrapper} instance
+	 * to the model instance provided as argument.
+	 * Existing values in the provided model instance will be overwritten.
+	 * <p>
+	 * This method doesn't change the state of this modelWrapper or the wrapped model instance.
+	 *
+	 * @param model a non-null instance of a model.
+	 */
+	public void copyValuesTo(M model) {
+		Objects.requireNonNull(model);
+		fields.forEach(field -> field.commit(model));
+	}
+
+
 	private void propertyWasChanged() {
 		dirtyFlag.set(true);
 		calculateDifferenceFlag();
@@ -851,13 +869,13 @@ public class ModelWrapper<M> {
 	 * @return The wrapped property instance.
 	 */
 	public StringProperty field(String identifier, StringGetter<M> getter, StringSetter<M> setter) {
-		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, SimpleStringProperty::new));
+		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, () -> new SimpleStringProperty(null, identifier)));
 	}
 	
 	public StringProperty field(String identifier, StringGetter<M> getter, StringSetter<M> setter,
 			String defaultValue) {
 		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, defaultValue,
-				SimpleStringProperty::new));
+				() -> new SimpleStringProperty(null, identifier)));
 	}
 	
 	/**
@@ -875,12 +893,12 @@ public class ModelWrapper<M> {
 	 * @return The wrapped property instance.
 	 */
 	public StringProperty field(String identifier, StringPropertyAccessor<M> accessor) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleStringProperty::new));
+		return addIdentified(identifier, new FxPropertyField<>(accessor, () -> new SimpleStringProperty(null, identifier)));
 	}
 	
 	public StringProperty field(String identifier, StringPropertyAccessor<M> accessor, String defaultValue) {
 		return addIdentified(identifier,
-				new FxPropertyField<>(accessor::apply, defaultValue, SimpleStringProperty::new));
+				new FxPropertyField<>(accessor, defaultValue, () -> new SimpleStringProperty(null, identifier)));
 	}
 	
 	/** Field type Boolean **/
@@ -902,21 +920,21 @@ public class ModelWrapper<M> {
 	}
 	
 	public BooleanProperty field(String identifier, BooleanGetter<M> getter, BooleanSetter<M> setter) {
-		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, SimpleBooleanProperty::new));
+		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, () -> new SimpleBooleanProperty(null, identifier)));
 	}
 	
 	public BooleanProperty field(String identifier, BooleanGetter<M> getter, BooleanSetter<M> setter,
 			boolean defaultValue) {
 		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, defaultValue,
-				SimpleBooleanProperty::new));
+				() -> new SimpleBooleanProperty(null, identifier)));
 	}
 	
 	public BooleanProperty field(String identifier, BooleanPropertyAccessor<M> accessor) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor, SimpleBooleanProperty::new));
+		return addIdentified(identifier, new FxPropertyField<>(accessor, () -> new SimpleBooleanProperty(null, identifier)));
 	}
 	
 	public BooleanProperty field(String identifier, BooleanPropertyAccessor<M> accessor, boolean defaultValue) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor, defaultValue, SimpleBooleanProperty::new));
+		return addIdentified(identifier, new FxPropertyField<>(accessor, defaultValue, () -> new SimpleBooleanProperty(null, identifier)));
 	}
 	
 	
@@ -948,9 +966,10 @@ public class ModelWrapper<M> {
 	}
 	
 	public DoubleProperty field(String identifier, DoubleGetter<M> getter, DoubleSetter<M> setter) {
-		final ModelWrapper<M>.BeanPropertyField<Number, SimpleDoubleProperty> beanPropertyField = new BeanPropertyField<>(
-				getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
-				SimpleDoubleProperty::new);
+		final ModelWrapper<M>.BeanPropertyField<Number, SimpleDoubleProperty> beanPropertyField =
+				new BeanPropertyField<>(
+					getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
+					() -> new SimpleDoubleProperty(null, identifier));
 				
 		return addIdentified(identifier, beanPropertyField);
 	}
@@ -960,17 +979,17 @@ public class ModelWrapper<M> {
 		ModelWrapper<M>.BeanPropertyField<Number, SimpleDoubleProperty> beanPropertyField = new BeanPropertyField<>(
 				getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
 				defaultValue,
-				SimpleDoubleProperty::new);
+				() -> new SimpleDoubleProperty(null, identifier));
 		return addIdentified(identifier, beanPropertyField);
 	}
 	
 	public DoubleProperty field(String identifier, DoublePropertyAccessor<M> accessor) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleDoubleProperty::new));
+		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, () -> new SimpleDoubleProperty(null, identifier)));
 	}
 	
 	public DoubleProperty field(String identifier, DoublePropertyAccessor<M> accessor, double defaultValue) {
 		return addIdentified(identifier,
-				new FxPropertyField<>(accessor::apply, defaultValue, SimpleDoubleProperty::new));
+				new FxPropertyField<>(accessor::apply, defaultValue, () -> new SimpleDoubleProperty(null, identifier)));
 	}
 	
 	
@@ -1003,7 +1022,7 @@ public class ModelWrapper<M> {
 	public FloatProperty field(String identifier, FloatGetter<M> getter, FloatSetter<M> setter) {
 		ModelWrapper<M>.BeanPropertyField<Number, SimpleFloatProperty> beanPropertyField = new BeanPropertyField<>(
 				getter::apply, (m, number) -> setter.accept(m, number.floatValue()),
-				SimpleFloatProperty::new);
+				() -> new SimpleFloatProperty(null, identifier));
 		return addIdentified(identifier, beanPropertyField);
 	}
 	
@@ -1012,17 +1031,17 @@ public class ModelWrapper<M> {
 		ModelWrapper<M>.BeanPropertyField<Number, SimpleFloatProperty> beanPropertyField = new BeanPropertyField<>(
 				getter::apply, (m, number) -> setter.accept(m, number.floatValue()),
 				defaultValue,
-				SimpleFloatProperty::new);
+				() -> new SimpleFloatProperty(null, identifier));
 		return addIdentified(identifier, beanPropertyField);
 	}
 	
 	public FloatProperty field(String identifier, FloatPropertyAccessor<M> accessor) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleFloatProperty::new));
+		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, () -> new SimpleFloatProperty(null, identifier)));
 	}
 	
 	public FloatProperty field(String identifier, FloatPropertyAccessor<M> accessor, float defaultValue) {
 		return addIdentified(identifier,
-				new FxPropertyField<>(accessor::apply, defaultValue, SimpleFloatProperty::new));
+				new FxPropertyField<>(accessor::apply, defaultValue, () -> new SimpleFloatProperty(null, identifier)));
 	}
 	
 	
@@ -1056,7 +1075,7 @@ public class ModelWrapper<M> {
 	public IntegerProperty field(String identifier, IntGetter<M> getter, IntSetter<M> setter) {
 		ModelWrapper<M>.BeanPropertyField<Number, SimpleIntegerProperty> beanPropertyField = new BeanPropertyField<>(
 				getter::apply, (m, number) -> setter.accept(m, number.intValue()),
-				SimpleIntegerProperty::new);
+				() -> new SimpleIntegerProperty(null, identifier));
 		return addIdentified(identifier, beanPropertyField);
 	}
 	
@@ -1064,18 +1083,18 @@ public class ModelWrapper<M> {
 		ModelWrapper<M>.BeanPropertyField<Number, SimpleIntegerProperty> beanPropertyField = new BeanPropertyField<>(
 				getter::apply, (m, number) -> setter.accept(m, number.intValue()),
 				defaultValue,
-				SimpleIntegerProperty::new);
+				() -> new SimpleIntegerProperty(null, identifier));
 		return addIdentified(identifier, beanPropertyField);
 	}
 	
 	
 	public IntegerProperty field(String identifier, IntPropertyAccessor<M> accessor) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleIntegerProperty::new));
+		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, () -> new SimpleIntegerProperty(null, identifier)));
 	}
 	
 	public IntegerProperty field(String identifier, IntPropertyAccessor<M> accessor, int defaultValue) {
 		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, defaultValue,
-				SimpleIntegerProperty::new));
+				 () -> new SimpleIntegerProperty(null, identifier)));
 	}
 	
 	
@@ -1109,7 +1128,7 @@ public class ModelWrapper<M> {
 	public LongProperty field(String identifier, LongGetter<M> getter, LongSetter<M> setter) {
 		ModelWrapper<M>.BeanPropertyField<Number, SimpleLongProperty> beanPropertyField = new BeanPropertyField<>(
 				getter::apply, (m, number) -> setter.accept(m, number.longValue()),
-				SimpleLongProperty::new);
+				() -> new SimpleLongProperty(null, identifier));
 		return addIdentified(identifier, beanPropertyField);
 	}
 	
@@ -1117,17 +1136,17 @@ public class ModelWrapper<M> {
 		ModelWrapper<M>.BeanPropertyField<Number, SimpleLongProperty> beanPropertyField = new BeanPropertyField<>(
 				getter::apply, (m, number) -> setter.accept(m, number.longValue()),
 				defaultValue,
-				SimpleLongProperty::new);
+				() -> new SimpleLongProperty(null, identifier));
 		return addIdentified(identifier,
 				beanPropertyField);
 	}
 	
 	public LongProperty field(String identifier, LongPropertyAccessor<M> accessor) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleLongProperty::new));
+		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, () -> new SimpleLongProperty(null, identifier)));
 	}
 	
 	public LongProperty field(String identifier, LongPropertyAccessor<M> accessor, long defaultValue) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, defaultValue, SimpleLongProperty::new));
+		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, defaultValue, () -> new SimpleLongProperty(null, identifier)));
 	}
 	
 	
@@ -1144,72 +1163,72 @@ public class ModelWrapper<M> {
 	}
 	
 	public <T> ObjectProperty<T> field(ObjectPropertyAccessor<M, T> accessor) {
-		return add(new FxPropertyField<>(accessor::apply, SimpleObjectProperty::new));
+		return add(new FxPropertyField<>(accessor, SimpleObjectProperty::new));
 	}
 	
 	public <T> ObjectProperty<T> field(ObjectPropertyAccessor<M, T> accessor, T defaultValue) {
-		return add(new FxPropertyField<>(accessor::apply, defaultValue, SimpleObjectProperty::new));
+		return add(new FxPropertyField<>(accessor, defaultValue, SimpleObjectProperty::new));
 	}
 	
 	
 	public <T> ObjectProperty<T> field(String identifier, ObjectGetter<M, T> getter, ObjectSetter<M, T> setter) {
-		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, SimpleObjectProperty::new));
+		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, () -> new SimpleObjectProperty<T>(null, identifier)));
 	}
 	
 	public <T> ObjectProperty<T> field(String identifier, ObjectGetter<M, T> getter, ObjectSetter<M, T> setter,
 			T defaultValue) {
 		return addIdentified(identifier, new BeanPropertyField<>(getter, setter, defaultValue,
-				SimpleObjectProperty::new));
+				() -> new SimpleObjectProperty<T>(null, identifier)));
 	}
 	
 	public <T> ObjectProperty<T> field(String identifier, ObjectPropertyAccessor<M, T> accessor) {
-		return addIdentified(identifier, new FxPropertyField<>(accessor::apply, SimpleObjectProperty::new));
+		return addIdentified(identifier, new FxPropertyField<>(accessor, () -> new SimpleObjectProperty<T>(null, identifier)));
 	}
 	
 	public <T> ObjectProperty<T> field(String identifier, ObjectPropertyAccessor<M, T> accessor, T defaultValue) {
 		return addIdentified(identifier,
-				new FxPropertyField<>(accessor::apply, defaultValue, SimpleObjectProperty::new));
+				new FxPropertyField<>(accessor, defaultValue, () -> new SimpleObjectProperty<T>(null, identifier)));
 	}
 	
 	
 	/** Field type list **/
 	
 	public <E> ListProperty<E> field(ListGetter<M, E> getter, ListSetter<M, E> setter) {
-		return add(new BeanListPropertyField<>(getter::apply,
-				(m, list) -> setter.accept(m, FXCollections.observableArrayList(list))));
+		return add(new BeanListPropertyField<>(getter,
+				(m, list) -> setter.accept(m, FXCollections.observableArrayList(list)), SimpleListProperty::new));
 	}
 	
 	public <E> ListProperty<E> field(ListGetter<M, E> getter, ListSetter<M, E> setter, List<E> defaultValue) {
-		return add(new BeanListPropertyField<>(getter::apply,
-				(m, list) -> setter.accept(m, FXCollections.observableArrayList(list)), defaultValue));
+		return add(new BeanListPropertyField<>(getter,
+				(m, list) -> setter.accept(m, FXCollections.observableArrayList(list)), SimpleListProperty::new, defaultValue));
 	}
 	
 	public <E> ListProperty<E> field(ListPropertyAccessor<M, E> accessor) {
-		return add(new FxListPropertyField<>(accessor::apply));
+		return add(new FxListPropertyField<>(accessor, SimpleListProperty::new));
 	}
 	
 	public <E> ListProperty<E> field(ListPropertyAccessor<M, E> accessor, List<E> defaultValue) {
-		return add(new FxListPropertyField<>(accessor::apply, defaultValue));
+		return add(new FxListPropertyField<>(accessor, SimpleListProperty::new, defaultValue));
 	}
 	
 	
 	public <E> ListProperty<E> field(String identifier, ListGetter<M, E> getter, ListSetter<M, E> setter) {
-		return addIdentified(identifier, new BeanListPropertyField<>(getter::apply,
-				(m, list) -> setter.accept(m, FXCollections.observableArrayList(list))));
+		return addIdentified(identifier, new BeanListPropertyField<>(getter,
+				(m, list) -> setter.accept(m, FXCollections.observableArrayList(list)), () -> new SimpleListProperty<>(null, identifier)));
 	}
 	
 	public <E> ListProperty<E> field(String identifier, ListGetter<M, E> getter, ListSetter<M, E> setter,
 			List<E> defaultValue) {
-		return addIdentified(identifier, new BeanListPropertyField<>(getter::apply,
-				(m, list) -> setter.accept(m, FXCollections.observableArrayList(list)), defaultValue));
+		return addIdentified(identifier, new BeanListPropertyField<>(getter,
+				(m, list) -> setter.accept(m, FXCollections.observableArrayList(list)), () -> new SimpleListProperty<>(null, identifier), defaultValue));
 	}
 	
 	public <E> ListProperty<E> field(String identifier, ListPropertyAccessor<M, E> accessor) {
-		return addIdentified(identifier, new FxListPropertyField<>(accessor::apply));
+		return addIdentified(identifier, new FxListPropertyField<>(accessor, () -> new SimpleListProperty<>(null, identifier)));
 	}
 	
 	public <E> ListProperty<E> field(String identifier, ListPropertyAccessor<M, E> accessor, List<E> defaultValue) {
-		return addIdentified(identifier, new FxListPropertyField<>(accessor::apply, defaultValue));
+		return addIdentified(identifier, new FxListPropertyField<>(accessor, () -> new SimpleListProperty<>(null, identifier), defaultValue));
 	}
 	
 	private <T, R extends Property<T>> R add(PropertyField<T, M, R> field) {

@@ -1,12 +1,9 @@
 package de.saxsys.mvvmfx.examples.contacts.ui.addcontact;
 
-import javax.inject.Singleton;
-
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.stage.Stage;
 
-@Singleton
 public class AddContactDialogView implements FxmlView<AddContactDialogViewModel> {
 
 	@InjectViewModel

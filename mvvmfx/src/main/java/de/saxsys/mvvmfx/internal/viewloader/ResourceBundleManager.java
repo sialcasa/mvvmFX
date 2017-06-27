@@ -40,7 +40,16 @@ public class ResourceBundleManager {
 	
 	ResourceBundleManager() {
 	}
-	
+
+	/**
+	 * Represents an empty ResourceBundle that is used when no actual resourceBundle was provided by the user.
+	 */
+	public static final ResourceBundle EMPTY_RESOURCE_BUNDLE = new ListResourceBundle() {
+		@Override protected Object[][] getContents() {
+			return new Object[0][];
+		}
+	};
+
 	public static ResourceBundleManager getInstance() {
 		return SINGLETON;
 	}
@@ -67,7 +76,7 @@ public class ResourceBundleManager {
 	public ResourceBundle mergeWithGlobal(ResourceBundle resourceBundle) {
 		if (globalResourceBundle == null) {
 			if (resourceBundle == null) {
-				return createEmptyBundle();
+				return EMPTY_RESOURCE_BUNDLE;
 			} else {
 				return new ResourceBundleWrapper(resourceBundle);
 			}
@@ -173,14 +182,5 @@ public class ResourceBundleManager {
 		public Set<String> keySet() {
 			return bundle.keySet();
 		}
-	}
-	
-	private ResourceBundle createEmptyBundle() {
-		return new ListResourceBundle() {
-			@Override
-			protected Object[][] getContents() {
-				return new Object[0][];
-			}
-		};
 	}
 }

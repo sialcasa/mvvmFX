@@ -470,4 +470,61 @@ public class FluentViewLoader_FxmlView_Test {
 
         assertThat(TestViewModel.wasInitialized).isFalse();
 	}
+
+	/**
+	 * Method annotated with {@link de.saxsys.mvvmfx.Initialize} annotation initializes the ViewModel
+	 * */
+	@Test
+	public void testViewModelIsInitializedWithAnnotatatedMethod() {
+		TestViewModelWithAnnotatedInitialize.wasInitialized = false;
+
+		ViewTuple<TestFxmlViewWithViewModelWithAnnotatedInitialize, TestViewModelWithAnnotatedInitialize> tuple
+				= FluentViewLoader.fxmlView(TestFxmlViewWithViewModelWithAnnotatedInitialize.class).load();
+
+		TestViewModelWithAnnotatedInitialize viewModel = tuple.getViewModel();
+
+		assertThat(TestViewModelWithAnnotatedInitialize.wasInitialized).isTrue();
+
+	}
+
+	@Test
+	public void testViewModelHasMultipleInitializeAnnotations() {
+		TestViewModelWithMultipleInitializeAnnotations.init1 = false;
+		TestViewModelWithMultipleInitializeAnnotations.init2 = false;
+		TestViewModelWithMultipleInitializeAnnotations.initialize = false;
+
+		ViewTuple<TestFxmlViewWithViewModelWithMultipleInitializeAnnotations, TestViewModelWithMultipleInitializeAnnotations> viewTuple = FluentViewLoader
+				.fxmlView(TestFxmlViewWithViewModelWithMultipleInitializeAnnotations.class).load();
+
+		assertThat(TestViewModelWithMultipleInitializeAnnotations.init1).isTrue();
+		assertThat(TestViewModelWithMultipleInitializeAnnotations.init2).isTrue();
+		assertThat(TestViewModelWithMultipleInitializeAnnotations.initialize).isTrue();
+	}
+
+	@Test
+	public void testLoadFxmlViewTupleWithCustomPath() throws IOException {
+
+		TestFxmlPathView.instanceCounter = 0;
+		TestViewModel.instanceCounter = 0;
+
+		TestViewModel.wasInitialized = false;
+
+		final ViewTuple<TestFxmlPathView, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlPathView.class)
+				.resourceBundle(resourceBundle).load();
+
+		assertThat(viewTuple).isNotNull();
+
+		assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
+		assertThat(viewTuple.getCodeBehind()).isNotNull();
+
+		final TestFxmlPathView codeBehind = viewTuple.getCodeBehind();
+		assertThat(codeBehind.getViewModel()).isNotNull();
+		assertThat(codeBehind.resourceBundle).hasSameContent(resourceBundle);
+
+		assertThat(codeBehind.viewModelWasNull).isFalse();
+
+		assertThat(TestFxmlPathView.instanceCounter).isEqualTo(1);
+		assertThat(TestViewModel.instanceCounter).isEqualTo(1);
+		assertThat(TestViewModel.wasInitialized).isTrue();
+	}
 }
