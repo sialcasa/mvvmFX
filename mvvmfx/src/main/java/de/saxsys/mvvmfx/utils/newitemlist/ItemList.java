@@ -5,7 +5,6 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -35,7 +34,7 @@ public class ItemList<T, K> implements ViewItemList<K>{
 	private K noSelectionKey;
 
 	public ItemList(Function<T, K> identifierFunction) {
-		this.identifierFunction = identifierFunction;
+		this.identifierFunction = Objects.requireNonNull(identifierFunction);
 		listTransformation = new ListTransformation<>(FXCollections.observableArrayList(), identifierFunction);
 
 		listTransformation.getModelList().addListener((ListChangeListener<T>) c -> {
@@ -49,25 +48,16 @@ public class ItemList<T, K> implements ViewItemList<K>{
         });
 	}
 
-	public void replaceModelItems(Collection<T> items) {
-		replaceModelItems(items, true);
-	}
+	public void replaceModelItems(Collection<? extends T> items) {
+	    Objects.requireNonNull(items);
+        T oldSelectedElement = selectedItem.get();
 
-	public void replaceModelItems(Collection<T> items, boolean keepSelection) {
-		if(keepSelection) {
-			T oldSelectedElement = selectedItem.get();
+        listTransformation.getModelList().clear();
+        listTransformation.getModelList().addAll(items);
 
-			listTransformation.getModelList().clear();
-			listTransformation.getModelList().addAll(items);
-
-			if(listTransformation.getModelList().contains(oldSelectedElement)) {
-				selectedItem.setValue(oldSelectedElement);
-			}
-		} else {
-			listTransformation.getModelList().clear();
-			listTransformation.getModelList().addAll(items);
-		}
-
+        if(listTransformation.getModelList().contains(oldSelectedElement)) {
+            selectedItem.setValue(oldSelectedElement);
+        }
 	}
 
 	public void setLabelFunction(Function<T, String> labelFunction) {
@@ -101,6 +91,12 @@ public class ItemList<T, K> implements ViewItemList<K>{
 		return listTransformation.getModelList();
 	}
 
+
+	// for testing only
+    ObservableList<K> getKeyList() {
+        return listTransformation.getTargetList();
+    }
+
 	public ObjectProperty<T> selectedItemProperty() {
 		return selectedItem;
 	}
@@ -108,6 +104,10 @@ public class ItemList<T, K> implements ViewItemList<K>{
 	public T getSelectedItem() {
 		return selectedItem.get();
 	}
+
+	public void setSelectedItem(T item) {
+	    this.selectedItem.setValue(item);
+    }
 
 
 	private Optional<T> getModelByKey(K key) {
@@ -176,17 +176,20 @@ public class ItemList<T, K> implements ViewItemList<K>{
 			comboBox.getSelectionModel().select(selectedKey);
 		}
 
-		// We need to patch the buttonCell of the ComboBox (the value that is visible on the combobox itself)
-		// so that it shows the "no selection" placeholder when "no selection" is enabled.
-		comboBox.setButtonCell(new ListCell<K>(){
-			@Override
-			protected void updateItem(K item, boolean empty) {
-				super.updateItem(item, empty);
 
-				// the converter takes care for selecting the "no selection" placeholder if needed.
-				setText(keyItemConverter.toString(item));
-			}
-		});
+		if(noSelectionKey != null) {
+			// We need to patch the buttonCell of the ComboBox (the value that is visible on the combobox itself)
+			// so that it shows the "no selection" placeholder when "no selection" is enabled.
+			comboBox.setButtonCell(new ListCell<K>() {
+				@Override
+				protected void updateItem(K item, boolean empty) {
+					super.updateItem(item, empty);
+
+					// the converter takes care for selecting the "no selection" placeholder if needed.
+					setText(keyItemConverter.toString(item));
+				}
+			});
+		}
 
 		comboBox.setConverter(keyItemConverter);
 
