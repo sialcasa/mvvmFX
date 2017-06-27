@@ -1,21 +1,19 @@
 package de.saxsys.mvvmfx.examples.welcome.viewmodel.personlogin;
 
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.examples.welcome.model.Person;
+import de.saxsys.mvvmfx.examples.welcome.model.Repository;
+import de.saxsys.mvvmfx.utils.commands.Action;
+import de.saxsys.mvvmfx.utils.commands.Command;
+import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
+import de.saxsys.mvvmfx.utils.newitemlist.ItemList;
+import de.saxsys.mvvmfx.utils.newitemlist.ViewItemList;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
-import javafx.collections.FXCollections;
 
 import javax.inject.Inject;
-
-import de.saxsys.mvvmfx.examples.welcome.model.Person;
-import de.saxsys.mvvmfx.examples.welcome.model.Repository;
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.utils.commands.Action;
-import de.saxsys.mvvmfx.utils.commands.Command;
-import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
-import de.saxsys.mvvmfx.utils.itemlist.SelectableItemList;
-import de.saxsys.mvvmfx.utils.itemlist.SelectableStringList;
 
 /**
  * ViewModel for a login view for the persons. It provides the data which should
@@ -29,7 +27,7 @@ import de.saxsys.mvvmfx.utils.itemlist.SelectableStringList;
 public class PersonLoginViewModel implements ViewModel {
 
 	// Properties which are used by the view.
-	private SelectableItemList<Person> selectablePersons;
+	private ItemList<Person, Integer> personsList;
 	private ReadOnlyIntegerWrapper loggedInPersonId;
 	private Command loginCommand;
 
@@ -39,24 +37,23 @@ public class PersonLoginViewModel implements ViewModel {
 	@Inject
 	public PersonLoginViewModel(Repository repository) {
 		this.repository = repository;
+
+		personsList = new ItemList<>(Person::getId);
+		personsList.getModelList().addAll(repository.getPersons());
+		personsList.setLabelFunction(person -> person.getFirstName() + " " + person.getLastName());
 	}
 
 	private BooleanBinding createLoginPossibleBinding() {
-		return selectablePersonsProperty().selectedIndexProperty().isNotEqualTo(-1);
+		return personsList.selectedItemProperty().isNotNull();
 	}
 
-	/**
-	 * Persons in string representation.
-	 *
-	 * @return persons
-	 */
-	public SelectableStringList selectablePersonsProperty() {
-		if (selectablePersons == null) {
-			selectablePersons = new SelectableItemList<>(
-					FXCollections.observableArrayList(repository.getPersons()),
-					person -> person.getFirstName() + " " + person.getLastName());
-		}
-		return selectablePersons;
+	public ViewItemList<Integer> personsListProperty() {
+		return personsList;
+	}
+
+	// for testing purposes only
+	ItemList<Person, Integer> getPersonList() {
+		return personsList;
 	}
 
 	/**
@@ -86,12 +83,12 @@ public class PersonLoginViewModel implements ViewModel {
 	private void performLogin() {
 		try {
 			// fakesleep, simulating latency
-			Thread.sleep(2000);
+			Thread.sleep(1000);
 		} catch (Exception e) {
 		}
 
 		Platform.runLater(() -> {
-			loggedInPersonId.set(selectablePersons.getSelectedItem().getId());
+			loggedInPersonId.set(personsList.getSelectedItem().getId());
 		});
 		publish(PersonLoginViewModelNotifications.OK.getId(), PersonLoginViewModelNotifications.OK.getMessage());
 	}
