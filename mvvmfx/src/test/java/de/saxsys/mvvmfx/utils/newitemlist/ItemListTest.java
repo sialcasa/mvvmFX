@@ -1,6 +1,7 @@
 package de.saxsys.mvvmfx.utils.newitemlist;
 
 import javafx.collections.ListChangeListener;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -17,12 +18,16 @@ public class ItemListTest {
     private Person person4 = new Person(4, "Sabine");
     private Person person5 = new Person(5, "Manfred");
 
+	ItemList<Person, Integer> itemList;
+
+	@Before
+	public void setup() {
+		itemList = new ItemList<>(Person::getId);
+	}
 
     @Test
     public void testAddRemove() {
         // given
-        ItemList<Person, Integer> itemList = new ItemList<>(Person::getId);
-
         assertThat(itemList.getSelectedItem()).isNull();
         assertThat(itemList.getModelList()).isNotNull().isEmpty();
         assertThat(itemList.getKeyList()).isNotNull().isEmpty();
@@ -52,8 +57,6 @@ public class ItemListTest {
     @Test
     public void testListeners() {
         // given
-        ItemList<Person, Integer> itemList = new ItemList<>(Person::getId);
-
         List<ListChangeListener.Change<? extends Integer>> keyChangeList = new ArrayList<>();
         itemList.getKeyList().addListener((ListChangeListener<Integer>) keyChangeList::add);
 
@@ -102,7 +105,6 @@ public class ItemListTest {
     @Test
     public void testReplaceModelItems() {
         // given
-        ItemList<Person, Integer> itemList = new ItemList<>(Person::getId);
         itemList.getModelList().addAll(person1, person2, person3, person4);
 
         // when
@@ -127,7 +129,6 @@ public class ItemListTest {
     @Test
     public void testReplaceModelItemsWithSelection() {
         // given
-        ItemList<Person, Integer> itemList = new ItemList<>(Person::getId);
         itemList.getModelList().addAll(person1, person2, person4);
 
         itemList.setSelectedItem(person2);
@@ -157,4 +158,70 @@ public class ItemListTest {
         // then
         assertThat(itemList.getSelectedItem()).isNull();
     }
+
+    @Test
+	public void testKeyList() {
+    	// given
+		assertThat(itemList.getModelList()).isEmpty();
+
+		// then
+		assertThat(itemList.getKeyList()).isEmpty();
+
+		// when
+		itemList.getModelList().addAll(person1, person2, person3, person4);
+
+		// then
+		assertThat(itemList.getKeyList()).containsExactly(1,2,3,4);
+	}
+
+	@Test
+	public void testLabelListWithoutLabelFunction() {
+    	// given
+		assertThat(itemList.getModelList()).isEmpty();
+
+		// then
+		assertThat(itemList.getLabelList()).isEmpty();
+
+		// when
+		itemList.getModelList().addAll(person1, person2, person3);
+
+		// then
+		assertThat(itemList.getLabelList()).containsExactly(person1.toString(), person2.toString(), person3.toString());
+
+		// when
+		itemList.getModelList().remove(person2);
+
+		// then
+		assertThat(itemList.getLabelList()).containsExactly(person1.toString(), person3.toString());
+	}
+
+	@Test
+	public void testLabelListWithLabelFunction() {
+    	// given
+		itemList.setLabelFunction(person -> "P:" + person.getName().toLowerCase());
+
+		assertThat(itemList.getModelList()).isEmpty();
+
+		// then
+		assertThat(itemList.getLabelList()).isEmpty();
+
+		// when
+		itemList.getModelList().addAll(person1, person2, person3);
+
+		// then
+		assertThat(itemList.getLabelList()).containsExactly(
+				"P:hugo",
+				"P:luise",
+				"P:horst"
+		);
+
+		// when
+		itemList.getModelList().remove(person2);
+
+		// then
+		assertThat(itemList.getLabelList()).containsExactly(
+				"P:hugo",
+				"P:horst"
+		);
+	}
 }

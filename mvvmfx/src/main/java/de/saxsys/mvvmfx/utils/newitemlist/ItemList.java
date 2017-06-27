@@ -33,6 +33,10 @@ public class ItemList<T, K> implements ViewItemList<K>{
 	private String noSelectionPlaceHolder;
 	private K noSelectionKey;
 
+	// can be used to get an observable list of the label values.
+	// this list is created lazily only when it is used by the developer.
+	private ListTransformation<K, String> labelList;
+
 	public ItemList(Function<T, K> identifierFunction) {
 		this.identifierFunction = Objects.requireNonNull(identifierFunction);
 		listTransformation = new ListTransformation<>(FXCollections.observableArrayList(), identifierFunction);
@@ -92,10 +96,18 @@ public class ItemList<T, K> implements ViewItemList<K>{
 	}
 
 
-	// for testing only
-    ObservableList<K> getKeyList() {
+    public ObservableList<K> getKeyList() {
         return listTransformation.getTargetList();
     }
+
+    public ObservableList<String> getLabelList() {
+		if(labelList == null) {
+			labelList = new ListTransformation<>(listTransformation.getTargetList(),
+					key -> keyItemConverter.toString(key));
+		}
+
+		return labelList.getTargetList();
+	}
 
 	public ObjectProperty<T> selectedItemProperty() {
 		return selectedItem;
