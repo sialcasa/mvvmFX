@@ -41,4 +41,15 @@
 		numeric_code="756"
 		name="Switzerland"
 		official_name="Swiss Confederation"/>
+	<iso_3166_entry
+			alpha_2_code="AU"
+			alpha_3_code="AUS"
+			numeric_code="036"
+			name="Australia"/>
+	<iso_3166_entry
+			alpha_2_code="CN"
+			alpha_3_code="CHN"
+			numeric_code="156"
+			name="China"
+			official_name="People's Republic of China"/>
 </iso_3166_entries>
