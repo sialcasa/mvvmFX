@@ -6,8 +6,8 @@ import de.saxsys.mvvmfx.examples.welcome.model.Repository;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
-import de.saxsys.mvvmfx.utils.newitemlist.ItemList;
-import de.saxsys.mvvmfx.utils.newitemlist.ViewItemList;
+import de.saxsys.mvvmfx.utils.items.ItemList;
+import de.saxsys.mvvmfx.utils.items.ViewItemList;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ReadOnlyIntegerProperty;
@@ -39,7 +39,7 @@ public class PersonLoginViewModel implements ViewModel {
 		this.repository = repository;
 
 		personsList = new ItemList<>(Person::getId);
-		personsList.getModelList().addAll(repository.getPersons());
+		personsList.getSourceList().addAll(repository.getPersons());
 		personsList.setLabelFunction(person -> person.getFirstName() + " " + person.getLastName());
 	}
 

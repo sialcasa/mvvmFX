@@ -30,11 +30,11 @@ public class ItemListTest {
     public void testAddRemove() {
         // given
         assertThat(itemList.getSelectedItem()).isNull();
-        assertThat(itemList.getModelList()).isNotNull().isEmpty();
+        assertThat(itemList.getSourceList()).isNotNull().isEmpty();
         assertThat(itemList.getKeyList()).isNotNull().isEmpty();
 
         // when
-        itemList.getModelList().addAll(person1, person2, person3, person4);
+        itemList.getSourceList().addAll(person1, person2, person3, person4);
 
 
         // then
@@ -42,13 +42,13 @@ public class ItemListTest {
 
 
         // when
-        itemList.getModelList().add(person5);
+        itemList.getSourceList().add(person5);
 
         // then
         assertThat(itemList.getKeyList()).contains(1,2,3,4,5);
 
         // when
-        itemList.getModelList().remove(person3);
+        itemList.getSourceList().remove(person3);
 
         // then
         assertThat(itemList.getKeyList()).contains(1,2,4,5);
@@ -67,7 +67,7 @@ public class ItemListTest {
 
         // when
 
-        itemList.getModelList().add(person1);
+        itemList.getSourceList().add(person1);
 
         // then
         assertThat(keyChangeList).hasSize(1);
@@ -78,7 +78,7 @@ public class ItemListTest {
         assertThat(keyChange1.next()).isFalse();
 
         // when
-        itemList.getModelList().addAll(person2, person3);
+        itemList.getSourceList().addAll(person2, person3);
 
         // then
         assertThat(keyChangeList).hasSize(2);
@@ -89,7 +89,7 @@ public class ItemListTest {
         assertThat(keyChange2.next()).isFalse();
 
         // when
-        itemList.getModelList().remove(person2);
+        itemList.getSourceList().remove(person2);
 
 
         // then
@@ -106,7 +106,7 @@ public class ItemListTest {
     @Test
     public void testReplaceModelItems() {
         // given
-        itemList.getModelList().addAll(person1, person2, person3, person4);
+        itemList.getSourceList().addAll(person1, person2, person3, person4);
 
         // when
         List<Person> otherOrderingPersons = new ArrayList<>();
@@ -130,7 +130,7 @@ public class ItemListTest {
     @Test
     public void testReplaceModelItemsWithSelection() {
         // given
-        itemList.getModelList().addAll(person1, person2, person4);
+        itemList.getSourceList().addAll(person1, person2, person4);
 
         itemList.setSelectedItem(person2);
 
@@ -163,13 +163,13 @@ public class ItemListTest {
     @Test
 	public void testKeyList() {
     	// given
-		assertThat(itemList.getModelList()).isEmpty();
+		assertThat(itemList.getSourceList()).isEmpty();
 
 		// then
 		assertThat(itemList.getKeyList()).isEmpty();
 
 		// when
-		itemList.getModelList().addAll(person1, person2, person3, person4);
+		itemList.getSourceList().addAll(person1, person2, person3, person4);
 
 		// then
 		assertThat(itemList.getKeyList()).containsExactly(1,2,3,4);
@@ -178,19 +178,19 @@ public class ItemListTest {
 	@Test
 	public void testLabelListWithoutLabelFunction() {
     	// given
-		assertThat(itemList.getModelList()).isEmpty();
+		assertThat(itemList.getSourceList()).isEmpty();
 
 		// then
 		assertThat(itemList.getLabelList()).isEmpty();
 
 		// when
-		itemList.getModelList().addAll(person1, person2, person3);
+		itemList.getSourceList().addAll(person1, person2, person3);
 
 		// then
 		assertThat(itemList.getLabelList()).containsExactly(person1.toString(), person2.toString(), person3.toString());
 
 		// when
-		itemList.getModelList().remove(person2);
+		itemList.getSourceList().remove(person2);
 
 		// then
 		assertThat(itemList.getLabelList()).containsExactly(person1.toString(), person3.toString());
@@ -201,13 +201,13 @@ public class ItemListTest {
     	// given
 		itemList.setLabelFunction(person -> "P:" + person.getName().toLowerCase());
 
-		assertThat(itemList.getModelList()).isEmpty();
+		assertThat(itemList.getSourceList()).isEmpty();
 
 		// then
 		assertThat(itemList.getLabelList()).isEmpty();
 
 		// when
-		itemList.getModelList().addAll(person1, person2, person3);
+		itemList.getSourceList().addAll(person1, person2, person3);
 
 		// then
 		assertThat(itemList.getLabelList()).containsExactly(
@@ -217,7 +217,7 @@ public class ItemListTest {
 		);
 
 		// when
-		itemList.getModelList().remove(person2);
+		itemList.getSourceList().remove(person2);
 
 		// then
 		assertThat(itemList.getLabelList()).containsExactly(

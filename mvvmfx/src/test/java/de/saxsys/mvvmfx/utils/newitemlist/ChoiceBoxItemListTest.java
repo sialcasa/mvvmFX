@@ -33,7 +33,7 @@ public class ChoiceBoxItemListTest {
 	@Test
 	public void testConnectToItemList() {
 		// given
-		itemList.getModelList().addAll(person1, person2, person3, person4);
+		itemList.getSourceList().addAll(person1, person2, person3, person4);
 		assertThat(choiceBox.getItems()).isEmpty();
 		assertThat(choiceBox.getValue()).isNull();
 		assertThat(choiceBox.getSelectionModel().getSelectedItem()).isNull();
@@ -50,7 +50,7 @@ public class ChoiceBoxItemListTest {
 	@Test
 	public void testConnectToEmptyItemList() {
 		// given
-		assertThat(itemList.getModelList()).isEmpty();
+		assertThat(itemList.getSourceList()).isEmpty();
 
 		// when
 		itemList.connect(choiceBox);
@@ -62,18 +62,18 @@ public class ChoiceBoxItemListTest {
 	@Test
 	public void testItemListEntrysChange() {
 		// given
-		assertThat(itemList.getModelList()).isEmpty();
+		assertThat(itemList.getSourceList()).isEmpty();
 
 		itemList.connect(choiceBox);
 
 		// when
-		itemList.getModelList().addAll(person1, person2);
+		itemList.getSourceList().addAll(person1, person2);
 
 		// then
 		assertThat(choiceBox.getItems()).containsExactly(1,2);
 
 		// when
-		itemList.getModelList().add(person3);
+		itemList.getSourceList().add(person3);
 
 		// then
 		assertThat(choiceBox.getItems()).containsExactly(1,2,3);
@@ -82,7 +82,7 @@ public class ChoiceBoxItemListTest {
 	@Test
 	public void testItemIsSelectedFromItemList() {
 		// given
-		itemList.getModelList().addAll(person1, person2, person3, person4, person5);
+		itemList.getSourceList().addAll(person1, person2, person3, person4, person5);
 
 		itemList.connect(choiceBox);
 
@@ -100,7 +100,7 @@ public class ChoiceBoxItemListTest {
 	@Test
 	public void testItemIsSelectedFromChoiceBox() {
 		// given
-		itemList.getModelList().addAll(person1, person2, person3, person4, person5);
+		itemList.getSourceList().addAll(person1, person2, person3, person4, person5);
 
 		itemList.connect(choiceBox);
 
@@ -118,7 +118,7 @@ public class ChoiceBoxItemListTest {
 	@Test
 	public void testNoSelection() {
 		// given
-		itemList.getModelList().addAll(person1, person2, person3, person4);
+		itemList.getSourceList().addAll(person1, person2, person3, person4);
 
 		// when
 		itemList.enableNoSelection(-1, "nothing");
