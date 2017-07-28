@@ -1,4 +1,4 @@
-package de.saxsys.mvvmfx.utils.newitemlist;
+package de.saxsys.mvvmfx.utils.items;
 
 public class Person {
 

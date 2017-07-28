@@ -1,8 +1,7 @@
-package de.saxsys.mvvmfx.utils.newitemlist;
+package de.saxsys.mvvmfx.utils.items;
 
 import de.saxsys.mvvmfx.testingutils.FxTestingUtils;
 import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
-import de.saxsys.mvvmfx.utils.items.ItemList;
 import javafx.scene.control.ComboBox;
 import org.junit.Before;
 import org.junit.Test;

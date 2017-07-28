@@ -117,7 +117,8 @@ public class ItemList<T, K> implements ViewItemList<K>{
 	    Objects.requireNonNull(items);
         T oldSelectedElement = selectedItem.get();
 
-        listTransformation.getSourceList().setAll(items);
+		listTransformation.getSourceList().clear();
+		listTransformation.getSourceList().addAll(items);
 
         if(listTransformation.getSourceList().contains(oldSelectedElement)) {
             selectedItem.setValue(oldSelectedElement);
@@ -349,9 +350,12 @@ public class ItemList<T, K> implements ViewItemList<K>{
 		// due to a bug (?) in JavaFX. Otherwise, the combobox button would still be empty.
 		if(selectedItem.get() == null && noSelectionKey != null) {
 			Platform.runLater(() -> {
-				int indexOfNoSelectionKey = comboBox.getButtonCell().getListView().getItems().indexOf(noSelectionKey);
-				if(indexOfNoSelectionKey != -1) {
-					comboBox.getButtonCell().updateIndex(indexOfNoSelectionKey);
+				if (comboBox.getButtonCell().getListView() != null) {
+					int indexOfNoSelectionKey = comboBox.getButtonCell().getListView().getItems()
+							.indexOf(noSelectionKey);
+					if (indexOfNoSelectionKey != -1) {
+						comboBox.getButtonCell().updateIndex(indexOfNoSelectionKey);
+					}
 				}
 			});
 		}
