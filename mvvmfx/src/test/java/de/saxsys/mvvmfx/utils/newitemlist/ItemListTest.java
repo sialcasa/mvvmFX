@@ -1,5 +1,6 @@
 package de.saxsys.mvvmfx.utils.newitemlist;
 
+import de.saxsys.mvvmfx.utils.items.ItemList;
 import javafx.collections.ListChangeListener;
 import org.junit.Before;
 import org.junit.Test;

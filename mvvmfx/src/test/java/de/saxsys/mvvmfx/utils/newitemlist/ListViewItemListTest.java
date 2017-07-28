@@ -1,6 +1,7 @@
 package de.saxsys.mvvmfx.utils.newitemlist;
 
 import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
+import de.saxsys.mvvmfx.utils.items.ItemList;
 import javafx.scene.control.ListView;
 import org.junit.Before;
 import org.junit.Test;

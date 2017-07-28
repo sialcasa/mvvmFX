@@ -1,4 +1,4 @@
-package de.saxsys.mvvmfx.utils.newitemlist;
+package de.saxsys.mvvmfx.utils.items;
 
 import de.saxsys.mvvmfx.utils.itemlist.ListTransformation;
 import javafx.application.Platform;

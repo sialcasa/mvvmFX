@@ -1,4 +1,4 @@
-package de.saxsys.mvvmfx.utils.newitemlist;
+package de.saxsys.mvvmfx.utils.items;
 
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
