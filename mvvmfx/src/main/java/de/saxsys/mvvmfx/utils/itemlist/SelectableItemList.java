@@ -55,12 +55,12 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	private SingleSelectionModel<ListType> selectionModel = new SingleSelectionModel<ListType>() {
 		@Override
 		protected int getItemCount() {
-			return modelListProperty().size();
+			return sourceListProperty().size();
 		}
 		
 		@Override
 		protected ListType getModelItem(int index) {
-			return index == -1 ? null : modelListProperty().get(index);
+			return index == -1 ? null : sourceListProperty().get(index);
 		}
 	};
 	
@@ -90,7 +90,7 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
                 .selectedIndexProperty()
 				.addListener((bean, oldVal, newVal) -> {
                     int index = newVal.intValue();
-                    ListType item = index == -1 ? null : modelListProperty()
+                    ListType item = index == -1 ? null : sourceListProperty()
                             .get(index);
                     selectedItem.set(item);
                 });
@@ -103,7 +103,7 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
                 selectedItem.set(null);
 
             } else {
-                int index = modelListProperty().get().indexOf(newVal);
+                int index = sourceListProperty().get().indexOf(newVal);
                 // Item not found
                 if (index != -1) {
                     selectionModel.select(index);
@@ -134,7 +134,7 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	}
 	
 	/**
-	 * @return String representation of {@link #modelListProperty()}.
+	 * @return String representation of {@link #sourceListProperty()}.
 	 */
 	@Override
 	public ReadOnlyListProperty<String> stringListProperty() {
@@ -142,7 +142,7 @@ public class SelectableItemList<ListType> extends ItemList<ListType> implements
 	}
 	
 	/**
-	 * @return String representation of {@link #modelListProperty()} as List.
+	 * @return String representation of {@link #sourceListProperty()} as List.
 	 */
 	public List<String> getStringList() {
 		return targetListProperty().get();

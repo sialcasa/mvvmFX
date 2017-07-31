@@ -64,7 +64,7 @@ public class ListTransformation<SourceType, TargetType> {
 			final Function<SourceType, TargetType> function) {
 		this.function = function;
 		initListEvents();
-		this.modelListProperty().set(modelList);
+		this.sourceListProperty().set(modelList);
 	}
 	
 	/**
@@ -106,7 +106,7 @@ public class ListTransformation<SourceType, TargetType> {
 				processStagingLists(deleteStaging);
 			}
 		};
-		modelListProperty().addListener(
+		sourceListProperty().addListener(
 				new WeakListChangeListener<>(listChangeListener));
 		
 	}
@@ -238,7 +238,7 @@ public class ListTransformation<SourceType, TargetType> {
 	}
 
 	/**
-	 * @return {@link TargetType} representation of {@link #modelListProperty()}.
+	 * @return {@link TargetType} representation of {@link #sourceListProperty()}.
 	 */
 	public ReadOnlyListProperty<TargetType> targetListProperty() {
 		return viewModelList.getReadOnlyProperty();
@@ -246,7 +246,7 @@ public class ListTransformation<SourceType, TargetType> {
 	
 	
 	/**
-	 * @return {@link TargetType} representation of {@link #modelListProperty()}.
+	 * @return {@link TargetType} representation of {@link #sourceListProperty()}.
 	 */
 	public ObservableList<TargetType> getTargetList() {
 		return viewModelList.getReadOnlyProperty().get();
