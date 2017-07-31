@@ -1,4 +1,4 @@
-package de.saxsys.mvvmfx.examples.itemlist;
+package de.saxsys.mvvmfx.examples.itemlist.ui.singleselection;
 
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.itemlist.model.IceCreamFlavor;
@@ -14,7 +14,7 @@ import javafx.beans.property.StringProperty;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ItemListExampleViewModel implements ViewModel {
+public class SingleSelectViewModel implements ViewModel {
 
 	private IceCreamRepository repository;
 
@@ -26,7 +26,7 @@ public class ItemListExampleViewModel implements ViewModel {
 
 	private ReadOnlyBooleanWrapper newValueEnabled = new ReadOnlyBooleanWrapper();
 
-	public ItemListExampleViewModel(IceCreamRepository repository) {
+	public SingleSelectViewModel(IceCreamRepository repository) {
 		this.repository = repository;
 
 		itemList.enableNoSelection(UUID.randomUUID().toString(), "---");

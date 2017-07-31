@@ -10,31 +10,17 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<VBox spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.examples.itemlist.ItemListExampleView">
+<VBox spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.saxsys.mvvmfx.examples.itemlist.ui.singleselection.SingleSelectView">
     <children>
-      <Label text="Your Favorite Ice Cream!">
-         <font>
-            <Font size="36.0" />
-         </font>
-      </Label>
-      <Label fx:id="favoriteLabel" text="Your choice:">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
+      <Label fx:id="favoriteLabel" styleClass="bigLabel" text="Your choice:" />
       <Separator prefWidth="200.0" />
       <VBox>
          <children>
-              <Label text="ComboBox">
-                  <font>
-                      <Font size="18.0" />
-                  </font>
-              </Label>
+              <Label styleClass="bigLabel" text="ComboBox" />
               <HBox alignment="CENTER_LEFT" spacing="5.0">
                   <children>
-                      <Label text="Chose favorite Icecream flavor:" />
+                      <Label styleClass="smallLabel" text="Chose favorite Icecream flavor:" />
                       <ComboBox fx:id="comboBox" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                   </children>
               </HBox>
@@ -43,24 +29,16 @@
       <Separator prefWidth="200.0" />
       <VBox>
          <children>
-            <Label fx:id="favoriteLabel1" text="ListView">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0" />
+            <Label fx:id="favoriteLabel1" styleClass="bigLabel" text="ListView" />
+            <ListView fx:id="listView" prefHeight="200.0" />
          </children>
       </VBox>
       <VBox layoutX="20.0" layoutY="133.0">
          <children>
-            <Label text="ChoiceBox">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
+            <Label styleClass="bigLabel" text="ChoiceBox" />
             <HBox alignment="CENTER_LEFT" spacing="5.0">
                <children>
-                  <Label text="Chose favorite Icecream flavor:" />
+                  <Label styleClass="smallLabel" text="Chose favorite Icecream flavor:" />
                   <ChoiceBox fx:id="choiceBox" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
@@ -69,7 +47,7 @@
       <Separator prefWidth="200.0" />
       <VBox spacing="5.0">
          <children>
-            <Label text="Change the Name of the selected Item" />
+            <Label styleClass="smallLabel" text="Change the Name of the selected Item" />
             <HBox spacing="5.0">
                <children>
                   <TextField fx:id="newValue" maxWidth="1.7976931348623157E308" promptText="new Value" HBox.hgrow="ALWAYS" />

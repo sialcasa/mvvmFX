@@ -1,4 +1,4 @@
-package de.saxsys.mvvmfx.examples.itemlist;
+package de.saxsys.mvvmfx.examples.itemlist.ui.singleselection;
 
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -11,7 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
-public class ItemListExampleView implements FxmlView<ItemListExampleViewModel> {
+public class SingleSelectView implements FxmlView<SingleSelectViewModel> {
 
 	@FXML
 	public ComboBox<String> comboBox;
@@ -32,7 +32,7 @@ public class ItemListExampleView implements FxmlView<ItemListExampleViewModel> {
 	public Button saveNewValue;
 
 	@InjectViewModel
-	private ItemListExampleViewModel viewModel;
+	private SingleSelectViewModel viewModel;
 
 	public void initialize() {
 		favoriteLabel.textProperty().bind(viewModel.favoriteLabelTextProperty());

@@ -4,6 +4,7 @@ import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.easydi.MvvmfxEasyDIApplication;
 import de.saxsys.mvvmfx.examples.itemlist.model.IceCreamFlavor;
 import de.saxsys.mvvmfx.examples.itemlist.model.IceCreamRepository;
+import de.saxsys.mvvmfx.examples.itemlist.ui.main.MainView;
 import eu.lestard.easydi.EasyDI;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -30,9 +31,12 @@ public class Starter extends MvvmfxEasyDIApplication {
 	@Override
 	public void startMvvmfx(Stage stage) {
 
-		Parent parent = FluentViewLoader.fxmlView(ItemListExampleView.class).load().getView();
 
-		stage.setScene(new Scene(parent));
+		Parent parent = FluentViewLoader.fxmlView(MainView.class).load().getView();
+
+		Scene scene = new Scene(parent, 500, 700);
+		scene.getStylesheets().add("styling.css");
+		stage.setScene(scene);
 		stage.show();
 
 	}
