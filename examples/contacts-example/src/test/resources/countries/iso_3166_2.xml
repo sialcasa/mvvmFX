@@ -138,4 +138,106 @@
 				code="CH-ZH" name="Zürich"/>
 		</iso_3166_subset>
 	</iso_3166_country>
+	<!-- Australia -->
+	<iso_3166_country code="AU">
+		<iso_3166_subset type="State">
+			<iso_3166_2_entry
+					code="AU-NSW" name="New South Wales"/>
+			<iso_3166_2_entry
+					code="AU-QLD" name="Queensland"/>
+			<iso_3166_2_entry
+					code="AU-SA" name="South Australia"/>
+			<iso_3166_2_entry
+					code="AU-TAS" name="Tasmania"/>
+			<iso_3166_2_entry
+					code="AU-VIC" name="Victoria"/>
+			<iso_3166_2_entry
+					code="AU-WA" name="Western Australia"/>
+		</iso_3166_subset>
+		<iso_3166_subset type="Territory">
+			<iso_3166_2_entry
+					code="AU-ACT" name="Australian Capital Territory"/>
+			<iso_3166_2_entry
+					code="AU-NT" name="Northern Territory"/>
+		</iso_3166_subset>
+	</iso_3166_country>
+	<!-- China -->
+	<iso_3166_country code="CN">
+		<iso_3166_subset type="Municipality">
+			<iso_3166_2_entry
+					code="CN-11" name="Beijing"/>
+			<iso_3166_2_entry
+					code="CN-50" name="Chongqing"/>
+			<iso_3166_2_entry
+					code="CN-31" name="Shanghai"/>
+			<iso_3166_2_entry
+					code="CN-12" name="Tianjin"/>
+		</iso_3166_subset>
+		<iso_3166_subset type="Province">
+			<iso_3166_2_entry
+					code="CN-34" name="Anhui"/>
+			<iso_3166_2_entry
+					code="CN-35" name="Fujian"/>
+			<iso_3166_2_entry
+					code="CN-62" name="Gansu"/>
+			<iso_3166_2_entry
+					code="CN-44" name="Guangdong"/>
+			<iso_3166_2_entry
+					code="CN-52" name="Guizhou"/>
+			<iso_3166_2_entry
+					code="CN-46" name="Hainan"/>
+			<iso_3166_2_entry
+					code="CN-13" name="Hebei"/>
+			<iso_3166_2_entry
+					code="CN-23" name="Heilongjiang"/>
+			<iso_3166_2_entry
+					code="CN-41" name="Henan"/>
+			<iso_3166_2_entry
+					code="CN-42" name="Hubei"/>
+			<iso_3166_2_entry
+					code="CN-43" name="Hunan"/>
+			<iso_3166_2_entry
+					code="CN-32" name="Jiangsu"/>
+			<iso_3166_2_entry
+					code="CN-36" name="Jiangxi"/>
+			<iso_3166_2_entry
+					code="CN-22" name="Jilin"/>
+			<iso_3166_2_entry
+					code="CN-21" name="Liaoning"/>
+			<iso_3166_2_entry
+					code="CN-63" name="Qinghai"/>
+			<iso_3166_2_entry
+					code="CN-61" name="Shaanxi"/>
+			<iso_3166_2_entry
+					code="CN-37" name="Shandong"/>
+			<iso_3166_2_entry
+					code="CN-14" name="Shanxi"/>
+			<iso_3166_2_entry
+					code="CN-51" name="Sichuan"/>
+			<iso_3166_2_entry
+					code="CN-71" name="Taiwan"/>
+			<iso_3166_2_entry
+					code="CN-53" name="Yunnan"/>
+			<iso_3166_2_entry
+					code="CN-33" name="Zhejiang"/>
+		</iso_3166_subset>
+		<iso_3166_subset type="Autonomous region">
+			<iso_3166_2_entry
+					code="CN-45" name="Guangxi"/>
+			<iso_3166_2_entry
+					code="CN-15" name="Nei Mongol"/>
+			<iso_3166_2_entry
+					code="CN-64" name="Ningxia"/>
+			<iso_3166_2_entry
+					code="CN-65" name="Xinjiang"/>
+			<iso_3166_2_entry
+					code="CN-54" name="Xizang"/>
+		</iso_3166_subset>
+		<iso_3166_subset type="Special administrative region">
+			<iso_3166_2_entry
+					code="CN-91" name="Xianggang (Hong-Kong)"/>
+			<iso_3166_2_entry
+					code="CN-92" name="Aomen (Macau)"/>
+		</iso_3166_subset>
+	</iso_3166_country>
 </iso_3166_2_entries>
