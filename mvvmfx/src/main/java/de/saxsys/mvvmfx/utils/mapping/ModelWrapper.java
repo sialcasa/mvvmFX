@@ -16,24 +16,31 @@
 package de.saxsys.mvvmfx.utils.mapping;
 
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.BooleanGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.BooleanImmutableSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.BooleanPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.BooleanSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.DoubleGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.DoubleImmutableSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.DoublePropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.DoubleSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.FloatGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.FloatImmutableSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.FloatPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.FloatSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.IntGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.IntImmutableSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.IntPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.IntSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ListGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ListImmutableSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ListPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ListSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.LongGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.LongImmutableSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.LongPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.LongSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectImmutableSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringGetter;
@@ -255,6 +262,16 @@ public class ModelWrapper<M> {
 
 	private final ObjectProperty<M> model;
 
+	/**
+	 * This flag is needed to support immutable fields. Without immutables when {@link #commit()} is invoked,
+	 * the fields of the model instance are changed. With immutables however on commit the instance of the model itself is
+	 * replaced. By default when the model instance is changed a {@link #reload()} is executed.
+	 * This is ok when the user changes the model instance. It is not ok when we replace the model instance because of immutable fields.
+	 * For this reason we need to distinguish between a change of the model instance due to a commit with immutable fields#
+	 * and when the user changes the model instance. Therefore durring commit this flag will switch to <code>true</code>
+	 * to indicate that we are currently executing a commit.
+	 */
+	private boolean inCommitPhase = false;
 
 	/**
 	 * Create a new instance of {@link ModelWrapper} that wraps the instance of the Model class wrapped by the property.
@@ -267,7 +284,13 @@ public class ModelWrapper<M> {
 		this.model = model;
 		reload();
 		this.model.addListener((observable, oldValue, newValue) -> {
-			reload();
+			/*
+			 * Only reload the values from the new model instance when it was changed by the user and not when it was changed
+			 * during the commit phase.
+			 */
+			if(!inCommitPhase) {
+				reload();
+			}
 		});
 	}
 
@@ -332,6 +355,7 @@ public class ModelWrapper<M> {
 	 */
 	public void reset() {
 		fields.forEach(PropertyField::resetToDefault);
+		immutableFields.forEach(PropertyField::resetToDefault);
 
 		calculateDifferenceFlag();
 	}
@@ -379,9 +403,14 @@ public class ModelWrapper<M> {
 	 *
 	 */
 	public void useCurrentValuesAsDefaults() {
-		if(model.get() != null) {
+		M wrappedModelInstance = model.get();
+		if(wrappedModelInstance != null) {
 			for (final PropertyField<?, M, ?> field : fields) {
-				field.updateDefault(model.get());
+				field.updateDefault(wrappedModelInstance);
+			}
+
+			for (final ImmutablePropertyField<?, M, ?> field : immutableFields) {
+				field.updateDefault(wrappedModelInstance);
 			}
 		}
 	}
@@ -396,12 +425,26 @@ public class ModelWrapper<M> {
 	 */
 	public void commit() {
 		if (model.get() != null) {
+
+			inCommitPhase = true;
+
 			fields.forEach(field -> field.commit(model.get()));
 
-			for (ImmutablePropertyField<?, M, ?> immutableField : immutableFields) {
-				M newModel = immutableField.commitImmutable(model.get());
-				model.setValue(newModel);
+			if(! immutableFields.isEmpty()) {
+
+				M tmp = model.get();
+
+				for (ImmutablePropertyField<?, M, ?> immutableField : immutableFields) {
+					tmp = immutableField.commitImmutable(tmp);
+				}
+
+				model.set(tmp);
+
 			}
+
+			inCommitPhase = false;
+
+
 
 			dirtyFlag.set(false);
 
@@ -418,8 +461,11 @@ public class ModelWrapper<M> {
 	 * defined property fields.
 	 */
 	public void reload() {
-		if (model.get() != null) {
-			fields.forEach(field -> field.reload(model.get()));
+		M wrappedModelInstance = model.get();
+		if (wrappedModelInstance != null) {
+			fields.forEach(field -> field.reload(wrappedModelInstance));
+
+			immutableFields.forEach(field -> field.reload(wrappedModelInstance));
 
 			dirtyFlag.set(false);
 			calculateDifferenceFlag();
@@ -448,14 +494,24 @@ public class ModelWrapper<M> {
 	}
 
 	private void calculateDifferenceFlag() {
-		if (model.get() != null) {
+		M wrappedModelInstance = model.get();
+
+		if (wrappedModelInstance != null) {
 			for (final PropertyField<?, M, ?> field : fields) {
-                            if (field.isDifferent(model.get())) {
-                                diffFlag.set(true);
-                                return;
-                            }
-                        }
-                        diffFlag.set(false);
+				if (field.isDifferent(wrappedModelInstance)) {
+					diffFlag.set(true);
+					return;
+				}
+			}
+
+			for (final ImmutablePropertyField<?, M, ?> field : immutableFields) {
+				if(field.isDifferent(wrappedModelInstance)) {
+					diffFlag.set(true);
+					return;
+				}
+			}
+
+			diffFlag.set(false);
 		}
 	}
 
@@ -537,6 +593,7 @@ public class ModelWrapper<M> {
 	 * {@link #commit()} or {@link #reload()} method is called. This property will stay <code>true</code> even if
 	 * afterwards another change is done so that the data is equal again. In this case the {@link #differentProperty()}
 	 * will switch back to <code>false</code>.
+	 * <p/>
 	 *
 	 * Simply speaking: This property indicates whether there was a change done to the wrapped properties or not. The
 	 * {@link #differentProperty()} indicates whether there is a difference in data at the moment.
@@ -556,7 +613,7 @@ public class ModelWrapper<M> {
 
 
 
-	/** Field type String **/
+	/* Field type String */
 
 	/**
 	 * Add a new field of type String to this instance of the wrapper. This method is used for model elements that are
@@ -593,9 +650,43 @@ public class ModelWrapper<M> {
 		return add(new BeanPropertyField<>(this::propertyWasChanged, getter, setter, SimpleStringProperty::new));
 	}
 
-
-	public StringProperty immutableField(StringGetter<M> getter, StringImmutableSetter<M> setter){
-		return addImmutable(new ImmutablePropertyField<>(this::propertyWasChanged, getter, setter, SimpleStringProperty::new));
+	/**
+	 * Add a new immutable field of type String to this instance of the wrapper. This method is used for immutable
+	 * model elements that have getters to get values for it's fields but not setters.
+	 * Instead, immutables have methods that take a new value for a field and return a new cloned instance of the
+	 * model element with only this field updated to the new value. The old model instance isn't changed.
+	 *
+	 * <p>
+	 *
+	 * Example:
+	 * <p>
+	 *
+	 * <pre>
+	 * ModelWrapper{@code<Person>} personWrapper = new ModelWrapper{@code<>}();
+	 *
+	 * StringProperty wrappedNameProperty = personWrapper.field(person -> person.getName(), (person, value)
+	 * 	 -> {
+	 * 	     Person clone = person.withName(value);
+	 * 	     return clone;
+	 * 	 });
+	 *
+	 * // or with a method reference
+	 * StringProperty wrappedNameProperty = personWrapper.field(Person::getName, Person::withName);
+	 *
+	 * </pre>
+	 *
+	 *
+	 * @param getter
+	 *            a function that returns the current value of the field for a given model element. Typically you will
+	 *            use a method reference to the getter method of the model element.
+	 * @param immutableSetter
+	 *            a function that returns a clone of this the given model element that has the given value set. Typically you will use a method
+	 *            reference to the immutable setter method of the model element.
+	 *
+	 * @return The wrapped property instance.
+	 */
+	public StringProperty immutableField(StringGetter<M> getter, StringImmutableSetter<M> immutableSetter){
+		return addImmutable(new ImmutableBeanPropertyField<>(this::propertyWasChanged, getter, immutableSetter, SimpleStringProperty::new));
 	}
 
 	/**
@@ -620,8 +711,25 @@ public class ModelWrapper<M> {
 				SimpleStringProperty::new));
 	}
 
-	public StringProperty immutableField(StringGetter<M> getter, StringImmutableSetter<M> setter, String defaultValue){
-		return addImmutable(new ImmutablePropertyField<>(this::propertyWasChanged, getter, setter, defaultValue, SimpleStringProperty::new));
+	/**
+	 * Ad a new immutable field of type String to this instance of the wrapper. See {@link #immutableField(StringGetter, StringImmutableSetter)}.
+	 * This method additionally has a parameter to define the default value that is used when the {@link #reset()}
+	 * method is used.
+	 *
+	 *
+	 * @param getter
+	 *            a function that returns the current value of the field for a given model element. Typically you will
+	 *            use a method reference to the getter method of the model element.
+	 * @param immutableSetter
+	 *            a function that returns a clone of this the given model element that has the given value set. Typically you will use a method
+	 *            reference to the immutable setter method of the model element.
+	 * @param defaultValue
+	 *            the default value that is used when {@link #reset()} is invoked.
+	 *
+	 * @return The wrapped property instance.
+	 */
+	public StringProperty immutableField(StringGetter<M> getter, StringImmutableSetter<M> immutableSetter, String defaultValue){
+		return addImmutable(new ImmutableBeanPropertyField<>(this::propertyWasChanged, getter, immutableSetter, defaultValue, SimpleStringProperty::new));
 	}
 
 	/**
@@ -649,7 +757,7 @@ public class ModelWrapper<M> {
 	 * @return The wrapped property instance.
 	 */
 	public StringProperty field(StringPropertyAccessor<M> accessor) {
-		return add(new FxPropertyField<>(this::propertyWasChanged, accessor::apply, SimpleStringProperty::new));
+		return add(new FxPropertyField<>(this::propertyWasChanged, accessor, SimpleStringProperty::new));
 	}
 
 	/**
@@ -665,7 +773,7 @@ public class ModelWrapper<M> {
 	 * @return The wrapped property instance.
 	 */
 	public StringProperty field(StringPropertyAccessor<M> accessor, String defaultValue) {
-		return add(new FxPropertyField<>(this::propertyWasChanged, accessor::apply, defaultValue,
+		return add(new FxPropertyField<>(this::propertyWasChanged, accessor, defaultValue,
 				SimpleStringProperty::new));
 	}
 
@@ -675,7 +783,7 @@ public class ModelWrapper<M> {
 	/**
 	 * Add a new field of type String to this instance of the wrapper. See {@link #field(StringGetter, StringSetter)}.
 	 * This method additionally takes a string identifier as first parameter.
-	 *
+	 * <p/>
 	 * This identifier is used to return the same property instance even when the method is invoked multiple times.
 	 *
 	 * @param identifier
@@ -699,12 +807,28 @@ public class ModelWrapper<M> {
 				() -> new SimpleStringProperty(null, identifier)));
 	}
 
-	public StringProperty immutableField(String identifier, StringGetter<M> getter, StringImmutableSetter<M> setter){
-		return addIdentifiedImmutable(identifier, new ImmutablePropertyField<>(this::propertyWasChanged, getter, setter, SimpleStringProperty::new));
+	/**
+	 * Add a new immutable field of type String to this instance of the wrapper. See {@link #immutableField(StringGetter, StringImmutableSetter}).
+	 * This method additionally takes a string identifier as first parameter.
+	 * <p/>
+	 * This identifier is used to return the same property instance even when the method is invoked multiple times.
+	 *
+	 * @param identifier
+	 *            an identifier for the field.
+	 * @param getter
+	 *            a function that returns the current value of the field for a given model element. Typically you will
+	 *            use a method reference to the getter method of the model element.
+	 * @param immutableSetter
+	 *            a function that returns a clone of this the given model element that has the given value set. Typically you will use a method
+	 *            reference to the immutable setter method of the model element.
+	 * @return The wrapped property instance.
+	 */
+	public StringProperty immutableField(String identifier, StringGetter<M> getter, StringImmutableSetter<M> immutableSetter){
+		return addIdentifiedImmutable(identifier, new ImmutableBeanPropertyField<>(this::propertyWasChanged, getter, immutableSetter, () -> new SimpleStringProperty(null, identifier)));
 	}
 
-	public StringProperty immutableField(String identifier, StringGetter<M> getter, StringImmutableSetter<M> setter, String defaultValue){
-		return addIdentifiedImmutable(identifier, new ImmutablePropertyField<>(this::propertyWasChanged, getter, setter, defaultValue, SimpleStringProperty::new));
+	public StringProperty immutableField(String identifier, StringGetter<M> getter, StringImmutableSetter<M> immutableSetter, String defaultValue){
+		return addIdentifiedImmutable(identifier, new ImmutableBeanPropertyField<>(this::propertyWasChanged, getter, immutableSetter, defaultValue, () -> new SimpleStringProperty(null, identifier)));
 	}
 
 	/**
@@ -732,15 +856,23 @@ public class ModelWrapper<M> {
 						() -> new SimpleStringProperty(null, identifier)));
 	}
 
-	/** Field type Boolean **/
+	/* Field type Boolean */
 
 	public BooleanProperty field(BooleanGetter<M> getter, BooleanSetter<M> setter) {
 		return add(new BeanPropertyField<>(this::propertyWasChanged, getter, setter, SimpleBooleanProperty::new));
 	}
 
+	public BooleanProperty immutableField(BooleanGetter<M> getter, BooleanImmutableSetter<M> immutableSetter){
+		return addImmutable(new ImmutableBeanPropertyField<>(this::propertyWasChanged, getter, immutableSetter, SimpleBooleanProperty::new));
+	}
+
 	public BooleanProperty field(BooleanGetter<M> getter, BooleanSetter<M> setter, boolean defaultValue) {
 		return add(new BeanPropertyField<>(this::propertyWasChanged, getter, setter, defaultValue,
 				SimpleBooleanProperty::new));
+	}
+
+	public BooleanProperty immutableField(BooleanGetter<M> getter, BooleanImmutableSetter<M> immutableSetter, boolean defaultValue){
+		return addImmutable(new ImmutableBeanPropertyField<>(this::propertyWasChanged, getter, immutableSetter, defaultValue, SimpleBooleanProperty::new));
 	}
 
 	public BooleanProperty field(BooleanPropertyAccessor<M> accessor) {
@@ -762,6 +894,14 @@ public class ModelWrapper<M> {
 				() -> new SimpleBooleanProperty(null, identifier)));
 	}
 
+	public BooleanProperty immutableField(String identifier, BooleanGetter<M> getter, BooleanImmutableSetter<M> immutableSetter){
+		return addIdentifiedImmutable(identifier, new ImmutableBeanPropertyField<>(this::propertyWasChanged, getter, immutableSetter, () -> new SimpleBooleanProperty(null, identifier)));
+	}
+
+	public BooleanProperty immutableField(String identifier, BooleanGetter<M> getter, BooleanImmutableSetter<M> immutableSetter, boolean defaultValue){
+		return addIdentifiedImmutable(identifier, new ImmutableBeanPropertyField<>(this::propertyWasChanged, getter, immutableSetter, defaultValue, () -> new SimpleBooleanProperty(null, identifier)));
+	}
+
 	public BooleanProperty field(String identifier, BooleanPropertyAccessor<M> accessor) {
 		return addIdentified(identifier, new FxPropertyField<>(this::propertyWasChanged, accessor,
 				() -> new SimpleBooleanProperty(null, identifier)));
@@ -774,7 +914,7 @@ public class ModelWrapper<M> {
 
 
 
-	/** Field type Double **/
+	/* Field type Double */
 
 
 	public DoubleProperty field(DoubleGetter<M> getter, DoubleSetter<M> setter) {
@@ -784,10 +924,29 @@ public class ModelWrapper<M> {
 				SimpleDoubleProperty::new));
 	}
 
+
+	public DoubleProperty immutableField(DoubleGetter<M> getter, DoubleImmutableSetter<M> immutableSetter){
+		return addImmutable(new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter::apply,
+				(m, number) -> immutableSetter.apply(m, number.doubleValue()),
+				SimpleDoubleProperty::new
+		));
+	}
+
 	public DoubleProperty field(DoubleGetter<M> getter, DoubleSetter<M> setter, double defaultValue) {
 		return add(new BeanPropertyField<>(
 				this::propertyWasChanged,
 				getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
+				defaultValue,
+				SimpleDoubleProperty::new));
+	}
+
+	public DoubleProperty immutableField(DoubleGetter<M> getter, DoubleImmutableSetter<M> immutableSetter, double defaultValue){
+		return addImmutable(new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter::apply,
+				(m, number) -> immutableSetter.apply(m, number.doubleValue()),
 				defaultValue,
 				SimpleDoubleProperty::new));
 	}
@@ -805,7 +964,8 @@ public class ModelWrapper<M> {
 
 		return addIdentified(identifier, new BeanPropertyField<>(
 				this::propertyWasChanged,
-				getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
+				getter::apply,
+				(m, number) -> setter.accept(m, number.doubleValue()),
 				() -> new SimpleDoubleProperty(null, identifier)));
 	}
 
@@ -813,13 +973,34 @@ public class ModelWrapper<M> {
 			double defaultValue) {
 		return addIdentified(identifier, new BeanPropertyField<>(
 				this::propertyWasChanged,
-				getter::apply, (m, number) -> setter.accept(m, number.doubleValue()),
+				getter::apply,
+				(m, number) -> setter.accept(m, number.doubleValue()),
+				defaultValue,
+				() -> new SimpleDoubleProperty(null, identifier)));
+	}
+
+
+	public DoubleProperty immutableField(String identifier, DoubleGetter<M> getter, DoubleImmutableSetter<M> immutableSetter){
+		return addIdentifiedImmutable(identifier, new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter::apply,
+				(m, number) -> immutableSetter.apply(m, number.doubleValue()),
+				() -> new SimpleDoubleProperty(null, identifier)));
+	}
+
+	public DoubleProperty immutableField(String identifier, DoubleGetter<M> getter, DoubleImmutableSetter<M> immutableSetter, double defaultValue){
+		return addIdentifiedImmutable(identifier, new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter::apply,
+				(m, number) -> immutableSetter.apply(m, number.doubleValue()),
 				defaultValue,
 				() -> new SimpleDoubleProperty(null, identifier)));
 	}
 
 	public DoubleProperty field(String identifier, DoublePropertyAccessor<M> accessor) {
-		return addIdentified(identifier, new FxPropertyField<>(this::propertyWasChanged, accessor::apply,
+		return addIdentified(identifier, new FxPropertyField<>(
+				this::propertyWasChanged,
+				accessor::apply,
 				() -> new SimpleDoubleProperty(null, identifier)));
 	}
 
@@ -832,7 +1013,7 @@ public class ModelWrapper<M> {
 
 
 
-	/** Field type Float **/
+	/* Field type Float */
 
 	public FloatProperty field(FloatGetter<M> getter, FloatSetter<M> setter) {
 		return add(new BeanPropertyField<>(
@@ -841,10 +1022,28 @@ public class ModelWrapper<M> {
 				SimpleFloatProperty::new));
 	}
 
+	public FloatProperty immutableField(FloatGetter<M> getter, FloatImmutableSetter<M> immutableSetter){
+		return addImmutable(new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter::apply,
+				(m, number) -> immutableSetter.apply(m, number.floatValue()),
+				SimpleFloatProperty::new
+		));
+	}
+
 	public FloatProperty field(FloatGetter<M> getter, FloatSetter<M> setter, float defaultValue) {
 		return add(new BeanPropertyField<>(
 				this::propertyWasChanged,
 				getter::apply, (m, number) -> setter.accept(m, number.floatValue()), defaultValue,
+				SimpleFloatProperty::new));
+	}
+
+	public FloatProperty immutableField(FloatGetter<M> getter, FloatImmutableSetter<M> immutableSetter, float defaultValue){
+		return addImmutable(new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter::apply,
+				(m, number) -> immutableSetter.apply(m, number.floatValue()),
+				defaultValue,
 				SimpleFloatProperty::new));
 	}
 
@@ -873,6 +1072,24 @@ public class ModelWrapper<M> {
 				() -> new SimpleFloatProperty(null, identifier)));
 	}
 
+
+	public FloatProperty immutableField(String identifier, FloatGetter<M> getter, FloatImmutableSetter<M> immutableSetter){
+		return addIdentifiedImmutable(identifier, new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter::apply,
+				(m, number) -> immutableSetter.apply(m, number.floatValue()),
+				() -> new SimpleFloatProperty(null, identifier)));
+	}
+
+	public FloatProperty immutableField(String identifier, FloatGetter<M> getter, FloatImmutableSetter<M> immutableSetter, float defaultValue){
+		return addIdentifiedImmutable(identifier, new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter::apply,
+				(m, number) -> immutableSetter.apply(m, number.floatValue()),
+				defaultValue,
+				() -> new SimpleFloatProperty(null, identifier)));
+	}
+
 	public FloatProperty field(String identifier, FloatPropertyAccessor<M> accessor) {
 		return addIdentified(identifier, new FxPropertyField<>(this::propertyWasChanged, accessor::apply,
 				() -> new SimpleFloatProperty(null, identifier)));
@@ -885,7 +1102,7 @@ public class ModelWrapper<M> {
 	}
 
 
-	/** Field type Integer **/
+	/* Field type Integer */
 
 
 	public IntegerProperty field(IntGetter<M> getter, IntSetter<M> setter) {
@@ -895,10 +1112,30 @@ public class ModelWrapper<M> {
 				SimpleIntegerProperty::new));
 	}
 
+
+	public IntegerProperty immutableField(IntGetter<M> getter, IntImmutableSetter<M> immutableSetter){
+		return addImmutable(new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter::apply,
+				(m, number) -> immutableSetter.apply(m, number.intValue()),
+				SimpleIntegerProperty::new
+		));
+	}
+
 	public IntegerProperty field(IntGetter<M> getter, IntSetter<M> setter, int defaultValue) {
 		return add(new BeanPropertyField<>(
 				this::propertyWasChanged,
 				getter::apply, (m, number) -> setter.accept(m, number.intValue()),
+				defaultValue,
+				SimpleIntegerProperty::new));
+	}
+
+
+	public IntegerProperty immutableField(IntGetter<M> getter, IntImmutableSetter<M> immutableSetter, int defaultValue){
+		return addImmutable(new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter::apply,
+				(m, number) -> immutableSetter.apply(m, number.intValue()),
 				defaultValue,
 				SimpleIntegerProperty::new));
 	}
@@ -929,6 +1166,24 @@ public class ModelWrapper<M> {
 	}
 
 
+
+	public IntegerProperty immutableField(String identifier, IntGetter<M> getter, IntImmutableSetter<M> immutableSetter){
+		return addIdentifiedImmutable(identifier, new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter::apply,
+				(m, number) -> immutableSetter.apply(m, number.intValue()),
+				() -> new SimpleIntegerProperty(null, identifier)));
+	}
+
+	public IntegerProperty immutableField(String identifier, IntGetter<M> getter, IntImmutableSetter<M> immutableSetter, int defaultValue){
+		return addIdentifiedImmutable(identifier, new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter::apply,
+				(m, number) -> immutableSetter.apply(m, number.intValue()),
+				defaultValue,
+				() -> new SimpleIntegerProperty(null, identifier)));
+	}
+
 	public IntegerProperty field(String identifier, IntPropertyAccessor<M> accessor) {
 		return addIdentified(identifier, new FxPropertyField<>(this::propertyWasChanged, accessor::apply,
 				() -> new SimpleIntegerProperty(null, identifier)));
@@ -941,7 +1196,7 @@ public class ModelWrapper<M> {
 
 
 
-	/** Field type Long **/
+	/* Field type Long */
 
 	public LongProperty field(LongGetter<M> getter, LongSetter<M> setter) {
 		return add(new BeanPropertyField<>(
@@ -950,10 +1205,28 @@ public class ModelWrapper<M> {
 				SimpleLongProperty::new));
 	}
 
+	public LongProperty immutableField(LongGetter<M> getter, LongImmutableSetter<M> immutableSetter){
+		return addImmutable(new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter::apply,
+				(m, number) -> immutableSetter.apply(m, number.longValue()),
+				SimpleLongProperty::new
+		));
+	}
+
 	public LongProperty field(LongGetter<M> getter, LongSetter<M> setter, long defaultValue) {
 		return add(new BeanPropertyField<>(
 				this::propertyWasChanged,
 				getter::apply, (m, number) -> setter.accept(m, number.longValue()),
+				defaultValue,
+				SimpleLongProperty::new));
+	}
+
+	public LongProperty immutableField(LongGetter<M> getter, LongImmutableSetter<M> immutableSetter, long defaultValue){
+		return addImmutable(new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter::apply,
+				(m, number) -> immutableSetter.apply(m, number.longValue()),
 				defaultValue,
 				SimpleLongProperty::new));
 	}
@@ -984,6 +1257,25 @@ public class ModelWrapper<M> {
 						() -> new SimpleLongProperty(null, identifier)));
 	}
 
+
+	public LongProperty immutableField(String identifier, LongGetter<M> getter, LongImmutableSetter<M> immutableSetter){
+		return addIdentifiedImmutable(identifier, new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter::apply,
+				(m, number) -> immutableSetter.apply(m, number.longValue()),
+				() -> new SimpleLongProperty(null, identifier)));
+	}
+
+	public LongProperty immutableField(String identifier, LongGetter<M> getter, LongImmutableSetter<M> immutableSetter, long defaultValue){
+		return addIdentifiedImmutable(identifier, new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter::apply,
+				(m, number) -> immutableSetter.apply(m, number.longValue()),
+				defaultValue,
+				() -> new SimpleLongProperty(null, identifier)));
+	}
+
+
 	public LongProperty field(String identifier, LongPropertyAccessor<M> accessor) {
 		return addIdentified(identifier, new FxPropertyField<>(this::propertyWasChanged, accessor::apply,
 				() -> new SimpleLongProperty(null, identifier)));
@@ -996,15 +1288,34 @@ public class ModelWrapper<M> {
 
 
 
-	/** Field type generic **/
+	/* Field type generic */
 
 
 	public <T> ObjectProperty<T> field(ObjectGetter<M, T> getter, ObjectSetter<M, T> setter) {
 		return add(new BeanPropertyField<>(this::propertyWasChanged, getter, setter, SimpleObjectProperty::new));
 	}
 
+
+	public <T> ObjectProperty<T> immutableField(ObjectGetter<M, T> getter, ObjectImmutableSetter<M, T> immutableSetter){
+		return addImmutable(new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				immutableSetter,
+				SimpleObjectProperty::new
+		));
+	}
+
 	public <T> ObjectProperty<T> field(ObjectGetter<M, T> getter, ObjectSetter<M, T> setter, T defaultValue) {
 		return add(new BeanPropertyField<>(this::propertyWasChanged, getter, setter, defaultValue,
+				SimpleObjectProperty::new));
+	}
+
+	public <T> ObjectProperty<T> immutableField(ObjectGetter<M,T> getter, ObjectImmutableSetter<M, T> immutableSetter, T defaultValue){
+		return addImmutable(new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				immutableSetter,
+				defaultValue,
 				SimpleObjectProperty::new));
 	}
 
@@ -1028,6 +1339,25 @@ public class ModelWrapper<M> {
 				() -> new SimpleObjectProperty<T>(null, identifier)));
 	}
 
+
+
+	public <T> ObjectProperty<T> immutableField(String identifier, ObjectGetter<M, T> getter, ObjectImmutableSetter<M, T> immutableSetter){
+		return addIdentifiedImmutable(identifier, new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				immutableSetter,
+				() -> new SimpleObjectProperty<T>(null, identifier)));
+	}
+
+	public <T> ObjectProperty<T> immutableField(String identifier, ObjectGetter<M, T> getter, ObjectImmutableSetter<M, T> immutableSetter, T defaultValue){
+		return addIdentifiedImmutable(identifier, new ImmutableBeanPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				immutableSetter,
+				defaultValue,
+				() -> new SimpleObjectProperty<T>(null, identifier)));
+	}
+
 	public <T> ObjectProperty<T> field(String identifier, ObjectPropertyAccessor<M, T> accessor) {
 		return addIdentified(identifier, new FxPropertyField<>(this::propertyWasChanged, accessor,
 				() -> new SimpleObjectProperty<T>(null, identifier)));
@@ -1040,16 +1370,36 @@ public class ModelWrapper<M> {
 	}
 
 
-	/** Field type list **/
+	/* Field type list */
 
 	public <E> ListProperty<E> field(ListGetter<M, E> getter, ListSetter<M, E> setter) {
 		return add(new BeanListPropertyField<>(this::propertyWasChanged, getter,
 				(m, list) -> setter.accept(m, FXCollections.observableArrayList(list)), SimpleListProperty::new));
 	}
 
+
+	public <E> ListProperty<E> immutableField(ListGetter<M, E> getter, ListImmutableSetter<M, E> immutableSetter){
+		return addImmutable(new ImmutableListPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				(m, list) -> immutableSetter.apply(m, FXCollections.observableArrayList(list)),
+				SimpleListProperty::new
+		));
+	}
+
 	public <E> ListProperty<E> field(ListGetter<M, E> getter, ListSetter<M, E> setter, List<E> defaultValue) {
 		return add(new BeanListPropertyField<>(this::propertyWasChanged, getter,
 				(m, list) -> setter.accept(m, FXCollections.observableArrayList(list)), SimpleListProperty::new,
+				defaultValue));
+	}
+
+
+	public <E> ListProperty<E> immutableField(ListGetter<M, E> getter, ListImmutableSetter<M, E> immutableSetter, List<E> defaultValue){
+		return addImmutable(new ImmutableListPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				(m, list) -> immutableSetter.apply(m, FXCollections.observableArrayList(list)),
+				SimpleListProperty::new,
 				defaultValue));
 	}
 
@@ -1074,6 +1424,23 @@ public class ModelWrapper<M> {
 		return addIdentified(identifier, new BeanListPropertyField<>(this::propertyWasChanged, getter,
 				(m, list) -> setter.accept(m, FXCollections.observableArrayList(list)),
 				() -> new SimpleListProperty<>(null, identifier), defaultValue));
+	}
+
+	public <E> ListProperty<E> immutableField(String identifier, ListGetter<M, E> getter, ListImmutableSetter<M, E> immutableSetter){
+		return addIdentifiedImmutable(identifier, new ImmutableListPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				(m, list) -> immutableSetter.apply(m, FXCollections.observableArrayList(list)),
+				() -> new SimpleListProperty<>(null, identifier)));
+	}
+
+	public <E> ListProperty<E> immutableField(String identifier, ListGetter<M, E> getter, ListImmutableSetter<M, E> immutableSetter, List<E> defaultValue){
+		return addIdentifiedImmutable(identifier, new ImmutableListPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				(m, list) -> immutableSetter.apply(m, FXCollections.observableArrayList(list)),
+				() -> new SimpleListProperty<>(null, identifier),
+				defaultValue));
 	}
 
 	public <E> ListProperty<E> field(String identifier, ListPropertyAccessor<M, E> accessor) {
