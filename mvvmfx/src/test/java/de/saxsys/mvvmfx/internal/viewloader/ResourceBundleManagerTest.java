@@ -15,8 +15,8 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.internal.viewloader;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ListResourceBundle;
 import java.util.MissingResourceException;
@@ -46,7 +46,7 @@ public class ResourceBundleManagerTest {
 	private ResourceBundle global;
 	private ResourceBundle other;
 	
-	@Before
+	@BeforeEach
 	public void setup(){
 		manager = new ResourceBundleManager();
 		

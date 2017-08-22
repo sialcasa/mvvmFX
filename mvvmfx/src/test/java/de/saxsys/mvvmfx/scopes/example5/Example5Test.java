@@ -3,12 +3,10 @@ package de.saxsys.mvvmfx.scopes.example5;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(JfxRunner.class)
 public class Example5Test {
 
 	@Test

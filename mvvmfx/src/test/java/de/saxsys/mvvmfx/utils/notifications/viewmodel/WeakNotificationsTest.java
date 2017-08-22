@@ -1,10 +1,8 @@
 package de.saxsys.mvvmfx.utils.notifications.viewmodel;
 
-import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
 import de.saxsys.mvvmfx.utils.notifications.*;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 /**
@@ -12,7 +10,6 @@ import org.mockito.Mockito;
  * To do this most test cases of {@link DefaultNotificationCenterTest}
  * are reproduced with the weak variant of notifications.
  */
-@RunWith(JfxRunner.class)
 public class WeakNotificationsTest {
 
 
@@ -26,7 +23,7 @@ public class WeakNotificationsTest {
 	NotificationObserver observer2;
 	NotificationObserver observer3;
 
-	@Before
+	@BeforeEach
 	public void init() {
 		observer1 = Mockito.mock(NotificationObserver.class);
 		observer2 = Mockito.mock(NotificationObserver.class);

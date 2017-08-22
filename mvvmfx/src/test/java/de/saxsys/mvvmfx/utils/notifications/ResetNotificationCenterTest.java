@@ -15,9 +15,9 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.notifications;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -40,7 +40,7 @@ public class ResetNotificationCenterTest {
     private static final String MY_MESSAGE = "myMessage";
     private AtomicBoolean wasCalled = new AtomicBoolean(false);
 
-    @Before
+    @BeforeEach
     public void setup() {
         NotificationCenter notificationCenter = NotificationCenterFactory.getNotificationCenter();
 
@@ -59,7 +59,7 @@ public class ResetNotificationCenterTest {
      * one of the test cases would fail.
      * By replacing the instance we assure that each test uses a fresh notification center.
      */
-    @After
+    @AfterEach
     public void tearDown() {
 
         NotificationCenterFactory.setNotificationCenter(new DefaultNotificationCenter());

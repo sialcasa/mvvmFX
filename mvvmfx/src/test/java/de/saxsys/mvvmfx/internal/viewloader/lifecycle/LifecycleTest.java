@@ -15,20 +15,20 @@ import de.saxsys.mvvmfx.internal.viewloader.lifecycle.example_notification.Lifec
 import de.saxsys.mvvmfx.internal.viewloader.lifecycle.example_notification.LifecycleNotificationViewModel;
 import de.saxsys.mvvmfx.internal.viewloader.lifecycle.example_notification_without_lifecycle.NotificationWithoutLifecycleView;
 import de.saxsys.mvvmfx.internal.viewloader.lifecycle.example_notification_without_lifecycle.NotificationWithoutLifecycleViewModel;
+import de.saxsys.mvvmfx.testingutils.FxTestingUtils;
 import de.saxsys.mvvmfx.testingutils.GCVerifier;
-import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
-import de.saxsys.mvvmfx.testingutils.jfxrunner.TestInJfxThread;
+import de.saxsys.mvvmfx.testingutils.JfxToolkitExtension;
 import de.saxsys.mvvmfx.utils.notifications.DefaultNotificationCenter;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenterFactory;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(JfxRunner.class)
+@ExtendWith(JfxToolkitExtension.class)
 public class LifecycleTest {
 
 	/**
@@ -42,68 +42,70 @@ public class LifecycleTest {
 	 * of the lifecycle.
 	 */
 	@Test
-	@TestInJfxThread
 	public void testLifecycleWithSubViewsWithoutGC() {
-		LifecycleTestRootViewModel.onViewAddedCalled = 0;
-		LifecycleTestRootViewModel.onViewRemovedCalled = 0;
-		LifecycleTestSub1ViewModel.onViewAddedCalled = 0;
-		LifecycleTestSub1ViewModel.onViewRemovedCalled = 0;
-		LifecycleTestSub2ViewModel.onViewAddedCalled = 0;
-		LifecycleTestSub2ViewModel.onViewRemovedCalled = 0;
+		FxTestingUtils.runInFXThread(() -> {
+			LifecycleTestRootViewModel.onViewAddedCalled = 0;
+			LifecycleTestRootViewModel.onViewRemovedCalled = 0;
+			LifecycleTestSub1ViewModel.onViewAddedCalled = 0;
+			LifecycleTestSub1ViewModel.onViewRemovedCalled = 0;
+			LifecycleTestSub2ViewModel.onViewAddedCalled = 0;
+			LifecycleTestSub2ViewModel.onViewRemovedCalled = 0;
 
-		ViewTuple<LifecycleTestRootView, LifecycleTestRootViewModel> viewTuple = FluentViewLoader.fxmlView(LifecycleTestRootView.class).load();
+			ViewTuple<LifecycleTestRootView, LifecycleTestRootViewModel> viewTuple = FluentViewLoader
+					.fxmlView(LifecycleTestRootView.class).load();
 
-		// the root view is not directly added to the Scene but encapsulated in
-		// another container
-		VBox subContainer = new VBox();
-		subContainer.getChildren().add(viewTuple.getView());
+			// the root view is not directly added to the Scene but encapsulated in
+			// another container
+			VBox subContainer = new VBox();
+			subContainer.getChildren().add(viewTuple.getView());
 
-		VBox container = new VBox();
+			VBox container = new VBox();
 
-		Stage stage = new Stage();
-		Scene scene = new Scene(container);
-		stage.setScene(scene);
-
-
-		// before adding to scene
-		assertThat(LifecycleTestRootViewModel.onViewAddedCalled).isEqualTo(0);
-		assertThat(LifecycleTestRootViewModel.onViewRemovedCalled).isEqualTo(0);
-		assertThat(LifecycleTestSub1ViewModel.onViewAddedCalled).isEqualTo(0);
-		assertThat(LifecycleTestSub1ViewModel.onViewRemovedCalled).isEqualTo(0);
-		assertThat(LifecycleTestSub2ViewModel.onViewAddedCalled).isEqualTo(0);
-		assertThat(LifecycleTestSub2ViewModel.onViewRemovedCalled).isEqualTo(0);
-
-		// add rootView to container
-		container.getChildren().add(subContainer);
-
-		assertThat(LifecycleTestRootViewModel.onViewAddedCalled).isEqualTo(1);
-		assertThat(LifecycleTestRootViewModel.onViewRemovedCalled).isEqualTo(0);
-		assertThat(LifecycleTestSub1ViewModel.onViewAddedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub1ViewModel.onViewRemovedCalled).isEqualTo(0);
-		assertThat(LifecycleTestSub2ViewModel.onViewAddedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub2ViewModel.onViewRemovedCalled).isEqualTo(0);
-
-		// remove from container
-		container.getChildren().clear();
-
-		assertThat(LifecycleTestRootViewModel.onViewAddedCalled).isEqualTo(1);
-		assertThat(LifecycleTestRootViewModel.onViewRemovedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub1ViewModel.onViewAddedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub1ViewModel.onViewRemovedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub2ViewModel.onViewAddedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub2ViewModel.onViewRemovedCalled).isEqualTo(1);
+			Stage stage = new Stage();
+			Scene scene = new Scene(container);
+			stage.setScene(scene);
 
 
-		// add again to container
-		container.getChildren().add(subContainer);
+			// before adding to scene
+			assertThat(LifecycleTestRootViewModel.onViewAddedCalled).isEqualTo(0);
+			assertThat(LifecycleTestRootViewModel.onViewRemovedCalled).isEqualTo(0);
+			assertThat(LifecycleTestSub1ViewModel.onViewAddedCalled).isEqualTo(0);
+			assertThat(LifecycleTestSub1ViewModel.onViewRemovedCalled).isEqualTo(0);
+			assertThat(LifecycleTestSub2ViewModel.onViewAddedCalled).isEqualTo(0);
+			assertThat(LifecycleTestSub2ViewModel.onViewRemovedCalled).isEqualTo(0);
 
-		// the lifecycle methods are invoked again
-		assertThat(LifecycleTestRootViewModel.onViewAddedCalled).isEqualTo(2);
-		assertThat(LifecycleTestRootViewModel.onViewRemovedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub1ViewModel.onViewAddedCalled).isEqualTo(2);
-		assertThat(LifecycleTestSub1ViewModel.onViewRemovedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub2ViewModel.onViewAddedCalled).isEqualTo(2);
-		assertThat(LifecycleTestSub2ViewModel.onViewRemovedCalled).isEqualTo(1);
+			// add rootView to container
+			container.getChildren().add(subContainer);
+
+			assertThat(LifecycleTestRootViewModel.onViewAddedCalled).isEqualTo(1);
+			assertThat(LifecycleTestRootViewModel.onViewRemovedCalled).isEqualTo(0);
+			assertThat(LifecycleTestSub1ViewModel.onViewAddedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub1ViewModel.onViewRemovedCalled).isEqualTo(0);
+			assertThat(LifecycleTestSub2ViewModel.onViewAddedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub2ViewModel.onViewRemovedCalled).isEqualTo(0);
+
+			// remove from container
+			container.getChildren().clear();
+
+			assertThat(LifecycleTestRootViewModel.onViewAddedCalled).isEqualTo(1);
+			assertThat(LifecycleTestRootViewModel.onViewRemovedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub1ViewModel.onViewAddedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub1ViewModel.onViewRemovedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub2ViewModel.onViewAddedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub2ViewModel.onViewRemovedCalled).isEqualTo(1);
+
+
+			// add again to container
+			container.getChildren().add(subContainer);
+
+			// the lifecycle methods are invoked again
+			assertThat(LifecycleTestRootViewModel.onViewAddedCalled).isEqualTo(2);
+			assertThat(LifecycleTestRootViewModel.onViewRemovedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub1ViewModel.onViewAddedCalled).isEqualTo(2);
+			assertThat(LifecycleTestSub1ViewModel.onViewRemovedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub2ViewModel.onViewAddedCalled).isEqualTo(2);
+			assertThat(LifecycleTestSub2ViewModel.onViewRemovedCalled).isEqualTo(1);
+		});
 	}
 
 
@@ -120,89 +122,91 @@ public class LifecycleTest {
 	 * when the view is added to the scene a second time.
 	 */
 	@Test
-	@TestInJfxThread
 	public void testLifecycleWithSubViewsWithGC() {
-		LifecycleTestRootViewModel.onViewAddedCalled = 0;
-		LifecycleTestRootViewModel.onViewRemovedCalled = 0;
-		LifecycleTestSub1ViewModel.onViewAddedCalled = 0;
-		LifecycleTestSub1ViewModel.onViewRemovedCalled = 0;
-		LifecycleTestSub2ViewModel.onViewAddedCalled = 0;
-		LifecycleTestSub2ViewModel.onViewRemovedCalled = 0;
+		FxTestingUtils.runInFXThread(() -> {
+			LifecycleTestRootViewModel.onViewAddedCalled = 0;
+			LifecycleTestRootViewModel.onViewRemovedCalled = 0;
+			LifecycleTestSub1ViewModel.onViewAddedCalled = 0;
+			LifecycleTestSub1ViewModel.onViewRemovedCalled = 0;
+			LifecycleTestSub2ViewModel.onViewAddedCalled = 0;
+			LifecycleTestSub2ViewModel.onViewRemovedCalled = 0;
 
-		ViewTuple<LifecycleTestRootView, LifecycleTestRootViewModel> viewTuple = FluentViewLoader.fxmlView(LifecycleTestRootView.class).load();
+			ViewTuple<LifecycleTestRootView, LifecycleTestRootViewModel> viewTuple = FluentViewLoader
+					.fxmlView(LifecycleTestRootView.class).load();
 
-		// GC is performed, however as we still have a reference to the viewTuple,
-		// nothing will be collected yet.
-		GCVerifier.forceGC();
+			// GC is performed, however as we still have a reference to the viewTuple,
+			// nothing will be collected yet.
+			GCVerifier.forceGC();
 
-		// the root view is not directly added to the Scene. Instead it is encapsulated in
-		// another container
-		VBox subContainer = new VBox();
-		subContainer.getChildren().add(viewTuple.getView());
+			// the root view is not directly added to the Scene. Instead it is encapsulated in
+			// another container
+			VBox subContainer = new VBox();
+			subContainer.getChildren().add(viewTuple.getView());
 
-		VBox container = new VBox();
+			VBox container = new VBox();
 
-		Stage stage = new Stage();
-		Scene scene = new Scene(container);
-		stage.setScene(scene);
+			Stage stage = new Stage();
+			Scene scene = new Scene(container);
+			stage.setScene(scene);
 
 
-		// now we clear the viewTuple reference ...
-		viewTuple = null;
+			// now we clear the viewTuple reference ...
+			viewTuple = null;
 
-		// and perform GC a second time.
-		// This time, both the ViewModel and the CodeBehind would be collected
-		// if the framework hadn't prevented it.
-		GCVerifier.forceGC();
+			// and perform GC a second time.
+			// This time, both the ViewModel and the CodeBehind would be collected
+			// if the framework hadn't prevented it.
+			GCVerifier.forceGC();
 
-		// before adding to scene
-		assertThat(LifecycleTestRootViewModel.onViewAddedCalled).isEqualTo(0);
-		assertThat(LifecycleTestRootViewModel.onViewRemovedCalled).isEqualTo(0);
-		assertThat(LifecycleTestSub1ViewModel.onViewAddedCalled).isEqualTo(0);
-		assertThat(LifecycleTestSub1ViewModel.onViewRemovedCalled).isEqualTo(0);
-		assertThat(LifecycleTestSub2ViewModel.onViewAddedCalled).isEqualTo(0);
-		assertThat(LifecycleTestSub2ViewModel.onViewRemovedCalled).isEqualTo(0);
+			// before adding to scene
+			assertThat(LifecycleTestRootViewModel.onViewAddedCalled).isEqualTo(0);
+			assertThat(LifecycleTestRootViewModel.onViewRemovedCalled).isEqualTo(0);
+			assertThat(LifecycleTestSub1ViewModel.onViewAddedCalled).isEqualTo(0);
+			assertThat(LifecycleTestSub1ViewModel.onViewRemovedCalled).isEqualTo(0);
+			assertThat(LifecycleTestSub2ViewModel.onViewAddedCalled).isEqualTo(0);
+			assertThat(LifecycleTestSub2ViewModel.onViewRemovedCalled).isEqualTo(0);
 
-		// add rootView to container
-		container.getChildren().add(subContainer);
+			// add rootView to container
+			container.getChildren().add(subContainer);
 
-		// onViewAdded is invoked for all viewModels
-		assertThat(LifecycleTestRootViewModel.onViewAddedCalled).isEqualTo(1);
-		assertThat(LifecycleTestRootViewModel.onViewRemovedCalled).isEqualTo(0);
-		assertThat(LifecycleTestSub1ViewModel.onViewAddedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub1ViewModel.onViewRemovedCalled).isEqualTo(0);
-		assertThat(LifecycleTestSub2ViewModel.onViewAddedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub2ViewModel.onViewRemovedCalled).isEqualTo(0);
+			// onViewAdded is invoked for all viewModels
+			assertThat(LifecycleTestRootViewModel.onViewAddedCalled).isEqualTo(1);
+			assertThat(LifecycleTestRootViewModel.onViewRemovedCalled).isEqualTo(0);
+			assertThat(LifecycleTestSub1ViewModel.onViewAddedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub1ViewModel.onViewRemovedCalled).isEqualTo(0);
+			assertThat(LifecycleTestSub2ViewModel.onViewAddedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub2ViewModel.onViewRemovedCalled).isEqualTo(0);
 
-		GCVerifier.forceGC();
+			GCVerifier.forceGC();
 
-		// remove from container
-		container.getChildren().clear();
+			// remove from container
+			container.getChildren().clear();
 
-		GCVerifier.forceGC();
+			GCVerifier.forceGC();
 
-		// onViewRemoved is invoked on all ViewModels
-		assertThat(LifecycleTestRootViewModel.onViewAddedCalled).isEqualTo(1);
-		assertThat(LifecycleTestRootViewModel.onViewRemovedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub1ViewModel.onViewAddedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub1ViewModel.onViewRemovedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub2ViewModel.onViewAddedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub2ViewModel.onViewRemovedCalled).isEqualTo(1);
+			// onViewRemoved is invoked on all ViewModels
+			assertThat(LifecycleTestRootViewModel.onViewAddedCalled).isEqualTo(1);
+			assertThat(LifecycleTestRootViewModel.onViewRemovedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub1ViewModel.onViewAddedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub1ViewModel.onViewRemovedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub2ViewModel.onViewAddedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub2ViewModel.onViewRemovedCalled).isEqualTo(1);
 
-		// Here the guarantee of the framework ends. This time the viewModels
-		// will be collected
-		GCVerifier.forceGC();
+			// Here the guarantee of the framework ends. This time the viewModels
+			// will be collected
+			GCVerifier.forceGC();
 
-		// add again to container
-		container.getChildren().add(subContainer);
+			// add again to container
+			container.getChildren().add(subContainer);
 
-		// no methods are invoked.
-		assertThat(LifecycleTestRootViewModel.onViewAddedCalled).isEqualTo(1);
-		assertThat(LifecycleTestRootViewModel.onViewRemovedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub1ViewModel.onViewAddedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub1ViewModel.onViewRemovedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub2ViewModel.onViewAddedCalled).isEqualTo(1);
-		assertThat(LifecycleTestSub2ViewModel.onViewRemovedCalled).isEqualTo(1);
+			// no methods are invoked.
+			assertThat(LifecycleTestRootViewModel.onViewAddedCalled).isEqualTo(1);
+			assertThat(LifecycleTestRootViewModel.onViewRemovedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub1ViewModel.onViewAddedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub1ViewModel.onViewRemovedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub2ViewModel.onViewAddedCalled).isEqualTo(1);
+			assertThat(LifecycleTestSub2ViewModel.onViewRemovedCalled).isEqualTo(1);
+		});
 	}
 
 
@@ -217,42 +221,44 @@ public class LifecycleTest {
 	 * prevents Garbage collection.
 	 */
 	@Test
-	@TestInJfxThread
 	public void testGarbageCollectionFailed() {
-		NotificationCenterFactory.setNotificationCenter(new DefaultNotificationCenter());
+		FxTestingUtils.runInFXThread(() -> {
+			NotificationCenterFactory.setNotificationCenter(new DefaultNotificationCenter());
 
-		ViewTuple<NotificationWithoutLifecycleView, NotificationWithoutLifecycleViewModel> viewTuple = FluentViewLoader.fxmlView(NotificationWithoutLifecycleView.class).load();
+			ViewTuple<NotificationWithoutLifecycleView, NotificationWithoutLifecycleViewModel> viewTuple = FluentViewLoader
+					.fxmlView(NotificationWithoutLifecycleView.class).load();
 
-		VBox container = new VBox();
+			VBox container = new VBox();
 
-		Stage stage = new Stage();
-		Scene scene = new Scene(container);
-		stage.setScene(scene);
+			Stage stage = new Stage();
+			Scene scene = new Scene(container);
+			stage.setScene(scene);
 
-		GCVerifier vmVerifier = GCVerifier.create(viewTuple.getViewModel());
+			GCVerifier vmVerifier = GCVerifier.create(viewTuple.getViewModel());
 
-		assertThat(vmVerifier.isAvailableForGC()).isFalse();
+			assertThat(vmVerifier.isAvailableForGC()).isFalse();
 
-		container.getChildren().add(viewTuple.getView());
+			container.getChildren().add(viewTuple.getView());
 
-		viewTuple = null;
+			viewTuple = null;
 
-		// The ViewModel has a listener subscribed so it isn't available for GC
-		assertThat(vmVerifier.isAvailableForGC()).isFalse();
+			// The ViewModel has a listener subscribed so it isn't available for GC
+			assertThat(vmVerifier.isAvailableForGC()).isFalse();
 
-		container.getChildren().clear();
+			container.getChildren().clear();
 
-		// even after the view isn't used anymore, the ViewModel still can't be garbage collected
-		// because it is still registered in the notification center
-		assertThat(vmVerifier.isAvailableForGC()).isFalse();
-
-
-		// only if we replace the notification center ...
-		NotificationCenterFactory.setNotificationCenter(new DefaultNotificationCenter());
+			// even after the view isn't used anymore, the ViewModel still can't be garbage collected
+			// because it is still registered in the notification center
+			assertThat(vmVerifier.isAvailableForGC()).isFalse();
 
 
-		// the viewModel can be garbage collected. Of cause in practice this isn't a suitable solution
-		assertThat(vmVerifier.isAvailableForGC()).isTrue();
+			// only if we replace the notification center ...
+			NotificationCenterFactory.setNotificationCenter(new DefaultNotificationCenter());
+
+
+			// the viewModel can be garbage collected. Of cause in practice this isn't a suitable solution
+			assertThat(vmVerifier.isAvailableForGC()).isTrue();
+		});
 	}
 
 	/**
@@ -266,39 +272,41 @@ public class LifecycleTest {
 	 * Therefore the ViewModel is available for garbage collection afterwards.
 	 */
 	@Test
-	@TestInJfxThread
 	public void testGarbageCollection() {
-		NotificationCenterFactory.setNotificationCenter(new DefaultNotificationCenter());
+		FxTestingUtils.runInFXThread(() -> {
+			NotificationCenterFactory.setNotificationCenter(new DefaultNotificationCenter());
 
-		ViewTuple<LifecycleNotificationView, LifecycleNotificationViewModel> viewTuple = FluentViewLoader.fxmlView(LifecycleNotificationView.class).load();
+			ViewTuple<LifecycleNotificationView, LifecycleNotificationViewModel> viewTuple = FluentViewLoader
+					.fxmlView(LifecycleNotificationView.class).load();
 
-		VBox container = new VBox();
+			VBox container = new VBox();
 
-		Stage stage = new Stage();
-		Scene scene = new Scene(container);
-		stage.setScene(scene);
+			Stage stage = new Stage();
+			Scene scene = new Scene(container);
+			stage.setScene(scene);
 
-		GCVerifier vmVerifier = GCVerifier.create(viewTuple.getViewModel());
+			GCVerifier vmVerifier = GCVerifier.create(viewTuple.getViewModel());
 
-		assertThat(vmVerifier.isAvailableForGC()).isFalse();
+			assertThat(vmVerifier.isAvailableForGC()).isFalse();
 
-		container.getChildren().add(viewTuple.getView());
+			container.getChildren().add(viewTuple.getView());
 
-		viewTuple = null;
+			viewTuple = null;
 
-		// The ViewModel has a listener subscribed so it isn't available for GC now
-		assertThat(vmVerifier.isAvailableForGC()).isFalse();
+			// The ViewModel has a listener subscribed so it isn't available for GC now
+			assertThat(vmVerifier.isAvailableForGC()).isFalse();
 
-		// this triggeres the lifecycle method which is used to deregister the listener
-		container.getChildren().clear();
-
-
-		// therefore the ViewModel can now be garbage collected.
-		assertThat(vmVerifier.isAvailableForGC()).isTrue();
+			// this triggeres the lifecycle method which is used to deregister the listener
+			container.getChildren().clear();
 
 
-		// cleanup notification center to not infer with other tests
-		NotificationCenterFactory.setNotificationCenter(new DefaultNotificationCenter());
+			// therefore the ViewModel can now be garbage collected.
+			assertThat(vmVerifier.isAvailableForGC()).isTrue();
+
+
+			// cleanup notification center to not infer with other tests
+			NotificationCenterFactory.setNotificationCenter(new DefaultNotificationCenter());
+		});
 	}
 
 
@@ -321,40 +329,42 @@ public class LifecycleTest {
 	 * In the previous implementation this resulted in only the first method was invoked.
 	 */
 	@Test
-	@TestInJfxThread
 	public void testGcBetweenLifecycleMethods() {
-		LifecycleGCTestRootViewModel.onViewRemovedCalled = 0;
-		LifecycleGCTestSub1ViewModel.onViewRemovedCalled = 0;
-		LifecycleGCTestSub2ViewModel.onViewRemovedCalled = 0;
+		FxTestingUtils.runInFXThread(() -> {
+			LifecycleGCTestRootViewModel.onViewRemovedCalled = 0;
+			LifecycleGCTestSub1ViewModel.onViewRemovedCalled = 0;
+			LifecycleGCTestSub2ViewModel.onViewRemovedCalled = 0;
 
 
-		ViewTuple<LifecycleGCTestRootView, LifecycleGCTestRootViewModel> viewTuple = FluentViewLoader.fxmlView(LifecycleGCTestRootView.class).load();
+			ViewTuple<LifecycleGCTestRootView, LifecycleGCTestRootViewModel> viewTuple = FluentViewLoader
+					.fxmlView(LifecycleGCTestRootView.class).load();
 
-		VBox subContainer = new VBox();
-		subContainer.getChildren().add(viewTuple.getView());
+			VBox subContainer = new VBox();
+			subContainer.getChildren().add(viewTuple.getView());
 
-		VBox container = new VBox();
+			VBox container = new VBox();
 
-		Stage stage = new Stage();
-		Scene scene = new Scene(container);
-		stage.setScene(scene);
+			Stage stage = new Stage();
+			Scene scene = new Scene(container);
+			stage.setScene(scene);
 
-		viewTuple = null;
+			viewTuple = null;
 
-		GCVerifier.forceGC();
+			GCVerifier.forceGC();
 
-		assertThat(LifecycleGCTestRootViewModel.onViewRemovedCalled).isEqualTo(0);
-		assertThat(LifecycleGCTestSub1ViewModel.onViewRemovedCalled).isEqualTo(0);
-		assertThat(LifecycleGCTestSub2ViewModel.onViewRemovedCalled).isEqualTo(0);
+			assertThat(LifecycleGCTestRootViewModel.onViewRemovedCalled).isEqualTo(0);
+			assertThat(LifecycleGCTestSub1ViewModel.onViewRemovedCalled).isEqualTo(0);
+			assertThat(LifecycleGCTestSub2ViewModel.onViewRemovedCalled).isEqualTo(0);
 
-		container.getChildren().add(subContainer);
+			container.getChildren().add(subContainer);
 
-		GCVerifier.forceGC();
+			GCVerifier.forceGC();
 
-		container.getChildren().remove(subContainer);
+			container.getChildren().remove(subContainer);
 
-		assertThat(LifecycleGCTestRootViewModel.onViewRemovedCalled).isEqualTo(1);
-		assertThat(LifecycleGCTestSub1ViewModel.onViewRemovedCalled).isEqualTo(1);
-		assertThat(LifecycleGCTestSub2ViewModel.onViewRemovedCalled).isEqualTo(1);
+			assertThat(LifecycleGCTestRootViewModel.onViewRemovedCalled).isEqualTo(1);
+			assertThat(LifecycleGCTestSub1ViewModel.onViewRemovedCalled).isEqualTo(1);
+			assertThat(LifecycleGCTestSub2ViewModel.onViewRemovedCalled).isEqualTo(1);
+		});
 	}
 }

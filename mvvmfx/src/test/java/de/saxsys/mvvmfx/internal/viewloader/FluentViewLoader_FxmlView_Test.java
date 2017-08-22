@@ -21,12 +21,13 @@ import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.internal.viewloader.example.*;
 import de.saxsys.mvvmfx.testingutils.ExceptionUtils;
-import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
+import de.saxsys.mvvmfx.testingutils.JfxToolkitExtension;
 import javafx.fxml.LoadException;
 import javafx.scene.layout.VBox;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -42,12 +43,12 @@ import static org.assertj.core.api.Assertions.fail;
  * 
  * @author manuel.mauky
  */
-@RunWith(JfxRunner.class)
+@ExtendWith(JfxToolkitExtension.class)
 public class FluentViewLoader_FxmlView_Test {
 	
 	private ResourceBundle resourceBundle;
 	
-	@Before
+	@BeforeEach
 	public void setup() throws Exception {
 		resourceBundle = new PropertyResourceBundle(new StringReader(""));
 	}
@@ -233,10 +234,13 @@ public class FluentViewLoader_FxmlView_Test {
 		}
 	}
 	
-	@Test(expected = RuntimeException.class)
+	@Test
 	public void testLoadFailNoSuchFxmlFile() {
-		ViewTuple<InvalidFxmlTestView, TestViewModel> viewTuple = FluentViewLoader.fxmlView(InvalidFxmlTestView.class)
-				.load();
+		Assertions.assertThrows(RuntimeException.class, () -> {
+			ViewTuple<InvalidFxmlTestView, TestViewModel> viewTuple = FluentViewLoader
+					.fxmlView(InvalidFxmlTestView.class)
+					.load();
+		});
 	}
 	
 	/**

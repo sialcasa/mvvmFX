@@ -15,7 +15,7 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.notifications;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**

@@ -16,7 +16,7 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
 import de.saxsys.mvvmfx.ViewTuple;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlView;

@@ -29,18 +29,20 @@ import de.saxsys.mvvmfx.internal.viewloader.example.*;
 import de.saxsys.mvvmfx.resourcebundle.global.TestView;
 import de.saxsys.mvvmfx.resourcebundle.global.TestViewModel;
 import de.saxsys.mvvmfx.testingutils.ExceptionUtils;
+import de.saxsys.mvvmfx.testingutils.JfxToolkitExtension;
 import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
 import javafx.scene.layout.VBox;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.InjectResourceBundle;
 import de.saxsys.mvvmfx.JavaView;
 import de.saxsys.mvvmfx.ViewTuple;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 
 /**
@@ -49,14 +51,14 @@ import org.junit.runner.RunWith;
  * A resourceBundle can be injected into the View with default behaviour of JavaFX. Additionally the user can use the
  * mvvmfx annotation {@link InjectResourceBundle} to inject the resourceBundle in the View and in the ViewModel.
  */
-@RunWith(JfxRunner.class)
+@ExtendWith(JfxToolkitExtension.class)
 public class FluentViewLoader_ResourceBundle_Test {
 
 
 	private ResourceBundle resourceBundle;
 	private ResourceBundle globalResourceBundle;
 
-	@Before
+	@BeforeEach
 	public void setup() throws Exception {
 		resourceBundle = new ListResourceBundle() {
 			@Override
@@ -82,7 +84,7 @@ public class FluentViewLoader_ResourceBundle_Test {
 		MvvmFX.setGlobalResourceBundle(null);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		MvvmFX.setGlobalResourceBundle(null);
 	}
@@ -210,7 +212,7 @@ public class FluentViewLoader_ResourceBundle_Test {
 	 * but no resourceBundle was provided at loading time. Therefore an exception is thrown.
 	 */
 	@Test
-	//	@Ignore("until fixed. See issue #435")
+	//	@Disabled("until fixed. See issue #435")
 	public void fail_noResourceBundleGivenForViewAndViewModel() {
 		MvvmFX.setGlobalResourceBundle(null);
 

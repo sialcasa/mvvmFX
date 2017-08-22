@@ -2,8 +2,9 @@ package de.saxsys.mvvmfx.scopes.example1;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.scopes.example1.views.*;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.omg.SendingContext.RunTime;
 
 public class Example1ScopesTest {
 
@@ -51,64 +52,66 @@ public class Example1ScopesTest {
 		ScopedViewModelG viewModel_B_E_G = parentView.subviewBController.subviewEController.subviewGController.viewModel;
 
 
-		Assert.assertNotNull(viewModel_A_E);
-		Assert.assertNotNull(viewModel_A_E_F);
-		Assert.assertNotNull(viewModel_A_E_G);
-		Assert.assertNotNull(viewModel_B_E);
-		Assert.assertNotNull(viewModel_B_E_F);
-		Assert.assertNotNull(viewModel_B_E_G);
+		Assertions.assertNotNull(viewModel_A_E);
+		Assertions.assertNotNull(viewModel_A_E_F);
+		Assertions.assertNotNull(viewModel_A_E_G);
+		Assertions.assertNotNull(viewModel_B_E);
+		Assertions.assertNotNull(viewModel_B_E_F);
+		Assertions.assertNotNull(viewModel_B_E_G);
 
 
-		Assert.assertNotEquals(viewModel_A_E.testScope3, viewModel_B_E.testScope3);
+		Assertions.assertNotEquals(viewModel_A_E.testScope3, viewModel_B_E.testScope3);
 
-		Assert.assertEquals(viewModel_A_E.testScope3, viewModel_A_E_F.testScope3);
-		Assert.assertEquals(viewModel_A_E.testScope3, viewModel_A_E_G.testScope3);
+		Assertions.assertEquals(viewModel_A_E.testScope3, viewModel_A_E_F.testScope3);
+		Assertions.assertEquals(viewModel_A_E.testScope3, viewModel_A_E_G.testScope3);
 
-		Assert.assertEquals(viewModel_B_E.testScope3, viewModel_B_E_F.testScope3);
-		Assert.assertEquals(viewModel_B_E.testScope3, viewModel_B_E_G.testScope3);
+		Assertions.assertEquals(viewModel_B_E.testScope3, viewModel_B_E_F.testScope3);
+		Assertions.assertEquals(viewModel_B_E.testScope3, viewModel_B_E_G.testScope3);
 
 
 
 		verifyScopes(viewModelA, viewModelB, viewModelCinA, viewModelCinB, viewModelDinA, viewModelDinB);
 	}
 
-	@Test(expected = Exception.class)
+	@Test
 	public void testErrorWhenNoScopeProviderFound() {
 
 		final ScopesFxmlParentView parentView = FluentViewLoader.fxmlView(ScopesFxmlParentView.class)
 				.load()
 				.getCodeBehind();
 
-		parentView.subviewAController.subviewCController.loadWrongScopedView();
+		Assertions.assertThrows(Exception.class, () ->{
+			parentView.subviewAController.subviewCController.loadWrongScopedView();
+		});
 	}
 
 	private void verifyScopes(ScopedViewModelA viewModelA, ScopedViewModelB viewModelB, ScopedViewModelC viewModelCinA,
 							  ScopedViewModelC viewModelCinB, ScopedViewModelD viewModelDinA, ScopedViewModelD viewModelDinB) {
 
-		Assert.assertNotNull(viewModelA);
-		Assert.assertNotNull(viewModelB);
-		Assert.assertNotNull(viewModelCinA);
-		Assert.assertNotNull(viewModelCinB);
-		Assert.assertNotNull(viewModelDinA);
-		Assert.assertNotNull(viewModelDinB);
+		Assertions.assertNotNull(viewModelA);
+		Assertions.assertNotNull(viewModelB);
+		Assertions.assertNotNull(viewModelCinA);
+		Assertions.assertNotNull(viewModelCinB);
+		Assertions.assertNotNull(viewModelDinA);
+		Assertions.assertNotNull(viewModelDinB);
 
-		Assert.assertNotNull(viewModelA.injectedScope1);
-		Assert.assertNotNull(viewModelB.injectedScope1);
-		Assert.assertNotNull(viewModelCinA.injectedScope1);
-		Assert.assertNotNull(viewModelCinB.injectedScope1);
-		Assert.assertNotNull(viewModelDinA.injectedScope1);
-		Assert.assertNotNull(viewModelDinA.injectedScope2);
-		Assert.assertNotNull(viewModelDinB.injectedScope1);
-		Assert.assertNotNull(viewModelDinB.injectedScope2);
+		Assertions.assertNotNull(viewModelA.injectedScope1);
+		Assertions.assertNotNull(viewModelB.injectedScope1);
+		Assertions.assertNotNull(viewModelCinA.injectedScope1);
+		Assertions.assertNotNull(viewModelCinB.injectedScope1);
+		Assertions.assertNotNull(viewModelDinA.injectedScope1);
+		Assertions.assertNotNull(viewModelDinA.injectedScope2);
+		Assertions.assertNotNull(viewModelDinB.injectedScope1);
+		Assertions.assertNotNull(viewModelDinB.injectedScope2);
 
 
-		Assert.assertNotEquals(viewModelA.injectedScope1, viewModelB.injectedScope1);
+		Assertions.assertNotEquals(viewModelA.injectedScope1, viewModelB.injectedScope1);
 
-		Assert.assertEquals(viewModelA.injectedScope1, viewModelCinA.injectedScope1);
-		Assert.assertEquals(viewModelA.injectedScope1, viewModelDinA.injectedScope1);
+		Assertions.assertEquals(viewModelA.injectedScope1, viewModelCinA.injectedScope1);
+		Assertions.assertEquals(viewModelA.injectedScope1, viewModelDinA.injectedScope1);
 
-		Assert.assertEquals(viewModelB.injectedScope1, viewModelCinB.injectedScope1);
-		Assert.assertEquals(viewModelB.injectedScope1, viewModelDinB.injectedScope1);
+		Assertions.assertEquals(viewModelB.injectedScope1, viewModelCinB.injectedScope1);
+		Assertions.assertEquals(viewModelB.injectedScope1, viewModelDinB.injectedScope1);
 
 	}
 

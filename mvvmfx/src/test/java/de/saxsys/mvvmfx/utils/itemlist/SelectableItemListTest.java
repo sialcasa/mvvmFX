@@ -19,9 +19,9 @@ package de.saxsys.mvvmfx.utils.itemlist;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link SelectableItemList}.
@@ -41,7 +41,7 @@ public class SelectableItemListTest {
 	/**
 	 * Prepares the test.
 	 */
-	@Before
+	@BeforeEach
 	public void init() {
 		
 		// Create the items in the model
@@ -68,8 +68,8 @@ public class SelectableItemListTest {
 	 */
 	@Test
 	public void checkStartState() {
-		Assert.assertEquals(-1, selectableItemList.getSelectedIndex());
-		Assert.assertEquals(null, selectableItemList.getSelectedItem());
+		Assertions.assertEquals(-1, selectableItemList.getSelectedIndex());
+		Assertions.assertEquals(null, selectableItemList.getSelectedItem());
 	}
 	
 	/**
@@ -79,7 +79,7 @@ public class SelectableItemListTest {
 	@Test
 	public void setSelectedItemByIndex() {
 		selectableItemList.select(1);
-		Assert.assertEquals(listWithModelObjects.get(1), selectableItemList
+		Assertions.assertEquals(listWithModelObjects.get(1), selectableItemList
 				.selectedItemProperty().get());
 	}
 	
@@ -90,7 +90,7 @@ public class SelectableItemListTest {
 	@Test
 	public void setSelectedIndexByItem() {
 		selectableItemList.select(person3);
-		Assert.assertEquals(2, selectableItemList.getSelectedIndex());
+		Assertions.assertEquals(2, selectableItemList.getSelectedIndex());
 	}
 	
 	/**
@@ -99,14 +99,14 @@ public class SelectableItemListTest {
 	@Test
 	public void setSelectedIndexWithInvalidItem() {
 		selectableItemList.select(person1);
-		Assert.assertEquals(0, selectableItemList.getSelectedIndex());
-		Assert.assertEquals(person1, selectableItemList.getSelectedItem());
+		Assertions.assertEquals(0, selectableItemList.getSelectedIndex());
+		Assertions.assertEquals(person1, selectableItemList.getSelectedItem());
 		selectableItemList.select(new Person("Roflcopter"));
-		Assert.assertEquals(0, selectableItemList.getSelectedIndex());
-		Assert.assertEquals(person1, selectableItemList.getSelectedItem());
+		Assertions.assertEquals(0, selectableItemList.getSelectedIndex());
+		Assertions.assertEquals(person1, selectableItemList.getSelectedItem());
 		selectableItemList.select(person2);
-		Assert.assertEquals(1, selectableItemList.getSelectedIndex());
-		Assert.assertEquals(person2, selectableItemList.getSelectedItem());
+		Assertions.assertEquals(1, selectableItemList.getSelectedIndex());
+		Assertions.assertEquals(person2, selectableItemList.getSelectedItem());
 	}
 	
 	/**
@@ -115,44 +115,44 @@ public class SelectableItemListTest {
 	@Test
 	public void setSelectedItemWithInvalidIndex() {
 		selectableItemList.select(person1);
-		Assert.assertEquals(0, selectableItemList.getSelectedIndex());
-		Assert.assertEquals(person1, selectableItemList.getSelectedItem());
+		Assertions.assertEquals(0, selectableItemList.getSelectedIndex());
+		Assertions.assertEquals(person1, selectableItemList.getSelectedItem());
 		selectableItemList.select(100);
-		Assert.assertEquals(0, selectableItemList.getSelectedIndex());
-		Assert.assertEquals(person1, selectableItemList.getSelectedItem());
+		Assertions.assertEquals(0, selectableItemList.getSelectedIndex());
+		Assertions.assertEquals(person1, selectableItemList.getSelectedItem());
 	}
 	
 	@Test
 	public void unselectBySettingSelectedItemToNull() {
 		selectableItemList.select(person2);
-		Assert.assertEquals(1, selectableItemList.getSelectedIndex());
-		Assert.assertEquals(person2, selectableItemList.selectedItemProperty()
+		Assertions.assertEquals(1, selectableItemList.getSelectedIndex());
+		Assertions.assertEquals(person2, selectableItemList.selectedItemProperty()
 				.get());
 		selectableItemList.select(null);
-		Assert.assertEquals(-1, selectableItemList.getSelectedIndex());
-		Assert.assertNull(selectableItemList.selectedItemProperty().get());
+		Assertions.assertEquals(-1, selectableItemList.getSelectedIndex());
+		Assertions.assertNull(selectableItemList.selectedItemProperty().get());
 	}
 	
 	@Test
 	public void unselectBySettingSelectedIndexToMinus1() {
 		selectableItemList.select(person2);
-		Assert.assertEquals(1, selectableItemList.getSelectedIndex());
-		Assert.assertEquals(person2, selectableItemList.selectedItemProperty()
+		Assertions.assertEquals(1, selectableItemList.getSelectedIndex());
+		Assertions.assertEquals(person2, selectableItemList.selectedItemProperty()
 				.get());
 		selectableItemList.select(-1);
-		Assert.assertEquals(-1, selectableItemList.getSelectedIndex());
-		Assert.assertNull(selectableItemList.selectedItemProperty().get());
+		Assertions.assertEquals(-1, selectableItemList.getSelectedIndex());
+		Assertions.assertNull(selectableItemList.selectedItemProperty().get());
 	}
 	
 	@Test
 	public void unselectByClearSelection() {
 		selectableItemList.select(person2);
-		Assert.assertEquals(1, selectableItemList.getSelectedIndex());
-		Assert.assertEquals(person2, selectableItemList.selectedItemProperty()
+		Assertions.assertEquals(1, selectableItemList.getSelectedIndex());
+		Assertions.assertEquals(person2, selectableItemList.selectedItemProperty()
 				.get());
 		selectableItemList.clearSelection();
-		Assert.assertEquals(-1, selectableItemList.getSelectedIndex());
-		Assert.assertNull(selectableItemList.selectedItemProperty().get());
+		Assertions.assertEquals(-1, selectableItemList.getSelectedIndex());
+		Assertions.assertNull(selectableItemList.selectedItemProperty().get());
 	}
 	
 }
