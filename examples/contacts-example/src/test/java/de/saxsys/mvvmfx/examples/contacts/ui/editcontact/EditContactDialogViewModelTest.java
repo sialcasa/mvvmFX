@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.ListResourceBundle;
 import java.util.ResourceBundle;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 import de.saxsys.mvvmfx.examples.contacts.model.Repository;
 import de.saxsys.mvvmfx.examples.contacts.ui.contactdialog.ContactDialogViewModel;
@@ -25,7 +25,7 @@ public class EditContactDialogViewModelTest {
 
 	private ContactDialogScope scope;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		scope = new ContactDialogScope();
 

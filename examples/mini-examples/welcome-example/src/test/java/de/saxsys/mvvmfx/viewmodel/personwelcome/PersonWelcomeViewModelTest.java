@@ -1,9 +1,9 @@
 package de.saxsys.mvvmfx.viewmodel.personwelcome;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import de.saxsys.mvvmfx.examples.welcome.model.Gender;
 import de.saxsys.mvvmfx.examples.welcome.model.Person;
@@ -15,7 +15,7 @@ public class PersonWelcomeViewModelTest {
 	private Repository repository;
 	private PersonWelcomeViewModel personWelcomeViewModel;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		// TODO: this should be mocked
 		repository = new Repository();

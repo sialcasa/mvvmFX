@@ -1,10 +1,10 @@
 package de.saxsys.mvvmfx.viewmodel.personlogin;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javafx.collections.ObservableList;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import de.saxsys.mvvmfx.examples.welcome.model.Repository;
 import de.saxsys.mvvmfx.examples.welcome.viewmodel.personlogin.PersonLoginViewModel;

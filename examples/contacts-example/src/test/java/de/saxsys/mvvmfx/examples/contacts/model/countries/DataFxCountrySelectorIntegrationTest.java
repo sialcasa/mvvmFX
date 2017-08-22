@@ -1,11 +1,11 @@
 package de.saxsys.mvvmfx.examples.contacts.model.countries;
 
 import de.saxsys.mvvmfx.examples.contacts.model.Country;
-import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
+import de.saxsys.mvvmfx.testingutils.JfxToolkitExtension;
 import org.datafx.reader.converter.XmlConverter;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -13,18 +13,17 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(JfxRunner.class)
-public class DataFxCountrySelectorIntegrationTest extends AbstractCountrySelectorTest {
+@ExtendWith(JfxToolkitExtension.class)
+public class DataFxCountrySelectorIntegrationTest implements CountrySelectorInterfaceTest {
 
 	private CountrySelector countrySelector;
 
 
-	@Override
-	protected CountrySelector getCountrySelector() {
+	@Override public CountrySelector getCountrySelector() {
 		return countrySelector;
 	}
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		countrySelector = new DataFxCountrySelector();
 	}

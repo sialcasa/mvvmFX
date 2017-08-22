@@ -5,7 +5,7 @@ import de.saxsys.mvvmfx.examples.contacts.model.Subdivision;
 import de.saxsys.mvvmfx.examples.contacts.model.countries.CountrySelector;
 import javafx.application.Platform;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
 
 import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
 
-public abstract class AbstractCountrySelectorTest {
+public interface CountrySelectorInterfaceTest {
 
-	protected abstract CountrySelector getCountrySelector();
+	CountrySelector getCountrySelector();
 
 	@Test
-	public void testLoadSubdivisions() throws Exception {
+	default void testLoadSubdivisions() throws Exception {
 		CountrySelector countrySelector = getCountrySelector();
 		runBlocked(countrySelector::init);
 
@@ -47,7 +47,7 @@ public abstract class AbstractCountrySelectorTest {
 	}
 
 	@Test
-	public void testLoadCountries() throws InterruptedException, ExecutionException, TimeoutException {
+	default void testLoadCountries() throws InterruptedException, ExecutionException, TimeoutException {
 		CountrySelector countrySelector = getCountrySelector();
 
 		runBlocked(countrySelector::init);
@@ -86,7 +86,7 @@ public abstract class AbstractCountrySelectorTest {
 		assertThat(countrySelector.subdivisionLabel()).hasNullValue();
 	}
 
-	protected void runBlocked(Runnable function) {
+	default void runBlocked(Runnable function) {
 		CompletableFuture<Boolean> blocker = new CompletableFuture<>();
 
 		getCountrySelector().inProgressProperty().addListener((obs, oldV, newV) -> {
@@ -104,15 +104,15 @@ public abstract class AbstractCountrySelectorTest {
 		}
 	}
 
-	protected Country getCountryByName(List<Country> countries, String name) {
+	default Country getCountryByName(List<Country> countries, String name) {
 		return countries.stream().filter(country -> country.getName().equals(name)).findFirst().orElse(null);
 	}
 
-	protected List<String> getSubdivisionNames(List<Subdivision> subdivisions) {
+	default List<String> getSubdivisionNames(List<Subdivision> subdivisions) {
 		return subdivisions.stream().map(Subdivision::getName).collect(Collectors.toList());
 	}
 
-	protected List<String> getCountryNames(List<Country> countries) {
+	default List<String> getCountryNames(List<Country> countries) {
 		return countries.stream().map(Country::getName).collect(Collectors.toList());
 	}
 }

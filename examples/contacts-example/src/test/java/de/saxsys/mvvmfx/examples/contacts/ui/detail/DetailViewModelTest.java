@@ -7,8 +7,8 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import de.saxsys.mvvmfx.examples.contacts.model.Contact;
 import de.saxsys.mvvmfx.examples.contacts.model.Repository;
@@ -26,7 +26,7 @@ public class DetailViewModelTest {
 
 	private Repository repository;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		MasterDetailScope masterViewModelMock = mock(MasterDetailScope.class);
 

@@ -9,8 +9,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ListResourceBundle;
 import java.util.ResourceBundle;
@@ -39,7 +39,7 @@ public class AddressFormViewModelTest {
 
 	private ContactDialogScope scope;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		availableCountries.addAll(germany, austria);
 
