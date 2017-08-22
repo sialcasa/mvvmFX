@@ -17,7 +17,7 @@ package de.saxsys.mvvmfx.utils.validation;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ValidationMessageTest {
 
