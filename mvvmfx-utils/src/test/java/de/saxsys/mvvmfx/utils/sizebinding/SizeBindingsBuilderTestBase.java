@@ -17,7 +17,7 @@ package de.saxsys.mvvmfx.utils.sizebinding;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
+import de.saxsys.mvvmfx.testingutils.JfxToolkitExtension;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.scene.control.Control;
 import javafx.scene.control.ScrollPane;
@@ -25,12 +25,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 
-import org.junit.Before;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.util.reflection.Whitebox;
 
 
-@RunWith(JfxRunner.class)
+@ExtendWith(JfxToolkitExtension.class)
 public abstract class SizeBindingsBuilderTestBase {
 	
 	protected static final double SIZEVAL = 100d;
@@ -43,7 +43,7 @@ public abstract class SizeBindingsBuilderTestBase {
 	
 	protected ImageView fromImageView;
 	
-	@Before
+	@BeforeEach
 	public void setup() {
 		fromRegion = new Region();
 		mockSize(fromRegion);

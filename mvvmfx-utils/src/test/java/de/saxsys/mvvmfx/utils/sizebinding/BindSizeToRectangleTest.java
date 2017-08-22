@@ -19,8 +19,8 @@ import static de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder.*;
 
 import javafx.scene.shape.Rectangle;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class BindSizeToRectangleTest extends SizeBindingsBuilderTestBase {
 	
@@ -30,7 +30,7 @@ public class BindSizeToRectangleTest extends SizeBindingsBuilderTestBase {
 	/**
 	 * Create elements which will bind to each other.
 	 */
-	@Before
+	@BeforeEach
 	public void setUp() {
 		toRectangle = new Rectangle();
 	}

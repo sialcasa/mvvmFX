@@ -20,8 +20,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder.bindSize;
 import static de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder.unbindSize;
@@ -35,7 +35,7 @@ public class UnbindSizeTest extends SizeBindingsBuilderTestBase {
 	private Region targetRegion;
 	
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		targetImageView = new ImageView();
 		targetControl = new ScrollPane();

@@ -24,8 +24,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 
 public class UnbindWidthTest extends SizeBindingsBuilderTestBase {
@@ -37,7 +37,7 @@ public class UnbindWidthTest extends SizeBindingsBuilderTestBase {
 	private Region targetRegion;
 	
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		targetImageView = new ImageView();
 		targetControl = new ScrollPane();
