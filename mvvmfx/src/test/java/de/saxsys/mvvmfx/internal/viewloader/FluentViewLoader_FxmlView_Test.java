@@ -527,4 +527,24 @@ public class FluentViewLoader_FxmlView_Test {
 		assertThat(TestViewModel.instanceCounter).isEqualTo(1);
 		assertThat(TestViewModel.wasInitialized).isTrue();
 	}
+
+	@Test
+	public void testFxmlViewModelAsControllerException(){
+		try {
+			ViewTuple<TestFxmlViewModelAsController, TestFxmlViewModelAsControllerViewModel> load = FluentViewLoader
+					.fxmlView(TestFxmlViewModelAsController.class).load();
+		} catch (IllegalStateException e){
+			assertThat(e.getMessage()).contains("A ViewModel class").contains("was referenced in the FXML file").contains("as the fx:controller");
+		}
+	}
+
+	@Test
+	public void testFxmlViewModelAsControllerWithCustomPath(){
+		ViewTuple<TestFxmlViewModelAsControllerWithCustomPath, TestFxmlViewModelAsControllerWithCustomPathViewModel> load = FluentViewLoader
+				.fxmlView(TestFxmlViewModelAsControllerWithCustomPath.class).load();
+
+		//should work since the View points to another FXML through @FxmlPath
+		assertThat(load.getView()).isNotNull().isInstanceOf(VBox.class);
+		System.out.println("test");
+	}
 }
