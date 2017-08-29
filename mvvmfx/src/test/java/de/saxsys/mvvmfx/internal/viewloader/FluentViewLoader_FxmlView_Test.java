@@ -531,20 +531,51 @@ public class FluentViewLoader_FxmlView_Test {
 	@Test
 	public void testFxmlViewModelAsControllerException(){
 		try {
-			ViewTuple<TestFxmlViewModelAsController, TestFxmlViewModelAsControllerViewModel> load = FluentViewLoader
-					.fxmlView(TestFxmlViewModelAsController.class).load();
-		} catch (IllegalStateException e){
-			assertThat(e.getMessage()).contains("A ViewModel class").contains("was referenced in the FXML file").contains("as the fx:controller");
+			FluentViewLoader.fxmlView(TestFxmlViewModelAsController.class)
+					.load();
+		} catch (RuntimeException e){ ;
+			assertThat(e.getCause().getCause().getMessage())
+					.contains("A ViewModel class")
+					.contains("was referenced in the FXML file")
+					.contains("as the fx:controller");
+		}
+
+		//with ControllerFactoryWithCustomViewModel
+		try {
+			FluentViewLoader.fxmlView(TestFxmlViewModelAsController.class)
+					.viewModel(new TestFxmlViewModelAsControllerViewModel())
+					.load();
+		} catch (RuntimeException e){ ;
+			assertThat(e.getCause().getCause().getMessage())
+					.contains("A ViewModel class")
+					.contains("was referenced in the FXML file")
+					.contains("as the fx:controller");
 		}
 	}
 
 	@Test
 	public void testFxmlViewModelAsControllerWithCustomPath(){
 		try {
-			ViewTuple<TestFxmlViewModelAsControllerWithCustomPathView, TestFxmlViewModelAsControllerWithCustomPathViewModel> load = FluentViewLoader
-					.fxmlView(TestFxmlViewModelAsControllerWithCustomPathView.class).load();
-		} catch (IllegalStateException e){
-			assertThat(e.getMessage()).contains("A ViewModel class").contains("was referenced in the FXML file").contains("as the fx:controller");
+			FluentViewLoader.fxmlView(TestFxmlViewModelAsControllerWithCustomPathView.class)
+					.load();
+		} catch (RuntimeException e){
+			assertThat(e.getCause().getCause().getMessage())
+					.contains("A ViewModel class")
+					.contains("was referenced in the FXML file")
+					.contains("as the fx:controller");
 		}
+
+		//with ControllerFactoryWithCustomViewModel
+		try {
+			FluentViewLoader.fxmlView(TestFxmlViewModelAsControllerWithCustomPathView.class)
+					.viewModel(new TestFxmlViewModelAsControllerWithCustomPathViewModel())
+					.load();
+		} catch (RuntimeException e){
+			assertThat(e.getCause().getCause().getMessage())
+					.contains("A ViewModel class")
+					.contains("was referenced in the FXML file")
+					.contains("as the fx:controller");
+		}
+
 	}
 }

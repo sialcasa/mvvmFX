@@ -164,13 +164,6 @@ public class FxmlViewLoader {
 
             loader.load();
 
-            //throw an exception if the fx:controller was of type ViewModel
-            Object controller = loader.getController();
-            if (controller instanceof ViewModel) {
-                throw new IllegalStateException("A ViewModel class [" + controller.getClass().getCanonicalName() + "] was referenced in the FXML file ["+resource+"] as the fx:controller."
-                        + " Instead a class that implements FxmlView has to be defined as the fx:controller in the FXML file.");
-            }
-
             final ViewType loadedController = loader.getController();
             final Parent loadedRoot = loader.getRoot();
 
@@ -290,6 +283,15 @@ public class FxmlViewLoader {
         public Object call(Class<?> type) {
             Object controller = DependencyInjector.getInstance().getInstanceOf(type);
 
+            //throw an exception if the fx:controller was of type ViewModel
+//            Object controller = loader.getController();
+            if (controller instanceof ViewModel) {
+                throw new IllegalStateException("A ViewModel class [" + controller.getClass().getCanonicalName() + "] was referenced in the FXML file"
+//                        + "["+resource+"]"
+                        + " as the fx:controller."
+                        + " Instead a class that implements FxmlView has to be defined as the fx:controller in the FXML file.");
+            }
+
             if (controller instanceof View) {
                 View codeBehind = (View) controller;
 
@@ -398,6 +400,16 @@ public class FxmlViewLoader {
 
                 handleInjection(codeBehind, resourceBundle, context, viewInSceneProperty);
             }
+
+            //throw an exception if the fx:controller was of type ViewModel
+            //            Object controller = loader.getController();
+            if (controller instanceof ViewModel) {
+                throw new IllegalStateException("A ViewModel class [" + controller.getClass().getCanonicalName() + "] was referenced in the FXML file"
+                        //                        + "["+resource+"]"
+                        + " as the fx:controller."
+                        + " Instead a class that implements FxmlView has to be defined as the fx:controller in the FXML file.");
+            }
+
 
             return controller;
         }
