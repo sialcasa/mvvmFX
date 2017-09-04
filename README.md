@@ -1,16 +1,16 @@
 ![image](http://www.buildpath.de/mvvm/mvvmfx.png)
 
-__mvvm(fx)__ is an application framework which provides you necessary components to implement the [MVVM](../../wiki/MVVM "MVVM") pattern with JavaFX.
+**mvvmFX** is an application framework which provides you necessary components to implement the [MVVM](../../wiki/MVVM "MVVM") pattern with JavaFX.
 
-__MVVM__ is the enhanced version of the [Presentation Model](http://martinfowler.com/eaaDev/PresentationModel.html "Presentation Model") pattern and was created by Microsoft engineers for [WPF](http://msdn.microsoft.com/en-us/library/ms754130.aspx "WPF") . JavaFX and WPF does have similarities like Databinding and descriptive UI declaration (FXML/XAML). Because of this fact we adopt best practices of the development with the Microsoft technology.
+**MVVM** is the enhanced version of the [Presentation Model](http://martinfowler.com/eaaDev/PresentationModel.html "Presentation Model") pattern and was created by Microsoft engineers for [WPF](http://msdn.microsoft.com/en-us/library/ms754130.aspx "WPF"). JavaFX and WPF does have similarities like data binding and descriptive UI declaration (FXML/XAML). Because of this fact we adopted best practices of the development with the Microsoft technology and introduced new helpers to support the development of applications with JavaFX and MVVM.
 
 [![Commercial Support](https://img.shields.io/badge/Commercial%20Support%20-by%20Saxonia%20Systems-brightgreen.svg)](http://goo.gl/forms/WVBG3SWHuL)
 [![Build Status](https://api.travis-ci.org/sialcasa/mvvmFX.svg?branch=develop)](https://travis-ci.org/sialcasa/mvvmFX)
 
 
-###[Howto](../../wiki "Howto")###
+### [Howto](../../wiki "Howto")
 
-### Maven dependency###
+### Maven dependency
 
 #### Stable Release
 
