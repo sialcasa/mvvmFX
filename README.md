@@ -51,7 +51,7 @@ Here we develop new features. This release is unstable and shouldn't be used in 
 
 ### Get Help
 
-If you need help you can use the forums on [Google Groups](https://groups.google.com/forum/#!forum/mvvmfx-dev) for asking questions and interacting with the mvvmFX developers. Additionally you can create issues, report bugs and add feature requests on the issue tracker at [github](https://github.com/sialcasa/mvvmFX/issues).
+The best way to get help with mvvmFX is to either ask questions on StackOverflow using the [tag "mvvmfx"](https://stackoverflow.com/questions/tagged/mvvmfx) or to use our [Google Groups](https://groups.google.com/forum/#!forum/mvvmfx-dev) mailing list. Additionally you can create issues, report bugs and add feature requests on the issue tracker at [github](https://github.com/sialcasa/mvvmFX/issues).
 
 ### Links
 
