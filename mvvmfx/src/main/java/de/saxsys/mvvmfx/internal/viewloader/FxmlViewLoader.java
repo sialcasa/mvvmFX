@@ -237,6 +237,7 @@ public class FxmlViewLoader {
         fxmlLoader.setRoot(root);
         fxmlLoader.setResources(resourceBundle);
         fxmlLoader.setLocation(location);
+        fxmlLoader.setBuilderFactory(GlobalBuilderFactory.getInstance());
 
         // when the user provides a viewModel but no codeBehind, we need to use
         // the custom controller factory.

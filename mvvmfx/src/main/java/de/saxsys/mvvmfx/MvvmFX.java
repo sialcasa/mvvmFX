@@ -15,7 +15,9 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx;
 
+import de.saxsys.mvvmfx.internal.viewloader.GlobalBuilderFactory;
 import de.saxsys.mvvmfx.internal.viewloader.ResourceBundleManager;
+import javafx.util.BuilderFactory;
 import javafx.util.Callback;
 
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
@@ -64,5 +66,23 @@ public class MvvmFX {
 	 */
 	public static void setGlobalResourceBundle(ResourceBundle resourceBundle) {
 		ResourceBundleManager.getInstance().setGlobalResourceBundle(resourceBundle);
+	}
+
+	/**
+	 * Add a {@link BuilderFactory} to be used by mvvmFX.
+	 * <br/>
+	 * A {@link BuilderFactory} is used to enable custom controls that need special initialization to be used with FXML.
+	 * MvvmFX can manage multiple builder factories. If you add multiple factories that can provide builders for the same type,
+	 * the last added builder factory will be used. This way it's possible to "overwrite" a more abstract builder factory with a more specific
+	 * factory.
+	 * <br/>
+	 * MvvmFX also takes care for handling the default {@link javafx.fxml.JavaFXBuilderFactory}. If no custom builder factory
+	 * is able to provide a builder for a given type the default JavaFX builder factory will be used as last resort.
+	 * This way you don't have to take care for standard JavaFX types in your builder factory.
+	 *
+	 * @param factory the builder factory
+	 */
+	public static void addGlobalBuilderFactory(BuilderFactory factory) {
+		GlobalBuilderFactory.getInstance().addBuilderFactory(factory);
 	}
 }
