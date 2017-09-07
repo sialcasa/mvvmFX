@@ -11,10 +11,10 @@ import javafx.beans.property.StringProperty;
 
 public class ContactDialogScope implements Scope {
 
-	public static String RESET_DIALOG_PAGE = "contact_reset_dialog_page";
-	public static String OK_BEFORE_COMMIT = "contact_ok_before_commit";
-	public static String COMMIT = "contact_commit";
-	public static String RESET_FORMS = "contact_reset";
+	public static final String RESET_DIALOG_PAGE = "contact_reset_dialog_page";
+	public static final String OK_BEFORE_COMMIT = "contact_ok_before_commit";
+	public static final String COMMIT = "contact_commit";
+	public static final String RESET_FORMS = "contact_reset";
 
 	private final ObjectProperty<Contact> contactToEdit = new SimpleObjectProperty<>(this, "contactToEdit");
 

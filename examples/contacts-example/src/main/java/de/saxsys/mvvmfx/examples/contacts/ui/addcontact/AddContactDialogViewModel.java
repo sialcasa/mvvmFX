@@ -26,9 +26,8 @@ public class AddContactDialogViewModel implements ViewModel {
 	private ResourceBundle defaultResourceBundle;
 
 	public void initialize() {
-		dialogScope.subscribe(ContactDialogScope.OK_BEFORE_COMMIT, (key, payload) -> {
-			addContactAction();
-		});
+		dialogScope.subscribe(ContactDialogScope.OK_BEFORE_COMMIT, (key, payload) ->
+				addContactAction());
 
 		dialogScope.dialogTitleProperty().set(defaultResourceBundle.getString(TITLE_LABEL_KEY));
 		dialogScope.publish(ContactDialogScope.RESET_FORMS);

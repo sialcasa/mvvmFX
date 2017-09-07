@@ -23,9 +23,8 @@ public class AddItemsViewModel implements ViewModel {
 	private final ReadOnlyBooleanWrapper allSelectedVisible = new ReadOnlyBooleanWrapper();
 
 	public AddItemsViewModel() {
-		allSelected.addListener((obs, oldV, newV) -> {
-			TodoItemStore.getInstance().getItems().forEach(item -> item.setCompleted(newV));
-		});
+		allSelected.addListener((obs, oldV, newV) ->
+				TodoItemStore.getInstance().getItems().forEach(item -> item.setCompleted(newV)));
 
 		allSelectedVisible.bind(Bindings.isEmpty(TodoItemStore.getInstance().getItems()).not());
 	}

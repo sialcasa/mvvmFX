@@ -21,6 +21,8 @@ import java.time.ZonedDateTime;
  */
 public class CentralClock {
 
+	private CentralClock(){}
+
 	private static Clock clock = Clock.systemUTC();
 
 	public static Clock getClock() {

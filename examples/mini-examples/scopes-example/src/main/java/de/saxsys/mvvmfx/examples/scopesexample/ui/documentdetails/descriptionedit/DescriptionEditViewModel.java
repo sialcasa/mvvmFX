@@ -17,9 +17,8 @@ public class DescriptionEditViewModel implements ViewModel {
 	private DetailsScope detailsScope;
 
 	public void initialize() {
-		detailsScope.documentProperty().addListener((observable, oldValue, newValue) -> {
-			update(newValue);
-		});
+		detailsScope.documentProperty().addListener((observable, oldValue, newValue) ->
+				update(newValue));
 
 		detailsScope.subscribe(DetailsScope.UPDATE, (k,v) -> update(detailsScope.documentProperty().get()));
 

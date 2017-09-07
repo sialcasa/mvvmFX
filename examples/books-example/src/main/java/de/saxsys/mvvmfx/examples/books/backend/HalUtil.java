@@ -1,6 +1,8 @@
 package de.saxsys.mvvmfx.examples.books.backend;
 
 public class HalUtil {
+
+	private HalUtil() {}
 	
 	public static String replaceParam(String href, String param) {
 		return href.replaceFirst("\\{.+\\}", param);

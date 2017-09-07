@@ -51,24 +51,22 @@ public class ControlsViewModel implements ViewModel {
     public void addItem() {
         final String inputValue = input.getValue();
 
-        if(inputValue != null && !inputValue.trim().isEmpty()) {
-            if(!uiDisabled.get()) {
-                CompletableFuture
-                    .runAsync(() -> {
-                        uiDisabled.setValue(true);
-                        itemService.createItem(new TodoItem(input.get()));
-                    })
-                    .thenRun(() -> {
-                        uiDisabled.setValue(false);
-                        input.setValue("");
-                        todoScope.publish(TodoScope.UPDATE_MSG);
-                        todoScope.setError(null);
-                    }).exceptionally(throwable -> {
-                        uiDisabled.setValue(false);
-                        todoScope.setError(throwable.getCause());
-                        return null;
-                    });
-            }
+        if(inputValue != null && !inputValue.trim().isEmpty() && !uiDisabled.get()) {
+			CompletableFuture
+				.runAsync(() -> {
+					uiDisabled.setValue(true);
+					itemService.createItem(new TodoItem(input.get()));
+				})
+				.thenRun(() -> {
+					uiDisabled.setValue(false);
+					input.setValue("");
+					todoScope.publish(TodoScope.UPDATE_MSG);
+					todoScope.setError(null);
+				}).exceptionally(throwable -> {
+					uiDisabled.setValue(false);
+					todoScope.setError(throwable.getCause());
+					return null;
+				});
         }
     }
 

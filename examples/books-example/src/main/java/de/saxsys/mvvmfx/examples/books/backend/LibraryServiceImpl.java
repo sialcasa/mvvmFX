@@ -70,7 +70,7 @@ public class LibraryServiceImpl implements Serializable, LibraryService {
 				}
 			}
 			return books;
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			LOGGER.error("Error during search", e);
 			errorCallback.accept(Error.error("Error during search", e.getMessage()));
 			return new ArrayList<>();

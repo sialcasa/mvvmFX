@@ -26,9 +26,8 @@ public class EditContactDialogViewModel implements ViewModel {
 	public void initialize() {
 		dialogScope.publish(ContactDialogScope.RESET_FORMS);
 		dialogScope.publish(ContactDialogScope.RESET_DIALOG_PAGE);
-		dialogScope.subscribe(ContactDialogScope.OK_BEFORE_COMMIT, (key, payload) -> {
-			applyAction();
-		});
+		dialogScope.subscribe(ContactDialogScope.OK_BEFORE_COMMIT, (key, payload) ->
+				applyAction());
 
 		dialogScope.dialogTitleProperty().set(defaultResourceBundle.getString(TITLE_LABEL_KEY));
 	}

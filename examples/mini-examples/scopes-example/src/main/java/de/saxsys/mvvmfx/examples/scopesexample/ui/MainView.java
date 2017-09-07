@@ -2,7 +2,6 @@ package de.saxsys.mvvmfx.examples.scopesexample.ui;
 
 import de.saxsys.mvvmfx.*;
 import de.saxsys.mvvmfx.examples.scopesexample.ui.documentdetails.DocumentDetailsView;
-import de.saxsys.mvvmfx.examples.scopesexample.ui.overview.OverviewScope;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;

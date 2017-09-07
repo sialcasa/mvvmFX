@@ -24,20 +24,11 @@ public class DocumentDetailsViewModel implements ViewModel {
 	@InjectScope
 	private OverviewScope overviewScope;
 
-
-	private final DocumentRepository repository;
-
-	public DocumentDetailsViewModel(DocumentRepository repository) {
-		this.repository = repository;
-	}
-
 	public void initialize() {
 		isSelected.bind(scope.documentProperty().isEqualTo(overviewScope.selectedDocumentProperty()));
 
 
-		scope.documentProperty().addListener((observable, oldValue, newValue) -> {
-			update(newValue);
-		});
+		scope.documentProperty().addListener((observable, oldValue, newValue) -> update(newValue));
 
 		scope.subscribe(DetailsScope.UPDATE, (k,v) -> update());
 
@@ -46,10 +37,8 @@ public class DocumentDetailsViewModel implements ViewModel {
 			Document updatedDocument = overviewScope.selectedDocumentProperty().get();
 			Document thisDocument = scope.documentProperty().get();
 
-			if(updatedDocument != null && thisDocument != null) {
-				if(updatedDocument.equals(thisDocument)) {
-					update();
-				}
+			if (updatedDocument != null && thisDocument != null && updatedDocument.equals(thisDocument)) {
+				update();
 			}
 		});
 

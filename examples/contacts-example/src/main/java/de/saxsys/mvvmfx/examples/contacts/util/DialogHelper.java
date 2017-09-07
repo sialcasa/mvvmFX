@@ -17,6 +17,8 @@ import javafx.stage.StageStyle;
  */
 public class DialogHelper {
 
+	private DialogHelper() {}
+
 	/**
 	 * Use this method to initialize the show/hide listeners for the dialog.
 	 *

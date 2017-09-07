@@ -35,16 +35,15 @@ public class ItemListViewModel implements ViewModel {
     }
 
     private void update() {
-                CompletableFuture.supplyAsync(() -> {
-                    return itemService.getAllItems();
-                }).thenAccept(allItems -> {
-                    Collections.reverse(allItems);
-                    Platform.runLater(() -> items.setAll(allItems));
-                    todoScope.setError(null);
-                }).exceptionally(throwable -> {
-                    todoScope.setError(throwable.getCause());
-                    return null;
-                });
+                CompletableFuture.supplyAsync(() -> itemService.getAllItems())
+						.thenAccept(allItems -> {
+							Collections.reverse(allItems);
+							Platform.runLater(() -> items.setAll(allItems));
+							todoScope.setError(null);
+						}).exceptionally(throwable -> {
+							todoScope.setError(throwable.getCause());
+							return null;
+						});
     }
 
     public ObservableList<TodoItem> itemsProperty() {

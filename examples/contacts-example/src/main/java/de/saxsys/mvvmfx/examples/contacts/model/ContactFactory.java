@@ -11,6 +11,8 @@ import java.util.Random;
  */
 public class ContactFactory {
 
+	private ContactFactory() {}
+
 	/**
 	 * @return a contact with random generated demo content.
 	 */

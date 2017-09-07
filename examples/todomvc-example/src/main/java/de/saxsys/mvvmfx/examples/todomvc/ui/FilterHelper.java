@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
  */
 public class FilterHelper {
 
+	private FilterHelper() {}
+
 	public static <T> ObservableList<T> filter(ObservableList<T> items,
 			Function<T, ObservableBooleanValue> conditionExtractor) {
 

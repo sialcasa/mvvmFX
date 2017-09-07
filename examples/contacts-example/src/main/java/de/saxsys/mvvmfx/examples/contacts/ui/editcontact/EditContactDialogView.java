@@ -20,9 +20,8 @@ public class EditContactDialogView implements FxmlView<EditContactDialogViewMode
 	private Stage showDialog;
 
 	public void initialize() {
-		viewModel.subscribe(EditContactDialogViewModel.CLOSE_DIALOG_NOTIFICATION, (key, payload) -> {
-			showDialog.close();
-		});
+		viewModel.subscribe(EditContactDialogViewModel.CLOSE_DIALOG_NOTIFICATION, (key, payload) ->
+				showDialog.close());
 	}
 
 	public void setOwningStage(Stage showDialog) {

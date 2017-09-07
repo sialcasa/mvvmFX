@@ -98,7 +98,7 @@ public class AddressFormViewModel implements ViewModel {
 		selectedCountry.addListener((obs, oldV, newV) -> {
 			if (newV != null && !newV.equals(NOTHING_SELECTED_MARKER)) {
 				Optional<Country> matchingCountry = countrySelector.availableCountries().stream()
-						.filter(country -> newV.equals(country.getName()))
+						.filter(c -> newV.equals(c.getName()))
 						.findFirst();
 
 				if (matchingCountry.isPresent()) {
@@ -115,7 +115,7 @@ public class AddressFormViewModel implements ViewModel {
 		selectedSubdivision.addListener((obs, oldV, newV) -> {
 			if (newV != null && !newV.equals(NOTHING_SELECTED_MARKER)) {
 				Optional<Subdivision> subdivisionOptional = countrySelector.subdivisions().stream()
-						.filter(subdivision -> subdivision.getName().equals(newV)).findFirst();
+						.filter(sd -> sd.getName().equals(newV)).findFirst();
 
 				if (subdivisionOptional.isPresent()) {
 					subdivision.set(subdivisionOptional.get());

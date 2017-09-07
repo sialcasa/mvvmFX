@@ -5,7 +5,6 @@ import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.examples.scopesexample.model.Document;
 import de.saxsys.mvvmfx.examples.scopesexample.model.DocumentRepository;
 import de.saxsys.mvvmfx.examples.scopesexample.ui.MainView;
-import de.saxsys.mvvmfx.examples.scopesexample.ui.overview.OverviewScope;
 import eu.lestard.easydi.EasyDI;
 import javafx.application.Application;
 import javafx.scene.Parent;

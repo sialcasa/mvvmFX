@@ -12,7 +12,7 @@ public class TodoItemServiceImpl implements TodoItemService {
      * To simulate a "real" backend service, this constant defines
      * the amount of time that this service will take to answer requests.
      */
-    private final static int DELAY_IN_MS = 400;
+    private static final int DELAY_IN_MS = 400;
 
     private List<TodoItem> items = new ArrayList<>();
 

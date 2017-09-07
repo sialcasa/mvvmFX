@@ -35,12 +35,10 @@ public class ItemListView implements FxmlView<ItemListViewModel> {
         });
 
         items.setItems(viewModel.itemsProperty());
-        items.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            viewModel.selectedItemProperty().setValue(newValue);
-        }));
+        items.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) ->
+				viewModel.selectedItemProperty().setValue(newValue)));
 
-        viewModel.selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            items.getSelectionModel().select(newValue);
-        }));
+        viewModel.selectedItemProperty().addListener(((observable, oldValue, newValue) ->
+				items.getSelectionModel().select(newValue)));
     }
 }

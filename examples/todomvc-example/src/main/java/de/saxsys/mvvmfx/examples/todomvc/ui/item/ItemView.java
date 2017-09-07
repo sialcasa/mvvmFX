@@ -38,13 +38,11 @@ public class ItemView implements FxmlView<ItemViewModel> {
 
 	public void initialize() {
 		deleteButton.setVisible(false);
-		root.setOnMouseEntered(event -> {
-			deleteButton.setVisible(true);
-		});
+		root.setOnMouseEntered(event ->
+				deleteButton.setVisible(true));
 
-		root.setOnMouseExited(event -> {
-			deleteButton.setVisible(false);
-		});
+		root.setOnMouseExited(event ->
+				deleteButton.setVisible(false));
 
 		completed.selectedProperty().bindBidirectional(viewModel.completedProperty());
 

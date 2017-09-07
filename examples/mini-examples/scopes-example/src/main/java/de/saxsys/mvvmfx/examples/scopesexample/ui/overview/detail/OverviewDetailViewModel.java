@@ -27,13 +27,9 @@ public class OverviewDetailViewModel implements ViewModel {
 
 
 	public void initialize() {
-		scope.selectedDocumentProperty().addListener((observable, oldValue, newValue) -> {
-			refresh();
-		});
+		scope.selectedDocumentProperty().addListener((observable, oldValue, newValue) -> refresh());
 
-		scope.subscribe(OverviewScope.UPDATE, (k,v) -> {
-			refresh();
-		});
+		scope.subscribe(OverviewScope.UPDATE, (k,v) -> refresh());
 	}
 
 	private void refresh() {
