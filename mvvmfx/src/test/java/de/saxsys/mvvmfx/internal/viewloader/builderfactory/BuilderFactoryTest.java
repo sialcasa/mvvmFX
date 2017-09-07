@@ -73,4 +73,25 @@ public class BuilderFactoryTest {
 
 		assertThat(codeBehind.textField.getSpecial()).isEqualTo("Test 2");
 	}
+
+	@Test
+	public void testWithBuilderAtLoadingTime() {
+		MvvmFX.addGlobalBuilderFactory(customBuilderFactoryOne);
+
+		BuilderFactoryTestView codeBehind = FluentViewLoader
+				.fxmlView(BuilderFactoryTestView.class)
+				.load().getCodeBehind();
+
+		// loading without parameter to FluentViewLoader results into the first factory to be used.
+		assertThat(codeBehind.textField.getSpecial()).isEqualTo("Test 1");
+
+
+		codeBehind = FluentViewLoader
+				.fxmlView(BuilderFactoryTestView.class)
+				.builderFactory(customBuilderFactoryTwo)
+				.load().getCodeBehind();
+
+		// passing a factory as parameter results into this factory being used instead of the global one.
+		assertThat(codeBehind.textField.getSpecial()).isEqualTo("Test 2");
+	}
 }

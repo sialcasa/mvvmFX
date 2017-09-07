@@ -11,7 +11,7 @@ import javafx.util.BuilderFactory;
 /**
  * A {@link BuilderFactory} that can manage multiple custom builder factories.
  * <br/>
- * This class is part of the internal API of mvvmFX and may be subject to changes. 
+ * This class is part of the internal API of mvvmFX and may be subject to changes.
  * Don't use this class directly. Instead add new builder factories by using public API:
  * {@link de.saxsys.mvvmfx.MvvmFX#addGlobalBuilderFactory(BuilderFactory)}.
  */
@@ -56,6 +56,20 @@ public class GlobalBuilderFactory implements BuilderFactory {
 		}
 
 		return builder;
+	}
+
+	/**
+	 * Create a new BuilderFactory instance that contains all custom factories of this instance
+	 * combined with the list of factories passed as argument to this method.
+	 * <br/>
+	 * This instance of the builderFactory is not changed by this method.
+	 */
+	public BuilderFactory mergeWith(List<BuilderFactory> factories) {
+		GlobalBuilderFactory factory = new GlobalBuilderFactory();
+
+		factory.factories.addAll(factories);
+
+		return factory;
 	}
 
 	public void addBuilderFactory(BuilderFactory factory) {

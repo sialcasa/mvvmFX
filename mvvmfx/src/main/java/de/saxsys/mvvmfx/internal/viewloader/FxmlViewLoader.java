@@ -26,6 +26,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.util.BuilderFactory;
 import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -68,14 +70,16 @@ public class FxmlViewLoader {
      *            the generic type of the view.
      * @param <ViewModelType>
      *            the generic type of the viewModel.
-     * @return the loaded ViewTuple.
+     * @param builderFactories a list of custom builder factories. may be <code>null</code>
+	 * @return the loaded ViewTuple.
      */
     public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
-            Class<? extends ViewType> viewType, ResourceBundle resourceBundle, ViewType codeBehind, Object root,
-            ViewModelType viewModel, Context context, Collection<Scope> providedScopes) {
+			Class<? extends ViewType> viewType, ResourceBundle resourceBundle, ViewType codeBehind, Object root,
+			ViewModelType viewModel, Context context, Collection<Scope> providedScopes,
+			List<BuilderFactory> builderFactories) {
 
         final String pathToFXML = createFxmlPath(viewType);
-        return loadFxmlViewTuple(pathToFXML, resourceBundle, codeBehind, root, viewModel, context, providedScopes);
+        return loadFxmlViewTuple(pathToFXML, resourceBundle, codeBehind, root, viewModel, context, providedScopes, builderFactories);
     }
 
     /**
@@ -146,11 +150,13 @@ public class FxmlViewLoader {
      *            the generic type of the view.
      * @param <ViewModelType>
      *            the generic type of the viewModel.
-     * @return the loaded ViewTuple.
+     * @param builderFactories a list of custom builder factories. may be <code>null</code>
+	 * @return the loaded ViewTuple.
      */
     public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
-            final String resource, ResourceBundle resourceBundle, final ViewType codeBehind, final Object root,
-            ViewModelType viewModel, Context parentContext, Collection<Scope> providedScopes) {
+			final String resource, ResourceBundle resourceBundle, final ViewType codeBehind, final Object root,
+			ViewModelType viewModel, Context parentContext, Collection<Scope> providedScopes,
+			List<BuilderFactory> builderFactories) {
         try {
 
             // FIXME Woanders hin?
@@ -160,7 +166,7 @@ public class FxmlViewLoader {
             // for the SceneLifecycle we need to know when the view is put into the scene
             BooleanProperty viewInSceneProperty = new SimpleBooleanProperty();
 
-            final FXMLLoader loader = createFxmlLoader(resource, resourceBundle, codeBehind, root, viewModel, context, viewInSceneProperty);
+            final FXMLLoader loader = createFxmlLoader(resource, resourceBundle, codeBehind, root, viewModel, context, viewInSceneProperty, builderFactories);
 
             loader.load();
 
@@ -225,7 +231,8 @@ public class FxmlViewLoader {
     }
 
     private FXMLLoader createFxmlLoader(String resource, ResourceBundle resourceBundle, View codeBehind, Object root,
-                                        ViewModel viewModel, ContextImpl context, ObservableBooleanValue viewInSceneProperty) throws IOException {
+			ViewModel viewModel, ContextImpl context, ObservableBooleanValue viewInSceneProperty,
+			List<BuilderFactory> builderFactories) throws IOException {
         // Load FXML file
         final URL location = FxmlViewLoader.class.getResource(resource);
         if (location == null) {
@@ -237,7 +244,14 @@ public class FxmlViewLoader {
         fxmlLoader.setRoot(root);
         fxmlLoader.setResources(resourceBundle);
         fxmlLoader.setLocation(location);
-        fxmlLoader.setBuilderFactory(GlobalBuilderFactory.getInstance());
+
+        if(builderFactories == null || builderFactories.isEmpty()) {
+        	fxmlLoader.setBuilderFactory(GlobalBuilderFactory.getInstance());
+		} else {
+			BuilderFactory factory = GlobalBuilderFactory.getInstance().mergeWith(builderFactories);
+			fxmlLoader.setBuilderFactory(factory);
+		}
+
 
         // when the user provides a viewModel but no codeBehind, we need to use
         // the custom controller factory.
