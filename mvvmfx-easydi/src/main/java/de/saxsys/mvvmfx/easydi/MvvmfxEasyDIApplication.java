@@ -99,8 +99,8 @@ public abstract class MvvmfxEasyDIApplication extends Application implements Mvv
 
 		// create the di context and bind all mvvmFX classes
 		easyDI = new EasyDI();
-		easyDI.bindProvider(HostServices.class, () -> getHostServices());
-		easyDI.bindProvider(Parameters.class, () -> getParameters());
+		easyDI.bindProvider(HostServices.class, this::getHostServices);
+		easyDI.bindProvider(Parameters.class, this::getParameters);
 		easyDI.bindProvider(Stage.class, () -> primaryStage);
 		// make sure all custom bindings are created before any UI code gets started
 		initEasyDi(easyDI);

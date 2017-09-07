@@ -45,10 +45,10 @@ import de.saxsys.mvvmfx.internal.viewloader.View;
  * the view without FXML in pure Java.
  * </p>
  *
- * @param <ViewModelType>
+ * @param <VM>
  *            the type of the viewModel.
  *
  * @author manuel.mauky
  */
-public interface JavaView<ViewModelType extends ViewModel> extends View<ViewModelType> {
+public interface JavaView<VM extends ViewModel> extends View<VM> {
 }

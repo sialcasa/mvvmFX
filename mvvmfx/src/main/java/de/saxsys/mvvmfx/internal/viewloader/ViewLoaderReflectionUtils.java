@@ -32,8 +32,6 @@ import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -156,20 +154,20 @@ public class ViewLoaderReflectionUtils {
      *
      * @param view
      *            the view instance where the viewModel will be looked for.
-     * @param <ViewType>
+     * @param <V>
      *            the generic type of the View
-     * @param <ViewModelType>
+     * @param <VM>
      *            the generic type of the ViewModel
      * @return the ViewModel instance or null if no viewModel could be found.
      */
     @SuppressWarnings("unchecked")
-    public static <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewModelType getExistingViewModel(
-            ViewType view) {
+    public static <V extends View<? extends VM>, VM extends ViewModel> VM getExistingViewModel(
+            V view) {
         final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
         Optional<Field> fieldOptional = getViewModelField(view.getClass(), viewModelType);
         if (fieldOptional.isPresent()) {
             Field field = fieldOptional.get();
-            return ReflectionUtils.accessMember(field, () -> (ViewModelType) field.get(view),
+            return ReflectionUtils.accessMember(field, () -> (VM) field.get(view),
                     "Can't get the viewModel of type <" + viewModelType + ">");
         } else {
             return null;
@@ -354,16 +352,16 @@ public class ViewLoaderReflectionUtils {
      * @param view
      *            the view instance that is used to find out the type of the
      *            ViewModel
-     * @param <ViewType>
+     * @param <V>
      *            the generic view type
-     * @param <ViewModelType>
+     * @param <VM>
      *            the generic viewModel type
      * @return the viewModel instance or <code>null</code> if the viewModel type
      *         can't be found or the viewModel can't be created.
      */
     @SuppressWarnings("unchecked")
-    public static <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewModelType createViewModel(
-            ViewType view) {
+    public static <V extends View<? extends VM>, VM extends ViewModel> VM createViewModel(
+            V view) {
         final Class<?> viewModelType = TypeResolver.resolveRawArgument(View.class, view.getClass());
         if (viewModelType == ViewModel.class) {
             return null;
@@ -371,7 +369,7 @@ public class ViewLoaderReflectionUtils {
         if (TypeResolver.Unknown.class == viewModelType) {
             return null;
         }
-        return (ViewModelType) DependencyInjector.getInstance().getInstanceOf(viewModelType);
+        return (VM) DependencyInjector.getInstance().getInstanceOf(viewModelType);
     }
 
     /**
@@ -382,10 +380,10 @@ public class ViewLoaderReflectionUtils {
      * @param viewModel
      *            the viewModel that's initialize method (if available) will be
      *            invoked.
-     * @param <ViewModelType>
+     * @param <VM>
      *            the generic type of the ViewModel.
      */
-    public static <ViewModelType extends ViewModel> void initializeViewModel(ViewModelType viewModel) {
+    public static <VM extends ViewModel> void initializeViewModel(VM viewModel) {
         if (viewModel == null) {
             return;
         }

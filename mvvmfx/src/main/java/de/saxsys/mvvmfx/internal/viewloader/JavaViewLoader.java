@@ -71,16 +71,16 @@ public class JavaViewLoader {
      *            optional ResourceBundle that will be injected into the view.
      * @param existingViewModel
      *            the viewModel instance that is used to load the view.
-     * @param <ViewType>
+     * @param <V>
      *            the generic type of the view.
-     * @param <ViewModelType>
+     * @param <VM>
      *            the generic type of the viewModel.
      *
      * @return a fully loaded and initialized instance of the view.
      */
-    public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadJavaViewTuple(
-            Class<? extends ViewType> viewType, ResourceBundle resourceBundle, final ViewModelType existingViewModel,
-            ViewType codeBehind, Context parentContext, Collection<Scope> providedScopes) {
+    public <V extends View<? extends VM>, VM extends ViewModel> ViewTuple<V, VM> loadJavaViewTuple(
+            Class<? extends V> viewType, ResourceBundle resourceBundle, final VM existingViewModel,
+            V codeBehind, Context parentContext, Collection<Scope> providedScopes) {
 
         // FIXME Woanders hin?!
         ContextImpl context = ViewLoaderScopeUtils.prepareContext(parentContext, providedScopes);
@@ -88,14 +88,14 @@ public class JavaViewLoader {
 
         DependencyInjector injectionFacade = DependencyInjector.getInstance();
 
-        final ViewType view = codeBehind == null ? injectionFacade.getInstanceOf(viewType) : codeBehind;
+        final V view = codeBehind == null ? injectionFacade.getInstanceOf(viewType) : codeBehind;
 
         if (!(view instanceof Parent)) {
             throw new IllegalArgumentException("Can not load java view! The view class has to extend from "
                     + Parent.class.getName() + " or one of it's subclasses");
         }
 
-        ViewModelType viewModel = null;
+        VM viewModel = null;
 
         // when no viewmodel was provided by the user...
         if (existingViewModel == null) {
@@ -154,32 +154,32 @@ public class JavaViewLoader {
      * @param view
      *            the view instance of which the initialize method will be
      *            invoked.
-     * @param <ViewModelType>
-     *            the generic type of the view.
+     * @param <VM>
+     *            the generic type of the view model.
      */
-    <ViewModelType extends ViewModel> void callInitialize(View<? extends ViewModelType> view) {
+    <VM extends ViewModel> void callInitialize(View<? extends VM> view) {
         try {
             final Method initializeMethod = view.getClass().getMethod(NAMING_CONVENTION_INITIALIZE_IDENTIFIER);
 
-            AccessController.doPrivileged((PrivilegedAction) () -> {
-                try {
-                    return initializeMethod.invoke(view);
-                } catch (InvocationTargetException e) {
-                    LOG.warn("The '{}' method of the view {} has thrown an exception!",
-                            NAMING_CONVENTION_INITIALIZE_IDENTIFIER, view);
+            AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+				try {
+					return initializeMethod.invoke(view);
+				} catch (InvocationTargetException e) {
+					LOG.warn("The '{}' method of the view {} has thrown an exception!",
+							NAMING_CONVENTION_INITIALIZE_IDENTIFIER, view);
 
-                    Throwable cause = e.getCause();
-                    if (cause instanceof RuntimeException) {
-                        throw (RuntimeException) cause;
-                    } else {
-                        throw new RuntimeException(cause);
-                    }
-                } catch (IllegalAccessException e) {
-                    LOG.warn("Can't invoke the '{}' method of the view {} because it is not accessible",
-                            NAMING_CONVENTION_INITIALIZE_IDENTIFIER, view);
-                }
-                return null;
-            });
+					Throwable cause = e.getCause();
+					if (cause instanceof RuntimeException) {
+						throw (RuntimeException) cause;
+					} else {
+						throw new RuntimeException(cause);
+					}
+				} catch (IllegalAccessException e) {
+					LOG.warn("Can't invoke the '{}' method of the view {} because it is not accessible",
+							NAMING_CONVENTION_INITIALIZE_IDENTIFIER, view);
+				}
+				return null;
+			});
 
         } catch (NoSuchMethodException e) {
             // This exception means that there is no initialize method declared.
@@ -206,10 +206,10 @@ public class JavaViewLoader {
      *            the view instance that gets the resourceBundle injected.
      * @param resourceBundle
      *            the resourceBundle instance that will be injected.
-     * @param <ViewModelType>
-     *            the generic type of the view.
+     * @param <VM>
+     *            the generic type of the view model.
      */
-    <ViewModelType extends ViewModel> void injectResourceBundle(View<? extends ViewModelType> view,
+    <VM extends ViewModel> void injectResourceBundle(View<? extends VM> view,
             ResourceBundle resourceBundle) {
         try {
             Field resourcesField = view.getClass().getField(NAMING_CONVENTION_RESOURCES_IDENTIFIER);

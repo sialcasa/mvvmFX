@@ -48,7 +48,7 @@ public class FxmlViewLoader {
     private static final Logger LOG = LoggerFactory.getLogger(FxmlViewLoader.class);
 
     /**
-     * Load the viewTuple by it`s ViewType.
+     * Load the viewTuple by it`s view type.
      *
      * @param viewType
      *            the type of the view to be loaded.
@@ -64,15 +64,15 @@ public class FxmlViewLoader {
      * @param viewModel
      *            the viewModel instance that is used when loading the
      *            viewTuple.
-     * @param <ViewType>
+     * @param <V>
      *            the generic type of the view.
-     * @param <ViewModelType>
+     * @param <VM>
      *            the generic type of the viewModel.
      * @return the loaded ViewTuple.
      */
-    public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
-            Class<? extends ViewType> viewType, ResourceBundle resourceBundle, ViewType codeBehind, Object root,
-            ViewModelType viewModel, Context context, Collection<Scope> providedScopes) {
+    public <V extends View<? extends VM>, VM extends ViewModel> ViewTuple<V, VM> loadFxmlViewTuple(
+            Class<? extends V> viewType, ResourceBundle resourceBundle, V codeBehind, Object root,
+            VM viewModel, Context context, Collection<Scope> providedScopes) {
 
         final String pathToFXML = createFxmlPath(viewType);
         return loadFxmlViewTuple(pathToFXML, resourceBundle, codeBehind, root, viewModel, context, providedScopes);
@@ -142,15 +142,15 @@ public class FxmlViewLoader {
      * @param viewModel
      *            the viewModel instance that is used when loading the
      *            viewTuple.
-     * @param <ViewType>
+     * @param <V>
      *            the generic type of the view.
-     * @param <ViewModelType>
+     * @param <VM>
      *            the generic type of the viewModel.
      * @return the loaded ViewTuple.
      */
-    public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
-            final String resource, ResourceBundle resourceBundle, final ViewType codeBehind, final Object root,
-            ViewModelType viewModel, Context parentContext, Collection<Scope> providedScopes) {
+    public <V extends View<? extends VM>, VM extends ViewModel> ViewTuple<V, VM> loadFxmlViewTuple(
+            final String resource, ResourceBundle resourceBundle, final V codeBehind, final Object root,
+            VM viewModel, Context parentContext, Collection<Scope> providedScopes) {
         try {
 
             // FIXME Woanders hin?
@@ -164,7 +164,7 @@ public class FxmlViewLoader {
 
             loader.load();
 
-            final ViewType loadedController = loader.getController();
+            final V loadedController = loader.getController();
             final Parent loadedRoot = loader.getRoot();
 
             viewInSceneProperty.bind(loadedRoot.sceneProperty().isNotNull());
@@ -176,7 +176,7 @@ public class FxmlViewLoader {
 
             // the actually used ViewModel instance. We need this so we can
             // return it in the ViewTuple
-            ViewModelType actualViewModel;
+            VM actualViewModel;
 
             // FIXME CONTEXT
 

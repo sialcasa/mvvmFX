@@ -35,16 +35,16 @@ import de.saxsys.mvvmfx.internal.viewloader.View;
  * </p>
  * 
  * 
- * @param <ViewType>
+ * @param <V>
  *            the generic type of the view that was loaded.
- * @param <ViewModelType>
+ * @param <VM>
  *            the generic type of the viewModel that was loaded.
  */
-public class ViewTuple<ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> {
+public class ViewTuple<V extends View<? extends VM>, VM extends ViewModel> {
 	
-	private final ViewType codeBehind;
+	private final V codeBehind;
 	private final Parent view;
-	private final ViewModelType viewModel;
+	private final VM viewModel;
 	
 	/**
 	 * @param codeBehind
@@ -54,7 +54,7 @@ public class ViewTuple<ViewType extends View<? extends ViewModelType>, ViewModel
 	 * @param viewModel
 	 *            the viewModel for this viewTuple
 	 */
-	public ViewTuple(final ViewType codeBehind, final Parent view, final ViewModelType viewModel) {
+	public ViewTuple(final V codeBehind, final Parent view, final VM viewModel) {
 		this.codeBehind = codeBehind;
 		this.view = view;
 		this.viewModel = viewModel;
@@ -73,7 +73,7 @@ public class ViewTuple<ViewType extends View<? extends ViewModelType>, ViewModel
 	 * 
 	 * @return the code behind of the View.
 	 */
-	public ViewType getCodeBehind() {
+	public V getCodeBehind() {
 		return codeBehind;
 	}
 	
@@ -89,7 +89,7 @@ public class ViewTuple<ViewType extends View<? extends ViewModelType>, ViewModel
 	/**
 	 * @return the viewModel
 	 */
-	public ViewModelType getViewModel() {
+	public VM getViewModel() {
 		return viewModel;
 	}
 }

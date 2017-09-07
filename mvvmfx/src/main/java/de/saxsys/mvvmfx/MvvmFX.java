@@ -28,6 +28,8 @@ import java.util.ResourceBundle;
  * This class is a facade that is used by the user to access classes and services from the framework.
  */
 public class MvvmFX {
+
+	private MvvmFX() {}
 	
 	/**
 	 * @return an instance of the {@link NotificationCenter}.

@@ -50,7 +50,7 @@ public abstract class MvvmfxCdiApplication extends Application implements Mvvmfx
                 .newInstance()
                 .initialize();
 
-		MvvmFX.setCustomDependencyInjector((type) -> container.select(type).get());
+		MvvmFX.setCustomDependencyInjector(type -> container.select(type).get());
 
 		MvvmfxProducer mvvmfxProducer = container.select(MvvmfxProducer.class).get();
 		mvvmfxProducer.setHostServices(getHostServices());

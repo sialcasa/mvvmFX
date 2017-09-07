@@ -33,9 +33,9 @@ import de.saxsys.mvvmfx.ViewModel;
  * 
  * @author alexander.casall, manuel.mauky
  * 
- * @param <ViewModelType>
+ * @param <VM>
  *            type
  */
-public interface View<ViewModelType extends ViewModel> {
+public interface View<VM extends ViewModel> {
 	
 }

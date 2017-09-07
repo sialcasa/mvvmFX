@@ -32,10 +32,10 @@ import de.saxsys.mvvmfx.internal.viewloader.View;
  * pattern.
  * </p>
  * 
- * @param <ViewModelType>
+ * @param <VM>
  *            the type of the viewModel.
  * 
  * @author manuel.mauky
  */
-public interface FxmlView<ViewModelType extends ViewModel> extends View<ViewModelType> {
+public interface FxmlView<VM extends ViewModel> extends View<VM> {
 }

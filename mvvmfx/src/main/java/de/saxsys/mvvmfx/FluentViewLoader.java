@@ -2,7 +2,6 @@ package de.saxsys.mvvmfx;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import de.saxsys.mvvmfx.internal.viewloader.FxmlViewLoader;
@@ -51,38 +50,38 @@ public class FluentViewLoader {
      * from the {@link FluentViewLoader} with the method
      * {@link FluentViewLoader#javaView(Class)}.
      * 
-     * @param <ViewType>
+     * @param <V>
      *            the generic type of the View that should be loaded. This type
      *            has to implement {@link de.saxsys.mvvmfx.JavaView}.
-     * @param <ViewModelType>
+     * @param <VM>
      *            the generic type of the ViewModel. This type has to implement
      *            {@link de.saxsys.mvvmfx.ViewModel}.
      */
-    public static class JavaViewStep<ViewType extends JavaView<? extends ViewModelType>, ViewModelType extends ViewModel> {
+    public static class JavaViewStep<V extends JavaView<? extends VM>, VM extends ViewModel> {
 
-        private final Class<? extends ViewType> viewType;
+        private final Class<? extends V> viewType;
         private ResourceBundle resourceBundle;
 
-        private ViewModelType viewModel;
-        private ViewType codeBehind;
+        private VM viewModel;
+        private V codeBehind;
         private Context context;
         private Collection<Scope> providedScopes;
 
-        JavaViewStep(Class<? extends ViewType> viewType) {
+        JavaViewStep(Class<? extends V> viewType) {
             this.viewType = viewType;
         }
 
-        public JavaViewStep<ViewType, ViewModelType> context(Context context) {
+        public JavaViewStep<V, VM> context(Context context) {
             this.context = context;
             return this;
         }
 
-        public JavaViewStep<ViewType, ViewModelType> providedScopes(Scope... providedScopes) {
+        public JavaViewStep<V, VM> providedScopes(Scope... providedScopes) {
             this.providedScopes = Arrays.asList(providedScopes);
             return this;
         }
 
-        public JavaViewStep<ViewType, ViewModelType> providedScopes(Collection<Scope> providedScopes) {
+        public JavaViewStep<V, VM> providedScopes(Collection<Scope> providedScopes) {
             this.providedScopes = providedScopes;
             return this;
         }
@@ -106,7 +105,7 @@ public class FluentViewLoader {
          *            the resource bundle that is used while loading the view.
          * @return this instance of the builder step.
          */
-        public JavaViewStep<ViewType, ViewModelType> resourceBundle(ResourceBundle resourceBundle) {
+        public JavaViewStep<V, VM> resourceBundle(ResourceBundle resourceBundle) {
             this.resourceBundle = resourceBundle;
             return this;
         }
@@ -122,7 +121,7 @@ public class FluentViewLoader {
          *            the viewModel instance that is used to load the java view.
          * @return this instance of the builder step.
          */
-        public JavaViewStep<ViewType, ViewModelType> viewModel(ViewModelType viewModel) {
+        public JavaViewStep<V, VM> viewModel(VM viewModel) {
             this.viewModel = viewModel;
             return this;
         }
@@ -138,7 +137,7 @@ public class FluentViewLoader {
          *            view.
          * @return this instance of the builder step.
          */
-        public JavaViewStep<ViewType, ViewModelType> codeBehind(ViewType codeBehind) {
+        public JavaViewStep<V, VM> codeBehind(V codeBehind) {
             this.codeBehind = codeBehind;
             return this;
         }
@@ -149,7 +148,7 @@ public class FluentViewLoader {
          *
          * @return a view tuple containing the loaded view.
          */
-        public ViewTuple<ViewType, ViewModelType> load() {
+        public ViewTuple<V, VM> load() {
             JavaViewLoader javaViewLoader = new JavaViewLoader();
 
             return javaViewLoader.loadJavaViewTuple(viewType,
@@ -164,40 +163,38 @@ public class FluentViewLoader {
      * from the {@link FluentViewLoader} with the method
      * {@link FluentViewLoader#fxmlView(Class)}.
      *
-     * @param <ViewType>
+     * @param <V>
      *            the generic type of the View that should be loaded. This type
      *            has to implement {@link de.saxsys.mvvmfx.FxmlView}.
-     * @param <ViewModelType>
+     * @param <VM>
      *            the generic type of the ViewModel. This type has to implement
      *            {@link de.saxsys.mvvmfx.ViewModel}.
      */
-    public static class FxmlViewStep<ViewType extends FxmlView<? extends ViewModelType>, ViewModelType extends ViewModel> {
+    public static class FxmlViewStep<V extends FxmlView<? extends VM>, VM extends ViewModel> {
 
-        private final Class<? extends ViewType> viewType;
+        private final Class<? extends V> viewType;
         private ResourceBundle resourceBundle;
         private Object root;
-        private ViewType codeBehind;
-        private ViewModelType viewModel;
+        private V codeBehind;
+        private VM viewModel;
         private Context context;
         private Collection<Scope> providedScopes;
 
-        FxmlViewStep(Class<? extends ViewType> viewType) {
+        FxmlViewStep(Class<? extends V> viewType) {
             this.viewType = viewType;
         }
 
-        public FxmlViewStep<ViewType, ViewModelType> context(Context context) {
+        public FxmlViewStep<V, VM> context(Context context) {
             this.context = context;
             return this;
         }
 
-        public FxmlViewStep<ViewType, ViewModelType> providedScopes(Scope... providedScopes) {
-
-            // TODO: add scopes instead of reinitialization
+        public FxmlViewStep<V, VM> providedScopes(Scope... providedScopes) {
             this.providedScopes = Arrays.asList(providedScopes);
             return this;
         }
 
-        public FxmlViewStep<ViewType, ViewModelType> providedScopes(Collection<Scope> providedScopes) {
+        public FxmlViewStep<V, VM> providedScopes(Collection<Scope> providedScopes) {
             this.providedScopes = providedScopes;
             return this;
         }
@@ -219,7 +216,7 @@ public class FluentViewLoader {
          *            the resource bundle that is used while loading the view.
          * @return this instance of the builder step.
          */
-        public FxmlViewStep<ViewType, ViewModelType> resourceBundle(ResourceBundle resourceBundle) {
+        public FxmlViewStep<V, VM> resourceBundle(ResourceBundle resourceBundle) {
             this.resourceBundle = resourceBundle;
             return this;
         }
@@ -235,7 +232,7 @@ public class FluentViewLoader {
          *            the root element that is used to load the fxml file.
          * @return this instance of the builder step.
          */
-        public FxmlViewStep<ViewType, ViewModelType> root(Object root) {
+        public FxmlViewStep<V, VM> root(Object root) {
             this.root = root;
             return this;
         }
@@ -252,7 +249,7 @@ public class FluentViewLoader {
          *            file.
          * @return this instance of the builder step.
          */
-        public FxmlViewStep<ViewType, ViewModelType> codeBehind(ViewType codeBehind) {
+        public FxmlViewStep<V, VM> codeBehind(V codeBehind) {
             this.codeBehind = codeBehind;
             return this;
         }
@@ -268,7 +265,7 @@ public class FluentViewLoader {
          *            the viewModel instance that is used to load the fxml file.
          * @return this instance of the builder step.
          */
-        public FxmlViewStep<ViewType, ViewModelType> viewModel(ViewModelType viewModel) {
+        public FxmlViewStep<V, VM> viewModel(VM viewModel) {
             this.viewModel = viewModel;
             return this;
         }
@@ -279,7 +276,7 @@ public class FluentViewLoader {
          * 
          * @return a view tuple containing the loaded view.
          */
-        public ViewTuple<ViewType, ViewModelType> load() {
+        public ViewTuple<V, VM> load() {
             FxmlViewLoader fxmlViewLoader = new FxmlViewLoader();
 
             return fxmlViewLoader.loadFxmlViewTuple(viewType,
@@ -294,18 +291,18 @@ public class FluentViewLoader {
      * 
      * @param viewType
      *            the type of the view that should be loaded.
-     * @param <ViewType>
+     * @param <V>
      *            the type of the View that should be loaded. This type has to
      *            implement {@link de.saxsys.mvvmfx.JavaView}.
-     * @param <ViewModelType>
+     * @param <VM>
      *            the type of the ViewModel. This type has to implement
      *            {@link de.saxsys.mvvmfx.ViewModel}.
      * 
      * @return a builder step that can be further configured and then load the
      *         actual view.
      */
-    public static <ViewType extends JavaView<? extends ViewModelType>, ViewModelType extends ViewModel> JavaViewStep<ViewType, ViewModelType> javaView(
-            Class<? extends ViewType> viewType) {
+    public static <V extends JavaView<? extends VM>, VM extends ViewModel> JavaViewStep<V, VM> javaView(
+            Class<? extends V> viewType) {
         return new JavaViewStep<>(viewType);
     }
 
@@ -315,19 +312,22 @@ public class FluentViewLoader {
      * 
      * @param viewType
      *            the type of the view that should be loaded.
-     * @param <ViewType>
+     * @param <V>
      *            the generic type of the View that should be loaded. This type
      *            has to implement {@link de.saxsys.mvvmfx.FxmlView}.
-     * @param <ViewModelType>
+     * @param <VM>
      *            the generic type of the ViewModel. This type has to implement
      *            {@link de.saxsys.mvvmfx.ViewModel}.
      * 
      * @return a builder step that can be further configured and then load the
      *         actual view.
      */
-    public static <ViewType extends FxmlView<? extends ViewModelType>, ViewModelType extends ViewModel> FxmlViewStep<ViewType, ViewModelType> fxmlView(
-            Class<? extends ViewType> viewType) {
+    public static <V extends FxmlView<? extends VM>, VM extends ViewModel> FxmlViewStep<V, VM> fxmlView(
+            Class<? extends V> viewType) {
         return new FxmlViewStep<>(viewType);
     }
 
+
+    private FluentViewLoader() {
+	}
 }
