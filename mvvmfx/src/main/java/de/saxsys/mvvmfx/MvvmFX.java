@@ -79,6 +79,13 @@ public class MvvmFX {
 	 * MvvmFX also takes care for handling the default {@link javafx.fxml.JavaFXBuilderFactory}. If no custom builder factory
 	 * is able to provide a builder for a given type the default JavaFX builder factory will be used as last resort.
 	 * This way you don't have to take care for standard JavaFX types in your builder factory.
+	 * <br/>
+	 * While most of the time using a global builder factory is the best approach, for some special use cases
+	 * it's needed to define a special builder factory that is only used for a single loading procedure.
+	 * For such use cases one can use the {@link FluentViewLoader} with the parameter
+	 * {@link de.saxsys.mvvmfx.FluentViewLoader.FxmlViewStep#builderFactory(BuilderFactory)} instead.
+	 * In this case the provided builder factory is again combined with the global factories (if defined).
+	 * Builder factories provided via {@link FluentViewLoader} have a higher priority then global builder factories.
 	 *
 	 * @param factory the builder factory
 	 */
