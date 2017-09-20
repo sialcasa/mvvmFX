@@ -401,7 +401,7 @@ public class FxmlViewLoader {
 
             //throw an exception if the fx:controller was of type ViewModel
             if (controller instanceof ViewModel) {
-                throw new IllegalStateException("A ViewModel class [" + controller.getClass().getCanonicalName() + "] was referenced an the FXML file"
+                throw new IllegalStateException("A ViewModel class [" + controller.getClass().getCanonicalName() + "] was referenced in an FXML file"
                         + " as the fx:controller."
                         + " Instead a class that implements FxmlView has to be defined as the fx:controller in the FXML file.");
             }
