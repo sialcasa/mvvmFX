@@ -533,10 +533,11 @@ public class FluentViewLoader_FxmlView_Test {
 		try {
 			FluentViewLoader.fxmlView(TestFxmlViewModelAsController.class)
 					.load();
-		} catch (RuntimeException e){ ;
-			assertThat(e.getCause().getCause().getMessage())
+		} catch (RuntimeException e){
+			assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(IllegalStateException.class);
+			assertThat(ExceptionUtils.getRootCause(e).getMessage())
 					.contains("A ViewModel class")
-					.contains("was referenced in the FXML file")
+					.contains("was referenced in an FXML file")
 					.contains("as the fx:controller");
 		}
 
@@ -545,10 +546,11 @@ public class FluentViewLoader_FxmlView_Test {
 			FluentViewLoader.fxmlView(TestFxmlViewModelAsController.class)
 					.viewModel(new TestFxmlViewModelAsControllerViewModel())
 					.load();
-		} catch (RuntimeException e){ ;
-			assertThat(e.getCause().getCause().getMessage())
+		} catch (RuntimeException e){
+			assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(IllegalStateException.class);
+			assertThat(ExceptionUtils.getRootCause(e).getMessage())
 					.contains("A ViewModel class")
-					.contains("was referenced in the FXML file")
+					.contains("was referenced in an FXML file")
 					.contains("as the fx:controller");
 		}
 	}
@@ -559,7 +561,8 @@ public class FluentViewLoader_FxmlView_Test {
 			FluentViewLoader.fxmlView(TestFxmlViewModelAsControllerWithCustomPathView.class)
 					.load();
 		} catch (RuntimeException e){
-			assertThat(e.getCause().getCause().getMessage())
+			assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(IllegalStateException.class);
+			assertThat(ExceptionUtils.getRootCause(e).getMessage())
 					.contains("A ViewModel class")
 					.contains("was referenced in the FXML file")
 					.contains("as the fx:controller");
@@ -571,7 +574,8 @@ public class FluentViewLoader_FxmlView_Test {
 					.viewModel(new TestFxmlViewModelAsControllerWithCustomPathViewModel())
 					.load();
 		} catch (RuntimeException e){
-			assertThat(e.getCause().getCause().getMessage())
+			assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(IllegalStateException.class);
+			assertThat(ExceptionUtils.getRootCause(e).getMessage())
 					.contains("A ViewModel class")
 					.contains("was referenced in the FXML file")
 					.contains("as the fx:controller");
