@@ -19,8 +19,8 @@ import com.google.common.base.Strings;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.*;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -41,7 +41,7 @@ public class CompositeValidatorTest {
 	private ObservableRuleBasedValidator validator1;
 	private ObservableRuleBasedValidator validator2;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		validator1 = new ObservableRuleBasedValidator();
 		validator1.addRule(valid1, ValidationMessage.error("error1"));

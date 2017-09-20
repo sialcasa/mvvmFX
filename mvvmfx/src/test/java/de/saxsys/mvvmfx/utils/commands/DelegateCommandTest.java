@@ -27,9 +27,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import de.saxsys.mvvmfx.testingutils.JfxToolkitExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.cedarsoft.test.utils.CatchAllExceptionsRule;
 
@@ -41,15 +41,13 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 
 
-@RunWith(JfxRunner.class)
+@ExtendWith(JfxToolkitExtension.class)
 public class DelegateCommandTest {
-	
-	// Rule to get exceptions from the JavaFX Thread into the JUnit thread
-	@Rule
-	public CatchAllExceptionsRule catchAllExceptionsRule = new CatchAllExceptionsRule();
+
 	
 	@Test
 	public void executable() {
@@ -154,7 +152,7 @@ public class DelegateCommandTest {
 				.hasMessage(exceptionReason);
 	}
 	
-	@Test(expected = RuntimeException.class)
+	@Test
 	public void commandNotExecutable() {
 		BooleanProperty condition = new SimpleBooleanProperty(false);
 		
@@ -163,8 +161,10 @@ public class DelegateCommandTest {
 			protected void action() {
 			}
 		}, condition);
-		
-		delegateCommand.execute();
+
+		Assertions.assertThrows(RuntimeException.class, () -> {
+			delegateCommand.execute();
+		});
 	}
 	
 	@Test

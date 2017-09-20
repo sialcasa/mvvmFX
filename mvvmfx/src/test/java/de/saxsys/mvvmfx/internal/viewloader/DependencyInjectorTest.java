@@ -20,12 +20,12 @@ import static org.junit.Assert.fail;
 import javafx.util.Callback;
 
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 /**
- * This test verifies the behaviour of the {@link de.saxsys.mvvmfx.internal.viewloader.DependencyInjector}.
+ * This test verifies the behaviour of the {@link DependencyInjector}.
  */
 public class DependencyInjectorTest {
 	
@@ -57,7 +57,7 @@ public class DependencyInjectorTest {
 		}
 	}
 	
-	@Before
+	@BeforeEach
 	public void setup() {
 		injector = new DependencyInjector();
 	}

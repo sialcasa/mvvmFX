@@ -17,11 +17,12 @@
 package de.saxsys.mvvmfx.utils.notifications;
 
 import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
+import de.saxsys.mvvmfx.testingutils.JfxToolkitExtension;
 import javafx.application.Platform;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
 import java.util.concurrent.CompletableFuture;
@@ -31,7 +32,7 @@ import java.util.concurrent.TimeoutException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(JfxRunner.class)
+@ExtendWith(JfxToolkitExtension.class)
 public class DefaultNotificationCenterTest {
 	
 	private static final String TEST_NOTIFICATION = "test_notification";
@@ -44,7 +45,7 @@ public class DefaultNotificationCenterTest {
 	NotificationObserver observer2;
 	NotificationObserver observer3;
 	
-	@Before
+	@BeforeEach
 	public void init() {
 		observer1 = Mockito.mock(NotificationObserver.class);
 		observer2 = Mockito.mock(NotificationObserver.class);
@@ -178,8 +179,10 @@ public class DefaultNotificationCenterTest {
 		assertThat(wasCalledOnUiThread).isTrue();
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void subscribeWithNullObserver() {
-		defaultCenter.subscribe(TEST_NOTIFICATION,null);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			defaultCenter.subscribe(TEST_NOTIFICATION, null);
+		});
 	}
 }

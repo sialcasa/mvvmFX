@@ -18,11 +18,11 @@ package de.saxsys.mvvmfx.resourcebundle.global;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.ViewTuple;
-import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import de.saxsys.mvvmfx.testingutils.JfxToolkitExtension;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.ResourceBundle;
 
@@ -33,21 +33,21 @@ import static org.assertj.core.api.Assertions.assertThat;
  * 
  * @author manuel.mauky
  */
-@RunWith(JfxRunner.class)
+@ExtendWith(JfxToolkitExtension.class)
 public class GlobalResourceBundleTest {
 	
 	
 	private ResourceBundle global;
 	private ResourceBundle other;
 	
-	@Before
+	@BeforeEach
 	public void setup(){
 		MvvmFX.setGlobalResourceBundle(null);
 		global = ResourceBundle.getBundle(this.getClass().getPackage().getName() + ".global");
 		other = ResourceBundle.getBundle(this.getClass().getPackage().getName() + ".other");
 	}
 	
-	@After
+	@AfterEach
 	public void tearDown() {
 		MvvmFX.setGlobalResourceBundle(null);
 	}

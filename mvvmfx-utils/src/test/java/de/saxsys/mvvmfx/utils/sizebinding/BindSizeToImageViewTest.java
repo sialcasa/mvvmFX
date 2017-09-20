@@ -19,14 +19,14 @@ import static de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder.*;
 
 import javafx.scene.image.ImageView;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class BindSizeToImageViewTest extends SizeBindingsBuilderTestBase {
 	private ImageView toImageView;
 	
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		toImageView = new ImageView();
 	}

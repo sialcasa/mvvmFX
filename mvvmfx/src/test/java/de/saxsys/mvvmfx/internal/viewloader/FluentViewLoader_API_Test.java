@@ -27,8 +27,8 @@ import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlViewFxRoot;
 import de.saxsys.mvvmfx.ViewTuple;
 import javafx.scene.layout.VBox;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import de.saxsys.mvvmfx.internal.viewloader.example.TestFxmlView;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestJavaView;
@@ -36,7 +36,7 @@ import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModel;
 
 
 /**
- * This test verifies the API of the {@link de.saxsys.mvvmfx.FluentViewLoader}. The functionality of loading Views is
+ * This test verifies the API of the {@link FluentViewLoader}. The functionality of loading Views is
  * not part of this test as it is already tested in other tests for the ViewLoader itself.
  */
 public class FluentViewLoader_API_Test {
@@ -44,7 +44,7 @@ public class FluentViewLoader_API_Test {
 	
 	private ResourceBundle resourceBundle;
 	
-	@Before
+	@BeforeEach
 	public void setup() throws IOException {
 		resourceBundle = new PropertyResourceBundle(new StringReader(""));
 	}

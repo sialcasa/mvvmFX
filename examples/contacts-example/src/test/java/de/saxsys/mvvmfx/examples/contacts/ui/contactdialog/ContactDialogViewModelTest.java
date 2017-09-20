@@ -2,8 +2,8 @@ package de.saxsys.mvvmfx.examples.contacts.ui.contactdialog;
 
 import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 import javafx.beans.property.BooleanProperty;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
 
@@ -16,7 +16,7 @@ public class ContactDialogViewModelTest {
 	private BooleanProperty contactFormValid;
 	private BooleanProperty addressFormValid;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		scope = new ContactDialogScope();
 		contactFormValid = scope.contactFormValidProperty();

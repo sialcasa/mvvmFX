@@ -16,9 +16,10 @@
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModel;
-import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import de.saxsys.mvvmfx.testingutils.JfxToolkitExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * 
  * A FxmlView located in the default package couldn't be loaded because a NullPointerException was thrown.
  */
-@RunWith(JfxRunner.class)
+@ExtendWith(JfxToolkitExtension.class)
 public class FxmlViewinDefaultPackageTest {
 	
 	

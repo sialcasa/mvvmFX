@@ -17,8 +17,8 @@ package de.saxsys.mvvmfx.utils.notifications;
 
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.util.Pair;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
@@ -34,7 +34,7 @@ public class NotificationTestHelperTest {
 	
 	private MyViewModel viewModel;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		viewModel = new MyViewModel();
 	}

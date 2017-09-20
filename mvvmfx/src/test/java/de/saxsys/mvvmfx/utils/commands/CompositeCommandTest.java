@@ -23,27 +23,23 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import com.cedarsoft.test.utils.CatchAllExceptionsRule;
-import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
+import de.saxsys.mvvmfx.testingutils.JfxToolkitExtension;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import de.saxsys.mvvmfx.testingutils.GCVerifier;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(JfxRunner.class)
+@ExtendWith(JfxToolkitExtension.class)
 public class CompositeCommandTest {
 
-	// Rule to get exceptions from the JavaFX Thread into the JUnit thread
-	@Rule
-	public CatchAllExceptionsRule catchAllExceptionsRule = new CatchAllExceptionsRule();
 
 
 	private BooleanProperty condition1;
@@ -53,7 +49,7 @@ public class CompositeCommandTest {
 	private BooleanProperty called2;
 	private DelegateCommand delegateCommand2;
 	
-	@Before
+	@BeforeEach
 	public void init() {
 		condition1 = new SimpleBooleanProperty(true);
 		called1 = new SimpleBooleanProperty();
@@ -170,7 +166,7 @@ public class CompositeCommandTest {
 		compositeCommand.unregister(delegateCommand2);
 	}
 	
-	@Ignore("unstable test. Needs to be fixed. see bug #260")
+	@Disabled("unstable test. Needs to be fixed. see bug #260")
 	@Test
 	public void longRunningAsyncComposite() throws Exception {
 		

@@ -1,22 +1,21 @@
 package de.saxsys.mvvmfx.examples.contacts.model.countries;
 
-import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
-import org.junit.Before;
-import org.junit.runner.RunWith;
+import de.saxsys.mvvmfx.testingutils.JfxToolkitExtension;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(JfxRunner.class)
-public class DomCountrySelectorIntegrationTest extends AbstractCountrySelectorTest {
+@ExtendWith(JfxToolkitExtension.class)
+public class DomCountrySelectorIntegrationTest implements CountrySelectorInterfaceTest {
 
 	private CountrySelector countrySelector;
 
-	@Before
+	@BeforeEach
 	public void setup(){
 		countrySelector = new DomCountrySelector();
 	}
 
 
-	@Override
-	protected CountrySelector getCountrySelector() {
+	@Override public CountrySelector getCountrySelector() {
 		return countrySelector;
 	}
 }

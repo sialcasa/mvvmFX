@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 
 import javax.inject.Inject;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * This test is used to reproduce a bug in the mvvmfx-guice module. A class that is injected into the application is

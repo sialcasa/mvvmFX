@@ -13,8 +13,8 @@ import de.saxsys.mvvmfx.utils.validation.Validator;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import de.saxsys.mvvmfx.examples.contacts.util.CentralClock;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
@@ -24,7 +24,7 @@ public class BirthdayValidatorTest {
 	private ValidationStatus result;
 	private ObjectProperty<LocalDate> value = new SimpleObjectProperty<>();
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		ZonedDateTime now = ZonedDateTime
 				.of(LocalDate.of(2014, Month.JANUARY, 1), LocalTime.of(0, 0), ZoneId.systemDefault());
