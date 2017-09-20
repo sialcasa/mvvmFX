@@ -1,0 +1,12 @@
+.bigLabel {
+    -fx-font-size: 1.5em;
+}
+
+.subHeader {
+    -fx-font-size: 2em;
+    -fx-font-style: italic;
+}
+
+.header {
+    -fx-font-size: 2.5em;
+}

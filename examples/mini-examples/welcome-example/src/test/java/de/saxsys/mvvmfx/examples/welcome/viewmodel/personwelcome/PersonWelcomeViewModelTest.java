@@ -1,4 +1,4 @@
-package de.saxsys.mvvmfx.viewmodel.personwelcome;
+package de.saxsys.mvvmfx.examples.welcome.viewmodel.personwelcome;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,7 +8,6 @@ import org.junit.Test;
 import de.saxsys.mvvmfx.examples.welcome.model.Gender;
 import de.saxsys.mvvmfx.examples.welcome.model.Person;
 import de.saxsys.mvvmfx.examples.welcome.model.Repository;
-import de.saxsys.mvvmfx.examples.welcome.viewmodel.personwelcome.PersonWelcomeViewModel;
 
 public class PersonWelcomeViewModelTest {
 

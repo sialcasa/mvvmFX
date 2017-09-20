@@ -22,7 +22,8 @@
 		<module>welcome-example</module>
 		<module>scopes-example</module>
         <module>async-todoapp-futures</module>
-    </modules>
+		<module>itemlist-example</module>
+	</modules>
 
 
 </project>

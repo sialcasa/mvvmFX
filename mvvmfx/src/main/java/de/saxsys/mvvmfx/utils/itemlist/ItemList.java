@@ -56,7 +56,7 @@ public class ItemList<ListType> extends ListTransformation<ListType, String> {
 	}
 	
 	/**
-	 * @return String representation of {@link #modelListProperty()}.
+	 * @return String representation of {@link #sourceListProperty()}.
 	 */
 	public ReadOnlyListProperty<String> stringListProperty() {
 		return targetListProperty();

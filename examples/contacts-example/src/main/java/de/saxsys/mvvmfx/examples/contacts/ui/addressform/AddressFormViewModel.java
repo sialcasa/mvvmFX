@@ -13,7 +13,7 @@ import de.saxsys.mvvmfx.examples.contacts.model.Country;
 import de.saxsys.mvvmfx.examples.contacts.model.countries.CountrySelector;
 import de.saxsys.mvvmfx.examples.contacts.model.Subdivision;
 import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
-import de.saxsys.mvvmfx.utils.itemlist.ItemList;
+import de.saxsys.mvvmfx.utils.itemlist.ListTransformation;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
@@ -62,9 +62,9 @@ public class AddressFormViewModel implements ViewModel {
 	ContactDialogScope dialogScope;
 
 	// Don't inline this field. It's needed to prevent the list mapping from being garbage collected.
-	private ItemList<Country> countryItemList;
+	private ListTransformation<Country, String> countryItemList;
 	// Don't inline this field. It's needed to prevent the list mapping from being garbage collected.
-	private ItemList<Subdivision> subdivisionItemList;
+	private ListTransformation<Subdivision, String> subdivisionItemList;
 	private Address address;
 
 	private ObjectBinding<Contact> contactBinding;
@@ -142,13 +142,13 @@ public class AddressFormViewModel implements ViewModel {
 	}
 
 	private void initSubdivisionList() {
-		subdivisionItemList = new ItemList<>(countrySelector.subdivisions(), Subdivision::getName);
+		subdivisionItemList = new ListTransformation<>(countrySelector.subdivisions(), Subdivision::getName);
 		subdivisions = createListWithNothingSelectedMarker(subdivisionItemList.getTargetList());
 		subdivisions.addListener((ListChangeListener<String>) c -> selectedSubdivision.set(NOTHING_SELECTED_MARKER));
 	}
 
 	private void initCountryList() {
-		countryItemList = new ItemList<>(countrySelector.availableCountries(), Country::getName);
+		countryItemList = new ListTransformation<>(countrySelector.availableCountries(), Country::getName);
 		ObservableList<String> mappedList = countryItemList.getTargetList();
 
 		countries = createListWithNothingSelectedMarker(mappedList);
