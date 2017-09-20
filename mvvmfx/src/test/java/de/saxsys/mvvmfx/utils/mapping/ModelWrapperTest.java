@@ -119,7 +119,7 @@ public class ModelWrapperTest {
 
 		assertThat(nameProperty.getValue()).isEqualTo(null);
 		assertThat(ageProperty.getValue()).isEqualTo(0);
-		assertThat(nicknamesProperty.getValue().size()).isEqualTo(0);
+		assertThat(nicknamesProperty.getValue()).isEmpty();
 
 		// the wrapped object has still the values from the last commit.
 		assertThat(person.getName()).isEqualTo("hugo");
@@ -254,6 +254,76 @@ public class ModelWrapperTest {
 		assertThat(otherPerson.getAge()).isEqualTo(24);
 	}
 
+
+	@Test
+	public void testWithImmutables() {
+
+		PersonImmutable person1 = PersonImmutable.create()
+				.withName("horst")
+				.withAge(32)
+				.withNicknames(Collections.singletonList("captain"));
+
+		ModelWrapper<PersonImmutable> personWrapper = new ModelWrapper<>(person1);
+
+		final StringProperty nameProperty = personWrapper
+				.immutableField(PersonImmutable::getName, PersonImmutable::withName);
+		final IntegerProperty ageProperty = personWrapper.immutableField(PersonImmutable::getAge,
+				PersonImmutable::withAge);
+		final ListProperty<String> nicknamesProperty = personWrapper.immutableField(PersonImmutable::getNicknames, PersonImmutable::withNicknames);
+
+		assertThat(nameProperty.getValue()).isEqualTo("horst");
+		assertThat(ageProperty.getValue()).isEqualTo(32);
+		assertThat(nicknamesProperty.getValue()).containsOnly("captain");
+
+		nameProperty.setValue("hugo");
+		ageProperty.setValue(33);
+		nicknamesProperty.add("player");
+
+		personWrapper.commit();
+
+		// old person has still the same old values.
+		assertThat(person1.getName()).isEqualTo("horst");
+		assertThat(person1.getAge()).isEqualTo(32);
+		assertThat(person1.getNicknames()).containsOnly("captain");
+
+
+		PersonImmutable person2 = personWrapper.get();
+
+		assertThat(person2).isNotEqualTo(person1);
+		assertThat(person2.getName()).isEqualTo("hugo");
+		assertThat(person2.getAge()).isEqualTo(33);
+		assertThat(person2.getNicknames()).containsOnly("captain", "player");
+
+		nameProperty.setValue("luise");
+		ageProperty.setValue(33);
+		nicknamesProperty.setValue(FXCollections.observableArrayList("student"));
+
+		personWrapper.reset();
+
+		assertThat(nameProperty.getValue()).isEqualTo(null);
+		assertThat(ageProperty.getValue()).isEqualTo(0);
+		assertThat(nicknamesProperty.getValue()).isEmpty();
+
+		personWrapper.reload();
+		// now the properties have the values from the wrapped object
+		assertThat(nameProperty.getValue()).isEqualTo("hugo");
+		assertThat(ageProperty.getValue()).isEqualTo(33);
+		assertThat(nicknamesProperty.get()).containsOnly("captain", "player");
+
+
+		PersonImmutable person3 = person1.withName("gisela")
+				.withAge(23)
+				.withNicknames(Collections.singletonList("referee"));
+
+		personWrapper.set(person3);
+		personWrapper.reload();
+
+		assertThat(nameProperty.getValue()).isEqualTo("gisela");
+		assertThat(ageProperty.getValue()).isEqualTo(23);
+		assertThat(nicknamesProperty.getValue()).containsOnly("referee");
+	}
+
+
 	@Test
 	public void testIdentifiedFields() {
 		Person person = new Person();
@@ -285,6 +355,36 @@ public class ModelWrapperTest {
 		assertThat(ageProperty.getName()).isEqualTo("age");
 		assertThat(nicknamesProperty.getName()).isEqualTo("nicknames");
 
+	}
+
+	@Test
+	public void testIdentifiedFieldsWithImmutables() {
+
+		PersonImmutable person1 = PersonImmutable.create()
+				.withName("horst")
+				.withAge(32)
+				.withNicknames(Collections.singletonList("captain"));
+
+		ModelWrapper<PersonImmutable> personWrapper = new ModelWrapper<>(person1);
+
+		final StringProperty nameProperty = personWrapper
+				.immutableField("name", PersonImmutable::getName, PersonImmutable::withName);
+		final IntegerProperty ageProperty = personWrapper.immutableField("age", PersonImmutable::getAge, PersonImmutable::withAge);
+		final ListProperty<String> nicknamesProperty = personWrapper.immutableField("nicknames", PersonImmutable::getNicknames, PersonImmutable::withNicknames);
+
+
+		final StringProperty nameProperty2 = personWrapper
+				.immutableField("name", PersonImmutable::getName, PersonImmutable::withName);
+		final IntegerProperty ageProperty2 = personWrapper.immutableField("age", PersonImmutable::getAge, PersonImmutable::withAge);
+		final ListProperty<String> nicknamesProperty2 = personWrapper.immutableField("nicknames", PersonImmutable::getNicknames, PersonImmutable::withNicknames);
+
+		assertThat(nameProperty).isSameAs(nameProperty2);
+		assertThat(ageProperty).isSameAs(ageProperty2);
+		assertThat(nicknamesProperty).isSameAs(nicknamesProperty2);
+
+		assertThat(nameProperty.getName()).isEqualTo("name");
+		assertThat(ageProperty.getName()).isEqualTo("age");
+		assertThat(nicknamesProperty.getName()).isEqualTo("nicknames");
 	}
 
 
@@ -409,6 +509,70 @@ public class ModelWrapperTest {
         personWrapper.reload();
 		assertThat(personWrapper.isDirty()).isFalse();
     }
+
+	@Test
+	public void testDirtyFlagWithImmutables() {
+
+		PersonImmutable person = PersonImmutable.create()
+				.withName("horst")
+				.withAge(32)
+				.withNicknames(Collections.singletonList("captain"));
+
+		ModelWrapper<PersonImmutable> personWrapper = new ModelWrapper<>(person);
+
+		assertThat(personWrapper.isDirty()).isFalse();
+
+		final StringProperty name = personWrapper
+				.immutableField(PersonImmutable::getName, PersonImmutable::withName);
+		final IntegerProperty age = personWrapper.immutableField(PersonImmutable::getAge,
+				PersonImmutable::withAge);
+		final ListProperty<String> nicknames = personWrapper.immutableField(PersonImmutable::getNicknames, PersonImmutable::withNicknames);
+
+		name.set("hugo");
+
+		assertThat(personWrapper.isDirty()).isTrue();
+
+		personWrapper.commit();
+		assertThat(personWrapper.isDirty()).isFalse();
+
+		age.set(33);
+		assertThat(personWrapper.isDirty()).isTrue();
+
+		age.set(32);
+		assertThat(personWrapper.isDirty()).isTrue(); // dirty is still true
+
+		personWrapper.reload();
+		assertThat(personWrapper.isDirty()).isFalse();
+
+
+		nicknames.add("player");
+		assertThat(personWrapper.isDirty()).isTrue();
+
+		nicknames.remove("player");
+		assertThat(personWrapper.isDirty()).isTrue(); // dirty is still true
+
+		personWrapper.commit();
+		assertThat(personWrapper.isDirty()).isFalse();
+
+		name.set("hans");
+		assertThat(personWrapper.isDirty()).isTrue();
+
+		personWrapper.reset();
+		assertThat(personWrapper.isDirty()).isTrue();
+
+
+		personWrapper.reload();
+		assertThat(personWrapper.isDirty()).isFalse();
+
+		nicknames.set(FXCollections.observableArrayList("player"));
+		assertThat(personWrapper.isDirty()).isTrue();
+
+		personWrapper.reset();
+		assertThat(personWrapper.isDirty()).isTrue();
+
+		personWrapper.reload();
+		assertThat(personWrapper.isDirty()).isFalse();
+	}
 
     @Test
     public void testDifferentFlag() {
@@ -568,73 +732,206 @@ public class ModelWrapperTest {
 	}
 
 	@Test
+	public void testDifferentFlagWithImmutables() {
+		PersonImmutable person = PersonImmutable.create()
+				.withName("horst")
+				.withAge(32)
+				.withNicknames(Collections.singletonList("captain"));
+
+		ModelWrapper<PersonImmutable> personWrapper = new ModelWrapper<>(person);
+
+		assertThat(personWrapper.isDirty()).isFalse();
+
+		final StringProperty name = personWrapper
+				.immutableField(PersonImmutable::getName, PersonImmutable::withName);
+		final IntegerProperty age = personWrapper.immutableField(PersonImmutable::getAge,
+				PersonImmutable::withAge);
+		final ListProperty<String> nicknames = personWrapper.immutableField(PersonImmutable::getNicknames, PersonImmutable::withNicknames);
+
+
+
+		name.set("hugo");
+		assertThat(personWrapper.isDifferent()).isTrue();
+
+		personWrapper.commit();
+		assertThat(personWrapper.isDifferent()).isFalse();
+
+
+		age.set(33);
+		assertThat(personWrapper.isDifferent()).isTrue();
+
+		age.set(32);
+		assertThat(personWrapper.isDifferent()).isFalse();
+
+
+		nicknames.remove("captain");
+		assertThat(personWrapper.isDifferent()).isTrue();
+
+		nicknames.add("captain");
+		assertThat(personWrapper.isDifferent()).isFalse();
+
+		nicknames.add("player");
+		assertThat(personWrapper.isDifferent()).isTrue();
+
+		nicknames.remove("player");
+		assertThat(personWrapper.isDifferent()).isFalse();
+
+		nicknames.setValue(FXCollections.observableArrayList("spectator"));
+		assertThat(personWrapper.isDifferent()).isTrue();
+
+		personWrapper.reload();
+		assertThat(personWrapper.isDifferent()).isFalse();
+
+		nicknames.add("captain"); // duplicate captain
+		assertThat(personWrapper.isDifferent()).isTrue();
+
+		nicknames.add("player");
+		assertThat(personWrapper.isDifferent()).isTrue();
+	}
+
+	@Test
 	public void defaultValuesCanBeUpdatedToCurrentValues(){
 		final Person person = new Person();
 		person.setName("horst");
 		person.setAge(32);
 		person.setNicknames(Arrays.asList("captain"));
 
-		final ModelWrapper<Person> cut = new ModelWrapper<>(person);
+		final ModelWrapper<Person> personWrapper = new ModelWrapper<>(person);
 
-		final StringProperty nameField = cut.field(Person::getName, Person::setName, person.getName());
-		nameField.set("test");
-		cut.commit();
-		cut.useCurrentValuesAsDefaults();
-		cut.reset();
+		final StringProperty name = personWrapper.field(Person::getName, Person::setName, person.getName());
+		name.set("test");
+		personWrapper.commit();
+		personWrapper.useCurrentValuesAsDefaults();
+		personWrapper.reset();
 		assertThat(person.getName()).isEqualTo("test");
-		assertThat(nameField.get()).isEqualTo("test");
+		assertThat(name.get()).isEqualTo("test");
 
-		final IntegerProperty ageField = cut.field(Person::getAge, Person::setAge, person.getAge());
-		ageField.set(42);
-		cut.commit();
-		cut.useCurrentValuesAsDefaults();
-		cut.reset();
+		final IntegerProperty age = personWrapper.field(Person::getAge, Person::setAge, person.getAge());
+		age.set(42);
+		personWrapper.commit();
+		personWrapper.useCurrentValuesAsDefaults();
+		personWrapper.reset();
 		assertThat(person.getAge()).isEqualTo(42);
-		assertThat(ageField.get()).isEqualTo(42);
+		assertThat(age.get()).isEqualTo(42);
 
-		final ListProperty<String> nicknames = cut.field(Person::getNicknames, Person::setNicknames, person.getNicknames());
+		final ListProperty<String> nicknames = personWrapper.field(Person::getNicknames, Person::setNicknames, person.getNicknames());
 		nicknames.add("myname");
 		nicknames.remove("captain");
-		cut.commit();
-		cut.useCurrentValuesAsDefaults();
-		cut.reset();
+		personWrapper.commit();
+		personWrapper.useCurrentValuesAsDefaults();
+		personWrapper.reset();
 		assertThat(person.getNicknames()).containsExactly("myname");
 		assertThat(nicknames.get()).containsExactly("myname");
 	}
 
-  @Test
-  public void valuesShouldBeUpdatedWhenModelInstanceChanges() {
-    final Person person1 = new Person();
-    person1.setName("horst");
-    person1.setAge(32);
-    person1.setNicknames(Arrays.asList("captain"));
-    final Person person2 = new Person();
-    person2.setName("dieter");
-    person2.setAge(42);
-    person2.setNicknames(Arrays.asList("robin"));
+	@Test
+	public void defaultValuesCanBeUpdatedToCurrentValuesWithImmutables(){
+		PersonImmutable person = PersonImmutable.create()
+				.withName("Luise")
+				.withAge(32)
+				.withNicknames(Collections.singletonList("captain"));
 
-    final SimpleObjectProperty<Person> modelProp = new SimpleObjectProperty<>(person1);
+		ModelWrapper<PersonImmutable> personWrapper = new ModelWrapper<>(person);
 
-    final ModelWrapper<Person> cut = new ModelWrapper<>(modelProp);
+		assertThat(personWrapper.isDirty()).isFalse();
 
-    final StringProperty nameField = cut.field(Person::getName, Person::setName, person1.getName());
-    final IntegerProperty ageField = cut.field(Person::getAge, Person::setAge, person1.getAge());
-    final ListProperty<String> nicknames = cut.field(Person::getNicknames, Person::setNicknames, person1.getNicknames());
+		final StringProperty name = personWrapper
+				.immutableField(PersonImmutable::getName, PersonImmutable::withName);
+		final IntegerProperty age = personWrapper.immutableField(PersonImmutable::getAge,
+				PersonImmutable::withAge);
+		final ListProperty<String> nicknames = personWrapper.immutableField(PersonImmutable::getNicknames, PersonImmutable::withNicknames);
 
-    assertThat(nameField.get()).isEqualTo(person1.getName());
-    assertThat(ageField.get()).isEqualTo(person1.getAge());
-    assertThat(nicknames.get()).containsExactlyElementsOf(person1.getNicknames());
+		name.set("test");
+		personWrapper.commit();
+		personWrapper.useCurrentValuesAsDefaults();
+		personWrapper.reset();
+		assertThat(name.get()).isEqualTo("test");
 
-    modelProp.set(person2);
-    assertThat(nameField.get()).isEqualTo(person2.getName());
-    assertThat(ageField.get()).isEqualTo(person2.getAge());
-    assertThat(nicknames.get()).containsExactlyElementsOf(person2.getNicknames());
+		age.set(42);
+		personWrapper.commit();
+		personWrapper.useCurrentValuesAsDefaults();
+		personWrapper.reset();
+		assertThat(age.get()).isEqualTo(42);
 
-    cut.reset();
-    assertThat(nameField.get()).isEqualTo(person1.getName());
-    assertThat(ageField.get()).isEqualTo(person1.getAge());
-    assertThat(nicknames.get()).containsExactlyElementsOf(person1.getNicknames());
-  }
+		nicknames.add("myname");
+		nicknames.remove("captain");
+		personWrapper.commit();
+		personWrapper.useCurrentValuesAsDefaults();
+		personWrapper.reset();
+		assertThat(nicknames.get()).containsExactly("myname");
+	}
+
+	@Test
+	public void valuesShouldBeUpdatedWhenModelInstanceChanges() {
+		final Person person1 = new Person();
+		person1.setName("horst");
+		person1.setAge(32);
+		person1.setNicknames(Arrays.asList("captain"));
+		final Person person2 = new Person();
+		person2.setName("dieter");
+		person2.setAge(42);
+		person2.setNicknames(Arrays.asList("robin"));
+
+		final SimpleObjectProperty<Person> modelProp = new SimpleObjectProperty<>(person1);
+
+		final ModelWrapper<Person> personWrapper = new ModelWrapper<>(modelProp);
+
+		final StringProperty nameField = personWrapper.field(Person::getName, Person::setName, person1.getName());
+		final IntegerProperty ageField = personWrapper.field(Person::getAge, Person::setAge, person1.getAge());
+		final ListProperty<String> nicknames = personWrapper
+				.field(Person::getNicknames, Person::setNicknames, person1.getNicknames());
+
+		assertThat(nameField.get()).isEqualTo(person1.getName());
+		assertThat(ageField.get()).isEqualTo(person1.getAge());
+		assertThat(nicknames.get()).containsExactlyElementsOf(person1.getNicknames());
+
+		modelProp.set(person2);
+		assertThat(nameField.get()).isEqualTo(person2.getName());
+		assertThat(ageField.get()).isEqualTo(person2.getAge());
+		assertThat(nicknames.get()).containsExactlyElementsOf(person2.getNicknames());
+
+		personWrapper.reset();
+		assertThat(nameField.get()).isEqualTo(person1.getName());
+		assertThat(ageField.get()).isEqualTo(person1.getAge());
+		assertThat(nicknames.get()).containsExactlyElementsOf(person1.getNicknames());
+	}
+
+	@Test
+	public void valuesShouldBeUpdatedWhenModelInstanceChangesWithImmutables() {
+		PersonImmutable person1 = PersonImmutable.create()
+				.withName("horst")
+				.withAge(32)
+				.withNicknames(Collections.singletonList("captain"));
+
+		PersonImmutable person2 = PersonImmutable.create()
+				.withName("dieter")
+				.withAge(42)
+				.withNicknames(Collections.singletonList("robin"));
+
+		final SimpleObjectProperty<PersonImmutable> modelProp = new SimpleObjectProperty<>(person1);
+
+		ModelWrapper<PersonImmutable> personWrapper = new ModelWrapper<>(modelProp);
+
+		final StringProperty nameField = personWrapper
+				.immutableField(PersonImmutable::getName, PersonImmutable::withName, person1.getName());
+		final IntegerProperty ageField = personWrapper.immutableField(PersonImmutable::getAge,
+				PersonImmutable::withAge, person1.getAge());
+		final ListProperty<String> nicknames = personWrapper.immutableField(PersonImmutable::getNicknames, PersonImmutable::withNicknames, person1.getNicknames());
+
+		assertThat(nameField.get()).isEqualTo(person1.getName());
+		assertThat(ageField.get()).isEqualTo(person1.getAge());
+		assertThat(nicknames.get()).containsExactlyElementsOf(person1.getNicknames());
+
+		modelProp.set(person2);
+		assertThat(nameField.get()).isEqualTo(person2.getName());
+		assertThat(ageField.get()).isEqualTo(person2.getAge());
+		assertThat(nicknames.get()).containsExactlyElementsOf(person2.getNicknames());
+
+		personWrapper.reset();
+		assertThat(nameField.get()).isEqualTo(person1.getName());
+		assertThat(ageField.get()).isEqualTo(person1.getAge());
+		assertThat(nicknames.get()).containsExactlyElementsOf(person1.getNicknames());
+	}
 
 	@Test
 	public void testUseCurrentValuesAsDefaultWhenModelIsNull() {

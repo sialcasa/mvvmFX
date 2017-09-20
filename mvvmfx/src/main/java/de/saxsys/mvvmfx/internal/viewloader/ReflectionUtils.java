@@ -15,6 +15,8 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.internal.viewloader;
 
+import de.saxsys.mvvmfx.internal.SideEffectWithException;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
@@ -32,15 +34,7 @@ import java.util.stream.Collectors;
  * @author manuel.mauky
  */
 public class ReflectionUtils {
-	/**
-	 * A functional interface that is used in this class to express callbacks that don't take any argument and don't
-	 * return anything. Such a callback have to work only by side effects.
-	 */
-	@FunctionalInterface
-	public static interface SideEffect {
-		void call() throws Exception;
-	}
-	
+
 	/**
 	 * Returns all fields with the given annotation. Only fields that are declared in the actual class of the instance
 	 * are considered (i.e. no fields from super classes). This includes private fields.
@@ -160,7 +154,7 @@ public class ReflectionUtils {
 	 * @throws IllegalStateException
 	 *             when something went wrong.
 	 */
-	public static void accessMember(final AccessibleObject member, final SideEffect sideEffect, String errorMessage) {
+	public static void accessMember(final AccessibleObject member, final SideEffectWithException sideEffect, String errorMessage) {
 		if (sideEffect == null) {
 			return;
 		}
