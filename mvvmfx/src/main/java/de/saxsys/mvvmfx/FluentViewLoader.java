@@ -63,7 +63,7 @@ public class FluentViewLoader {
     public static class JavaViewStep<ViewType extends JavaView<? extends ViewModelType>, ViewModelType extends ViewModel> {
 
         private final Class<? extends ViewType> viewType;
-        private ResourceBundle resourceBundle;
+		private List<ResourceBundle> resourceBundles;
 
         private ViewModelType viewModel;
         private ViewType codeBehind;
@@ -96,20 +96,27 @@ public class FluentViewLoader {
          * view. Note: It is possible to provide a global application-wide
          * resourceBundle via
          * {@link MvvmFX#setGlobalResourceBundle(ResourceBundle)} method.
-         *
+         * <p/>
          * If there is a global resourceBundle set it will be merged with the
          * resourceBundle provided by this builder method. The resourceBundle
          * provided by this method will have a higher priority then the global
          * one which means that if there are duplicate keys, the values of the
          * global resourceBundle will be overwritten and the values of this
          * resourceBundle will be used.
+		 * <p/>
+		 * It is possible to add multiple resourceBundles by invoking this builder method
+		 * multiple times. In this case the last provided resourceBundle will have the
+		 * highest priority when it comes to overwriting values with the same keys.
          *
          * @param resourceBundle
          *            the resource bundle that is used while loading the view.
          * @return this instance of the builder step.
          */
         public JavaViewStep<ViewType, ViewModelType> resourceBundle(ResourceBundle resourceBundle) {
-            this.resourceBundle = resourceBundle;
+			if(resourceBundles == null) {
+				resourceBundles = new ArrayList<>();
+			}
+			resourceBundles.add(resourceBundle);
             return this;
         }
 
@@ -154,12 +161,12 @@ public class FluentViewLoader {
         public ViewTuple<ViewType, ViewModelType> load() {
             JavaViewLoader javaViewLoader = new JavaViewLoader();
 
-            return javaViewLoader.loadJavaViewTuple(viewType,
-                    ResourceBundleManager.getInstance().mergeWithGlobal(resourceBundle), viewModel, codeBehind, context,
-                    providedScopes);
-        }
+			final ResourceBundle bundle = ResourceBundleManager.getInstance().mergeListWithGlobal(resourceBundles);
 
-    }
+			return javaViewLoader.loadJavaViewTuple(viewType, bundle, viewModel, codeBehind, context,
+					providedScopes);
+		}
+	}
 
     /**
      * This class is the builder step to load a fxml based view. It is accessed
@@ -176,7 +183,7 @@ public class FluentViewLoader {
     public static class FxmlViewStep<ViewType extends FxmlView<? extends ViewModelType>, ViewModelType extends ViewModel> {
 
         private final Class<? extends ViewType> viewType;
-        private ResourceBundle resourceBundle;
+        private List<ResourceBundle> resourceBundles;
         private Object root;
         private ViewType codeBehind;
         private ViewModelType viewModel;
@@ -211,20 +218,27 @@ public class FluentViewLoader {
          * view. Note: It is possible to provide a global application-wide
          * resourceBundle via
          * {@link MvvmFX#setGlobalResourceBundle(ResourceBundle)} method.
-         * 
+         * <p/>
          * If there is a global resourceBundle set it will be merged with the
          * resourceBundle provided by this builder method. The resourceBundle
          * provided by this method will have a higher priority then the global
          * one which means that if there are duplicate keys, the values of the
          * global resourceBundle will be overwritten and the values of this
          * resourceBundle will be used.
+		 * <p/>
+		 * It is possible to add multiple resourceBundles by invoking this builder method
+		 * multiple times. In this case the last provided resourceBundle will have the
+		 * highest priority when it comes to overwriting values with the same keys.
          *
          * @param resourceBundle
          *            the resource bundle that is used while loading the view.
          * @return this instance of the builder step.
          */
         public FxmlViewStep<ViewType, ViewModelType> resourceBundle(ResourceBundle resourceBundle) {
-            this.resourceBundle = resourceBundle;
+        	if(resourceBundles == null) {
+        		resourceBundles = new ArrayList<>();
+			}
+			resourceBundles.add(resourceBundle);
             return this;
         }
 
@@ -314,10 +328,11 @@ public class FluentViewLoader {
         public ViewTuple<ViewType, ViewModelType> load() {
             FxmlViewLoader fxmlViewLoader = new FxmlViewLoader();
 
-            return fxmlViewLoader.loadFxmlViewTuple(viewType,
-                    ResourceBundleManager.getInstance().mergeWithGlobal(resourceBundle), codeBehind, root, viewModel,
-                    context, providedScopes, builderFactories);
-        }
+			final ResourceBundle bundle = ResourceBundleManager.getInstance().mergeListWithGlobal(resourceBundles);
+
+			return fxmlViewLoader.loadFxmlViewTuple(viewType, bundle, codeBehind, root, viewModel,
+					context, providedScopes, builderFactories);
+		}
     }
 
     /**

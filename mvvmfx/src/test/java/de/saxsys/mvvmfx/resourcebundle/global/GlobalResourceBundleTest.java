@@ -39,12 +39,14 @@ public class GlobalResourceBundleTest {
 	
 	private ResourceBundle global;
 	private ResourceBundle other;
+	private ResourceBundle third;
 	
 	@BeforeEach
 	public void setup(){
 		MvvmFX.setGlobalResourceBundle(null);
 		global = ResourceBundle.getBundle(this.getClass().getPackage().getName() + ".global");
 		other = ResourceBundle.getBundle(this.getClass().getPackage().getName() + ".other");
+		third = ResourceBundle.getBundle(this.getClass().getPackage().getName() + ".third");
 	}
 	
 	@AfterEach
@@ -68,6 +70,31 @@ public class GlobalResourceBundleTest {
 		// in this case "other" has the higher priority and overwrites the value defined in "global"
 		assertThat(codeBehind.label.getText()).isEqualTo("other");
 	}
-	
+
+	/**
+	 * It's possible to use more then one resourceBundle with {@link FluentViewLoader}.
+	 */
+	@Test
+	public void testThreeResourceBundles() {
+		MvvmFX.setGlobalResourceBundle(global);
+
+		final ViewTuple<TestView, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestView.class)
+				.resourceBundle(other)
+				.resourceBundle(third)
+				.load();
+		final TestView codeBehind = viewTuple.getCodeBehind();
+
+		assertThat(codeBehind.resources).isNotNull();
+
+		assertThat(codeBehind.global_label.getText()).isEqualTo("global");
+		assertThat(codeBehind.other_label.getText()).isEqualTo("other");
+
+		// the "third" bundle was added last in the fluent API.
+		// for this reason it has the highest priority and overwrites other values
+		assertThat(codeBehind.label.getText()).isEqualTo("third");
+
+		assertThat(codeBehind.resources.getString("third_label")).isEqualTo("third");
+
+	}
 	
 }
