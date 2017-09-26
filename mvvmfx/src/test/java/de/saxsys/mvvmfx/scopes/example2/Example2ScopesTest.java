@@ -6,14 +6,14 @@ import de.saxsys.mvvmfx.scopes.example2.views.ScopedViewA;
 import de.saxsys.mvvmfx.scopes.example2.views.ScopedViewB;
 import de.saxsys.mvvmfx.scopes.example2.views.ScopedViewC;
 import de.saxsys.mvvmfx.scopes.example2.views.ScopedViewModelA;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 
-@Ignore
+@Disabled
 public class Example2ScopesTest {
 
 	@Test

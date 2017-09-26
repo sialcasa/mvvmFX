@@ -5,7 +5,7 @@
     <parent>
         <artifactId>mvvmfx-parent</artifactId>
         <groupId>de.saxsys</groupId>
-        <version>1.6.0</version>
+        <version>1.7.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -30,8 +30,8 @@
         <!-- Testing Frameworks -->
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

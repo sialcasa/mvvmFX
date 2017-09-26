@@ -25,8 +25,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -53,7 +53,7 @@ public class ListenerManagerTest {
 	
 	private ListenerManager manager;
 	
-	@Before
+	@BeforeEach
 	public void setup() {
 		manager = new ListenerManager();
 		simpleListProperty.set(FXCollections.<String> observableArrayList());

@@ -112,6 +112,14 @@ public class NotificationTestHelper implements NotificationObserver {
 	}
 
 	/**
+	 * @return the list of received notifications
+	 */
+	public List<Pair<String, Object[]>> getReceivedNotifications() {
+		waitForUiThread();
+		return notifications;
+	}
+
+	/**
 	 * @return the number of received notifications.
 	 */
 	public int numberOfReceivedNotifications() {

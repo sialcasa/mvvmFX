@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx-parent</artifactId>
-		<version>1.6.0</version>
+		<version>1.7.0</version>
 	</parent>
 
 	<artifactId>mvvmfx-validation</artifactId>
@@ -38,7 +38,8 @@
 		<dependency>
 			<groupId>org.controlsfx</groupId>
 			<artifactId>controlsfx</artifactId>
-			<version>8.40.9</version>
+			<version>8.40.12</version>
+            <scope>provided</scope>
 		</dependency>
 
 		<!-- Testing Frameworks -->
@@ -48,8 +49,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

@@ -4,10 +4,10 @@ import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.scopes.example3.views.MainView;
 import de.saxsys.mvvmfx.scopes.example3.views.MainViewModel;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-@Ignore("Ignore until fixed")
+@Disabled("Ignore until fixed")
 public class Example3Test {
 
 	@Test

@@ -10,7 +10,7 @@ import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.examples.contacts.model.Address;
 import de.saxsys.mvvmfx.examples.contacts.model.Contact;
 import de.saxsys.mvvmfx.examples.contacts.model.Country;
-import de.saxsys.mvvmfx.examples.contacts.model.CountrySelector;
+import de.saxsys.mvvmfx.examples.contacts.model.countries.CountrySelector;
 import de.saxsys.mvvmfx.examples.contacts.model.Subdivision;
 import de.saxsys.mvvmfx.examples.contacts.ui.scopes.ContactDialogScope;
 import de.saxsys.mvvmfx.utils.itemlist.ItemList;
@@ -90,7 +90,6 @@ public class AddressFormViewModel implements ViewModel {
 		});
 
 		loadingInProgress.bind(countrySelector.inProgressProperty());
-		countrySelector.init();
 
 		initSubdivisionLabel();
 		initCountryList();

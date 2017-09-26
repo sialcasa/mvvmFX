@@ -2,8 +2,8 @@ package de.saxsys.mvvmfx.examples.contacts.ui.contactdialog;
 
 import de.saxsys.mvvmfx.examples.contacts.ui.contactform.ContactFormViewModel;
 import de.saxsys.mvvmfx.testingutils.GCVerifier;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static eu.lestard.assertj.javafx.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,7 +12,7 @@ public class ContactFormViewModelTest {
 
 	private ContactFormViewModel viewModel;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		viewModel = new ContactFormViewModel();
 	}

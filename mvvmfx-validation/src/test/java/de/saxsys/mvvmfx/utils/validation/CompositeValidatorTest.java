@@ -15,20 +15,18 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.validation;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.google.common.base.Strings;
-
-import org.junit.Before;
-import org.junit.Test;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.IntegerBinding;
+import javafx.beans.property.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author manuel.mauky
@@ -43,7 +41,7 @@ public class CompositeValidatorTest {
 	private ObservableRuleBasedValidator validator1;
 	private ObservableRuleBasedValidator validator2;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		validator1 = new ObservableRuleBasedValidator();
 		validator1.addRule(valid1, ValidationMessage.error("error1"));
@@ -246,4 +244,84 @@ public class CompositeValidatorTest {
 				.map(ValidationMessage::getMessage)
 				.collect(Collectors.toList());
 	}
+
+
+    /**
+    * Issue #413
+    */
+    @Test
+    public void validatorPercentageTest(){
+
+        final IntegerProperty integerProperty1 = new SimpleIntegerProperty(30);
+        final IntegerProperty integerProperty2 = new SimpleIntegerProperty(-20);
+        final IntegerProperty integerProperty3 = new SimpleIntegerProperty(35);
+		final IntegerProperty integerProperty4 = new SimpleIntegerProperty(55);
+
+        Predicate<Number> predicate1 = v -> v.doubleValue() > 50;
+
+		final Validator validator1 = new FunctionBasedValidator<>(integerProperty1, predicate1, ValidationMessage.error("Value must be bigger than 50"));
+        final Validator validator2 = new FunctionBasedValidator<>(integerProperty2, predicate1, ValidationMessage.error("Value must be bigger than 50"));
+        final Validator validator3 = new FunctionBasedValidator<>(integerProperty3, predicate1, ValidationMessage.error("Value must be bigger than 50"));
+		final Validator validator4 = new FunctionBasedValidator<>(integerProperty4, predicate1, ValidationMessage.error("Value must be bigger than 50"));
+
+        final CompositeValidator compositeValidator = new CompositeValidator(validator1, validator2, validator3);
+        assertThat(compositeValidator.getValidationStatus().getMessages()).hasSize(3);
+
+		IntegerBinding percentage = Bindings.createIntegerBinding(() -> {
+            int numberOfValidators = compositeValidator.getValidators().size();
+
+            if (numberOfValidators == 0) {
+                return 100;
+            } else {
+                int numberOfValidValidators = (int) compositeValidator.getValidators().stream()
+                        .map(Validator::getValidationStatus)
+                        .filter(ValidationStatus::isValid)
+                        .count();
+
+                return numberOfValidValidators * 100 / numberOfValidators;
+            }
+        }, compositeValidator.getValidationStatus().getMessages(), compositeValidator.getValidators());
+
+
+        assertThat(percentage.intValue()).isEqualTo(0);
+
+        // change values
+        integerProperty1.setValue(70);
+        assertThat(percentage.intValue()).isEqualTo(33);
+        integerProperty1.setValue(0);
+        assertThat(percentage.intValue()).isEqualTo(0);
+
+
+		integerProperty2.setValue(100);
+		assertThat(percentage.intValue()).isEqualTo(33);
+
+		integerProperty1.setValue(70);
+		assertThat(percentage.intValue()).isEqualTo(66);
+
+        integerProperty2.setValue(50);
+        assertThat(percentage.intValue()).isEqualTo(33);
+
+        // add new Validator
+        compositeValidator.addValidators(validator4);
+        assertThat(percentage.intValue()).isEqualTo(50);
+
+        // 0% valid
+        integerProperty1.setValue(50);
+        integerProperty4.setValue(50);
+        assertThat(percentage.intValue()).isEqualTo(0);
+
+        // 100% valid
+        integerProperty1.setValue(51);
+        integerProperty2.setValue(100);
+        integerProperty3.setValue(80);
+        integerProperty4.setValue(75);
+        assertThat(percentage.intValue()).isEqualTo(100);
+
+		// remove validator
+		compositeValidator.removeValidators(validator1);
+		assertThat(percentage.intValue()).isEqualTo(100);
+		integerProperty2.setValue(30);
+		assertThat(percentage.intValue()).isEqualTo(66);
+
+    }
 }

@@ -7,8 +7,8 @@ import de.saxsys.mvvmfx.utils.validation.Validator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 
@@ -17,7 +17,7 @@ public class PhoneNumberValidatorTest {
 	private ValidationStatus result;
 	private StringProperty value = new SimpleStringProperty();
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		Validator validator = new PhoneValidator(value, "error message");
 

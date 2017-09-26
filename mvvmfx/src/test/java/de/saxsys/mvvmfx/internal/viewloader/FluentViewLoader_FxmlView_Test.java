@@ -21,12 +21,13 @@ import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.internal.viewloader.example.*;
 import de.saxsys.mvvmfx.testingutils.ExceptionUtils;
-import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
+import de.saxsys.mvvmfx.testingutils.JfxToolkitExtension;
 import javafx.fxml.LoadException;
 import javafx.scene.layout.VBox;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -42,12 +43,12 @@ import static org.assertj.core.api.Assertions.fail;
  * 
  * @author manuel.mauky
  */
-@RunWith(JfxRunner.class)
+@ExtendWith(JfxToolkitExtension.class)
 public class FluentViewLoader_FxmlView_Test {
 	
 	private ResourceBundle resourceBundle;
 	
-	@Before
+	@BeforeEach
 	public void setup() throws Exception {
 		resourceBundle = new PropertyResourceBundle(new StringReader(""));
 	}
@@ -233,10 +234,13 @@ public class FluentViewLoader_FxmlView_Test {
 		}
 	}
 	
-	@Test(expected = RuntimeException.class)
+	@Test
 	public void testLoadFailNoSuchFxmlFile() {
-		ViewTuple<InvalidFxmlTestView, TestViewModel> viewTuple = FluentViewLoader.fxmlView(InvalidFxmlTestView.class)
-				.load();
+		Assertions.assertThrows(RuntimeException.class, () -> {
+			ViewTuple<InvalidFxmlTestView, TestViewModel> viewTuple = FluentViewLoader
+					.fxmlView(InvalidFxmlTestView.class)
+					.load();
+		});
 	}
 	
 	/**
@@ -469,5 +473,144 @@ public class FluentViewLoader_FxmlView_Test {
 
 
         assertThat(TestViewModel.wasInitialized).isFalse();
+	}
+
+	/**
+	 * Method annotated with {@link de.saxsys.mvvmfx.Initialize} annotation initializes the ViewModel
+	 * */
+	@Test
+	public void testViewModelIsInitializedWithAnnotatatedMethod() {
+		TestViewModelWithAnnotatedInitialize.wasInitialized = false;
+
+		ViewTuple<TestFxmlViewWithViewModelWithAnnotatedInitialize, TestViewModelWithAnnotatedInitialize> tuple
+				= FluentViewLoader.fxmlView(TestFxmlViewWithViewModelWithAnnotatedInitialize.class).load();
+
+		TestViewModelWithAnnotatedInitialize viewModel = tuple.getViewModel();
+
+		assertThat(TestViewModelWithAnnotatedInitialize.wasInitialized).isTrue();
+
+	}
+
+	@Test
+	public void testViewModelHasMultipleInitializeAnnotations() {
+		TestViewModelWithMultipleInitializeAnnotations.init1 = false;
+		TestViewModelWithMultipleInitializeAnnotations.init2 = false;
+		TestViewModelWithMultipleInitializeAnnotations.initialize = false;
+
+		ViewTuple<TestFxmlViewWithViewModelWithMultipleInitializeAnnotations, TestViewModelWithMultipleInitializeAnnotations> viewTuple = FluentViewLoader
+				.fxmlView(TestFxmlViewWithViewModelWithMultipleInitializeAnnotations.class).load();
+
+		assertThat(TestViewModelWithMultipleInitializeAnnotations.init1).isTrue();
+		assertThat(TestViewModelWithMultipleInitializeAnnotations.init2).isTrue();
+		assertThat(TestViewModelWithMultipleInitializeAnnotations.initialize).isTrue();
+	}
+
+	@Test
+	public void testLoadFxmlViewTupleWithCustomPath() throws IOException {
+
+		TestFxmlPathView.instanceCounter = 0;
+		TestViewModel.instanceCounter = 0;
+
+		TestViewModel.wasInitialized = false;
+
+		final ViewTuple<TestFxmlPathView, TestViewModel> viewTuple = FluentViewLoader.fxmlView(TestFxmlPathView.class)
+				.resourceBundle(resourceBundle).load();
+
+		assertThat(viewTuple).isNotNull();
+
+		assertThat(viewTuple.getView()).isNotNull().isInstanceOf(VBox.class);
+		assertThat(viewTuple.getCodeBehind()).isNotNull();
+
+		final TestFxmlPathView codeBehind = viewTuple.getCodeBehind();
+		assertThat(codeBehind.getViewModel()).isNotNull();
+		assertThat(codeBehind.resourceBundle).hasSameContent(resourceBundle);
+
+		assertThat(codeBehind.viewModelWasNull).isFalse();
+
+		assertThat(TestFxmlPathView.instanceCounter).isEqualTo(1);
+		assertThat(TestViewModel.instanceCounter).isEqualTo(1);
+		assertThat(TestViewModel.wasInitialized).isTrue();
+	}
+
+	@Test
+	public void testFxmlViewModelAsControllerException(){
+		try {
+			FluentViewLoader.fxmlView(TestFxmlViewModelAsController.class)
+					.load();
+		} catch (RuntimeException e){
+			assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(IllegalStateException.class);
+			assertThat(ExceptionUtils.getRootCause(e))
+					.hasMessageContaining("A ViewModel class")
+					.hasMessageContaining("was referenced in an FXML file")
+					.hasMessageContaining("as the fx:controller");
+		}
+
+		//with ControllerFactoryWithCustomViewModel
+		try {
+			FluentViewLoader.fxmlView(TestFxmlViewModelAsController.class)
+					.viewModel(new TestFxmlViewModelAsControllerViewModel())
+					.load();
+		} catch (RuntimeException e){
+			assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(IllegalStateException.class);
+			assertThat(ExceptionUtils.getRootCause(e))
+					.hasMessageContaining("A ViewModel class")
+					.hasMessageContaining("was referenced in an FXML file")
+					.hasMessageContaining("as the fx:controller");
+		}
+	}
+
+	@Test
+	public void testFxmlViewModelAsControllerWithCustomPath(){
+		try {
+			FluentViewLoader.fxmlView(TestFxmlViewModelAsControllerWithCustomPathView.class)
+					.load();
+		} catch (RuntimeException e){
+			assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(IllegalStateException.class);
+			assertThat(ExceptionUtils.getRootCause(e))
+					.hasMessageContaining("A ViewModel class")
+					.hasMessageContaining("was referenced in an FXML file")
+					.hasMessageContaining("as the fx:controller");
+		}
+
+		//with ControllerFactoryWithCustomViewModel
+		try {
+			FluentViewLoader.fxmlView(TestFxmlViewModelAsControllerWithCustomPathView.class)
+					.viewModel(new TestFxmlViewModelAsControllerWithCustomPathViewModel())
+					.load();
+		} catch (RuntimeException e){
+			assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(IllegalStateException.class);
+			assertThat(ExceptionUtils.getRootCause(e))
+					.hasMessageContaining("A ViewModel class")
+					.hasMessageContaining("was referenced in an FXML file")
+					.hasMessageContaining("as the fx:controller");
+		}
+
+	}
+
+	@Test
+	public void testFxmlViewModelAsControllerFxInclude(){
+		try {
+			FluentViewLoader.fxmlView(TestFxmlViewModelAsControllerParent.class)
+					.load();
+		} catch (RuntimeException e){
+			assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(IllegalStateException.class);
+			assertThat(ExceptionUtils.getRootCause(e))
+					.hasMessageContaining("A ViewModel class")
+					.hasMessageContaining("was referenced in an FXML file")
+					.hasMessageContaining("as the fx:controller");
+		}
+
+		//with ControllerFactoryWithCustomViewModel
+		try {
+			FluentViewLoader.fxmlView(TestFxmlViewModelAsControllerParent.class)
+					.viewModel(new TestFxmlViewModelAsControllerParentViewModel())
+					.load();
+		} catch (RuntimeException e){
+			assertThat(ExceptionUtils.getRootCause(e)).isInstanceOf(IllegalStateException.class);
+			assertThat(ExceptionUtils.getRootCause(e))
+					.hasMessageContaining("A ViewModel class")
+					.hasMessageContaining("was referenced in an FXML file")
+					.hasMessageContaining("as the fx:controller");
+		}
 	}
 }

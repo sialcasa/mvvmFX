@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import de.saxsys.mvvmfx.examples.contacts.events.ContactsUpdatedEvent;
 import de.saxsys.mvvmfx.examples.contacts.model.Contact;
@@ -34,7 +34,7 @@ public class MasterViewModelTest {
 
 	private Consumer<MasterTableViewModel> onSelectConsumer;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		repository = new InmemoryRepository();
 		viewModel = new MasterViewModel();
@@ -143,12 +143,12 @@ public class MasterViewModelTest {
 	 * TableView.
 	 *
 	 * The TableView doesn't directly show instances of
-	 * {@link de.saxsys.mvvmfx.examples.contacts.model.Contact} but instead
+	 * {@link Contact} but instead
 	 * contains instances of
-	 * {@link de.saxsys.mvvmfx.examples.contacts.ui.master.MasterTableViewModel}.
+	 * {@link MasterTableViewModel}.
 	 *
 	 * Every
-	 * {@link de.saxsys.mvvmfx.examples.contacts.ui.master.MasterTableViewModel}
+	 * {@link MasterTableViewModel}
 	 * has an ID attribute corresponding to the ID of the contact that is shown.
 	 * This method extracts these IDs and returns them as List. This way we can
 	 * verify what Contacts are shown in the Table.
@@ -160,8 +160,8 @@ public class MasterViewModelTest {
 
 	/**
 	 * Returns the
-	 * {@link de.saxsys.mvvmfx.examples.contacts.ui.master.MasterTableViewModel}
-	 * for the given {@link de.saxsys.mvvmfx.examples.contacts.model.Contact}
+	 * {@link MasterTableViewModel}
+	 * for the given {@link Contact}
 	 * from the contact list.
 	 */
 	private MasterTableViewModel findTableViewModelForContact(Contact contact) {

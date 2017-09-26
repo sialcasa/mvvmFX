@@ -15,12 +15,14 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.notifications;
 
-import static org.assertj.core.api.Assertions.*;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import de.saxsys.mvvmfx.ViewModel;
+import javafx.util.Pair;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author manuel.mauky
@@ -32,7 +34,7 @@ public class NotificationTestHelperTest {
 	
 	private MyViewModel viewModel;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		viewModel = new MyViewModel();
 	}
@@ -113,5 +115,46 @@ public class NotificationTestHelperTest {
 		new Thread(r).start();
 		
 		assertThat(helper.numberOfReceivedNotifications()).isEqualTo(1);
+	}
+
+	@Test
+	public void notificationList() {
+		NotificationTestHelper helper = new NotificationTestHelper();
+		viewModel.subscribe("test", helper);
+		viewModel.subscribe("something", helper);
+
+		viewModel.publish("test", 1, "a", 2, 3, "b");
+
+		Pair<String, Object[]> notification1 = helper.getReceivedNotifications().get(0);
+
+		assertThat(notification1.getValue().length).isEqualTo(5);
+		long integerValueCount = Stream.of(notification1.getValue())
+				.filter(v -> v instanceof Integer)
+				.count();
+
+		long stringValueCount = Stream.of(notification1.getValue())
+				.filter(v -> v instanceof String)
+				.count();
+
+		assertThat(integerValueCount).isEqualTo(3);
+		assertThat(stringValueCount).isEqualTo(2);
+		assertThat(notification1.getValue()[1]).isEqualTo("a");
+
+		//second message
+		viewModel.publish("test", false);
+		Pair<String, Object[]> notification2 = helper.getReceivedNotifications().get(1);
+		assertThat(notification2.getKey()).isEqualTo("test");
+		assertThat(notification2.getValue()[0]).isEqualTo(false);
+
+		//getting an empty message
+		viewModel.publish("something");
+		Pair<String, Object[]> notification3 = helper.getReceivedNotifications().get(2);
+		assertThat(notification3.getKey()).isEqualTo("something");
+		assertThat(notification3.getValue()).isEmpty();
+
+		//message should not be received
+		viewModel.publish("some other message");
+		assertThat(helper.getReceivedNotifications().size()).isEqualTo(3);
+
 	}
 }

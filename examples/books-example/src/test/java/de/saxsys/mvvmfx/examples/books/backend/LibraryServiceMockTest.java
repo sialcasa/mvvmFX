@@ -1,7 +1,7 @@
 package de.saxsys.mvvmfx.examples.books.backend;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class LibraryServiceMockTest {
 	
 	private Book theMetamorphosis;
 	
-	@Before
+	@BeforeEach
 	public void setup() {
 		libraryService = new LibraryServiceMockImpl();
 		

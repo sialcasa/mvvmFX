@@ -17,7 +17,7 @@ package de.saxsys.mvvmfx.utils.validation;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
 import java.util.function.Predicate;

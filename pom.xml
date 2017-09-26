@@ -26,7 +26,7 @@
 	<groupId>de.saxsys</groupId>
 	<artifactId>mvvmfx-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.6.0</version>
+	<version>1.7.0</version>
 	<name>mvvmFX parent</name>
 	<description>Application Framework for MVVM with JavaFX.</description>
 	<url>http://www.saxsys.de</url>
@@ -150,19 +150,14 @@
 			
 			<!-- dependency injection -->
 			<dependency>
-				<groupId>javax.inject</groupId>
-				<artifactId>javax.inject</artifactId>
-				<version>1</version>
-			</dependency>
-			<dependency>
 				<groupId>javax.enterprise</groupId>
 				<artifactId>cdi-api</artifactId>
-				<version>1.2</version>
+				<version>2.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jboss.weld.se</groupId>
 				<artifactId>weld-se-core</artifactId>
-				<version>2.2.11.Final</version>
+				<version>3.0.0.Final</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cathive.fx</groupId>
@@ -187,6 +182,11 @@
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>4.12</version>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<version>5.0.0-RC2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mockito</groupId>
@@ -275,6 +275,29 @@
 				<artifactId>maven-gpg-plugin</artifactId>
 				<version>1.1</version>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<!-- Minimal supported version is 2.4 -->
+				<version>2.19.1</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.junit.platform</groupId>
+						<artifactId>junit-platform-surefire-provider</artifactId>
+						<version>1.0.0-RC2</version>
+					</dependency>
+					<dependency>
+						<groupId>org.junit.jupiter</groupId>
+						<artifactId>junit-jupiter-engine</artifactId>
+						<version>5.0.0-RC2</version>
+					</dependency>
+					<dependency>
+						<groupId>org.junit.vintage</groupId>
+						<artifactId>junit-vintage-engine</artifactId>
+						<version>4.12.0-RC2</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 		</plugins>
 	</build>
 	<profiles>
@@ -326,7 +349,7 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
 						<!-- Minimal supported version is 2.4 -->
-						<version>2.16</version>
+						<version>2.19.1</version>
 						<configuration>
 							<properties>
 								<property>
@@ -335,6 +358,23 @@
 								</property>
 							</properties>
 						</configuration>
+						<dependencies>
+							<dependency>
+								<groupId>org.junit.platform</groupId>
+								<artifactId>junit-platform-surefire-provider</artifactId>
+								<version>1.0.0-RC2</version>
+							</dependency>
+							<dependency>
+								<groupId>org.junit.jupiter</groupId>
+								<artifactId>junit-jupiter-engine</artifactId>
+								<version>5.0.0-RC2</version>
+							</dependency>
+							<dependency>
+								<groupId>org.junit.vintage</groupId>
+								<artifactId>junit-vintage-engine</artifactId>
+								<version>4.12.0-RC2</version>
+							</dependency>
+						</dependencies>
 					</plugin>
 				</plugins>
 			</build>

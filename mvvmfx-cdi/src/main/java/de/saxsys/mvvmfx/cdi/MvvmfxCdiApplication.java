@@ -20,12 +20,11 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.se.SeContainer;
+import javax.enterprise.inject.se.SeContainerInitializer;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
 import javax.inject.Inject;
-
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
 
 import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.cdi.internal.MvvmfxProducer;
@@ -37,29 +36,28 @@ import de.saxsys.mvvmfx.cdi.internal.MvvmfxProducer;
  * @author manuel.mauky
  */
 public abstract class MvvmfxCdiApplication extends Application implements MvvmfxApplication {
-	
-	
+
 	private final BeanManager beanManager;
 	private CreationalContext<MvvmfxCdiApplication> ctx;
-	private InjectionTarget<MvvmfxCdiApplication> injectionTarget;
-	private final Weld weld;
-	
-	@Inject
+    private InjectionTarget<MvvmfxCdiApplication> injectionTarget;
+    private final SeContainer container;
+
+    @Inject
 	private MvvmfxProducer producer;
-	
-	public MvvmfxCdiApplication() {
-		weld = new Weld();
-		WeldContainer weldContainer = weld.initialize();
-		
-		MvvmFX.setCustomDependencyInjector((type) -> weldContainer.instance().select(type).get());
-		
-		MvvmfxProducer mvvmfxProducer = weldContainer.instance().select(MvvmfxProducer.class).get();
+
+    public MvvmfxCdiApplication() {
+        container = SeContainerInitializer
+                .newInstance()
+                .initialize();
+
+		MvvmFX.setCustomDependencyInjector((type) -> container.select(type).get());
+
+		MvvmfxProducer mvvmfxProducer = container.select(MvvmfxProducer.class).get();
 		mvvmfxProducer.setHostServices(getHostServices());
-		
-		beanManager = weldContainer.getBeanManager();
-		
+
+		beanManager = container.getBeanManager();
 	}
-	
+
 	/**
 	 * This method is overridden to initialize the mvvmFX framework. Override the
 	 * {@link #startMvvmfx(javafx.stage.Stage)} method for your application entry point and startup code instead of this
@@ -68,11 +66,11 @@ public abstract class MvvmfxCdiApplication extends Application implements Mvvmfx
 	@Override
 	public final void start(Stage primaryStage) throws Exception {
 		producer.setPrimaryStage(primaryStage);
-		
+
 		startMvvmfx(primaryStage);
 	}
-	
-	
+
+
 	/**
 	 * This method is called when the javafx application is initialized. See
 	 * {@link javafx.application.Application#init()} for more details.
@@ -89,35 +87,35 @@ public abstract class MvvmfxCdiApplication extends Application implements Mvvmfx
 		ctx = beanManager.createCreationalContext(null);
 		injectionTarget = beanManager.createInjectionTarget(
 				beanManager.createAnnotatedType((Class<MvvmfxCdiApplication>) this.getClass()));
-		
+
 		injectionTarget.inject(this, ctx);
 		injectionTarget.postConstruct(this);
-		
+
 		producer.setApplicationParameters(getParameters());
-		
+
 		initMvvmfx();
 	}
-	
-	
+
+
 	/**
 	 * This method is called when the application should stop. See {@link javafx.application.Application#stop()} for
 	 * more details.
-	 * 
+	 *
 	 * Unlike the original stop method in {@link javafx.application.Application} this method contains logic to release
 	 * resources managed by the CDI container. Therefor it's important to call <code>super.stop()</code> when you
 	 * override this method.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
 	public final void stop() throws Exception {
 		stopMvvmfx();
-		
+
 		injectionTarget.preDestroy(this);
 		injectionTarget.dispose(this);
-		
+
 		ctx.release();
-		
-		weld.shutdown();
+
+		container.close();
 	}
 }

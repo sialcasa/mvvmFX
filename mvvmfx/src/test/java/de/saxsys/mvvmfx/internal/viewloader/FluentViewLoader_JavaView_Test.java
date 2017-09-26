@@ -24,9 +24,9 @@ import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelWithResourceBun
 import de.saxsys.mvvmfx.testingutils.ExceptionUtils;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.VBox;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
@@ -41,32 +41,32 @@ import static org.assertj.core.api.Assertions.fail;
 
 
 /**
- * This test verifies that loading views of type {@link de.saxsys.mvvmfx.JavaView} works correctly.
+ * This test verifies that loading views of type {@link JavaView} works correctly.
  * 
  * This includes the handling of initialization and injection of the ViewModel and the resourceBundle.
  * 
  * The injection and initialization is similar to that of FXML files. It can be done explicit by the use of the
- * {@link javafx.fxml.Initializable} interface or implicit by using the naming conventions of the
+ * {@link Initializable} interface or implicit by using the naming conventions of the
  * {@link javafx.fxml.FXMLLoader}.
  * 
  * This naming conventions are:
  * <ul>
  *
- * <li>a public field of type {@link java.util.ResourceBundle} named "resources" gets the current ResourceBundle
+ * <li>a public field of type {@link ResourceBundle} named "resources" gets the current ResourceBundle
  * injected.</li>
  * <li>a public no-arg method named "initialize" is called after the injection of other resources is finished.</li>
  *
  * </ul>
  *
  * The third convention of the FXMLLoader to inject the path of the FXML file to a public field of type
- * {@link java.net.URL} named "location" is NOT done by mvvmfx because it doesn't make sense for Java written Views (as
+ * {@link URL} named "location" is NOT done by mvvmfx because it doesn't make sense for Java written Views (as
  * there is no FXML file at all).
  */
 public class FluentViewLoader_JavaView_Test {
 	
 	private ResourceBundle resourceBundle;
 	
-	@Before
+	@BeforeEach
 	public void before() throws Exception {
 		resourceBundle = new PropertyResourceBundle(new StringReader(""));
 		
@@ -90,14 +90,14 @@ public class FluentViewLoader_JavaView_Test {
 		});
 	}
 	
-	@After
+	@AfterEach
 	public void after() {
 		MvvmFX.setCustomDependencyInjector(null);
 	}
 	
 	
 	/**
-	 * Verify that the loaded {@link de.saxsys.mvvmfx.ViewTuple} contains all expected references.
+	 * Verify that the loaded {@link ViewTuple} contains all expected references.
 	 */
 	@Test
 	public void testViewTuple() {
@@ -402,7 +402,7 @@ public class FluentViewLoader_JavaView_Test {
 	
 	
 	/**
-	 * When the {@link javafx.fxml.Initializable} interface is implemented, the implicit initialize method may not be
+	 * When the {@link Initializable} interface is implemented, the implicit initialize method may not be
 	 * called.
 	 */
 	@Test
@@ -497,7 +497,7 @@ public class FluentViewLoader_JavaView_Test {
 	
 	/**
 	 * The naming conventions say that the field for the resourceBundle may be named "resources". The injection is still
-	 * working when the type of the field is not {@link java.util.ResourceBundle}.
+	 * working when the type of the field is not {@link ResourceBundle}.
 	 */
 	@Test
 	public void testResourcesFieldHasOtherTypeAndIsStillInjected() {
@@ -548,7 +548,7 @@ public class FluentViewLoader_JavaView_Test {
 	}
 	
 	/**
-	 * When the {@link javafx.fxml.Initializable} interface is implemented, no implicit injection should be done.
+	 * When the {@link Initializable} interface is implemented, no implicit injection should be done.
 	 */
 	@Test
 	public void testResourceBundleIsNotInjectedImplicitWhenInitializeableIsImplemented() {

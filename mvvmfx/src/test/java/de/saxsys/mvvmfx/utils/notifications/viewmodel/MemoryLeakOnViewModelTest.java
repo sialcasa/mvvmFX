@@ -1,12 +1,13 @@
 package de.saxsys.mvvmfx.utils.notifications.viewmodel;
 
 import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.testingutils.FxTestingUtils;
 import de.saxsys.mvvmfx.testingutils.GCVerifier;
-import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
+import de.saxsys.mvvmfx.testingutils.JfxToolkitExtension;
 import de.saxsys.mvvmfx.utils.notifications.NotificationObserver;
 import javafx.application.Platform;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -21,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * This test verifies that the communication between View and ViewModel
  * via notifications doesn't introduce memory leaks.
  */
-@RunWith(JfxRunner.class)
+@ExtendWith(JfxToolkitExtension.class)
 public class MemoryLeakOnViewModelTest {
 
 
@@ -43,7 +44,7 @@ public class MemoryLeakOnViewModelTest {
 
 		viewModel.actionThatPublishes();
 
-		waitForUiThread();
+		FxTestingUtils.waitForUiThread();
 
 
 		assertThat(view.counter.get()).isEqualTo(1);
@@ -79,7 +80,7 @@ public class MemoryLeakOnViewModelTest {
 		vm.publish("test");
 
 
-		waitForUiThread();
+		FxTestingUtils.waitForUiThread();
 
 
 		assertThat(counter.get()).isEqualTo(1);
@@ -115,7 +116,7 @@ public class MemoryLeakOnViewModelTest {
 
 		vm.publish("test");
 
-		waitForUiThread();
+		FxTestingUtils.waitForUiThread();
 
 		assertThat(StaticObserver.counter.get()).isEqualTo(1);
 
@@ -136,21 +137,6 @@ public class MemoryLeakOnViewModelTest {
 		@Override
 		public void receivedNotification(String key, Object... payload) {
 			StaticObserver.counter.incrementAndGet();
-		}
-	}
-
-
-	/**
-	 * This method is used to wait until the UI thread has done all work that was queued via
-	 * {@link Platform#runLater(Runnable)}.
-	 */
-	private void waitForUiThread() {
-		CompletableFuture<Void> future = new CompletableFuture<>();
-		Platform.runLater(() -> future.complete(null));
-		try {
-			future.get(1l, TimeUnit.SECONDS);
-		} catch (InterruptedException | ExecutionException | TimeoutException e) {
-			throw new IllegalStateException(e);
 		}
 	}
 

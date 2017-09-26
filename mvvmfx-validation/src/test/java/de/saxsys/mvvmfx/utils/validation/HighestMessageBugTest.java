@@ -24,8 +24,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * This test case reproduces the bug <a href="https://github.com/sialcasa/mvvmFX/issues/264">#264</a>
@@ -40,7 +40,7 @@ public class HighestMessageBugTest {
 	private ValidationStatus validationStatus;
 	
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		value = new SimpleStringProperty("");
 		validator = new FunctionBasedValidator<>(value, v -> v != null, ValidationMessage.error("error"));
