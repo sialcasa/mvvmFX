@@ -40,8 +40,8 @@ import javafx.concurrent.Task;
 @Beta
 public class DelegateCommand extends Service<Void> implements Command {
 	
-	private final Supplier<Action> actionSupplier;
-	private boolean inBackground = false;
+	protected final Supplier<Action> actionSupplier;
+	protected boolean inBackground = false;
 	protected final ReadOnlyBooleanWrapper executable = new ReadOnlyBooleanWrapper(true);
 	protected ReadOnlyBooleanWrapper notExecutable;
 	protected ReadOnlyBooleanWrapper notRunning;
@@ -143,7 +143,7 @@ public class DelegateCommand extends Service<Void> implements Command {
 		return (ObjectProperty<State>) stateProperty();
 	}
 	
-	private void callActionAndSynthesizeServiceRun() {
+	protected void callActionAndSynthesizeServiceRun() {
 		try {
 			unbindServiceExceptionFromTaskException();
 			getStateObjectPropertyReadable().setValue(State.SCHEDULED);
@@ -265,5 +265,9 @@ public class DelegateCommand extends Service<Void> implements Command {
 			throw new RuntimeException(
 					"Cannot use DelegateCommand in asynchronous mode because of an incompatible JDK version. Please report this to the mvvmFX developers at https://github.com/sialcasa/mvvmFX.");
 		}
+	}
+
+	public Supplier<Action> getActionSupplier() {
+		return actionSupplier;
 	}
 }
