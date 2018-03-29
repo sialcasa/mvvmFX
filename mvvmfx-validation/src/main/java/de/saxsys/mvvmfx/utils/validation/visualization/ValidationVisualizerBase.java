@@ -41,16 +41,18 @@ public abstract class ValidationVisualizerBase implements ValidationVisualizer {
 	
 	@Override
 	public void initVisualization(final ValidationStatus result, final Control control, boolean required) {
-		if (required) {
-			applyRequiredVisualization(control, required);
-		}
-		
-		applyVisualization(control, result.getHighestMessage(), required);
-		
-		result.getMessages().addListener((ListChangeListener<ValidationMessage>) c -> {
-			while (c.next()) {
-				Platform.runLater(() -> applyVisualization(control, result.getHighestMessage(), required));
+		Platform.runLater(() -> {
+			if (required) {
+				applyRequiredVisualization(control, required);
 			}
+
+			applyVisualization(control, result.getHighestMessage(), required);
+
+			result.getMessages().addListener((ListChangeListener<ValidationMessage>) c -> {
+				while (c.next()) {
+					Platform.runLater(() -> applyVisualization(control, result.getHighestMessage(), required));
+				}
+			});
 		});
 	}
 	
