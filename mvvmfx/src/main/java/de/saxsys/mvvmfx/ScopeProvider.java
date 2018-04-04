@@ -8,5 +8,15 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface ScopeProvider {
-    Class<? extends Scope>[] scopes();
+	/**
+	 * The scopes provides by this scope provider.
+	 */
+    Class<? extends Scope>[] scopes() default {};
+    
+    /**
+	 * The scopes provides by this scope provider. This is an alias for {@link #scopes()}. 
+	 * If both {@link #value()} and {@link #scopes()} are provided, the content of
+	 * {@link #value()} is preferred.
+	 */
+    Class<? extends Scope>[] value() default {};
 }
