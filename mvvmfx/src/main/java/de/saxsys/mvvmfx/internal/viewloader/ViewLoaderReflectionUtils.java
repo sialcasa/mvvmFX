@@ -282,7 +282,7 @@ public class ViewLoaderReflectionUtils {
         for (Annotation annotation : viewModelClass.getDeclaredAnnotations()) {
             if (annotation.annotationType().isAssignableFrom(ScopeProvider.class)) {
                 ScopeProvider provider = (ScopeProvider) annotation;
-                Class<? extends Scope>[] scopes = getScopesFromProvider( provider, viewModelClass );
+                Class<? extends Scope>[] scopes = getScopesFromProvider(provider, viewModelClass);
                 for (int i = 0; i < scopes.length; i++) {
                     Class<? extends Scope> scopeType = scopes[i];
                     // Overrides existing scopes!!!!
@@ -300,20 +300,20 @@ public class ViewLoaderReflectionUtils {
         });
     }
 
-	private static Class<? extends Scope>[] getScopesFromProvider( final ScopeProvider scopeProvider, final Class<?> aViewModelClass ) {
-		Class<? extends Scope>[] scopes = scopeProvider.value( );
-		
-		if (scopes.length == 0) {
-			scopes = scopeProvider.scopes( );
-		}
-		
-		if (scopes.length == 0) {
-			final String message = String.format( "The scope provider '%s' has to provide at least one scope.", aViewModelClass.getCanonicalName( ) );
-			throw new IllegalArgumentException( message );
-		}
-		
-		return scopes;
-	}
+    private static Class<? extends Scope>[] getScopesFromProvider(final ScopeProvider scopeProvider, final Class<?> aViewModelClass) {
+        Class<? extends Scope>[] scopes = scopeProvider.value();
+        
+        if (scopes.length == 0) {
+            scopes = scopeProvider.scopes();
+        }
+        
+        if (scopes.length == 0) {
+            final String message = String.format("The scope provider '%s' has to provide at least one scope.", aViewModelClass.getCanonicalName());
+            throw new IllegalArgumentException(message);
+        }
+
+        return scopes;
+    }
 
     public static void injectContext(View codeBehind, ContextImpl context) {
 
