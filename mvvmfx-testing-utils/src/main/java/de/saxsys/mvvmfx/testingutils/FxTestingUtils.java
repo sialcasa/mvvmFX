@@ -2,7 +2,11 @@ package de.saxsys.mvvmfx.testingutils;
 
 import javafx.application.Platform;
 
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.Semaphore;
 
 public class FxTestingUtils {
 

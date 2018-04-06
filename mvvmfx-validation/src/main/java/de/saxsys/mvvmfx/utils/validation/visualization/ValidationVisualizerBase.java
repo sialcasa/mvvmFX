@@ -37,8 +37,8 @@ import java.util.Optional;
  * @author manuel.mauky
  */
 public abstract class ValidationVisualizerBase implements ValidationVisualizer {
-	
-	
+
+
 	@Override
 	public void initVisualization(final ValidationStatus result, final Control control, boolean required) {
 		Platform.runLater(() -> {
