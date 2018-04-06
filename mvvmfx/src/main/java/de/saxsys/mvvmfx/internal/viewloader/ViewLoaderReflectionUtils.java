@@ -32,8 +32,6 @@ import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -284,7 +282,7 @@ public class ViewLoaderReflectionUtils {
         for (Annotation annotation : viewModelClass.getDeclaredAnnotations()) {
             if (annotation.annotationType().isAssignableFrom(ScopeProvider.class)) {
                 ScopeProvider provider = (ScopeProvider) annotation;
-                Class<? extends Scope>[] scopes = provider.scopes();
+                Class<? extends Scope>[] scopes = getScopesFromProvider(provider, viewModelClass);
                 for (int i = 0; i < scopes.length; i++) {
                     Class<? extends Scope> scopeType = scopes[i];
                     // Overrides existing scopes!!!!
@@ -300,6 +298,21 @@ public class ViewLoaderReflectionUtils {
             ReflectionUtils.accessMember(scopeField, () -> injectScopeIntoField(scopeField, viewModel, context),
                     "Can't inject Scope into ViewModel <" + viewModel.getClass() + ">");
         });
+    }
+
+    private static Class<? extends Scope>[] getScopesFromProvider(final ScopeProvider scopeProvider, final Class<?> aViewModelClass) {
+        Class<? extends Scope>[] scopes = scopeProvider.value();
+        
+        if (scopes.length == 0) {
+            scopes = scopeProvider.scopes();
+        }
+        
+        if (scopes.length == 0) {
+            final String message = String.format("The scope provider '%s' has to provide at least one scope.", aViewModelClass.getCanonicalName());
+            throw new IllegalArgumentException(message);
+        }
+
+        return scopes;
     }
 
     public static void injectContext(View codeBehind, ContextImpl context) {
@@ -332,8 +345,8 @@ public class ViewLoaderReflectionUtils {
         if (newScope == null) {
             // TODO Modify Stacktrace to get the Injectionpoint of the Scope
             throw new IllegalStateException(
-                    "A scope was requested but no @ScopeProvider found in the hirarchy. Declare it like this: @ScopeProvider("
-                            + scopeType.getName() + ")");
+                    "A scope was requested but no @ScopeProvider found in the hierarchy. Declare it like this: @ScopeProvider("
+                            + scopeType.getName() + ".class )");
         }
 
         if (!newScope.getClass().equals(scopeType)) {
