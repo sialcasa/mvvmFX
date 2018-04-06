@@ -6,6 +6,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.Semaphore;
 
 public class FxTestingUtils {
 
@@ -43,5 +44,36 @@ public class FxTestingUtils {
 	 */
 	public static void waitForUiThread() {
 		waitForUiThread(1000);
+	}
+
+	/**
+	 * This method is used to put the platform thread on hold. In conjunction with waitForUiThread(), it
+	 * allows to test that tasks are being queued on the thread.
+	 *
+	 * For example:
+	 * <pre>
+	 * {@code
+	 * cut.usePlatformRunLaterToDoSomething(...);
+	 * Semaphore semaphore = new Semaphore(0);
+	 * FxTestingUtils.putPlatformThreadOnHold(semaphore);
+	 * Mockito.verifyZeroInteractions(testDummy); // confirms runLater is being used
+	 * semaphore.release();
+	 * FxTestingUtils.waitForUiThread();
+	 * Mockito.verify(testDummy).doSomething();
+	 * }
+	 * </pre>
+	 *
+
+	 * @param semaphore
+	 * @throws InterruptedException
+	 */
+	public static void putPlatformThreadOnHold(Semaphore semaphore) throws InterruptedException {
+		Platform.runLater(() -> {
+			try {
+				semaphore.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 }
