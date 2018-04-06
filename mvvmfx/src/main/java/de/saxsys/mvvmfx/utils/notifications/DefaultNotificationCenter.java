@@ -72,8 +72,8 @@ public class DefaultNotificationCenter implements NotificationCenter {
 	public void publish(Object channel, String messageName, Object[] payload) {
 		if (channelObserverMap.containsKey(channel)) {
 			final ObserverMap observerMap = channelObserverMap.get(channel);
-
-			if (Platform.isFxApplicationThread()) {
+			
+			if (shouldPublishInThisThread()) {
 				publish(messageName, payload, observerMap);
 			} else {
 				try {
@@ -92,6 +92,21 @@ public class DefaultNotificationCenter implements NotificationCenter {
 		}
 	}
 
+
+	private boolean shouldPublishInThisThread() {
+		try {
+			return Platform.isFxApplicationThread();
+		} catch (final RuntimeException e) {
+			if (e.getMessage().equals("No toolkit found")) {
+				// If the toolkit is not even available, we publish the notification directly.
+				// In most cases this means that we are in an environment where no JavaFX 
+				// application is running (probably also in a JUnit test).
+				return true;
+			} else {
+				throw e;
+			}
+		}
+	}
 
 	@Override
 	public void subscribe(Object channel, String messageName, NotificationObserver observer) {
