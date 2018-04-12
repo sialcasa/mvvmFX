@@ -33,40 +33,42 @@ import java.util.Optional;
  * <p>
  * This base class takes care for the handling of the {@link ValidationStatus} and the reaction to it's changing message
  * lists.
- * 
+ *
  * @author manuel.mauky
  */
 public abstract class ValidationVisualizerBase implements ValidationVisualizer {
-	
-	
+
+
 	@Override
 	public void initVisualization(final ValidationStatus result, final Control control, boolean required) {
-		if (required) {
-			applyRequiredVisualization(control, required);
-		}
-		
-		applyVisualization(control, result.getHighestMessage(), required);
+		Platform.runLater(() -> {
+			if (required) {
+				applyRequiredVisualization(control, required);
+			}
 
-		// Monitor the message list and always display the highest message.
-		// Note: there could be more than one change on the message list, but only the highest
-		// message is of interest in this case.
-		result.getMessages().addListener((ListChangeListener<ValidationMessage>) c -> {
-			Platform.runLater(() -> applyVisualization(control, result.getHighestMessage(), required));
+			applyVisualization(control, result.getHighestMessage(), required);
+
+			// Monitor the message list and always display the highest message.
+			// Note: there could be more than one change on the message list, but only the highest
+			// message is of interest in this case.
+			result.getMessages().addListener((ListChangeListener<ValidationMessage>) c -> {
+				Platform.runLater(() -> applyVisualization(control, result.getHighestMessage(), required));
+			});
 		});
 	}
-	
+
 	/**
 	 * Apply a visualization to the given control that indicates that it is a mandatory field.
 	 * <p>
 	 * This method is called when the validator is initialized.
-	 * 
+	 *
 	 * @param control
 	 *            the controls that has to be decorated.
 	 * @param required
 	 *            a boolean indicating whether the given control is mandatory or not.
 	 */
 	abstract void applyRequiredVisualization(Control control, boolean required);
-	
+
 	/**
 	 * Apply a visualization to the given control that shows a validation message.
 	 * <p>
@@ -79,8 +81,8 @@ public abstract class ValidationVisualizerBase implements ValidationVisualizer {
 	 * <p>
 	 * The given boolean parameter indicates whether this controls is mandatory or not. It can be used if a violation
 	 * for a mandatory field should be visualized differently than a non-mandatory field.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param control
 	 *            the control that will be decorated.
 	 * @param messageOptional
@@ -90,5 +92,5 @@ public abstract class ValidationVisualizerBase implements ValidationVisualizer {
 	 *            a boolean flag indicating whether this control is mandatory or not.
 	 */
 	abstract void applyVisualization(Control control, Optional<ValidationMessage> messageOptional, boolean required);
-	
+
 }
