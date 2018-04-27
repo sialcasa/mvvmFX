@@ -18,10 +18,12 @@ package de.saxsys.mvvmfx.internal.viewloader;
 import eu.lestard.doc.Internal;
 import sun.util.ResourceBundleEnumeration;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListResourceBundle;
 import java.util.Locale;
 import java.util.Map;
@@ -87,9 +89,50 @@ public class ResourceBundleManager {
 				return merge(resourceBundle, globalResourceBundle);
 			}
 		}
-	}	
+	}
+
+
+	private static ResourceBundle reduce(List<ResourceBundle> bundles) {
+		return bundles.stream()
+				.filter(Objects::nonNull)
+				.reduce(EMPTY_RESOURCE_BUNDLE, (a, b) -> merge(b, a));
+	}
+
+	/**
+	 * Merges the list of ResourceBundles with the global one (if any).
+	 * <p/>
+	 * The global resourceBundle has a lower priority then the provided ones. If there is the same key defined in the
+	 * global and in one of the provided resourceBundles, the value from the provided resourceBundle will be used.
+	 * <p/>
+	 * The order of resourceBundles in the list defines the priority for resourceBundles.
+	 * ResourceBundles at the start of the list have a <strong>lower</strong> priority compared to bundles
+	 * at the end of the list. This means that the last resourceBundle will overwrite values from previous resourceBundles
+	 * (including the global resourceBundle (if any)).	 *
+	 *
+	 * @param bundles
+	 *            a list of resourceBundles that will be merged. <code>null</code> is accepted.
+	 * @return the merged resourceBundle.
+	 */
+	public ResourceBundle mergeListWithGlobal(List<ResourceBundle> bundles) {
+		if (globalResourceBundle == null) {
+			if (bundles == null) {
+				return EMPTY_RESOURCE_BUNDLE;
+			} else {
+				return reduce(bundles);
+			}
+		} else {
+			if (bundles == null) {
+				return new ResourceBundleWrapper(globalResourceBundle);
+			} else {
+				final List<ResourceBundle> resourceBundles = new ArrayList<>();
+				resourceBundles.add(globalResourceBundle);
+				resourceBundles.addAll(bundles);
+				return reduce(resourceBundles);
+			}
+		}
+	}
 	
-	private ResourceBundle merge(ResourceBundle highPriority, ResourceBundle lowPriority) {
+	private static ResourceBundle merge(ResourceBundle highPriority, ResourceBundle lowPriority) {
 		return new MergedResourceBundle(highPriority, lowPriority);
 	}
 	

@@ -3,8 +3,8 @@ package de.saxsys.mvvmfx.examples.books;
 import de.saxsys.mvvmfx.examples.books.backend.Error;
 import de.saxsys.mvvmfx.examples.books.backend.Book;
 import de.saxsys.mvvmfx.examples.books.backend.LibraryService;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,7 +19,7 @@ public class MainViewModelTest {
 	private MainViewModel viewModel;
 	private LibraryService libraryService;
 	
-	@Before
+	@BeforeEach
 	public void setup() {
 		libraryService = mock(LibraryService.class);
 		

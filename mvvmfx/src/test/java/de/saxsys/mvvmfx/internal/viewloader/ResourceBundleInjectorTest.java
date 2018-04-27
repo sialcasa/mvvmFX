@@ -21,8 +21,9 @@ import java.io.StringReader;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import de.saxsys.mvvmfx.InjectResourceBundle;
 
@@ -33,7 +34,7 @@ public class ResourceBundleInjectorTest {
 	
 	private ResourceBundle resourceBundle;
 
-	@Before
+	@BeforeEach
 	public void setup() throws Exception {
 		resourceBundle = new PropertyResourceBundle(new StringReader(""));
 	}
@@ -66,7 +67,7 @@ public class ResourceBundleInjectorTest {
 		assertThat(example.resourceBundle).isEqualTo(resourceBundle);
 	}
 	
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void fail_wrongType() {
 		class Example {
 			@InjectResourceBundle
@@ -74,8 +75,10 @@ public class ResourceBundleInjectorTest {
 		}
 		
 		Example example = new Example();
-		
-		ResourceBundleInjector.injectResourceBundle(example, resourceBundle);
+
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			ResourceBundleInjector.injectResourceBundle(example, resourceBundle);
+		});
 	}
 	
 	@Test
@@ -91,7 +94,7 @@ public class ResourceBundleInjectorTest {
 		assertThat(example.resourceBundle).isNull();
 	}
 	
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void fail_annotationIsPresentButNoResourceBundleProvided() {
 		class Example {
 			@InjectResourceBundle
@@ -99,8 +102,10 @@ public class ResourceBundleInjectorTest {
 		}
 		
 		Example example = new Example();
-		
-		ResourceBundleInjector.injectResourceBundle(example, ResourceBundleManager.EMPTY_RESOURCE_BUNDLE);
+
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			ResourceBundleInjector.injectResourceBundle(example, ResourceBundleManager.EMPTY_RESOURCE_BUNDLE);
+		});
 	}
 	
 	/**
@@ -123,7 +128,7 @@ public class ResourceBundleInjectorTest {
 	 * If the annotation is present, even when the type of the field is wrong, an exception has to be thrown when no
 	 * resourceBundle was provided.
 	 */
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void fail_wrongTypeAndNoResourceBundleProvided() {
 		class Example {
 			@InjectResourceBundle
@@ -131,8 +136,10 @@ public class ResourceBundleInjectorTest {
 		}
 		
 		Example example = new Example();
-		
-		ResourceBundleInjector.injectResourceBundle(example, ResourceBundleManager.EMPTY_RESOURCE_BUNDLE);
+
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			ResourceBundleInjector.injectResourceBundle(example, ResourceBundleManager.EMPTY_RESOURCE_BUNDLE);
+		});
 	}
 	
 	
@@ -173,7 +180,7 @@ public class ResourceBundleInjectorTest {
 	/**
 	 * When the type of the field is wrong, an exception should be thrown even if the optional attribute is set to true.
 	 */
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void fail_optionalIsTrueButWrongType() {
 		class Example {
 			@InjectResourceBundle(optional = true)
@@ -181,8 +188,10 @@ public class ResourceBundleInjectorTest {
 		}
 		
 		Example example = new Example();
-		
-		ResourceBundleInjector.injectResourceBundle(example, resourceBundle);
+
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			ResourceBundleInjector.injectResourceBundle(example, resourceBundle);
+		});
 	}
 	
 	/**
@@ -200,9 +209,9 @@ public class ResourceBundleInjectorTest {
 		}
 		
 		Example example = new Example();
-		
+
 		ResourceBundleInjector.injectResourceBundle(example, resourceBundle);
-		
+
 		assertThat(example.resourceBundle).isEqualTo(resourceBundle);
 		assertThat(example.resourceBundleToo).isEqualTo(resourceBundle);
 	}
@@ -211,7 +220,7 @@ public class ResourceBundleInjectorTest {
 	 * When multiple fields are available, an exception is thrown when at least one of the fields has a wrong type. This
 	 * is true even if one of the fields is correct.
 	 */
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void fail_multipleResourceBundleFieldsOneHasWrongType() {
 		class Example {
 			@InjectResourceBundle
@@ -222,8 +231,10 @@ public class ResourceBundleInjectorTest {
 		}
 		
 		Example example = new Example();
-		
-		ResourceBundleInjector.injectResourceBundle(example, resourceBundle);
+
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			ResourceBundleInjector.injectResourceBundle(example, resourceBundle);
+		});
 	}
 	
 }

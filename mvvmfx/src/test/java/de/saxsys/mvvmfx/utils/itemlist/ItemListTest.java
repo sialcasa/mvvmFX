@@ -19,9 +19,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.List;
@@ -52,7 +52,7 @@ public class ItemListTest {
 	/**
 	 * Prepares the test.
 	 */
-	@Before
+	@BeforeEach
 	public void init() {
 		
 		// Create the items in the model
@@ -77,7 +77,7 @@ public class ItemListTest {
 	 */
 	@Test
 	public void mapFromModelToString() {
-		Assert.assertEquals(PREFIX + PERSON3_NAME, itemList
+		Assertions.assertEquals(PREFIX + PERSON3_NAME, itemList
 				.stringListProperty().get(2));
 	}
 	
@@ -86,11 +86,11 @@ public class ItemListTest {
 	 */
 	@Test
 	public void addItemToItemList() {
-		Assert.assertEquals(3, itemList.stringListProperty().size());
-		Assert.assertEquals(3, listWithModelObjects.size());
+		Assertions.assertEquals(3, itemList.stringListProperty().size());
+		Assertions.assertEquals(3, listWithModelObjects.size());
 		listWithModelObjects.add(new Person("addedPerson"));
-		Assert.assertEquals(4, itemList.stringListProperty().size());
-		Assert.assertEquals(4, listWithModelObjects.size());
+		Assertions.assertEquals(4, itemList.stringListProperty().size());
+		Assertions.assertEquals(4, listWithModelObjects.size());
 	}
 	
 	/**
@@ -98,56 +98,56 @@ public class ItemListTest {
 	 */
 	@Test
 	public void removeItemFromItemList() {
-		Assert.assertEquals(3, itemList.stringListProperty().size());
-		Assert.assertEquals(3, listWithModelObjects.size());
+		Assertions.assertEquals(3, itemList.stringListProperty().size());
+		Assertions.assertEquals(3, listWithModelObjects.size());
 		listWithModelObjects.remove(0);
-		Assert.assertEquals(2, itemList.stringListProperty().size());
-		Assert.assertEquals(2, listWithModelObjects.size());
+		Assertions.assertEquals(2, itemList.stringListProperty().size());
+		Assertions.assertEquals(2, listWithModelObjects.size());
 	}
 	
 	@Test
 	public void removeMultipleItemsFromItemList() {
 		listWithModelObjects.removeAll(person1, person2);
-		Assert.assertEquals(1, listWithModelObjects.size());
-		Assert.assertEquals(1, itemList.stringListProperty().size());
-		Assert.assertEquals(person3, listWithModelObjects.get(0));
-		Assert.assertEquals(PREFIX + PERSON3_NAME, itemList
+		Assertions.assertEquals(1, listWithModelObjects.size());
+		Assertions.assertEquals(1, itemList.stringListProperty().size());
+		Assertions.assertEquals(person3, listWithModelObjects.get(0));
+		Assertions.assertEquals(PREFIX + PERSON3_NAME, itemList
 				.stringListProperty().get(0));
 	}
 	
 	@Test
 	public void removeAllItemsFromItemList() {
 		listWithModelObjects.clear();
-		Assert.assertEquals(0, listWithModelObjects.size());
-		Assert.assertEquals(0, itemList.stringListProperty().size());
+		Assertions.assertEquals(0, listWithModelObjects.size());
+		Assertions.assertEquals(0, itemList.stringListProperty().size());
 	}
 	
 	@Test
 	public void addItemToItemListAtIndex() {
 		listWithModelObjects.add(1, new Person("addedPerson"));
-		Assert.assertEquals(4, itemList.stringListProperty().size());
-		Assert.assertEquals(4, listWithModelObjects.size());
-		Assert.assertEquals(PREFIX + "addedPerson", itemList
+		Assertions.assertEquals(4, itemList.stringListProperty().size());
+		Assertions.assertEquals(4, listWithModelObjects.size());
+		Assertions.assertEquals(PREFIX + "addedPerson", itemList
 				.stringListProperty().get(1));
 	}
 	
 	@Test
 	public void addMultipleItemsToItemList() {
 		listWithModelObjects.addAll(new Person("added1"), new Person("added2"));
-		Assert.assertEquals(5, listWithModelObjects.size());
-		Assert.assertEquals(5, itemList.stringListProperty().size());
-		Assert.assertEquals(PREFIX + "added1", itemList.stringListProperty()
+		Assertions.assertEquals(5, listWithModelObjects.size());
+		Assertions.assertEquals(5, itemList.stringListProperty().size());
+		Assertions.assertEquals(PREFIX + "added1", itemList.stringListProperty()
 				.get(3));
-		Assert.assertEquals(PREFIX + "added2", itemList.stringListProperty()
+		Assertions.assertEquals(PREFIX + "added2", itemList.stringListProperty()
 				.get(4));
 	}
 	
 	@Test
 	public void replaceItemInItemListAtIndex() {
 		listWithModelObjects.set(1, new Person("replacedPerson"));
-		Assert.assertEquals(3, listWithModelObjects.size());
-		Assert.assertEquals(3, itemList.stringListProperty().size());
-		Assert.assertEquals(PREFIX + "replacedPerson", itemList
+		Assertions.assertEquals(3, listWithModelObjects.size());
+		Assertions.assertEquals(3, itemList.stringListProperty().size());
+		Assertions.assertEquals(PREFIX + "replacedPerson", itemList
 				.stringListProperty().get(1));
 	}
 

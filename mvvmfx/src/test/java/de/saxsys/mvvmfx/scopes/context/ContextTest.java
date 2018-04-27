@@ -3,7 +3,7 @@ package de.saxsys.mvvmfx.scopes.context;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.scopes.context.views.ScopedFxmlView;
 import de.saxsys.mvvmfx.scopes.context.views.ScopedFxmlViewModel;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

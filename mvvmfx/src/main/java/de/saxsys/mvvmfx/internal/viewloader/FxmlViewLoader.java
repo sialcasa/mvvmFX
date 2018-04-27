@@ -19,12 +19,14 @@ import de.saxsys.mvvmfx.Context;
 import de.saxsys.mvvmfx.Scope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.FxmlPath;
 import de.saxsys.mvvmfx.internal.ContextImpl;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.util.BuilderFactory;
 import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
@@ -47,7 +51,7 @@ public class FxmlViewLoader {
 
     /**
      * Load the viewTuple by it`s ViewType.
-     * 
+     *
      * @param viewType
      *            the type of the view to be loaded.
      * @param resourceBundle
@@ -66,30 +70,35 @@ public class FxmlViewLoader {
      *            the generic type of the view.
      * @param <ViewModelType>
      *            the generic type of the viewModel.
-     * @return the loaded ViewTuple.
+     * @param builderFactories a list of custom builder factories. may be <code>null</code>
+	 * @return the loaded ViewTuple.
      */
     public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
-            Class<? extends ViewType> viewType, ResourceBundle resourceBundle, ViewType codeBehind, Object root,
-            ViewModelType viewModel, Context context, Collection<Scope> providedScopes) {
+			Class<? extends ViewType> viewType, ResourceBundle resourceBundle, ViewType codeBehind, Object root,
+			ViewModelType viewModel, Context context, Collection<Scope> providedScopes,
+			List<BuilderFactory> builderFactories) {
 
         final String pathToFXML = createFxmlPath(viewType);
-        return loadFxmlViewTuple(pathToFXML, resourceBundle, codeBehind, root, viewModel, context, providedScopes);
+        return loadFxmlViewTuple(pathToFXML, resourceBundle, codeBehind, root, viewModel, context, providedScopes, builderFactories);
     }
 
     /**
      * This method is used to create a String with the path to the FXML file for
      * a given View class.
-     * 
+     *
      * This is done by taking the package of the view class (if any) and replace
      * "." with "/". After that the Name of the class and the file ending
      * ".fxml" is appended.
-     * 
+     *
+     * If the View class is annotated with @FxmlPath then the String path supplied
+     * in the annotation  value will be used.
+     *
      * Example: de.saxsys.myapp.ui.MainView as view class will be transformed to
      * "/de/saxsys/myapp/ui/MainView.fxml"
-     * 
+     *
      * Example 2: MainView (located in the default package) will be transformed
      * to "/MainView.fxml"
-     * 
+     *
      * @param viewType
      *            the view class type.
      * @return the path to the fxml file as string.
@@ -97,22 +106,32 @@ public class FxmlViewLoader {
     private String createFxmlPath(Class<?> viewType) {
         final StringBuilder pathBuilder = new StringBuilder();
 
-        pathBuilder.append("/");
+        final FxmlPath pathAnnotation = viewType.getDeclaredAnnotation(FxmlPath.class); //Get annotation from view
+        final String fxmlPath = Optional.ofNullable(pathAnnotation)
+                .map(FxmlPath::value)
+                .map(String::trim)
+                .orElse("");
 
-        if (viewType.getPackage() != null) {
-            pathBuilder.append(viewType.getPackage().getName().replaceAll("\\.", "/"));
+        if (fxmlPath.isEmpty()) {
             pathBuilder.append("/");
-        }
 
-        pathBuilder.append(viewType.getSimpleName());
-        pathBuilder.append(".fxml");
+            if (viewType.getPackage() != null) {
+                pathBuilder.append(viewType.getPackage().getName().replaceAll("\\.", "/"));
+                pathBuilder.append("/");
+            }
+
+            pathBuilder.append(viewType.getSimpleName());
+            pathBuilder.append(".fxml");
+        } else {
+            pathBuilder.append(fxmlPath);
+        }
 
         return pathBuilder.toString();
     }
 
     /**
      * Load the viewTuple by the path of the fxml file.
-     * 
+     *
      * @param resource
      *            the string path to the fxml file that is loaded.
      * @param resourceBundle
@@ -131,11 +150,13 @@ public class FxmlViewLoader {
      *            the generic type of the view.
      * @param <ViewModelType>
      *            the generic type of the viewModel.
-     * @return the loaded ViewTuple.
+     * @param builderFactories a list of custom builder factories. may be <code>null</code>
+	 * @return the loaded ViewTuple.
      */
     public <ViewType extends View<? extends ViewModelType>, ViewModelType extends ViewModel> ViewTuple<ViewType, ViewModelType> loadFxmlViewTuple(
-            final String resource, ResourceBundle resourceBundle, final ViewType codeBehind, final Object root,
-            ViewModelType viewModel, Context parentContext, Collection<Scope> providedScopes) {
+			final String resource, ResourceBundle resourceBundle, final ViewType codeBehind, final Object root,
+			ViewModelType viewModel, Context parentContext, Collection<Scope> providedScopes,
+			List<BuilderFactory> builderFactories) {
         try {
 
             // FIXME Woanders hin?
@@ -145,7 +166,7 @@ public class FxmlViewLoader {
             // for the SceneLifecycle we need to know when the view is put into the scene
             BooleanProperty viewInSceneProperty = new SimpleBooleanProperty();
 
-            final FXMLLoader loader = createFxmlLoader(resource, resourceBundle, codeBehind, root, viewModel, context, viewInSceneProperty);
+            final FXMLLoader loader = createFxmlLoader(resource, resourceBundle, codeBehind, root, viewModel, context, viewInSceneProperty, builderFactories);
 
             loader.load();
 
@@ -210,7 +231,8 @@ public class FxmlViewLoader {
     }
 
     private FXMLLoader createFxmlLoader(String resource, ResourceBundle resourceBundle, View codeBehind, Object root,
-                                        ViewModel viewModel, ContextImpl context, ObservableBooleanValue viewInSceneProperty) throws IOException {
+			ViewModel viewModel, ContextImpl context, ObservableBooleanValue viewInSceneProperty,
+			List<BuilderFactory> builderFactories) throws IOException {
         // Load FXML file
         final URL location = FxmlViewLoader.class.getResource(resource);
         if (location == null) {
@@ -222,6 +244,14 @@ public class FxmlViewLoader {
         fxmlLoader.setRoot(root);
         fxmlLoader.setResources(resourceBundle);
         fxmlLoader.setLocation(location);
+
+        if(builderFactories == null || builderFactories.isEmpty()) {
+        	fxmlLoader.setBuilderFactory(GlobalBuilderFactory.getInstance());
+		} else {
+			BuilderFactory factory = GlobalBuilderFactory.getInstance().mergeWith(builderFactories);
+			fxmlLoader.setBuilderFactory(factory);
+		}
+
 
         // when the user provides a viewModel but no codeBehind, we need to use
         // the custom controller factory.
@@ -267,6 +297,13 @@ public class FxmlViewLoader {
         @Override
         public Object call(Class<?> type) {
             Object controller = DependencyInjector.getInstance().getInstanceOf(type);
+
+            //throw an exception if the fx:controller was of type ViewModel
+            if (controller instanceof ViewModel) {
+                throw new IllegalStateException("A ViewModel class [" + controller.getClass().getCanonicalName() + "] was referenced in an FXML file"
+                        + " as the fx:controller."
+                        + " Instead a class that implements FxmlView has to be defined as the fx:controller in the FXML file.");
+            }
 
             if (controller instanceof View) {
                 View codeBehind = (View) controller;
@@ -376,6 +413,14 @@ public class FxmlViewLoader {
 
                 handleInjection(codeBehind, resourceBundle, context, viewInSceneProperty);
             }
+
+            //throw an exception if the fx:controller was of type ViewModel
+            if (controller instanceof ViewModel) {
+                throw new IllegalStateException("A ViewModel class [" + controller.getClass().getCanonicalName() + "] was referenced in an FXML file"
+                        + " as the fx:controller."
+                        + " Instead a class that implements FxmlView has to be defined as the fx:controller in the FXML file.");
+            }
+
 
             return controller;
         }

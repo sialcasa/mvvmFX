@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 
 import javafx.beans.property.ReadOnlyStringProperty;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class AboutViewModelTest {
 
@@ -25,7 +25,7 @@ public class AboutViewModelTest {
 	private Consumer<String> onLinkClickedHandler;
 
 	@SuppressWarnings("unchecked")
-	@Before
+	@BeforeEach
 	public void setup() {
 		viewModel = new AboutViewModel();
 

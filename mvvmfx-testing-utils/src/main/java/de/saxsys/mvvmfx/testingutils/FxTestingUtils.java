@@ -10,10 +10,15 @@ import java.util.concurrent.TimeoutException;
 public class FxTestingUtils {
 
 
-	public static void waitForUiThread(long timeout) {
+	public static void runInFXThread(Runnable code){
+		runInFXThread(code, 1000);
+	}
+
+	public static void runInFXThread(Runnable code, long timeout){
 		CompletableFuture<Void> future = new CompletableFuture<>();
 
 		Platform.runLater(() -> {
+			code.run();
 			future.complete(null);
 		});
 
@@ -24,7 +29,19 @@ public class FxTestingUtils {
 		}
 	}
 
+	/**
+	 * This method is used to wait until the UI thread has done all work that was queued via
+	 * {@link Platform#runLater(Runnable)}.
+	 */
+	public static void waitForUiThread(long timeout) {
+		runInFXThread(() -> {}, timeout);
+	}
+
+	/**
+	 * This method is used to wait until the UI thread has done all work that was queued via
+	 * {@link Platform#runLater(Runnable)}.
+	 */
 	public static void waitForUiThread() {
-		waitForUiThread(0);
+		waitForUiThread(1000);
 	}
 }

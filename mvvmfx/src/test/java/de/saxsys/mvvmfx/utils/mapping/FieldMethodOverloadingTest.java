@@ -24,8 +24,8 @@ import javafx.beans.property.LongProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -59,7 +59,7 @@ public class FieldMethodOverloadingTest {
 	
 	private ModelWrapper<ExampleModel> wrapper;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		wrapper = new ModelWrapper<>();
 	}

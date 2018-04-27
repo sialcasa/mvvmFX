@@ -1,5 +1,7 @@
-package de.saxsys.mvvmfx.examples.contacts.model;
+package de.saxsys.mvvmfx.examples.contacts.model.countries;
 
+import de.saxsys.mvvmfx.examples.contacts.model.Country;
+import de.saxsys.mvvmfx.examples.contacts.model.Subdivision;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyStringProperty;
@@ -15,36 +17,41 @@ import org.datafx.reader.converter.XmlConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.bind.annotation.*;
+import javax.annotation.PostConstruct;
+import javax.enterprise.inject.Alternative;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This class is used to encapsulate the process of loading available countries
- * and there subdivisions (if available).
+ * and their subdivisions (if available).
  *
  * This class is meant to be a stateful wrapper around the existing countries.
  * You should create an instance of this class, call the {@link #init()} method
  * and then bind the UI to the provided observable lists (
  * {@link #availableCountries()} and {@link #subdivisions()}).
  *
- * To choose a country have to use the {@link #setCountry(Country)} method. This
+ * To choose a country use the {@link #setCountry(Country)} method. This
  * will lead to a change of the {@link #subdivisions()} list.
  *
  *
- * At the moment this class used two XML files ({@link #ISO_3166_LOCATION} and
+ * At the moment this class uses two XML files ({@link #ISO_3166_LOCATION} and
  * {@link #ISO_3166_2_LOCATION}) that contain information about countries,
  * country-codes and subdivisions according to ISO 3166 and ISO 3166-2.
  *
  * The loading process is implemented with the DataFX framework.
  */
-public class CountrySelector {
+@Singleton
+@Alternative
+public class DataFxCountrySelector implements CountrySelector {
 
-	private static final Logger LOG = LoggerFactory.getLogger(CountrySelector.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DataFxCountrySelector.class);
 
 	public static final String ISO_3166_LOCATION = "/countries/iso_3166.xml";
 	public static final String ISO_3166_2_LOCATION = "/countries/iso_3166_2.xml";
@@ -62,6 +69,8 @@ public class CountrySelector {
 	 * This method triggers the loading of the available countries and
 	 * subdivisions.
 	 */
+	@PostConstruct
+	@Override
 	public void init() {
 		inProgress.set(true);
 		loadCountries();
@@ -75,6 +84,7 @@ public class CountrySelector {
 	 * @param country the country that will be selected or <code>null</code> if
 	 * no country is selected.
 	 */
+	@Override
 	public void setCountry(Country country) {
 		if (country == null) {
 			subdivisionLabel.set(null);
@@ -169,11 +179,17 @@ public class CountrySelector {
 
 							List<Subdivision> subdivisionList = countryCodeSubdivisionMap.get(country);
 
-							entity.subsets.get(0).entryList.forEach(entry -> {
-								subdivisionList.add(new Subdivision(entry.name, entry.code, country));
+							entity.subsets.forEach(subset -> {
+								subset.entryList.forEach(entry -> {
+									subdivisionList.add(new Subdivision(entry.name, entry.code, country));
+								});
 							});
 
-							countryCodeSubdivisionNameMap.put(country, entity.subsets.get(0).subdivisionType);
+							String subdivisionName = entity.subsets.stream()
+									.map(subset -> subset.subdivisionType)
+									.collect(Collectors.joining("/"));
+
+							countryCodeSubdivisionNameMap.put(country, subdivisionName);
 						}
 					});
 
@@ -190,67 +206,22 @@ public class CountrySelector {
 		return countries.stream().filter(country -> country.getCountryCode().equals(code)).findFirst().orElse(null);
 	}
 
-	/**
-	 * XML entity class. These classes represent the structure of the XML files
-	 * to be loaded.
-	 */
-	@XmlRootElement(name = "iso_3166_subset")
-	@XmlAccessorType(XmlAccessType.FIELD)
-	static class ISO3166_2_EntryEntity {
-
-		@XmlAttribute(name = "code")
-		public String code;
-		@XmlAttribute(name = "name")
-		public String name;
-	}
-
-	/**
-	 * XML entity class. These classes represent the structure of the XML files
-	 * to be loaded.
-	 */
-	@XmlRootElement(name = "iso_3166_subset")
-	@XmlAccessorType(XmlAccessType.FIELD)
-	static class ISO3166_2_SubsetEntity {
-
-		@XmlElement(name = "iso_3166_2_entry")
-		public List<ISO3166_2_EntryEntity> entryList;
-
-		@XmlAttribute(name = "type")
-		public String subdivisionType;
-	}
-
-	/**
-	 * XML entity class. These classes represent the structure of the XML files
-	 * to be loaded.
-	 */
-	@XmlRootElement(name = "iso_3166_country")
-	@XmlAccessorType(XmlAccessType.FIELD)
-	static class ISO3166_2_CountryEntity {
-
-		@XmlAttribute(name = "code")
-		public String code;
-
-		@XmlElement(name = "iso_3166_subset")
-		public List<ISO3166_2_SubsetEntity> subsets;
-
-		@Override
-		public String toString() {
-			return "CountryEntity " + code;
-		}
-	}
-
+	@Override
 	public ObservableList<Country> availableCountries() {
 		return countries;
 	}
 
+	@Override
 	public ReadOnlyStringProperty subdivisionLabel() {
 		return subdivisionLabel.getReadOnlyProperty();
 	}
 
+	@Override
 	public ObservableList<Subdivision> subdivisions() {
 		return FXCollections.unmodifiableObservableList(subdivisions);
 	}
 
+	@Override
 	public ReadOnlyBooleanProperty inProgressProperty() {
 		return inProgress.getReadOnlyProperty();
 	}

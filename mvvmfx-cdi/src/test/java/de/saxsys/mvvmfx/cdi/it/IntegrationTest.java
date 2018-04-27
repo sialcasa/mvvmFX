@@ -3,12 +3,12 @@ package de.saxsys.mvvmfx.cdi.it;
 import static org.assertj.core.api.Assertions.assertThat;
 import javafx.application.Application;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class IntegrationTest {
 	
-	@Before
+	@BeforeEach
 	public void setup() {
 		MyApp.wasPostConstructCalled = false;
 		MyApp.wasPreDestroyCalled = false;

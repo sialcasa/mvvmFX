@@ -20,15 +20,15 @@ import static de.saxsys.mvvmfx.utils.sizebinding.SizeBindingsBuilder.*;
 import javafx.scene.control.Control;
 import javafx.scene.control.ScrollPane;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class BindSizeToControlTest extends SizeBindingsBuilderTestBase {
 	
 	private Control toControl;
 	
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		toControl = new ScrollPane();
 	}

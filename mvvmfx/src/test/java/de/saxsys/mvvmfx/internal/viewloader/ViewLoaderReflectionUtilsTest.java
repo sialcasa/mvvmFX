@@ -18,7 +18,8 @@ package de.saxsys.mvvmfx.internal.viewloader;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModel;
 import de.saxsys.mvvmfx.internal.viewloader.example.TestViewModelWithDoubleInjection;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -55,11 +56,13 @@ public class ViewLoaderReflectionUtilsTest {
 		assertThat(viewModel).isNull();
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testDoubleInjection() {
 		class TestView implements View<TestViewModelWithDoubleInjection> {}
 
 		ViewModel viewModel = ViewLoaderReflectionUtils.createViewModel(new TestView());
-		ViewLoaderReflectionUtils.initializeViewModel(viewModel);
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			ViewLoaderReflectionUtils.initializeViewModel(viewModel);
+		});
 	}
 }

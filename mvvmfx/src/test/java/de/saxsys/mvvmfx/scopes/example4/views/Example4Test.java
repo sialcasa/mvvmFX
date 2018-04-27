@@ -4,20 +4,14 @@ import com.cedarsoft.test.utils.CatchAllExceptionsRule;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.testingutils.FxTestingUtils;
-import de.saxsys.mvvmfx.testingutils.jfxrunner.JfxRunner;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import de.saxsys.mvvmfx.testingutils.JfxToolkitExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(JfxRunner.class)
+@ExtendWith(JfxToolkitExtension.class)
 public class Example4Test {
-
-
-	// Rule to get exceptions from the JavaFX Thread into the JUnit thread
-	@Rule
-	public CatchAllExceptionsRule catchAllExceptionsRule = new CatchAllExceptionsRule();
 
 
 	@Test

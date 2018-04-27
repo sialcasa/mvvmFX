@@ -17,8 +17,8 @@ package de.saxsys.mvvmfx.utils.validation;
 
 import de.saxsys.mvvmfx.testingutils.GCVerifier;
 import javafx.beans.property.*;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.regex.Pattern;
 
@@ -33,7 +33,7 @@ public class ObservableRulesValidatorTest {
 
 	private ObservableRuleBasedValidator validator;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		rule1 = new SimpleBooleanProperty();
 		rule2 = new SimpleBooleanProperty();

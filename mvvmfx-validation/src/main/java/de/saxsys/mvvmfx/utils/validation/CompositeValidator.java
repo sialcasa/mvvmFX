@@ -15,14 +15,14 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.validation;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This {@link Validator} implementation is used to compose multiple other validators.
@@ -33,7 +33,7 @@ import javafx.collections.ObservableList;
  */
 public class CompositeValidator implements Validator {
 
-	CompositeValidationStatus status = new CompositeValidationStatus();
+	private CompositeValidationStatus status = new CompositeValidationStatus();
 
 	private ListProperty<Validator> validators = new SimpleListProperty<>(FXCollections.observableArrayList());
 	private Map<Validator, ListChangeListener<ValidationMessage>> listenerMap = new HashMap<>();
@@ -90,6 +90,13 @@ public class CompositeValidator implements Validator {
 		addValidators(validators);
 	}
 
+
+	/**
+	 * @return an unmodifiable observable list of validators composed by this CompositeValidator.
+	 */
+	public ObservableList<Validator> getValidators() {
+		return FXCollections.unmodifiableObservableList(this.validators);
+	}
 
 	public void addValidators(Validator... validators) {
 		this.validators.addAll(validators);

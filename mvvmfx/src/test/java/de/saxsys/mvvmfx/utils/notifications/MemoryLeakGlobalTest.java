@@ -1,8 +1,8 @@
 package de.saxsys.mvvmfx.utils.notifications;
 
 import de.saxsys.mvvmfx.testingutils.GCVerifier;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MemoryLeakGlobalTest {
 
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		NotificationCenterFactory.setNotificationCenter(new DefaultNotificationCenter());
 	}
