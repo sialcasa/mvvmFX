@@ -28,7 +28,6 @@ import de.saxsys.mvvmfx.internal.ContextImpl;
 import javafx.beans.value.ObservableBooleanValue;
 import net.jodah.typetools.TypeResolver;
 
-import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -407,7 +406,12 @@ public class ViewLoaderReflectionUtils {
 
         initializeMethods.forEach(initMethod -> {
 			// if there is a @PostConstruct annotation, throw an exception to prevent double injection
-			if(initMethod.isAnnotationPresent(PostConstruct.class)) {
+            final boolean postConstructPresent = Arrays.stream(initMethod.getAnnotations())
+                    .map(Annotation::annotationType)
+                    .map(Class::getName)
+                    .anyMatch("javax.annotation.PostConstruct"::equals);
+
+            if(postConstructPresent) {
 				throw new IllegalStateException(String.format("initialize method of ViewModel [%s] is annotated with @PostConstruct. " +
 						"This will lead to unexpected behaviour and duplicate initialization. " +
 						"Please rename the method or remove the @PostConstruct annotation. " +
