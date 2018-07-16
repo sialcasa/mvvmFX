@@ -432,11 +432,13 @@ public class ViewLoaderReflectionUtils {
 	 * </ol>
 	 */
 	private static Collection<Method> getInitializeMethods(Class<?> classType) {
-		final List<Method> initializeMethods = new ArrayList<>();
-		Arrays.stream(classType.getMethods())
-				.filter(method -> "initialize".equals(method.getName()))
-				.findAny()
-				.ifPresent(initializeMethods::add);
+        final List<Method> initializeMethods = new ArrayList<>();
+
+        Arrays.stream(classType.getMethods())
+                .filter(method -> "initialize".equals(method.getName()))
+                .filter(method -> void.class.equals(method.getReturnType()))
+                .filter(method -> method.getParameterCount() == 0)
+                .forEach(initializeMethods::add);
 
 		Arrays.stream(classType.getDeclaredMethods())
 				.filter(method -> method.isAnnotationPresent(Initialize.class))
