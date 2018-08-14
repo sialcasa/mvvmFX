@@ -57,10 +57,5 @@ class Junit5Test {
 				Platform.runLater(() -> {});
 			}, "Toolkit not initialized");
 		}
-
-
 	}
-
-
-
 }
