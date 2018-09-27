@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx"
+      fx:id="rectangleMainBox" id="rectangleMainBox"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="de.saxsys.mvvmfx.examples.jigsaw.rectangle.RectangleView"
+      prefHeight="400.0" prefWidth="600.0" stylesheets="@Rectangle.css">
+
+    <Label fx:id="title" id="title" text="%rectangle.label.title" />
+
+    <HBox fx:id="firstSideBox">
+        <Label fx:id="firstSideLabel" id="firstSideLabel" text="%rectangle.label.firstside" />
+        <TextField fx:id="firstSideTextField" />
+    </HBox>
+
+    <HBox fx:id="secondSideBox">
+        <Label fx:id="secondSideLabel" id="secondSideLabel" text="%rectangle.label.secondside" />
+        <TextField fx:id="secondSideTextField" />
+    </HBox>
+
+    <HBox fx:id="resultBox">
+        <Label fx:id="resultLabel" id="resultLabel" text="%rectangle.label.rectangulararea" />
+        <Label fx:id="rectangularAreaLabel" id="rectangularAreaLabel" />
+    </HBox>
+</VBox>
