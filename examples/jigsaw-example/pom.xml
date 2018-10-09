@@ -16,125 +16,16 @@
         <module>rectangle</module>
     </modules>
 
-
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <java.version>11</java.version>
+        <!--<java.version>1.8.0_181</java.version>-->
+
+        <mvvmfx.version>1.8.0-SNAPSHOT</mvvmfx.version>
+        <!--<mvvmfx.version>1.7.0</mvvmfx.version>-->
     </properties>
-
-    <profiles>
-        <profile>
-            <id>JigSaw+1.8</id>
-            <activation>
-                <property>
-                    <name>JigSaw_Success_Version1.8</name>
-                    <value>jdk11_mvvmfx1.8</value>
-                </property>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <java.version>11</java.version>
-                <mvvmfx.version>1.8.0-SNAPSHOT</mvvmfx.version>
-            </properties>
-            <dependencies>
-                <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
-                <dependency>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-controls</artifactId>
-                    <version>11</version>
-                </dependency>
-                <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-graphics -->
-                <dependency>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-graphics</artifactId>
-                    <version>11</version>
-                </dependency>
-                <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-base -->
-                <dependency>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-base</artifactId>
-                    <version>11</version>
-                </dependency>
-                <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-fxml -->
-                <dependency>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-fxml</artifactId>
-                    <version>11</version>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
-            <id>Java8+1.7</id>
-            <activation>
-                <property>
-                    <name>Java8_Success_Version1.7</name>
-                    <value>jdk1.8.0_181_mvvmfx1.7</value>
-                </property>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <java.version>1.8.0_181</java.version>
-                <mvvmfx.version>1.7.0</mvvmfx.version>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>JigSaw+1.7</id>
-            <activation>
-                <property>
-                    <name>JigSaw_Failed_Version1.7</name>
-                    <value>jdk11_mvvmfx1.7</value>
-                </property>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <java.version>11</java.version>
-                <mvvmfx.version>1.7.0</mvvmfx.version>
-            </properties>
-            <dependencies>
-                <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
-                <dependency>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-controls</artifactId>
-                    <version>11</version>
-                </dependency>
-                <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-graphics -->
-                <dependency>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-graphics</artifactId>
-                    <version>11</version>
-                </dependency>
-                <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-base -->
-                <dependency>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-base</artifactId>
-                    <version>11</version>
-                </dependency>
-                <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-fxml -->
-                <dependency>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-fxml</artifactId>
-                    <version>11</version>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
-            <id>Java8+1.8</id>
-            <activation>
-                <property>
-                    <name>Java8_Success_Version1.8</name>
-                    <value>jdk1.8.0_181_mvvmfx1.7</value>
-                </property>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <java.version>1.8.0_181</java.version>
-                <mvvmfx.version>1.8.0-SNAPSHOT</mvvmfx.version>
-            </properties>
-        </profile>
-    </profiles>
 
     <build>
         <plugins>
@@ -156,6 +47,34 @@
             <artifactId>mvvmfx</artifactId>
             <version>${mvvmfx.version}</version>
             <scope>compile</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>11</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-graphics -->
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>11</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-base -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>11</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-fxml -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>11</version>
         </dependency>
     </dependencies>
 </project>
