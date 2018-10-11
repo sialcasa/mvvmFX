@@ -17,11 +17,14 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <!--<maven.compiler.source>${java.version}</maven.compiler.source>-->
+        <!--<maven.compiler.target>${java.version}</maven.compiler.target>-->
 
-        <java.version>11</java.version>
-        <!--<java.version>1.8.0_181</java.version>-->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <!--<java.version>11</java.version>-->
+        <java.version>1.8.0_181</java.version>
 
         <mvvmfx.version>1.8.0-SNAPSHOT</mvvmfx.version>
         <!--<mvvmfx.version>1.7.0</mvvmfx.version>-->
@@ -34,7 +37,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <release>11</release>
+                    <!--<release>11</release>-->
                 </configuration>
             </plugin>
         </plugins>
