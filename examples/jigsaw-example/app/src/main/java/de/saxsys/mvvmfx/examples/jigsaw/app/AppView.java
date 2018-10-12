@@ -25,17 +25,7 @@ public class AppView implements FxmlView<AppViewModel> {
 
     public void initialize() {
 
-        //loadCircleView();
         loadRectangleView();
-    }
-
-    private void loadCircleView() {
-        ResourceBundle circleBundle = ResourceBundle.getBundle("circle");
-
-        ViewTuple<CircleView, CircleViewModel> viewTuple = FluentViewLoader.fxmlView(
-                CircleView.class).resourceBundle(circleBundle).load();
-
-        appMainBox.getChildren().add(viewTuple.getView());
     }
 
     private void loadRectangleView() {

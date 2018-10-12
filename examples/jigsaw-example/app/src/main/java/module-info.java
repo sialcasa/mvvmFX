@@ -9,9 +9,7 @@ module de.saxsys.mvvmfx.examples.jigsaw.app{
     requires javafx.graphics;
     requires mvvmfx;
 
-//    exports de.saxsys.mvvmfx.examples.jigsaw.app to javafx.graphics;
-    exports de.saxsys.mvvmfx.examples.jigsaw.app;
+    exports de.saxsys.mvvmfx.examples.jigsaw.app to javafx.graphics;
 
     opens de.saxsys.mvvmfx.examples.jigsaw.app to mvvmfx, javafx.fxml;
-
 }

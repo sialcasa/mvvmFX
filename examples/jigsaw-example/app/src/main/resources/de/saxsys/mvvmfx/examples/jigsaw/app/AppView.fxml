@@ -7,5 +7,4 @@
       fx:controller="de.saxsys.mvvmfx.examples.jigsaw.app.AppView"
       prefHeight="400.0" prefWidth="600.0">
     <fx:include source="../../../../../../../../../../../../../../Projekte/mvvmFX/examples/jigsaw-example/circle/src/main/resources/de/saxsys/mvvmfx/examples/jigsaw/circle/CircleView.fxml" fx:id="circle" resources="circle" />
-    <!--<fx:include source="/de/saxsys/mvvmfx/examples/jigsaw/circle/CircleView.fxml" fx:id="circle" resources="circle" />-->
 </VBox>
