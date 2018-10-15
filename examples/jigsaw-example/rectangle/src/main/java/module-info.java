@@ -1,5 +1,5 @@
 
-module de.saxsys.mvvmfx.examples.jigsaw.rectangle{
+module de.saxsys.mvvmfx.examples.jigsaw.rectangle {
 
     requires javafx.base;
     requires javafx.fxml;

@@ -1,5 +1,5 @@
 
-module de.saxsys.mvvmfx.examples.jigsaw.circle{
+module de.saxsys.mvvmfx.examples.jigsaw.circle {
 
     requires javafx.base;
     requires javafx.fxml;

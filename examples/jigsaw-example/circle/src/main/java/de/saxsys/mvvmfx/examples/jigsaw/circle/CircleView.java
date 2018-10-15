@@ -21,13 +21,11 @@ public class CircleView implements FxmlView<CircleViewModel> {
 
 
     public void initialize() {
-
         setupValidation();
         bindViewValues();
     }
 
     private void setupValidation() {
-
         TextFormatter<Double> textFormatter = new TextFormatter<>(new DoubleStringConverter(), 0.0,
                 change -> {
                     String newText = change.getControlNewText();
@@ -42,7 +40,6 @@ public class CircleView implements FxmlView<CircleViewModel> {
     }
 
     private void bindViewValues() {
-
         radiusTextField.textProperty().bindBidirectional(circleViewModel.radiusProperty());
         circleAreaLabel.textProperty().bind(circleViewModel.circularAreaProperty());
     }

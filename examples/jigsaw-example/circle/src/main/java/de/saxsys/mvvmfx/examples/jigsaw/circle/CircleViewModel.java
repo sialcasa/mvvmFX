@@ -4,7 +4,6 @@ import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-
 import java.util.regex.Pattern;
 
 public class CircleViewModel implements ViewModel {
@@ -20,7 +19,6 @@ public class CircleViewModel implements ViewModel {
     }
 
     private void calculateCircleArea() {
-
         if (radius.get() != null && !radius.get().isEmpty()) {
             double radiusAsDouble = Double.valueOf(radius.get());
             double roundedResult = Math.round(Math.pow(radiusAsDouble, 2) * Math.PI);
@@ -31,7 +29,6 @@ public class CircleViewModel implements ViewModel {
     }
 
     boolean validateDouble(String newText) {
-
         return VALID_DOUBLE_PATTERN.matcher(newText).matches();
     }
 

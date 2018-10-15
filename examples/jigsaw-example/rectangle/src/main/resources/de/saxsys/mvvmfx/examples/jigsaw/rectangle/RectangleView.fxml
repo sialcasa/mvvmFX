@@ -4,6 +4,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+
 <VBox xmlns="http://javafx.com/javafx"
       fx:id="rectangleMainBox" id="rectangleMainBox"
       xmlns:fx="http://javafx.com/fxml"

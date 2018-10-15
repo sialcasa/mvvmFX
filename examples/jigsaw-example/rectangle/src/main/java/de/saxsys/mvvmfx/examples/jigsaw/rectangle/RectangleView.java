@@ -21,14 +21,12 @@ public class RectangleView implements FxmlView<RectangleViewModel> {
     private RectangleViewModel rectangleViewModel;
 
     public void initialize() {
-
         setupValidation(firstSideTextField);
         setupValidation(secondSideTextField);
         bindViewValues();
     }
 
     private void setupValidation(TextField textField) {
-
         final TextFormatter<Double> textFormatter = new TextFormatter<>(new DoubleStringConverter(), 0.0,
                 change -> {
                     String newText = change.getControlNewText();
@@ -43,7 +41,6 @@ public class RectangleView implements FxmlView<RectangleViewModel> {
     }
 
     private void bindViewValues() {
-
         firstSideTextField.textProperty().bindBidirectional(rectangleViewModel.firstSideProperty());
         secondSideTextField.textProperty().bindBidirectional(rectangleViewModel.secondSideProperty());
         rectangularAreaLabel.textProperty().bind(rectangleViewModel.rectangularAreaProperty());

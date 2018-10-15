@@ -16,7 +16,6 @@ public class RectangleViewModel implements ViewModel {
 
 
     public void initialize() {
-
         firstSide.addListener((observable, oldValue, newValue) -> {
             calculateRectangularArea();
         });
@@ -27,7 +26,6 @@ public class RectangleViewModel implements ViewModel {
     }
 
     private void calculateRectangularArea() {
-
         if (firstSide.get() != null && !firstSide.get().isEmpty() && secondSide.get() != null && !secondSide.get().isEmpty()) {
             double result = Math.round(Double.valueOf(firstSide.get()) * Double.valueOf(secondSide.get()));
             rectangularArea.setValue(Double.toString(result));
@@ -37,7 +35,6 @@ public class RectangleViewModel implements ViewModel {
     }
 
     boolean validateDouble(String newText) {
-
         return VALID_DOUBLE_PATTERN.matcher(newText).matches();
     }
 

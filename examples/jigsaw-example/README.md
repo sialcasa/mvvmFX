@@ -9,13 +9,13 @@ respectively a rectangle.
 The circle view is included via `fx:include`, the rectangle view is loaded via FluentViewLoader when initializing the 
 main view.
 
-### Important difference to the other example's in the MvvmFX project
+### Important difference to the other examples in the MvvmFX project
 The application is not involved in the build process of the main project because the main project is compiled with Java 8
 and the jigsaw-example is compiled with Java 11. Because of differences on the project structures, otherwise building 
 the main project would fail. 
 
 ### Configuration to run with Java 11
-* set JAVA_HOMO to an installed jdk-11
+* set JAVA_HOME to an installed jdk-11
 * set IDE's runconfiguration to JRE 11
 * set properties tag in pom.xml to
  ```xml
