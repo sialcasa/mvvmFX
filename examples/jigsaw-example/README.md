@@ -28,7 +28,7 @@ the main project would fail.
 
        <java.version>11</java.version>
        <mvvmfx.version>1.8.0-SNAPSHOT</mvvmfx.version>
-   </properties>
+    </properties>
  ```
  * set the release tag in the maven compiler plugin to 
  ```xml  
