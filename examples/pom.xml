@@ -18,7 +18,6 @@
 		<module>books-example</module>
 		<module>todomvc-example</module>
 		<module>mini-examples</module>
-        <module>jigsaw-example</module>
     </modules>
 
 

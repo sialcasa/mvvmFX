@@ -4,8 +4,6 @@ sudo: false
 
 jdk:
   - oraclejdk8
-  - openjdk11
-  - oraclejdk11
 
 install: true
 
