@@ -33,4 +33,6 @@ public class Starter extends MvvmfxGuiceApplication {
 
 A simple example for this is available at [welcome-example](/examples/mini-examples/welcome-example).
 
-If you prefer CDI as dependency injection framework you can use [mvvnfx-cdi](/mvvmfx-cdi).
+* [CDI](/mvvmfx-cdi)
+* [Spring-Boot](/mvvmfx-spring-boot)
+* [EasyDI](/mvvmfx-easydi)
