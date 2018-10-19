@@ -23,6 +23,7 @@
 		<module>scopes-example</module>
         <module>async-todoapp-futures</module>
         <module>helloworld-custom-fxml-path</module>
+        <module>helloworld-spring-boot</module>
     </modules>
 
 
