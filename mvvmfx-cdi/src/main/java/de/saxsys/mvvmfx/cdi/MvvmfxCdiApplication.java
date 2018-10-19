@@ -76,8 +76,8 @@ public abstract class MvvmfxCdiApplication extends Application implements Mvvmfx
 	 * {@link javafx.application.Application#init()} for more details.
 	 *
 	 * Unlike the original init method in {@link javafx.application.Application} this method contains logic to
-	 * initialize the CDI container. Therefor it's important to call <code>super.init()</code> when you override this
-	 * method.
+	 * initialize the CDI container.  For this reason this method is now final to prevent unintended overriding.
+	 * 	 * Please use {@link #initMvvmfx()} for you own initialization logic.
 	 *
 	 * @throws Exception
 	 */
@@ -102,8 +102,8 @@ public abstract class MvvmfxCdiApplication extends Application implements Mvvmfx
 	 * more details.
 	 *
 	 * Unlike the original stop method in {@link javafx.application.Application} this method contains logic to release
-	 * resources managed by the CDI container. Therefor it's important to call <code>super.stop()</code> when you
-	 * override this method.
+	 * resources managed by the CDI container.  For this reason this method is now final to prevent unintended overriding.
+	 * 	 * Please use {@link #stopMvvmfx()} ()} for you own initialization logic.
 	 *
 	 * @throws Exception
 	 */
