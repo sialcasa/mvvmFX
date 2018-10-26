@@ -470,4 +470,20 @@ public class ViewLoaderReflectionUtils {
             }
         }
     }
+
+    /**
+     * This method is used to check if the given View instance has one or more fields that try to inject a scope
+     * with the {@link InjectScope} annotation.
+     * This is a violation of the mvvm-pattern and therefore this method will throw an exception with a message describing the
+     * error.
+     */
+    static void checkScopesInView(View codeBehind) {
+        List<Field> scopeFields = ReflectionUtils.getFieldsWithAnnotation(codeBehind, InjectScope.class);
+
+        if(!scopeFields.isEmpty()) {
+            throw new IllegalStateException("The view class [" + codeBehind.getClass().getSimpleName() + "] tries to inject a Scope with " +
+                    "@InjectScope. This would be a violation of the mvvm pattern. Scopes are only supported in ViewModels.");
+        }
+
+    }
 }

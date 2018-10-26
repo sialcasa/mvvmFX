@@ -363,6 +363,8 @@ public class FxmlViewLoader {
     }
 
     private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, ContextImpl context, ObservableBooleanValue viewInSceneProperty) {
+        ViewLoaderReflectionUtils.checkScopesInView(codeBehind);
+
         ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
 
         Consumer<ViewModel> newVmConsumer = viewModel -> {
@@ -379,6 +381,8 @@ public class FxmlViewLoader {
 
     private static void handleInjection(View codeBehind, ResourceBundle resourceBundle, ViewModel viewModel,
             ContextImpl context, ObservableBooleanValue viewInSceneProperty) {
+        ViewLoaderReflectionUtils.checkScopesInView(codeBehind);
+
         ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
 
         if (viewModel != null) {
