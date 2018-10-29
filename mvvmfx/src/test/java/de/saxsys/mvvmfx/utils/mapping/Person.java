@@ -16,7 +16,9 @@
 package de.saxsys.mvvmfx.utils.mapping;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Person {
 	
@@ -26,12 +28,22 @@ public class Person {
 	
 	private List<String> nicknames = new ArrayList<>();
 
+	private Set<String> emailAddresses = new HashSet<>();
+
 	public List<String> getNicknames() {
 		return nicknames;
 	}
 
 	public void setNicknames (List<String> nicknames) {
 		this.nicknames = nicknames;
+	}
+
+	public Set<String> getEmailAddresses() {
+		return emailAddresses;
+	}
+
+	public void setEmailAddresses(Set<String> emailAddresses) {
+		this.emailAddresses = emailAddresses;
 	}
 
 	public int getAge() {

@@ -43,6 +43,10 @@ import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectGetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectImmutableSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectSetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.SetGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.SetImmutableSetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.SetPropertyAccessor;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.SetSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringGetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringImmutableSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringPropertyAccessor;
@@ -66,6 +70,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.SetProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -73,6 +78,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -1451,5 +1457,87 @@ public class ModelWrapper<M> {
 	public <E> ListProperty<E> field(String identifier, ListPropertyAccessor<M, E> accessor, List<E> defaultValue) {
 		return addIdentified(identifier, new FxListPropertyField<>(this::propertyWasChanged, accessor,
 				() -> new SimpleListProperty<>(null, identifier), defaultValue));
+	}
+
+
+	/* Field type set */
+
+	public <E> SetProperty<E> field(SetGetter<M, E> getter, SetSetter<M, E> setter) {
+		return add(new BeanSetPropertyField<>(this::propertyWasChanged, getter,
+				(m, set) -> setter.accept(m, FXCollections.observableSet(set)), SimpleSetProperty::new));
+	}
+
+	public <E> SetProperty<E> immutableField(SetGetter<M, E> getter, SetImmutableSetter<M, E> immutableSetter) {
+		return addImmutable(new ImmutableSetPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				(m, set) -> immutableSetter.apply(m, FXCollections.observableSet(set)),
+				SimpleSetProperty::new
+		));
+	}
+
+	public <E> SetProperty<E> field(SetGetter<M, E> getter, SetSetter<M, E> setter, Set<E> defaultValue) {
+		return add(new BeanSetPropertyField<>(this::propertyWasChanged, getter,
+				(m, set) -> setter.accept(m, FXCollections.observableSet(set)), SimpleSetProperty::new,
+				defaultValue));
+	}
+
+	public <E> SetProperty<E> immutableField(SetGetter<M, E> getter, SetImmutableSetter<M, E> immutableSetter, Set<E> defaultValue) {
+		return addImmutable(new ImmutableSetPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				(m, set) -> immutableSetter.apply(m, FXCollections.observableSet(set)),
+				SimpleSetProperty::new,
+				defaultValue));
+	}
+
+	public <E> SetProperty<E> field(SetPropertyAccessor<M, E> accessor) {
+		return add(new FxSetPropertyField<>(this::propertyWasChanged, accessor, SimpleSetProperty::new));
+	}
+
+	public <E> SetProperty<E> field(SetPropertyAccessor<M, E> accessor, Set<E> defaultValue) {
+		return add(
+				new FxSetPropertyField<>(this::propertyWasChanged, accessor, SimpleSetProperty::new, defaultValue));
+	}
+
+	public <E> SetProperty<E> field(String identifier, SetGetter<M, E> getter, SetSetter<M, E> setter) {
+		return addIdentified(identifier, new BeanSetPropertyField<>(this::propertyWasChanged, getter,
+				(m, set) -> setter.accept(m, FXCollections.observableSet(set)),
+				() -> new SimpleSetProperty<>(null, identifier)));
+	}
+
+	public <E> SetProperty<E> field(String identifier, SetGetter<M, E> getter, SetSetter<M, E> setter,
+			Set<E> defaultValue) {
+		return addIdentified(identifier, new BeanSetPropertyField<>(this::propertyWasChanged, getter,
+				(m, set) -> setter.accept(m, FXCollections.observableSet(set)),
+				() -> new SimpleSetProperty<>(null, identifier), defaultValue));
+	}
+
+	public <E> SetProperty<E> immutableField(String identifier, SetGetter<M, E> getter, SetImmutableSetter<M, E> immutableSetter) {
+		return addIdentifiedImmutable(identifier, new ImmutableSetPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				(m, set) -> immutableSetter.apply(m, FXCollections.observableSet(set)),
+				() -> new SimpleSetProperty<>(null, identifier)));
+	}
+
+	public <E> SetProperty<E> immutableField(String identifier, SetGetter<M, E> getter, SetImmutableSetter<M, E> immutableSetter,
+			Set<E> defaultValue) {
+		return addIdentifiedImmutable(identifier, new ImmutableSetPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				(m, set) -> immutableSetter.apply(m, FXCollections.observableSet(set)),
+				() -> new SimpleSetProperty<>(null, identifier),
+				defaultValue));
+	}
+
+	public <E> SetProperty<E> field(String identifier, SetPropertyAccessor<M, E> accessor) {
+		return addIdentified(identifier, new FxSetPropertyField<>(this::propertyWasChanged, accessor,
+				() -> new SimpleSetProperty<>(null, identifier)));
+	}
+
+	public <E> SetProperty<E> field(String identifier, SetPropertyAccessor<M, E> accessor, Set<E> defaultValue) {
+		return addIdentified(identifier, new FxSetPropertyField<>(this::propertyWasChanged, accessor,
+				() -> new SimpleSetProperty<>(null, identifier), defaultValue));
 	}
 }
