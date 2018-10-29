@@ -254,7 +254,6 @@ public class FxmlViewLoader {
                 }
             } else {
                 actualViewModel = viewModel;
-                ViewLoaderReflectionUtils.createAndInjectScopes(actualViewModel, context);
             }
             if (actualViewModel != null) {
                 // TODO: Create Testcase for this corner case:
@@ -452,6 +451,8 @@ public class FxmlViewLoader {
                 if (!customViewModelInjected) {
                     ResourceBundleInjector.injectResourceBundle(customViewModel, resourceBundle);
                     ResourceBundleInjector.injectResourceBundle(codeBehind, resourceBundle);
+
+                    ViewLoaderReflectionUtils.createAndInjectScopes(customViewModel, context);
 
                     ViewLoaderReflectionUtils.injectViewModel(codeBehind, customViewModel);
                     ViewLoaderReflectionUtils.injectContext(codeBehind, context);
