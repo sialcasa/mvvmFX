@@ -2,21 +2,26 @@ package de.saxsys.mvvmfx.utils.mapping;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PersonImmutable {
 	private final String name;
 	private final int age;
 	private final List<String> nicknames = new ArrayList<>();
 
+	private final Set<String> emailAddresses = new HashSet<>();
+
 	public static PersonImmutable create(){
-		return new PersonImmutable("", 0, Collections.emptyList());
+		return new PersonImmutable("", 0, Collections.emptyList(), Collections.emptySet());
 	}
 
-	private PersonImmutable(String name, int age, List<String> nicknames) {
+	private PersonImmutable(String name, int age, List<String> nicknames, Set<String> emailAddresses) {
 		this.name = name;
 		this.age = age;
 		this.nicknames.addAll(nicknames);
+		this.emailAddresses.addAll(emailAddresses);
 	}
 
 	public String getName() {
@@ -24,7 +29,7 @@ public class PersonImmutable {
 	}
 
 	public PersonImmutable withName(String name) {
-		return new PersonImmutable(name, this.age, this.nicknames);
+		return new PersonImmutable(name, this.age, this.nicknames, this.emailAddresses);
 	}
 
 	public int getAge() {
@@ -32,7 +37,7 @@ public class PersonImmutable {
 	}
 
 	public PersonImmutable withAge(int age) {
-		return new PersonImmutable(this.name, age, this.nicknames);
+		return new PersonImmutable(this.name, age, this.nicknames, this.emailAddresses);
 	}
 
 	public List<String> getNicknames() {
@@ -40,31 +45,15 @@ public class PersonImmutable {
 	}
 
 	public PersonImmutable withNicknames(List<String> nicknames) {
-		return new PersonImmutable(this.name, this.age, nicknames);
+		return new PersonImmutable(this.name, this.age, nicknames, this.emailAddresses);
 	}
 
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
-
-		PersonImmutable that = (PersonImmutable) o;
-
-		if (age != that.age)
-			return false;
-		if (name != null ? !name.equals(that.name) : that.name != null)
-			return false;
-		return nicknames.equals(that.nicknames);
+	public Set<String> getEmailAddresses() {
+		return Collections.unmodifiableSet(emailAddresses);
 	}
 
-	@Override
-	public int hashCode() {
-		int result = name != null ? name.hashCode() : 0;
-		result = 31 * result + age;
-		result = 31 * result + nicknames.hashCode();
-		return result;
+	public PersonImmutable withEmailAddresses(Set<String> emailAddresses) {
+		return new PersonImmutable(this.name, this.age, this.nicknames, emailAddresses);
 	}
+
 }

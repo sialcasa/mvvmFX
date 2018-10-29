@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 /**
  * An implementation of {@link PropertyField} that is used when the field of the model class is a {@link List} and
- * is <b>not</b> a JavaFX ListProperty but is following the old Java-Beans standard, i.e. there is getter and setter
+ * is <b>not</b> a JavaFX {@link ListProperty} but is following the old Java-Beans standard, i.e. there is getter and setter
  * method for the field.
  *
  * @param <T>
