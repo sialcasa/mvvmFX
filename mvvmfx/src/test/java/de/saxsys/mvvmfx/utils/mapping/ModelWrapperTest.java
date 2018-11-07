@@ -17,9 +17,15 @@ package de.saxsys.mvvmfx.utils.mapping;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import org.junit.jupiter.api.Test;
 
 import javafx.beans.property.IntegerProperty;
@@ -618,6 +624,7 @@ public class ModelWrapperTest {
 		person.setName("horst");
 		person.setAge(32);
 		person.setNicknames(Arrays.asList("captain"));
+		person.setEmailAddresses(Collections.singleton("test@example.org"));
 
 		ModelWrapper<Person> personWrapper = new ModelWrapper<>(person);
 
@@ -626,6 +633,9 @@ public class ModelWrapperTest {
 		final StringProperty name = personWrapper.field(Person::getName, Person::setName);
 		final IntegerProperty age = personWrapper.field(Person::getAge, Person::setAge);
 		final ListProperty<String> nicknames = personWrapper.field(Person::getNicknames, Person::setNicknames);
+		final SetProperty<String> emailAddresses = personWrapper.field(Person::getEmailAddresses, Person::setEmailAddresses);
+
+		assertThat(personWrapper.isDifferent()).isFalse();
 
 		name.set("hugo");
 		assertThat(personWrapper.isDifferent()).isTrue();
@@ -679,18 +689,32 @@ public class ModelWrapperTest {
 		nicknames.setValue(FXCollections.observableArrayList("spectator"));
 		assertThat(personWrapper.isDifferent()).isTrue();
 
-		personWrapper.reload();
-		assertThat(personWrapper.isDifferent()).isFalse();
-
 		name.setValue("hans");
 		assertThat(personWrapper.isDifferent()).isTrue();
 
 		personWrapper.reload();
 		assertThat(personWrapper.isDifferent()).isFalse();
 
+		emailAddresses.remove("test@example.org");
+
+		assertThat(personWrapper.isDifferent()).isTrue();
+
+		emailAddresses.add("test@example.org");
+		assertThat(personWrapper.isDifferent()).isFalse();
+
+		emailAddresses.add("horst@example.org");
+		assertThat(personWrapper.isDifferent()).isTrue();
+
+		emailAddresses.remove("horst@example.org");
+		assertThat(personWrapper.isDifferent()).isFalse();
+
+		emailAddresses.setValue(FXCollections.observableSet("horst@example.org"));
+		assertThat(personWrapper.isDifferent()).isTrue();
+
 		personWrapper.reset();
 		assertThat(personWrapper.isDifferent()).isTrue();
 	}
+
 
 	@Test
 	public void testDifferentFlagWithFxProperties() {
@@ -698,6 +722,7 @@ public class ModelWrapperTest {
 		person.setName("horst");
 		person.setAge(32);
 		person.setNicknames(Arrays.asList("captain"));
+		person.setEmailAddresses(Collections.singleton("test@example.org"));
 
 		ModelWrapper<PersonFX> personWrapper = new ModelWrapper<>(person);
 
@@ -706,6 +731,7 @@ public class ModelWrapperTest {
 		final StringProperty name = personWrapper.field(PersonFX::nameProperty);
 		final IntegerProperty age = personWrapper.field(PersonFX::ageProperty);
 		final ListProperty<String> nicknames = personWrapper.field(PersonFX::nicknamesProperty);
+		final SetProperty<String> emailAddresses = personWrapper.field(PersonFX::emailAddressesProperty);
 
 		name.set("hugo");
 		assertThat(personWrapper.isDifferent()).isTrue();
@@ -750,6 +776,22 @@ public class ModelWrapperTest {
 
 		personWrapper.reload();
 		assertThat(personWrapper.isDifferent()).isFalse();
+
+		emailAddresses.remove("test@example.org");
+
+		assertThat(personWrapper.isDifferent()).isTrue();
+
+		emailAddresses.add("test@example.org");
+		assertThat(personWrapper.isDifferent()).isFalse();
+
+		emailAddresses.add("horst@example.org");
+		assertThat(personWrapper.isDifferent()).isTrue();
+
+		emailAddresses.remove("horst@example.org");
+		assertThat(personWrapper.isDifferent()).isFalse();
+
+		emailAddresses.setValue(FXCollections.observableSet("horst@example.org"));
+		assertThat(personWrapper.isDifferent()).isTrue();
 
 		personWrapper.reset();
 		assertThat(personWrapper.isDifferent()).isTrue();
@@ -1069,5 +1111,32 @@ public class ModelWrapperTest {
 
 		assertThat(nameWithoutDefault.get()).isNull();
 		assertThat(ageWithoutDefault.get()).isEqualTo(0);
+	}
+
+
+	/**
+	 * This test case reproduces an error resulting from the internal usage of {@link FXCollections#observableSet(Set)}
+	 * that lead to the behavior that when a value was added to a mapped SetProperty then this value was initially also
+	 * added to the wrapped object.
+	 */
+	@Test
+	public void testSet() {
+		Person person = new Person();
+
+		person.setEmailAddresses(Collections.singleton("test@example.org"));
+
+		ModelWrapper<Person> personWrapper = new ModelWrapper<>(person);
+		SetProperty<String> emailAddresses = personWrapper.field(Person::getEmailAddresses, Person::setEmailAddresses);
+
+		personWrapper.commit();
+
+		// given
+		assertThat(person.getEmailAddresses()).containsOnly("test@example.org");
+
+		// when
+		emailAddresses.add("horst@example.org");
+
+		// then
+		assertThat(person.getEmailAddresses()).containsOnly("test@example.org");
 	}
 }

@@ -52,7 +52,9 @@ import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringImmutableSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringSetter;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +84,7 @@ import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
 
 
 /**
@@ -1462,23 +1465,36 @@ public class ModelWrapper<M> {
 
 	/* Field type set */
 
+	/**
+	 * This helper method is needed because there is no equivalent of {@link FXCollections#observableArrayList(Collection)}
+	 * for {@link Set}.
+	 * The only factory method available for sets is {@link FXCollections#observableSet(Set)} which creates an observable set
+	 * that is backed by the given set. However, this would mean that changes to the observable set are directly synchronized back to the
+	 * source set. In contrast to this {@link FXCollections#observableArrayList(Collection)} creates an observable list that has
+	 * initially all values of the source list but changes aren't synchronized back because internally a new ArrayList is created.
+	 * We need exactly this behaviour for Sets and therefore are using this helper method.
+	 */
+	private static <T> ObservableSet<T> observableHashSet(Set<T> source) {
+		return FXCollections.observableSet(new HashSet<>(source));
+	}
+
 	public <E> SetProperty<E> field(SetGetter<M, E> getter, SetSetter<M, E> setter) {
 		return add(new BeanSetPropertyField<>(this::propertyWasChanged, getter,
-				(m, set) -> setter.accept(m, FXCollections.observableSet(set)), SimpleSetProperty::new));
+				(m, set) -> setter.accept(m, observableHashSet(set)), SimpleSetProperty::new));
 	}
 
 	public <E> SetProperty<E> immutableField(SetGetter<M, E> getter, SetImmutableSetter<M, E> immutableSetter) {
 		return addImmutable(new ImmutableSetPropertyField<>(
 				this::propertyWasChanged,
 				getter,
-				(m, set) -> immutableSetter.apply(m, FXCollections.observableSet(set)),
+				(m, set) -> immutableSetter.apply(m, observableHashSet(set)),
 				SimpleSetProperty::new
 		));
 	}
 
 	public <E> SetProperty<E> field(SetGetter<M, E> getter, SetSetter<M, E> setter, Set<E> defaultValue) {
 		return add(new BeanSetPropertyField<>(this::propertyWasChanged, getter,
-				(m, set) -> setter.accept(m, FXCollections.observableSet(set)), SimpleSetProperty::new,
+				(m, set) -> setter.accept(m, observableHashSet(set)), SimpleSetProperty::new,
 				defaultValue));
 	}
 
@@ -1486,7 +1502,7 @@ public class ModelWrapper<M> {
 		return addImmutable(new ImmutableSetPropertyField<>(
 				this::propertyWasChanged,
 				getter,
-				(m, set) -> immutableSetter.apply(m, FXCollections.observableSet(set)),
+				(m, set) -> immutableSetter.apply(m, observableHashSet(set)),
 				SimpleSetProperty::new,
 				defaultValue));
 	}
@@ -1502,14 +1518,14 @@ public class ModelWrapper<M> {
 
 	public <E> SetProperty<E> field(String identifier, SetGetter<M, E> getter, SetSetter<M, E> setter) {
 		return addIdentified(identifier, new BeanSetPropertyField<>(this::propertyWasChanged, getter,
-				(m, set) -> setter.accept(m, FXCollections.observableSet(set)),
+				(m, set) -> setter.accept(m, observableHashSet(set)),
 				() -> new SimpleSetProperty<>(null, identifier)));
 	}
 
 	public <E> SetProperty<E> field(String identifier, SetGetter<M, E> getter, SetSetter<M, E> setter,
 			Set<E> defaultValue) {
 		return addIdentified(identifier, new BeanSetPropertyField<>(this::propertyWasChanged, getter,
-				(m, set) -> setter.accept(m, FXCollections.observableSet(set)),
+				(m, set) -> setter.accept(m, observableHashSet(set)),
 				() -> new SimpleSetProperty<>(null, identifier), defaultValue));
 	}
 
@@ -1517,7 +1533,7 @@ public class ModelWrapper<M> {
 		return addIdentifiedImmutable(identifier, new ImmutableSetPropertyField<>(
 				this::propertyWasChanged,
 				getter,
-				(m, set) -> immutableSetter.apply(m, FXCollections.observableSet(set)),
+				(m, set) -> immutableSetter.apply(m, observableHashSet(set)),
 				() -> new SimpleSetProperty<>(null, identifier)));
 	}
 
@@ -1526,7 +1542,7 @@ public class ModelWrapper<M> {
 		return addIdentifiedImmutable(identifier, new ImmutableSetPropertyField<>(
 				this::propertyWasChanged,
 				getter,
-				(m, set) -> immutableSetter.apply(m, FXCollections.observableSet(set)),
+				(m, set) -> immutableSetter.apply(m, observableHashSet(set)),
 				() -> new SimpleSetProperty<>(null, identifier),
 				defaultValue));
 	}

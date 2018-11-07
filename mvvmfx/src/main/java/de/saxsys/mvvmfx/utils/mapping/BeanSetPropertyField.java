@@ -97,6 +97,6 @@ public class BeanSetPropertyField<M, E, T extends ObservableSet<E>, R extends Pr
 		final Set<E> modelValue = getter.apply(wrappedObject);
 		final Set<E> wrapperValue = targetProperty;
 
-		return !Objects.equals(modelValue, wrappedObject);
+		return !Objects.equals(modelValue, wrapperValue);
 	}
 }
