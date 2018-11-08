@@ -21,7 +21,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import javafx.beans.property.MapProperty;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -309,6 +312,35 @@ public class FieldMethodOverloadingTest {
 		verifyDefaultValues(idFxFieldDefault, defaultValue, alternativeValue);
 	}
 
+	@Test
+	public <T> void mapProperty() {
+		Map<String, String> defaultValue = Collections.emptyMap();
+		final MapProperty<String, String> beanField = wrapper.field(ExampleModel::getMap, ExampleModel::setMap);
+		final MapProperty<String, String> fxField = wrapper.field(ExampleModel::mapProperty);
+		final MapProperty<String, String> beanFieldDefault = wrapper.field(ExampleModel::getMap, ExampleModel::setMap,
+				defaultValue);
+		final MapProperty<String, String> fxFieldDefault = wrapper.field(ExampleModel::mapProperty, defaultValue);
+
+		final MapProperty<String, String> idBeanField = wrapper.field("idBeanField", ExampleModel::getMap, ExampleModel::setMap);
+		final MapProperty<String, String> idFxField = wrapper.field("idFxField", ExampleModel::mapProperty);
+		final MapProperty<String, String> idBeanFieldDefault = wrapper.field("idBeanFieldDefault", ExampleModel::getMap,
+				ExampleModel::setMap, defaultValue);
+		final MapProperty<String, String> idFxFieldDefault = wrapper.field("idFxFieldDefault", ExampleModel::mapProperty,
+				defaultValue);
+
+		// for listProperty we can't use the other "verify" method because of type mismatch.
+		verifyId(idBeanField, "idBeanField");
+		verifyId(idFxField, "idFxField");
+		verifyId(idBeanFieldDefault, "idBeanFieldDefault");
+		verifyId(idFxFieldDefault, "idFxFieldDefault");
+
+		Map<String, String> alternativeValue = Collections.singletonMap("1", "2");
+		verifyDefaultValues(beanFieldDefault, defaultValue, alternativeValue);
+		verifyDefaultValues(fxFieldDefault, defaultValue, alternativeValue);
+		verifyDefaultValues(idBeanFieldDefault, defaultValue, alternativeValue);
+		verifyDefaultValues(idFxFieldDefault, defaultValue, alternativeValue);
+	}
+
 	private <T> void verifyDefaultValues(Collection<T> property, Collection<T> defaultValue, Collection<T> otherValue) {
 		property.addAll(otherValue);
 
@@ -317,5 +349,17 @@ public class FieldMethodOverloadingTest {
 
 		wrapper.reset();
 		assertThat(property).containsAll(defaultValue);
+	}
+
+	private void verifyDefaultValues(Map<String, String> property, Map<String, String> defaultValue, Map<String,
+			String> otherValue) {
+
+		property.putAll(otherValue);
+
+		wrapper.commit();
+		assertThat(property.entrySet()).containsExactlyElementsOf(otherValue.entrySet());
+
+		wrapper.reset();
+		assertThat(property.entrySet()).containsExactlyElementsOf(defaultValue.entrySet());
 	}
 }

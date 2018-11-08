@@ -17,74 +17,87 @@ package de.saxsys.mvvmfx.utils.mapping;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.MapProperty;
 import javafx.beans.property.SetProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableSet;
+import javafx.collections.ObservableMap;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class PersonFX {
-	
-	private StringProperty name = new SimpleStringProperty();
-	
-	private IntegerProperty age = new SimpleIntegerProperty();
 
-	private ListProperty<String> nicknames = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private StringProperty name = new SimpleStringProperty();
 
-	private SetProperty<String> emailAddresses = new SimpleSetProperty<>(FXCollections.observableSet(new HashSet<>()));
+    private IntegerProperty age = new SimpleIntegerProperty();
 
-	public String getName() {
-		return name.get();
-	}
-	
-	public StringProperty nameProperty() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name.set(name);
-	}
-	
-	public int getAge() {
-		return age.get();
-	}
-	
-	public IntegerProperty ageProperty() {
-		return age;
-	}
-	
-	public void setAge(int age) {
-		this.age.set(age);
-	}
+    private ListProperty<String> nicknames = new SimpleListProperty<>(FXCollections.observableArrayList());
 
-	public List<String> getNicknames() {
-		return nicknames.get();
-	}
+    private SetProperty<String> emailAddresses = new SimpleSetProperty<>(FXCollections.observableSet(new HashSet<>()));
 
-	public ListProperty<String> nicknamesProperty() {
-		return nicknames;
-	}
+    private MapProperty<String, String> phoneNumbers = new SimpleMapProperty<>(
+            FXCollections.observableMap(new HashMap<>()));
 
-	public void setNicknames(List<String> nicknames) {
-		this.nicknames.setAll(nicknames);
-	}
+    public String getName() {
+        return name.get();
+    }
 
-	public Set<String> getEmailAddresses() {
-		return emailAddresses.get();
-	}
+    public StringProperty nameProperty() {
+        return name;
+    }
 
-	public SetProperty<String> emailAddressesProperty() {
-		return emailAddresses;
-	}
+    public void setName(String name) {
+        this.name.set(name);
+    }
 
-	public void setEmailAddresses(Set<String> emailAddresses) {
-		this.emailAddresses.addAll(emailAddresses);
-	}
+    public int getAge() {
+        return age.get();
+    }
+
+    public IntegerProperty ageProperty() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age.set(age);
+    }
+
+    public List<String> getNicknames() {
+        return nicknames.get();
+    }
+
+    public ListProperty<String> nicknamesProperty() {
+        return nicknames;
+    }
+
+    public void setNicknames(List<String> nicknames) {
+        this.nicknames.setAll(nicknames);
+    }
+
+    public Set<String> getEmailAddresses() {
+        return emailAddresses.get();
+    }
+
+    public SetProperty<String> emailAddressesProperty() {
+        return emailAddresses;
+    }
+
+    public void setEmailAddresses(Set<String> emailAddresses) {
+        this.emailAddresses.addAll(emailAddresses);
+    }
+
+    public Map<String, String> getPhoneNumbers() { return phoneNumbers.get(); }
+
+    public MapProperty<String, String> phoneNumbersProperty() { return phoneNumbers; }
+
+    public void setPhoneNumbers(ObservableMap<String, String> phoneNumbers) { this.phoneNumbers.set(phoneNumbers); }
 }
