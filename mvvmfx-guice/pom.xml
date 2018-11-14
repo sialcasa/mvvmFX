@@ -49,12 +49,12 @@
 			<scope>provided</scope>
 		</dependency>
 
-
 		<dependency>
-			<groupId>com.cathive.fx</groupId>
-			<artifactId>fx-guice</artifactId>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>[3.0,)</version>
+			<scope>provided</scope>
 		</dependency>
-
 
 		<!-- Testing Frameworks -->
 		<dependency>

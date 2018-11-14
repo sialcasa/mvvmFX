@@ -16,8 +16,6 @@
 package de.saxsys.mvvmfx.guice.internal;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Provider;
-
 import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 
@@ -29,13 +27,6 @@ import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 public class MvvmfxModule extends AbstractModule {
 	@Override
 	protected void configure() {
-		bind(NotificationCenter.class).toProvider(new Provider<NotificationCenter>() {
-			@Override
-			public NotificationCenter get() {
-				return MvvmFX.getNotificationCenter();
-			}
-		});
-		
-		
+		bind(NotificationCenter.class).toProvider(MvvmFX::getNotificationCenter);
 	}
 }
