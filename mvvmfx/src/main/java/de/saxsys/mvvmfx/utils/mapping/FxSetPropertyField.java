@@ -90,6 +90,6 @@ class FxSetPropertyField<M, E, T extends ObservableSet<E>, R extends Property<T>
 		final Set<E> modelValue = accessor.apply(wrappedObject).getValue();
 		final Set<E> wrapperValue = targetProperty;
 
-		return !Objects.equals(modelValue, wrappedObject);
+		return !Objects.equals(modelValue, wrapperValue);
 	}
 }

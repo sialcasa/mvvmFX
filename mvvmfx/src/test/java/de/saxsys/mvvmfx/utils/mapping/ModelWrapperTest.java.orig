@@ -15,12 +15,22 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.mapping;
 
+<<<<<<< HEAD
+=======
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
+import org.junit.jupiter.api.Test;
+
+>>>>>>> upstream/develop
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.MapProperty;
@@ -707,8 +717,18 @@ public class ModelWrapperTest {
         personWrapper.reload();
         assertThat(personWrapper.isDirty()).isFalse();
 
+<<<<<<< HEAD
         nicknames.add("player");
         assertThat(personWrapper.isDirty()).isTrue();
+=======
+	@Test
+	public void testDifferentFlag() {
+		Person person = new Person();
+		person.setName("horst");
+		person.setAge(32);
+		person.setNicknames(Arrays.asList("captain"));
+		person.setEmailAddresses(Collections.singleton("test@example.org"));
+>>>>>>> upstream/develop
 
         nicknames.remove("player");
         assertThat(personWrapper.isDirty()).isTrue(); // dirty is still true
@@ -716,8 +736,17 @@ public class ModelWrapperTest {
         personWrapper.commit();
         assertThat(personWrapper.isDirty()).isFalse();
 
+<<<<<<< HEAD
         name.set("hans");
         assertThat(personWrapper.isDirty()).isTrue();
+=======
+		final StringProperty name = personWrapper.field(Person::getName, Person::setName);
+		final IntegerProperty age = personWrapper.field(Person::getAge, Person::setAge);
+		final ListProperty<String> nicknames = personWrapper.field(Person::getNicknames, Person::setNicknames);
+		final SetProperty<String> emailAddresses = personWrapper.field(Person::getEmailAddresses, Person::setEmailAddresses);
+
+		assertThat(personWrapper.isDifferent()).isFalse();
+>>>>>>> upstream/develop
 
         personWrapper.reset();
         assertThat(personWrapper.isDirty()).isTrue();
@@ -750,9 +779,7 @@ public class ModelWrapperTest {
         final StringProperty name = personWrapper.field(Person::getName, Person::setName);
         final IntegerProperty age = personWrapper.field(Person::getAge, Person::setAge);
         final ListProperty<String> nicknames = personWrapper.field(Person::getNicknames, Person::setNicknames);
-        final SetProperty<String> emailAddresses = personWrapper.field(Person::getEmailAddresses, Person::setEmailAddresses);
-
-        assertThat(personWrapper.isDifferent()).isFalse();
+        //final SetProperty<String> emailAddresses = personWrapper.field(Person::getEmailAddresses, Person::setEmailAddresses);
 
         name.set("hugo");
         assertThat(personWrapper.isDifferent()).isTrue();
@@ -775,6 +802,7 @@ public class ModelWrapperTest {
         nicknames.add("player");
         assertThat(personWrapper.isDifferent()).isTrue();
 
+<<<<<<< HEAD
         nicknames.remove("player");
         assertThat(personWrapper.isDifferent()).isFalse();
 
@@ -792,33 +820,19 @@ public class ModelWrapperTest {
         // change in the model element...
         // ... for this reason the different flag will still be true
         assertThat(personWrapper.isDifferent()).isTrue();
-
-        // ... but if we add another value to the nickname-Property, the modelWrapper can react to this change
-        person.getNicknames().add("other");
-        nicknames.add("other");
-        assertThat(personWrapper.isDifferent()).isFalse();
-
-        nicknames.add("player");
-        assertThat(personWrapper.isDifferent()).isTrue();
-
-        nicknames.remove("player");
-        assertThat(personWrapper.isDifferent()).isFalse();
-
-        nicknames.setValue(FXCollections.observableArrayList("spectator"));
-        assertThat(personWrapper.isDifferent()).isTrue();
-
+=======
 		name.setValue("hans");
 		assertThat(personWrapper.isDifferent()).isTrue();
 
-        personWrapper.reload();
-        assertThat(personWrapper.isDifferent()).isFalse();
+		personWrapper.reload();
+		assertThat(personWrapper.isDifferent()).isFalse();
 
 		emailAddresses.remove("test@example.org");
 
-        assertThat(personWrapper.isDifferent()).isTrue();
+		assertThat(personWrapper.isDifferent()).isTrue();
 
 		emailAddresses.add("test@example.org");
-        assertThat(personWrapper.isDifferent()).isFalse();
+		assertThat(personWrapper.isDifferent()).isFalse();
 
 		emailAddresses.add("horst@example.org");
 		assertThat(personWrapper.isDifferent()).isTrue();
@@ -829,10 +843,53 @@ public class ModelWrapperTest {
 		emailAddresses.setValue(FXCollections.observableSet("horst@example.org"));
 		assertThat(personWrapper.isDifferent()).isTrue();
 
+		personWrapper.reset();
+		assertThat(personWrapper.isDifferent()).isTrue();
+	}
+
+
+	@Test
+	public void testDifferentFlagWithFxProperties() {
+		PersonFX person = new PersonFX();
+		person.setName("horst");
+		person.setAge(32);
+		person.setNicknames(Arrays.asList("captain"));
+		person.setEmailAddresses(Collections.singleton("test@example.org"));
+>>>>>>> upstream/develop
+
+        // ... but if we add another value to the nickname-Property, the modelWrapper can react to this change
+        person.getNicknames().add("other");
+        nicknames.add("other");
+        assertThat(personWrapper.isDifferent()).isFalse();
+
+        nicknames.add("player");
+        assertThat(personWrapper.isDifferent()).isTrue();
+
+<<<<<<< HEAD
+        nicknames.remove("player");
+        assertThat(personWrapper.isDifferent()).isFalse();
+=======
+		final StringProperty name = personWrapper.field(PersonFX::nameProperty);
+		final IntegerProperty age = personWrapper.field(PersonFX::ageProperty);
+		final ListProperty<String> nicknames = personWrapper.field(PersonFX::nicknamesProperty);
+		final SetProperty<String> emailAddresses = personWrapper.field(PersonFX::emailAddressesProperty);
+>>>>>>> upstream/develop
+
+        nicknames.setValue(FXCollections.observableArrayList("spectator"));
+        assertThat(personWrapper.isDifferent()).isTrue();
+
+        personWrapper.reload();
+        assertThat(personWrapper.isDifferent()).isFalse();
+
+        name.setValue("hans");
+        assertThat(personWrapper.isDifferent()).isTrue();
+
+        personWrapper.reload();
+        assertThat(personWrapper.isDifferent()).isFalse();
+
         personWrapper.reset();
         assertThat(personWrapper.isDifferent()).isTrue();
     }
-
 
     @Test
     public void testDifferentFlagWithFxProperties() {
@@ -840,7 +897,6 @@ public class ModelWrapperTest {
         person.setName("horst");
         person.setAge(32);
         person.setNicknames(Arrays.asList("captain"));
-		person.setEmailAddresses(Collections.singleton("test@example.org"));
 
         ModelWrapper<PersonFX> personWrapper = new ModelWrapper<>(person);
 
@@ -849,7 +905,6 @@ public class ModelWrapperTest {
         final StringProperty name = personWrapper.field(PersonFX::nameProperty);
         final IntegerProperty age = personWrapper.field(PersonFX::ageProperty);
         final ListProperty<String> nicknames = personWrapper.field(PersonFX::nicknamesProperty);
-		final SetProperty<String> emailAddresses = personWrapper.field(PersonFX::emailAddressesProperty);
 
         name.set("hugo");
         assertThat(personWrapper.isDifferent()).isTrue();
@@ -866,8 +921,30 @@ public class ModelWrapperTest {
         nicknames.remove("captain");
         assertThat(personWrapper.isDifferent()).isTrue();
 
+<<<<<<< HEAD
         nicknames.add("captain");
         assertThat(personWrapper.isDifferent()).isFalse();
+=======
+		emailAddresses.remove("test@example.org");
+
+		assertThat(personWrapper.isDifferent()).isTrue();
+
+		emailAddresses.add("test@example.org");
+		assertThat(personWrapper.isDifferent()).isFalse();
+
+		emailAddresses.add("horst@example.org");
+		assertThat(personWrapper.isDifferent()).isTrue();
+
+		emailAddresses.remove("horst@example.org");
+		assertThat(personWrapper.isDifferent()).isFalse();
+
+		emailAddresses.setValue(FXCollections.observableSet("horst@example.org"));
+		assertThat(personWrapper.isDifferent()).isTrue();
+
+		personWrapper.reset();
+		assertThat(personWrapper.isDifferent()).isTrue();
+	}
+>>>>>>> upstream/develop
 
         person.getNicknames().add("captain"); // duplicate value
         nicknames.add("captain");
@@ -896,22 +973,6 @@ public class ModelWrapperTest {
 
         personWrapper.reload();
         assertThat(personWrapper.isDifferent()).isFalse();
-
-		emailAddresses.remove("test@example.org");
-
-		assertThat(personWrapper.isDifferent()).isTrue();
-
-		emailAddresses.add("test@example.org");
-		assertThat(personWrapper.isDifferent()).isFalse();
-
-		emailAddresses.add("horst@example.org");
-		assertThat(personWrapper.isDifferent()).isTrue();
-
-		emailAddresses.remove("horst@example.org");
-		assertThat(personWrapper.isDifferent()).isFalse();
-
-		emailAddresses.setValue(FXCollections.observableSet("horst@example.org"));
-		assertThat(personWrapper.isDifferent()).isTrue();
 
         personWrapper.reset();
         assertThat(personWrapper.isDifferent()).isTrue();
@@ -1271,8 +1332,13 @@ public class ModelWrapperTest {
         assertThat(nameWithDefault.get()).isEqualTo("empty");
         assertThat(ageWithDefault.get()).isEqualTo(12);
 
+<<<<<<< HEAD
         assertThat(nameWithoutDefault.get()).isNull();
         assertThat(ageWithoutDefault.get()).isEqualTo(0);
+    }
+=======
+		assertThat(nameWithoutDefault.get()).isNull();
+		assertThat(ageWithoutDefault.get()).isEqualTo(0);
 	}
 
 
@@ -1300,5 +1366,6 @@ public class ModelWrapperTest {
 
 		// then
 		assertThat(person.getEmailAddresses()).containsOnly("test@example.org");
-    }
+	}
+>>>>>>> upstream/develop
 }
