@@ -16,24 +16,24 @@
 package de.saxsys.mvvmfx.utils.mapping.accessorfunctions;
 
 import javafx.beans.property.MapProperty;
+
 import java.util.function.Function;
 
 /**
  * A functional interface to define an accessor method for a property of a map type.
  *
  * @param <M> the generic type of the model.
- *
  * @param <K> the type of the key elements
- *
  * @param <V> the type of the value elements
  */
 @FunctionalInterface
 public interface MapPropertyAccessor<M, K, V> extends Function<M, MapProperty<K, V>> {
 
-    /**
-     * @param model the model instance
-     * @return the property field of the model
-     */
-    @Override
-    MapProperty<K, V> apply(M model);
+	/**
+	 * @param model the model instance
+	 *
+	 * @return the property field of the model
+	 */
+	@Override
+	MapProperty<K, V> apply(M model);
 }

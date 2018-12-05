@@ -102,7 +102,7 @@ public class BeanMapPropertyField<M, K, V, T extends ObservableMap<K, V>, R exte
         final Map<K, V> modelValue = getter.apply(wrappedObject);
         final Map<K, V> wrapperValue = targetProperty;
 
-        return !Objects.equals(modelValue, wrappedObject);
+        return !Objects.equals(modelValue, wrapperValue);
     }
 
 }

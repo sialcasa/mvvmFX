@@ -42,143 +42,143 @@ import java.util.Set;
 
 public class ExampleModel {
 
-    private IntegerProperty integerProperty = new SimpleIntegerProperty();
-    private DoubleProperty doubleProperty = new SimpleDoubleProperty();
-    private FloatProperty floatProperty = new SimpleFloatProperty();
-    private LongProperty longProperty = new SimpleLongProperty();
+	private IntegerProperty integerProperty = new SimpleIntegerProperty();
+	private DoubleProperty doubleProperty = new SimpleDoubleProperty();
+	private FloatProperty floatProperty = new SimpleFloatProperty();
+	private LongProperty longProperty = new SimpleLongProperty();
 
-    private StringProperty stringProperty = new SimpleStringProperty();
+	private StringProperty stringProperty = new SimpleStringProperty();
 
-    private ObjectProperty<Person> objectProperty = new SimpleObjectProperty<>();
+	private ObjectProperty<Person> objectProperty = new SimpleObjectProperty<>();
 
-    private BooleanProperty booleanProperty = new SimpleBooleanProperty();
+	private BooleanProperty booleanProperty = new SimpleBooleanProperty();
 
-    private ListProperty<String> listProperty = new SimpleListProperty<>();
+	private ListProperty<String> listProperty = new SimpleListProperty<>();
 
-    private SetProperty<String> setProperty = new SimpleSetProperty<>();
+	private SetProperty<String> setProperty = new SimpleSetProperty<>();
 
-    private MapProperty<String, String> mapProperty = new SimpleMapProperty<>();
+	private MapProperty<String, String> mapProperty = new SimpleMapProperty<>();
 
 
-    public int getInteger() {
-        return integerProperty.get();
-    }
+	public int getInteger() {
+		return integerProperty.get();
+	}
 
-    public IntegerProperty integerProperty() {
-        return integerProperty;
-    }
+	public IntegerProperty integerProperty() {
+		return integerProperty;
+	}
 
-    public void setInteger(int integerProperty) {
-        this.integerProperty.set(integerProperty);
-    }
+	public void setInteger(int integerProperty) {
+		this.integerProperty.set(integerProperty);
+	}
 
-    public double getDouble() {
-        return doubleProperty.get();
-    }
+	public double getDouble() {
+		return doubleProperty.get();
+	}
 
-    public DoubleProperty doubleProperty() {
-        return doubleProperty;
-    }
+	public DoubleProperty doubleProperty() {
+		return doubleProperty;
+	}
 
-    public void setDouble(double doubleProperty) {
-        this.doubleProperty.set(doubleProperty);
-    }
+	public void setDouble(double doubleProperty) {
+		this.doubleProperty.set(doubleProperty);
+	}
 
-    public float getFloat() {
-        return floatProperty.get();
-    }
+	public float getFloat() {
+		return floatProperty.get();
+	}
 
-    public FloatProperty floatProperty() {
-        return floatProperty;
-    }
+	public FloatProperty floatProperty() {
+		return floatProperty;
+	}
 
-    public void setFloat(float floatProperty) {
-        this.floatProperty.set(floatProperty);
-    }
+	public void setFloat(float floatProperty) {
+		this.floatProperty.set(floatProperty);
+	}
 
-    public long getLong() {
-        return longProperty.get();
-    }
+	public long getLong() {
+		return longProperty.get();
+	}
 
-    public LongProperty longProperty() {
-        return longProperty;
-    }
+	public LongProperty longProperty() {
+		return longProperty;
+	}
 
-    public void setLong(long longProperty) {
-        this.longProperty.set(longProperty);
-    }
+	public void setLong(long longProperty) {
+		this.longProperty.set(longProperty);
+	}
 
-    public String getString() {
-        return stringProperty.get();
-    }
+	public String getString() {
+		return stringProperty.get();
+	}
 
-    public StringProperty stringProperty() {
-        return stringProperty;
-    }
+	public StringProperty stringProperty() {
+		return stringProperty;
+	}
 
-    public void setString(String stringProperty) {
-        this.stringProperty.set(stringProperty);
-    }
+	public void setString(String stringProperty) {
+		this.stringProperty.set(stringProperty);
+	}
 
-    public Person getObject() {
-        return objectProperty.get();
-    }
+	public Person getObject() {
+		return objectProperty.get();
+	}
 
-    public ObjectProperty<Person> objectProperty() {
-        return objectProperty;
-    }
+	public ObjectProperty<Person> objectProperty() {
+		return objectProperty;
+	}
 
-    public void setObject(Person objectProperty) {
-        this.objectProperty.set(objectProperty);
-    }
+	public void setObject(Person objectProperty) {
+		this.objectProperty.set(objectProperty);
+	}
 
-    public boolean getBoolean() {
-        return booleanProperty.get();
-    }
+	public boolean getBoolean() {
+		return booleanProperty.get();
+	}
 
-    public BooleanProperty booleanProperty() {
-        return booleanProperty;
-    }
+	public BooleanProperty booleanProperty() {
+		return booleanProperty;
+	}
 
-    public void setBoolean(boolean booleanProperty) {
-        this.booleanProperty.set(booleanProperty);
-    }
+	public void setBoolean(boolean booleanProperty) {
+		this.booleanProperty.set(booleanProperty);
+	}
 
-    public List<String> getList() {
-        return listProperty.get();
-    }
+	public List<String> getList() {
+		return listProperty.get();
+	}
 
-    public ListProperty<String> listProperty() {
-        return listProperty;
-    }
+	public ListProperty<String> listProperty() {
+		return listProperty;
+	}
 
-    public void setList(List<String> listProperty) {
-        this.listProperty.setAll(listProperty);
-    }
+	public void setList(List<String> listProperty) {
+		this.listProperty.setAll(listProperty);
+	}
 
-    public Set<String> getSet() {
-        return setProperty.get();
-    }
+	public Set<String> getSet() {
+		return setProperty.get();
+	}
 
-    public SetProperty<String> setProperty() {
-        return setProperty;
-    }
+	public SetProperty<String> setProperty() {
+		return setProperty;
+	}
 
-    public void setSet(Set<String> set) {
-        this.setProperty.retainAll(set);
-        this.setProperty.addAll(set);
-    }
+	public void setSet(Set<String> set) {
+		this.setProperty.retainAll(set);
+		this.setProperty.addAll(set);
+	}
 
-    public Map<String, String> getMap() {
-        return mapProperty.get();
-    }
+	public Map<String, String> getMap() {
+		return mapProperty.get();
+	}
 
-    public MapProperty<String, String> mapProperty() {
-        return mapProperty;
-    }
+	public MapProperty<String, String> mapProperty() {
+		return mapProperty;
+	}
 
-    public void setMap(Map<String, String> map) {
-        this.mapProperty.get().clear();
-        this.mapProperty.get().putAll(map);
-    }
+	public void setMap(Map<String, String> map) {
+		this.mapProperty.get().clear();
+		this.mapProperty.get().putAll(map);
+	}
 }

@@ -21,66 +21,66 @@ import static de.saxsys.mvvmfx.utils.mapping.BeanMapPropertyField.setAll;
  * be mapped to a JavaFX {@link MapProperty}.
  *
  * @param <K> the type of the key elements.
- *
  * @param <V> the type of the value elements.
  */
-class FxMapPropertyField<M, K, V, T extends ObservableMap<K, V>, R extends Property<T>> implements PropertyField<T, M, R> {
+class FxMapPropertyField<M, K, V, T extends ObservableMap<K, V>, R extends Property<T>>
+		implements PropertyField<T, M, R> {
 
-    private Map<K, V> defaultValue;
+	private Map<K, V> defaultValue;
 
-    private final MapPropertyAccessor<M, K, V> accessor;
+	private final MapPropertyAccessor<M, K, V> accessor;
 
-    private final MapProperty<K, V> targetProperty;
+	private final MapProperty<K, V> targetProperty;
 
-    public FxMapPropertyField(
-            SideEffect updateFunction, MapPropertyAccessor<M, K, V> accessor,
-            Supplier<MapProperty<K, V>> propertySupplier) {
-        this(updateFunction, accessor, propertySupplier, Collections.emptyMap());
-    }
+	public FxMapPropertyField(
+			SideEffect updateFunction, MapPropertyAccessor<M, K, V> accessor,
+			Supplier<MapProperty<K, V>> propertySupplier) {
+		this(updateFunction, accessor, propertySupplier, Collections.emptyMap());
+	}
 
-    public FxMapPropertyField(SideEffect updateFunction, MapPropertyAccessor<M, K, V> accessor,
-            Supplier<MapProperty<K, V>> propertySupplier,
-            Map<K, V> defaultValue) {
-        this.accessor = accessor;
-        this.defaultValue = defaultValue;
-        this.targetProperty = propertySupplier.get();
+	public FxMapPropertyField(SideEffect updateFunction, MapPropertyAccessor<M, K, V> accessor,
+			Supplier<MapProperty<K, V>> propertySupplier,
+			Map<K, V> defaultValue) {
+		this.accessor = accessor;
+		this.defaultValue = defaultValue;
+		this.targetProperty = propertySupplier.get();
 
-        this.targetProperty.setValue(FXCollections.observableMap(new HashMap<>()));
-        this.targetProperty.addListener((MapChangeListener<K, V>) change -> updateFunction.call());
-    }
+		this.targetProperty.setValue(FXCollections.observableMap(new HashMap<>()));
+		this.targetProperty.addListener((MapChangeListener<K, V>) change -> updateFunction.call());
+	}
 
-    @Override
-    public void commit(M wrappedObject) {
-        setAll(accessor.apply(wrappedObject), targetProperty.getValue());
-    }
+	@Override
+	public void commit(M wrappedObject) {
+		setAll(accessor.apply(wrappedObject), targetProperty.getValue());
+	}
 
-    @Override
-    public void reload(M wrappedObject) {
-        setAll(targetProperty, accessor.apply(wrappedObject).getValue());
-    }
+	@Override
+	public void reload(M wrappedObject) {
+		setAll(targetProperty, accessor.apply(wrappedObject).getValue());
+	}
 
-    @Override
-    public void resetToDefault() {
-        targetProperty.get().clear();
-        setAll(targetProperty, defaultValue);
-    }
+	@Override
+	public void resetToDefault() {
+		targetProperty.get().clear();
+		setAll(targetProperty, defaultValue);
+	}
 
-    @Override
-    public void updateDefault(M wrappedObject) {
-        defaultValue = new HashMap<>(accessor.apply(wrappedObject).getValue());
-    }
+	@Override
+	public void updateDefault(M wrappedObject) {
+		defaultValue = new HashMap<>(accessor.apply(wrappedObject).getValue());
+	}
 
-    @Override
-    public R getProperty() {
-        return (R) targetProperty;
-    }
+	@Override
+	public R getProperty() {
+		return (R) targetProperty;
+	}
 
-    @Override
-    public boolean isDifferent(M wrappedObject) {
-        final Map<K, V> modelValue = accessor.apply(wrappedObject).getValue();
-        final Map<K, V> wrapperValue = targetProperty;
+	@Override
+	public boolean isDifferent(M wrappedObject) {
+		final Map<K, V> modelValue = accessor.apply(wrappedObject).getValue();
+		final Map<K, V> wrapperValue = targetProperty;
 
-        return !Objects.equals(modelValue, wrappedObject);
-    }
+		return !Objects.equals(modelValue, wrapperValue);
+	}
 }
 

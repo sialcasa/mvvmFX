@@ -23,11 +23,11 @@ import java.util.Map;
 import java.util.Set;
 
 public class Person {
-	
+
 	private String name;
-	
+
 	private int age;
-	
+
 	private List<String> nicknames = new ArrayList<>();
 
 	private Set<String> emailAddresses = new HashSet<>();
@@ -38,7 +38,7 @@ public class Person {
 		return nicknames;
 	}
 
-	public void setNicknames (List<String> nicknames) {
+	public void setNicknames(List<String> nicknames) {
 		this.nicknames = nicknames;
 	}
 
@@ -57,15 +57,15 @@ public class Person {
 	public int getAge() {
 		return age;
 	}
-	
+
 	public void setAge(int age) {
 		this.age = age;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}

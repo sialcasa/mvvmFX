@@ -28,12 +28,12 @@ import java.util.function.BiFunction;
 @FunctionalInterface
 public interface MapImmutableSetter<M, K, V> extends BiFunction<M, Map<K, V>, M> {
 
-    /**
-     * @param model       the model instance
-     * @param newElements the new elements of this map field.
-     *
-     * @return a new model instance with the new values
-     */
-    @Override
-    M apply(M model, Map<K, V> newElements);
+	/**
+	 * @param model       the model instance
+	 * @param newElements the new elements of this map field.
+	 *
+	 * @return a new model instance with the new values
+	 */
+	@Override
+	M apply(M model, Map<K, V> newElements);
 }

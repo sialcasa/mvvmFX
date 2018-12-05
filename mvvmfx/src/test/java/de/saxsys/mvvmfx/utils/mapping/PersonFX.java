@@ -36,68 +36,68 @@ import java.util.Set;
 
 public class PersonFX {
 
-    private StringProperty name = new SimpleStringProperty();
+	private StringProperty name = new SimpleStringProperty();
 
-    private IntegerProperty age = new SimpleIntegerProperty();
+	private IntegerProperty age = new SimpleIntegerProperty();
 
-    private ListProperty<String> nicknames = new SimpleListProperty<>(FXCollections.observableArrayList());
+	private ListProperty<String> nicknames = new SimpleListProperty<>(FXCollections.observableArrayList());
 
-    private SetProperty<String> emailAddresses = new SimpleSetProperty<>(FXCollections.observableSet(new HashSet<>()));
+	private SetProperty<String> emailAddresses = new SimpleSetProperty<>(FXCollections.observableSet(new HashSet<>()));
 
-    private MapProperty<String, String> phoneNumbers = new SimpleMapProperty<>(
-            FXCollections.observableMap(new HashMap<>()));
+	private MapProperty<String, String> phoneNumbers = new SimpleMapProperty<>(
+			FXCollections.observableMap(new HashMap<>()));
 
-    public String getName() {
-        return name.get();
-    }
+	public String getName() {
+		return name.get();
+	}
 
-    public StringProperty nameProperty() {
-        return name;
-    }
+	public StringProperty nameProperty() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name.set(name);
-    }
+	public void setName(String name) {
+		this.name.set(name);
+	}
 
-    public int getAge() {
-        return age.get();
-    }
+	public int getAge() {
+		return age.get();
+	}
 
-    public IntegerProperty ageProperty() {
-        return age;
-    }
+	public IntegerProperty ageProperty() {
+		return age;
+	}
 
-    public void setAge(int age) {
-        this.age.set(age);
-    }
+	public void setAge(int age) {
+		this.age.set(age);
+	}
 
-    public List<String> getNicknames() {
-        return nicknames.get();
-    }
+	public List<String> getNicknames() {
+		return nicknames.get();
+	}
 
-    public ListProperty<String> nicknamesProperty() {
-        return nicknames;
-    }
+	public ListProperty<String> nicknamesProperty() {
+		return nicknames;
+	}
 
-    public void setNicknames(List<String> nicknames) {
-        this.nicknames.setAll(nicknames);
-    }
+	public void setNicknames(List<String> nicknames) {
+		this.nicknames.setAll(nicknames);
+	}
 
-    public Set<String> getEmailAddresses() {
-        return emailAddresses.get();
-    }
+	public Set<String> getEmailAddresses() {
+		return emailAddresses.get();
+	}
 
-    public SetProperty<String> emailAddressesProperty() {
-        return emailAddresses;
-    }
+	public SetProperty<String> emailAddressesProperty() {
+		return emailAddresses;
+	}
 
-    public void setEmailAddresses(Set<String> emailAddresses) {
-        this.emailAddresses.addAll(emailAddresses);
-    }
+	public void setEmailAddresses(Set<String> emailAddresses) {
+		this.emailAddresses.addAll(emailAddresses);
+	}
 
-    public Map<String, String> getPhoneNumbers() { return phoneNumbers.get(); }
+	public Map<String, String> getPhoneNumbers() { return phoneNumbers.get(); }
 
-    public MapProperty<String, String> phoneNumbersProperty() { return phoneNumbers; }
+	public MapProperty<String, String> phoneNumbersProperty() { return phoneNumbers; }
 
-    public void setPhoneNumbers(ObservableMap<String, String> phoneNumbers) { this.phoneNumbers.set(phoneNumbers); }
+	public void setPhoneNumbers(ObservableMap<String, String> phoneNumbers) { this.phoneNumbers.set(phoneNumbers); }
 }

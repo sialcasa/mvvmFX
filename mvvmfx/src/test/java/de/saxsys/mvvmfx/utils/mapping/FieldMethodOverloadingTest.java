@@ -15,7 +15,20 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.utils.mapping;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.google.common.collect.Sets;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.MapProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.SetProperty;
+import javafx.beans.property.StringProperty;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,44 +37,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javafx.beans.property.MapProperty;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import com.google.common.collect.Sets;
-
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SetProperty;
-import javafx.beans.property.StringProperty;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * This test class is <strong>not</strong> indented to verify the behaviour of the {@link ModelWrapper} class in detail with all
- * possible edge cases. For this purpose there is the test class {@link ModelWrapperTest} that has detailed test cases
- * for the behaviour of the wrapper.
+ * This test class is <strong>not</strong> indented to verify the behaviour of the {@link ModelWrapper} class in detail
+ * with all possible edge cases. For this purpose there is the test class {@link ModelWrapperTest} that has detailed
+ * test cases for the behaviour of the wrapper.
  *
- * The intention of this test class is instead to verify the correct overloading of the field-methods for all property types.
- * This is needed because most of the fields-methods are more or less the same and therefor are copy+pasted.
- * However, due to the poor type system of Java this copy+paste work is inevitable.
- * As most of the implementation code for most of the actual features is reused internally it is safe to only test
- * the implementation details for some examples like it is done in {@link ModelWrapperTest}.
- * The overloaded methods mostly pass through the given arguments.
+ * The intention of this test class is instead to verify the correct overloading of the field-methods for all property
+ * types. This is needed because most of the fields-methods are more or less the same and therefor are copy+pasted.
+ * However, due to the poor type system of Java this copy+paste work is inevitable. As most of the implementation code
+ * for most of the actual features is reused internally it is safe to only test the implementation details for some
+ * examples like it is done in {@link ModelWrapperTest}. The overloaded methods mostly pass through the given
+ * arguments.
  *
  * There are 2 use cases that we are checking here: </p>
- * 1. Verify that all overloaded methods have the correct return type.
- * Because of Javas poor type system this isn't always as easy as it sounds.<p/>
- * 2. Verify that the basic handling of default values and identifiers works for all overloaded methods.
- * The overloaded methods pass through most of the arguments but it can happen that for one of the methods an argument
- * is missing due to copy+paste errors (see <a href="https://github.com/sialcasa/mvvmFX/pull/393">issue 393</a> for an example)
- * or due to a refactoring. This test class should point at such "simple" errors.
- *
+ * 1. Verify that all overloaded methods have the correct return type. Because of Javas poor type system this isn't
+ * always as easy as it sounds.<p/>
+ * 2. Verify that the basic handling of default values and identifiers works for all overloaded methods. The overloaded
+ * methods pass through most of the arguments but it can happen that for one of the methods an argument is missing due
+ * to copy+paste errors (see <a href="https://github.com/sialcasa/mvvmFX/pull/393">issue 393</a> for an example) or due
+ * to a refactoring. This test class should point at such "simple" errors.
  */
 public class FieldMethodOverloadingTest {
 
@@ -77,15 +73,15 @@ public class FieldMethodOverloadingTest {
 	 * A test helper method that verifies some default behaviour of all properties.
 	 */
 	private <T> void verify(T defaultValue,
-							T alternativeValue,
-							Property<T> beanField,
-							Property<T> fxField,
-							Property<T> beanFieldDefault,
-							Property<T> fxFieldDefault,
-							Property<T> idBeanField,
-							Property<T> idFxField,
-							Property<T> idBeanFieldDefault,
-							Property<T> idFxFieldDefault) {
+			T alternativeValue,
+			Property<T> beanField,
+			Property<T> fxField,
+			Property<T> beanFieldDefault,
+			Property<T> fxFieldDefault,
+			Property<T> idBeanField,
+			Property<T> idFxField,
+			Property<T> idBeanFieldDefault,
+			Property<T> idFxFieldDefault) {
 
 		verifyDefaultValue(beanFieldDefault, defaultValue, alternativeValue);
 		verifyDefaultValue(fxFieldDefault, defaultValue, alternativeValue);
@@ -120,16 +116,20 @@ public class FieldMethodOverloadingTest {
 
 		final IntegerProperty beanField = wrapper.field(ExampleModel::getInteger, ExampleModel::setInteger);
 		final IntegerProperty fxField = wrapper.field(ExampleModel::integerProperty);
-		final IntegerProperty beanFieldDefault = wrapper.field(ExampleModel::getInteger, ExampleModel::setInteger, defaultValue);
+		final IntegerProperty beanFieldDefault = wrapper
+				.field(ExampleModel::getInteger, ExampleModel::setInteger, defaultValue);
 		final IntegerProperty fxFieldDefault = wrapper.field(ExampleModel::integerProperty, defaultValue);
 
-		final IntegerProperty idBeanField = wrapper.field("idBeanField", ExampleModel::getInteger, ExampleModel::setInteger);
+		final IntegerProperty idBeanField = wrapper
+				.field("idBeanField", ExampleModel::getInteger, ExampleModel::setInteger);
 		final IntegerProperty idFxField = wrapper.field("idFxField", ExampleModel::integerProperty);
 		final IntegerProperty idBeanFieldDefault = wrapper.field("idBeanFieldDefault", ExampleModel::getInteger,
 				ExampleModel::setInteger, defaultValue);
-		final IntegerProperty idFxFieldDefault = wrapper.field("idFxFieldDefault", ExampleModel::integerProperty, defaultValue);
+		final IntegerProperty idFxFieldDefault = wrapper
+				.field("idFxFieldDefault", ExampleModel::integerProperty, defaultValue);
 
-		verify(defaultValue, 10, beanField, fxField, beanFieldDefault, fxFieldDefault, idBeanField, idFxField, idBeanFieldDefault, idFxFieldDefault);
+		verify(defaultValue, 10, beanField, fxField, beanFieldDefault, fxFieldDefault, idBeanField, idFxField,
+				idBeanFieldDefault, idFxFieldDefault);
 	}
 
 	@Test
@@ -138,16 +138,20 @@ public class FieldMethodOverloadingTest {
 
 		final DoubleProperty beanField = wrapper.field(ExampleModel::getDouble, ExampleModel::setDouble);
 		final DoubleProperty fxField = wrapper.field(ExampleModel::doubleProperty);
-		final DoubleProperty beanFieldDefault = wrapper.field(ExampleModel::getDouble, ExampleModel::setDouble, defaultValue);
+		final DoubleProperty beanFieldDefault = wrapper
+				.field(ExampleModel::getDouble, ExampleModel::setDouble, defaultValue);
 		final DoubleProperty fxFieldDefault = wrapper.field(ExampleModel::doubleProperty, defaultValue);
 
-		final DoubleProperty idBeanField = wrapper.field("idBeanField", ExampleModel::getDouble, ExampleModel::setDouble);
+		final DoubleProperty idBeanField = wrapper
+				.field("idBeanField", ExampleModel::getDouble, ExampleModel::setDouble);
 		final DoubleProperty idFxField = wrapper.field("idFxField", ExampleModel::doubleProperty);
 		final DoubleProperty idBeanFieldDefault = wrapper.field("idBeanFieldDefault", ExampleModel::getDouble,
 				ExampleModel::setDouble, defaultValue);
-		final DoubleProperty idFxFieldDefault = wrapper.field("idFxFieldDefault", ExampleModel::doubleProperty, defaultValue);
+		final DoubleProperty idFxFieldDefault = wrapper
+				.field("idFxFieldDefault", ExampleModel::doubleProperty, defaultValue);
 
-		verify(defaultValue, 10.71, beanField, fxField, beanFieldDefault, fxFieldDefault, idBeanField, idFxField, idBeanFieldDefault, idFxFieldDefault);
+		verify(defaultValue, 10.71, beanField, fxField, beanFieldDefault, fxFieldDefault, idBeanField, idFxField,
+				idBeanFieldDefault, idFxFieldDefault);
 	}
 
 
@@ -157,16 +161,19 @@ public class FieldMethodOverloadingTest {
 
 		final LongProperty beanField = wrapper.field(ExampleModel::getLong, ExampleModel::setLong);
 		final LongProperty fxField = wrapper.field(ExampleModel::longProperty);
-		final LongProperty beanFieldDefault = wrapper.field(ExampleModel::getLong, ExampleModel::setLong, defaultValue);
+		final LongProperty beanFieldDefault = wrapper.field(ExampleModel::getLong, ExampleModel::setLong,
+				defaultValue);
 		final LongProperty fxFieldDefault = wrapper.field(ExampleModel::longProperty, defaultValue);
 
 		final LongProperty idBeanField = wrapper.field("idBeanField", ExampleModel::getLong, ExampleModel::setLong);
 		final LongProperty idFxField = wrapper.field("idFxField", ExampleModel::longProperty);
 		final LongProperty idBeanFieldDefault = wrapper
 				.field("idBeanFieldDefault", ExampleModel::getLong, ExampleModel::setLong, defaultValue);
-		final LongProperty idFxFieldDefault = wrapper.field("idFxFieldDefault", ExampleModel::longProperty, defaultValue);
+		final LongProperty idFxFieldDefault = wrapper
+				.field("idFxFieldDefault", ExampleModel::longProperty, defaultValue);
 
-		verify(defaultValue, 10L, beanField, fxField, beanFieldDefault, fxFieldDefault, idBeanField, idFxField, idBeanFieldDefault, idFxFieldDefault);
+		verify(defaultValue, 10L, beanField, fxField, beanFieldDefault, fxFieldDefault, idBeanField, idFxField,
+				idBeanFieldDefault, idFxFieldDefault);
 	}
 
 
@@ -176,16 +183,19 @@ public class FieldMethodOverloadingTest {
 
 		final FloatProperty beanField = wrapper.field(ExampleModel::getFloat, ExampleModel::setFloat);
 		final FloatProperty fxField = wrapper.field(ExampleModel::floatProperty);
-		final FloatProperty beanFieldDefault = wrapper.field(ExampleModel::getFloat, ExampleModel::setFloat, defaultValue);
+		final FloatProperty beanFieldDefault = wrapper
+				.field(ExampleModel::getFloat, ExampleModel::setFloat, defaultValue);
 		final FloatProperty fxFieldDefault = wrapper.field(ExampleModel::floatProperty, defaultValue);
 
 		final FloatProperty idBeanField = wrapper.field("idBeanField", ExampleModel::getFloat, ExampleModel::setFloat);
 		final FloatProperty idFxField = wrapper.field("idFxField", ExampleModel::floatProperty);
 		final FloatProperty idBeanFieldDefault = wrapper.field("idBeanFieldDefault", ExampleModel::getFloat,
 				ExampleModel::setFloat, defaultValue);
-		final FloatProperty idFxFieldDefault = wrapper.field("idFxFieldDefault", ExampleModel::floatProperty, defaultValue);
+		final FloatProperty idFxFieldDefault = wrapper
+				.field("idFxFieldDefault", ExampleModel::floatProperty, defaultValue);
 
-		verify(defaultValue, 10.52F, beanField, fxField, beanFieldDefault, fxFieldDefault, idBeanField, idFxField, idBeanFieldDefault, idFxFieldDefault);
+		verify(defaultValue, 10.52F, beanField, fxField, beanFieldDefault, fxFieldDefault, idBeanField, idFxField,
+				idBeanFieldDefault, idFxFieldDefault);
 	}
 
 
@@ -199,13 +209,16 @@ public class FieldMethodOverloadingTest {
 				.field(ExampleModel::getBoolean, ExampleModel::setBoolean, defaultValue);
 		final BooleanProperty fxFieldDefault = wrapper.field(ExampleModel::booleanProperty, defaultValue);
 
-		final BooleanProperty idBeanField = wrapper.field("idBeanField", ExampleModel::getBoolean, ExampleModel::setBoolean);
+		final BooleanProperty idBeanField = wrapper
+				.field("idBeanField", ExampleModel::getBoolean, ExampleModel::setBoolean);
 		final BooleanProperty idFxField = wrapper.field("idFxField", ExampleModel::booleanProperty);
 		final BooleanProperty idBeanFieldDefault = wrapper.field("idBeanFieldDefault", ExampleModel::getBoolean,
 				ExampleModel::setBoolean, defaultValue);
-		final BooleanProperty idFxFieldDefault = wrapper.field("idFxFieldDefault", ExampleModel::booleanProperty, defaultValue);
+		final BooleanProperty idFxFieldDefault = wrapper
+				.field("idFxFieldDefault", ExampleModel::booleanProperty, defaultValue);
 
-		verify(defaultValue, false, beanField, fxField, beanFieldDefault, fxFieldDefault, idBeanField, idFxField, idBeanFieldDefault, idFxFieldDefault);
+		verify(defaultValue, false, beanField, fxField, beanFieldDefault, fxFieldDefault, idBeanField, idFxField,
+				idBeanFieldDefault, idFxFieldDefault);
 	}
 
 
@@ -215,16 +228,20 @@ public class FieldMethodOverloadingTest {
 
 		final StringProperty beanField = wrapper.field(ExampleModel::getString, ExampleModel::setString);
 		final StringProperty fxField = wrapper.field(ExampleModel::stringProperty);
-		final StringProperty beanFieldDefault = wrapper.field(ExampleModel::getString, ExampleModel::setString, defaultValue);
+		final StringProperty beanFieldDefault = wrapper
+				.field(ExampleModel::getString, ExampleModel::setString, defaultValue);
 		final StringProperty fxFieldDefault = wrapper.field(ExampleModel::stringProperty, defaultValue);
 
-		final StringProperty idBeanField = wrapper.field("idBeanField", ExampleModel::getString, ExampleModel::setString);
+		final StringProperty idBeanField = wrapper
+				.field("idBeanField", ExampleModel::getString, ExampleModel::setString);
 		final StringProperty idFxField = wrapper.field("idFxField", ExampleModel::stringProperty);
 		final StringProperty idBeanFieldDefault = wrapper.field("idBeanFieldDefault", ExampleModel::getString,
 				ExampleModel::setString, defaultValue);
-		final StringProperty idFxFieldDefault = wrapper.field("idFxFieldDefault", ExampleModel::stringProperty, defaultValue);
+		final StringProperty idFxFieldDefault = wrapper
+				.field("idFxFieldDefault", ExampleModel::stringProperty, defaultValue);
 
-		verify(defaultValue, "hello world", beanField, fxField, beanFieldDefault, fxFieldDefault, idBeanField, idFxField, idBeanFieldDefault, idFxFieldDefault);
+		verify(defaultValue, "hello world", beanField, fxField, beanFieldDefault, fxFieldDefault, idBeanField,
+				idFxField, idBeanFieldDefault, idFxFieldDefault);
 
 	}
 
@@ -250,7 +267,8 @@ public class FieldMethodOverloadingTest {
 		Person alternativeValue = new Person();
 		alternativeValue.setName("Horst");
 
-		verify(defaultValue, alternativeValue, beanField, fxField, beanFieldDefault, fxFieldDefault, idBeanField, idFxField, idBeanFieldDefault, idFxFieldDefault);
+		verify(defaultValue, alternativeValue, beanField, fxField, beanFieldDefault, fxFieldDefault, idBeanField,
+				idFxField, idBeanFieldDefault, idFxFieldDefault);
 	}
 
 	@Test
@@ -262,7 +280,8 @@ public class FieldMethodOverloadingTest {
 				defaultValue);
 		final ListProperty<String> fxFieldDefault = wrapper.field(ExampleModel::listProperty, defaultValue);
 
-		final ListProperty<String> idBeanField = wrapper.field("idBeanField", ExampleModel::getList, ExampleModel::setList);
+		final ListProperty<String> idBeanField = wrapper
+				.field("idBeanField", ExampleModel::getList, ExampleModel::setList);
 		final ListProperty<String> idFxField = wrapper.field("idFxField", ExampleModel::listProperty);
 		final ListProperty<String> idBeanFieldDefault = wrapper.field("idBeanFieldDefault", ExampleModel::getList,
 				ExampleModel::setList, defaultValue);
@@ -292,7 +311,8 @@ public class FieldMethodOverloadingTest {
 				defaultValue);
 		final SetProperty<String> fxFieldDefault = wrapper.field(ExampleModel::setProperty, defaultValue);
 
-		final SetProperty<String> idBeanField = wrapper.field("idBeanField", ExampleModel::getSet, ExampleModel::setSet);
+		final SetProperty<String> idBeanField = wrapper
+				.field("idBeanField", ExampleModel::getSet, ExampleModel::setSet);
 		final SetProperty<String> idFxField = wrapper.field("idFxField", ExampleModel::setProperty);
 		final SetProperty<String> idBeanFieldDefault = wrapper.field("idBeanFieldDefault", ExampleModel::getSet,
 				ExampleModel::setSet, defaultValue);
@@ -321,12 +341,15 @@ public class FieldMethodOverloadingTest {
 				defaultValue);
 		final MapProperty<String, String> fxFieldDefault = wrapper.field(ExampleModel::mapProperty, defaultValue);
 
-		final MapProperty<String, String> idBeanField = wrapper.field("idBeanField", ExampleModel::getMap, ExampleModel::setMap);
+		final MapProperty<String, String> idBeanField = wrapper
+				.field("idBeanField", ExampleModel::getMap, ExampleModel::setMap);
 		final MapProperty<String, String> idFxField = wrapper.field("idFxField", ExampleModel::mapProperty);
-		final MapProperty<String, String> idBeanFieldDefault = wrapper.field("idBeanFieldDefault", ExampleModel::getMap,
+		final MapProperty<String, String> idBeanFieldDefault = wrapper.field("idBeanFieldDefault",
+				ExampleModel::getMap,
 				ExampleModel::setMap, defaultValue);
-		final MapProperty<String, String> idFxFieldDefault = wrapper.field("idFxFieldDefault", ExampleModel::mapProperty,
-				defaultValue);
+		final MapProperty<String, String> idFxFieldDefault = wrapper
+				.field("idFxFieldDefault", ExampleModel::mapProperty,
+						defaultValue);
 
 		// for listProperty we can't use the other "verify" method because of type mismatch.
 		verifyId(idBeanField, "idBeanField");
