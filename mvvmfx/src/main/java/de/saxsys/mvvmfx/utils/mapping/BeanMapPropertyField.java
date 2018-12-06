@@ -66,7 +66,7 @@ public class BeanMapPropertyField<M, K, V, T extends ObservableMap<K, V>, R exte
     }
 
     static <K, V> void setAll(Map<K, V> target, Map<K, V> newValues) {
-        target.clear();
+        target.keySet().retainAll(newValues.keySet());
         target.putAll(newValues);
     }
 
