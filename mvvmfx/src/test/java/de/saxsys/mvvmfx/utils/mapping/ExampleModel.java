@@ -16,6 +16,7 @@
 package de.saxsys.mvvmfx.utils.mapping;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javafx.beans.property.BooleanProperty;
@@ -24,6 +25,7 @@ import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.LongProperty;
+import javafx.beans.property.MapProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SetProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -32,6 +34,7 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -54,6 +57,7 @@ public class ExampleModel {
 
 	private SetProperty<String> setProperty = new SimpleSetProperty<>();
 
+	private MapProperty<String, String> mapProperty = new SimpleMapProperty<>();
 
 	public int getInteger() {
 		return integerProperty.get();
@@ -162,5 +166,18 @@ public class ExampleModel {
 	public void setSet(Set<String> set) {
 		this.setProperty.retainAll(set);
 		this.setProperty.addAll(set);
+	}
+
+	public Map<String, String> getMap() {
+		return mapProperty.get();
+	}
+
+	public MapProperty<String, String> mapProperty() {
+		return mapProperty;
+	}
+
+	public void setMap(Map<String, String> map) {
+		this.mapProperty.get().clear();
+		this.mapProperty.get().putAll(map);
 	}
 }
