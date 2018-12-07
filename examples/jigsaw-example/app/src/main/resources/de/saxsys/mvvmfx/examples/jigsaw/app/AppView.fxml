@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx"
+      fx:id="appMainBox"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="de.saxsys.mvvmfx.examples.jigsaw.app.AppView"
+      prefHeight="400.0" prefWidth="600.0">
+    <fx:include
+            source="../../../../../../../../../circle/src/main/resources/de/saxsys/mvvmfx/examples/jigsaw/circle/CircleView.fxml" resources="circle" />
+</VBox>

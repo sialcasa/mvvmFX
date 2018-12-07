@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx"
+      fx:id="circleMainBox" id="circleMainBox"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="de.saxsys.mvvmfx.examples.jigsaw.circle.CircleView"
+      prefHeight="400.0" prefWidth="600.0" stylesheets="@CircleView.css">
+
+    <Label fx:id="title" id="title" text="%circle.label.title" />
+
+    <HBox fx:id="radiusBox" id="radiusBox">
+        <Label fx:id="radiusLabel" id="radiusLabel" text="%circle.label.radius" />
+        <TextField fx:id="radiusTextField" id="radiusTextField" />
+    </HBox>
+
+    <HBox fx:id="resultBox" id="resultBox">
+        <Label fx:id="resultLabel" id="resultLabel" text="%circle.label.circlearea" />
+        <Label fx:id="circleAreaLabel" id="circleAreaLabel" />
+    </HBox>
+</VBox>

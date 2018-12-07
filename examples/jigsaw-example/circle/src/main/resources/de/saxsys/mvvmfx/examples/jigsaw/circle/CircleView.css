@@ -1,0 +1,25 @@
+#circleMainBox{
+    -fx-alignment: center;
+    -fx-spacing: 10;
+}
+
+#radiusBox{
+    -fx-padding: 0 0 0 20;
+    -fx-spacing: 70;
+}
+
+#resultBox{
+    -fx-padding: 0 0 0 20;
+    -fx-spacing: 40;
+}
+
+#title{
+    -fx-font-weight: bold;
+    -fx-font-size: 24;
+}
+
+#radiusLabel, #resultLabel, #circleAreaLabel{
+    -fx-minWidth: 300;
+    -fx-font-size: 16;
+}
+
