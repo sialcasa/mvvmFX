@@ -48,6 +48,21 @@ Here we develop new features. This release is unstable and shouldn't be used in 
 </dependency>
 ```
 
+#### Snapshot repository
+
+We use the Sonatype snapshot repository.
+ Maybe you have to add this repository to your \<repository> section of the pom.xml.
+
+```xml
+<repository>
+		<id>sonatype-snapshots</id>
+		<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+		<snapshots>
+			<enabled>true</enabled>
+		</snapshots>
+</repository>
+```
+
 
 ### Get Help
 
