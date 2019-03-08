@@ -5,5 +5,5 @@ module de.saxsys.mvvmfx.examples.jigsaw{
     requires javafx.fxml;
     requires javafx.controls;
     requires javafx.graphics;
-    requires mvvmfx;
+    requires de.saxsys.mvvmfx;
 }
