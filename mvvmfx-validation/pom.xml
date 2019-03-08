@@ -29,6 +29,22 @@
 	<name>mvvmFX validation</name>
 	<description>This module contains validation utils that can be useful for JavaFX and mvvmFX developers.</description>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>de.saxsys.mvvmfx-validation</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 	<dependencies>
 		<dependency>
 			<groupId>de.saxsys</groupId>
