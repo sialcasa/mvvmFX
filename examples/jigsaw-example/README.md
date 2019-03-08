@@ -27,7 +27,7 @@ the main project would fail.
        <maven.compiler.target>11</maven.compiler.target>
 
        <java.version>11</java.version>
-       <mvvmfx.version>1.8.0-SNAPSHOT</mvvmfx.version>
+       <mvvmfx.version>${mvvmfx.version}</mvvmfx.version>
     </properties>
  ```
  * set the release tag in the maven compiler plugin to 
