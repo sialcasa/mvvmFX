@@ -7,7 +7,7 @@ module de.saxsys.mvvmfx.examples.jigsaw.rectangle {
     requires javafx.graphics;
     requires de.saxsys.mvvmfx;
 
-    exports de.saxsys.mvvmfx.examples.jigsaw.rectangle to javafx.graphics, de.saxsys.mvvmfx.examples.jigsaw.app;
+    exports de.saxsys.mvvmfx.examples.jigsaw.rectangle;
 
     opens de.saxsys.mvvmfx.examples.jigsaw.rectangle to de.saxsys.mvvmfx, javafx.fxml;
 }
