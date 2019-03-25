@@ -67,20 +67,20 @@ In this case the scope is used to handle the state of a multi paged dialog.
 
 To understand the machanism of the implemented dialogs, you should check the following classes: 
 
-* [EditContactDialogView](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/editcontact/EditContactDialog.java) and [AddContactDialog](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/addcontact/AddContactDialog.java)
+* [EditContactDialogView](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/editcontact/EditContactDialogView.java) and [AddContactDialogView](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/addcontact/AddContactDialogView.java)
 
 * Both of them are using the [ContactDialogView](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/contactdialog/ContactDialogView.java) with different configurations. 
 
 * [AddressFormViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/addressform/AddressFormViewModel.java) and [ContactFormViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/contactform/ContactFormViewModel.java) are the dialog pages (1 and 2) that are displayed in the EditContactDialog and the AddContactDialog
 
-* Also check the Views where the dialogs are created ([ToolbarView.java](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/toolbar/ToolbarView) and [DetailView](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/detail/DetailView.java)).
+* Also check the Views where the dialogs are created ([ToolbarView.java](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/toolbar/ToolbarView.java) and [DetailView](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/detail/DetailView.java)).
 
-######Scope usages######
+##### Scope usages
 The used scope is called [ContactDialogScope](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/scopes/ContactDialogScope.java) and it has three use cases:
 
 1. Configuration (eg. title) of the [ContactDialogViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/contactdialog/ContactDialogViewModel.java) from the [EditContactDialogViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/editcontact/EditContactDialogViewModel.java) and [AddContactDialogViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/addcontact/AddContactDialogViewModel.java).
 
-2. [DetailViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/detail/DetailViewModel) sets the Contact object that will be edited into the scope. This information is used by the dialog pages: [AddressFormViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/addressform/AddressFormViewModel.java) and [ContactFormViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/contactform/ContactFormViewModel.java)    
+2. [DetailViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/detail/DetailViewModel.java) sets the Contact object that will be edited into the scope. This information is used by the dialog pages: [AddressFormViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/addressform/AddressFormViewModel.java) and [ContactFormViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/contactform/ContactFormViewModel.java)    
 
 3. [ContactDialogViewModel](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/contactdialog/ContactDialogViewModel.java) binds the *disableProperty()* of the navigation buttons to the validation state in the scope. This validation state is bound to the validation state of the dialog pages (AddressFormView and ContactFormView).
 
@@ -106,7 +106,7 @@ public void startMvvmfx(Stage stage) throws Exception {
 }
 ```
 
-In addition for the menu a specific resourceBundle is defined in the [MainView.fxml](src/main/resources/de/saxsys/mvvmfx/examples/contacts/ui/main/MainView.fxml) via `fx:include`:
+In addition for the menu a specific resourceBundle is defined in the [MainView.fxml](src/main/java/de/saxsys/mvvmfx/examples/contacts/ui/main/MainView.fxml) via `fx:include`:
 
 ```xml
 ...

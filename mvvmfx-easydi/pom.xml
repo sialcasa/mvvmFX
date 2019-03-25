@@ -5,7 +5,7 @@
     <parent>
         <artifactId>mvvmfx-parent</artifactId>
         <groupId>de.saxsys</groupId>
-        <version>1.7.0</version>
+        <version>1.8.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -21,6 +21,17 @@
                 <version>2.18.1</version>
                 <configuration>
                     <forkMode>always</forkMode>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>de.saxsys.mvvmfx-easydi</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>

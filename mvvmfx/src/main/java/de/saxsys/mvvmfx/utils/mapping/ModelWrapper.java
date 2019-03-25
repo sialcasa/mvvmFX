@@ -39,16 +39,26 @@ import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.LongGetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.LongImmutableSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.LongPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.LongSetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.MapGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.MapImmutableSetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.MapPropertyAccessor;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.MapSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectGetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectImmutableSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.ObjectSetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.SetGetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.SetImmutableSetter;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.SetPropertyAccessor;
+import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.SetSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringGetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringImmutableSetter;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringPropertyAccessor;
 import de.saxsys.mvvmfx.utils.mapping.accessorfunctions.StringSetter;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -62,20 +72,25 @@ import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.LongProperty;
+import javafx.beans.property.MapProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.SetProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
 
 
 /**
@@ -1451,5 +1466,187 @@ public class ModelWrapper<M> {
 	public <E> ListProperty<E> field(String identifier, ListPropertyAccessor<M, E> accessor, List<E> defaultValue) {
 		return addIdentified(identifier, new FxListPropertyField<>(this::propertyWasChanged, accessor,
 				() -> new SimpleListProperty<>(null, identifier), defaultValue));
+	}
+
+
+	/* Field type set */
+
+	/**
+	 * This helper method is needed because there is no equivalent of {@link FXCollections#observableArrayList(Collection)}
+	 * for {@link Set}.
+	 * The only factory method available for sets is {@link FXCollections#observableSet(Set)} which creates an observable set
+	 * that is backed by the given set. However, this would mean that changes to the observable set are directly synchronized back to the
+	 * source set. In contrast to this {@link FXCollections#observableArrayList(Collection)} creates an observable list that has
+	 * initially all values of the source list but changes aren't synchronized back because internally a new ArrayList is created.
+	 * We need exactly this behaviour for Sets and therefore are using this helper method.
+	 */
+	private static <T> ObservableSet<T> observableHashSet(Set<T> source) {
+		return FXCollections.observableSet(new HashSet<>(source));
+	}
+
+	public <E> SetProperty<E> field(SetGetter<M, E> getter, SetSetter<M, E> setter) {
+		return add(new BeanSetPropertyField<>(this::propertyWasChanged, getter,
+				(m, set) -> setter.accept(m, observableHashSet(set)), SimpleSetProperty::new));
+	}
+
+	public <E> SetProperty<E> immutableField(SetGetter<M, E> getter, SetImmutableSetter<M, E> immutableSetter) {
+		return addImmutable(new ImmutableSetPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				(m, set) -> immutableSetter.apply(m, observableHashSet(set)),
+				SimpleSetProperty::new
+		));
+	}
+
+	public <E> SetProperty<E> field(SetGetter<M, E> getter, SetSetter<M, E> setter, Set<E> defaultValue) {
+		return add(new BeanSetPropertyField<>(this::propertyWasChanged, getter,
+				(m, set) -> setter.accept(m, observableHashSet(set)), SimpleSetProperty::new,
+				defaultValue));
+	}
+
+	public <E> SetProperty<E> immutableField(SetGetter<M, E> getter, SetImmutableSetter<M, E> immutableSetter, Set<E> defaultValue) {
+		return addImmutable(new ImmutableSetPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				(m, set) -> immutableSetter.apply(m, observableHashSet(set)),
+				SimpleSetProperty::new,
+				defaultValue));
+	}
+
+	public <E> SetProperty<E> field(SetPropertyAccessor<M, E> accessor) {
+		return add(new FxSetPropertyField<>(this::propertyWasChanged, accessor, SimpleSetProperty::new));
+	}
+
+	public <E> SetProperty<E> field(SetPropertyAccessor<M, E> accessor, Set<E> defaultValue) {
+		return add(
+				new FxSetPropertyField<>(this::propertyWasChanged, accessor, SimpleSetProperty::new, defaultValue));
+	}
+
+	public <E> SetProperty<E> field(String identifier, SetGetter<M, E> getter, SetSetter<M, E> setter) {
+		return addIdentified(identifier, new BeanSetPropertyField<>(this::propertyWasChanged, getter,
+				(m, set) -> setter.accept(m, observableHashSet(set)),
+				() -> new SimpleSetProperty<>(null, identifier)));
+	}
+
+	public <E> SetProperty<E> field(String identifier, SetGetter<M, E> getter, SetSetter<M, E> setter,
+			Set<E> defaultValue) {
+		return addIdentified(identifier, new BeanSetPropertyField<>(this::propertyWasChanged, getter,
+				(m, set) -> setter.accept(m, observableHashSet(set)),
+				() -> new SimpleSetProperty<>(null, identifier), defaultValue));
+	}
+
+	public <E> SetProperty<E> immutableField(String identifier, SetGetter<M, E> getter, SetImmutableSetter<M, E> immutableSetter) {
+		return addIdentifiedImmutable(identifier, new ImmutableSetPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				(m, set) -> immutableSetter.apply(m, observableHashSet(set)),
+				() -> new SimpleSetProperty<>(null, identifier)));
+	}
+
+	public <E> SetProperty<E> immutableField(String identifier, SetGetter<M, E> getter, SetImmutableSetter<M, E> immutableSetter,
+			Set<E> defaultValue) {
+		return addIdentifiedImmutable(identifier, new ImmutableSetPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				(m, set) -> immutableSetter.apply(m, observableHashSet(set)),
+				() -> new SimpleSetProperty<>(null, identifier),
+				defaultValue));
+	}
+
+	public <E> SetProperty<E> field(String identifier, SetPropertyAccessor<M, E> accessor) {
+		return addIdentified(identifier, new FxSetPropertyField<>(this::propertyWasChanged, accessor,
+				() -> new SimpleSetProperty<>(null, identifier)));
+	}
+
+	public <E> SetProperty<E> field(String identifier, SetPropertyAccessor<M, E> accessor, Set<E> defaultValue) {
+		return addIdentified(identifier, new FxSetPropertyField<>(this::propertyWasChanged, accessor,
+				() -> new SimpleSetProperty<>(null, identifier), defaultValue));
+	}
+
+	/* Field type map */
+
+	public <K, V> MapProperty<K, V> field(MapGetter<M, K, V> getter, MapSetter<M, K, V> setter) {
+		return add(new BeanMapPropertyField<>(this::propertyWasChanged, getter,
+				(m, map) -> setter.accept(m, FXCollections.observableMap(map)), SimpleMapProperty::new));
+	}
+
+	public <K, V> MapProperty<K, V> immutableField(MapGetter<M, K, V> getter,
+			MapImmutableSetter<M, K, V> immutableSetter) {
+		return addImmutable(new ImmutableMapPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				(m, map) -> immutableSetter.apply(m, FXCollections.observableMap(map)),
+				SimpleMapProperty::new
+		));
+	}
+
+	public <K, V> MapProperty<K, V> field(MapGetter<M, K, V> getter, MapSetter<M, K, V> setter,
+			Map<K, V> defaultValue) {
+		return add(new BeanMapPropertyField<>(this::propertyWasChanged, getter,
+				(m, map) -> setter.accept(m, FXCollections.observableMap(map)), SimpleMapProperty::new,
+				defaultValue));
+	}
+
+	public <K, V> MapProperty<K, V> immutableField(MapGetter<M, K, V> getter,
+			MapImmutableSetter<M, K, V> immutableSetter, Map<K, V> defaultValue) {
+		return addImmutable(new ImmutableMapPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				(m, map) -> immutableSetter.apply(m, FXCollections.observableMap(map)),
+				SimpleMapProperty::new,
+				defaultValue));
+	}
+
+	public <K, V> MapProperty<K, V> field(MapPropertyAccessor<M, K, V> accessor) {
+		return add(new FxMapPropertyField<>(this::propertyWasChanged, accessor, SimpleMapProperty::new));
+	}
+
+	public <K, V> MapProperty<K, V> field(MapPropertyAccessor<M, K, V> accessor, Map<K, V> defaultValue) {
+		return add(
+				new FxMapPropertyField<>(this::propertyWasChanged, accessor, SimpleMapProperty::new, defaultValue));
+	}
+
+	public <K, V> MapProperty<K, V> field(String identifier, MapGetter<M, K, V> getter, MapSetter<M, K, V> setter) {
+		return addIdentified(identifier, new BeanMapPropertyField<>(this::propertyWasChanged, getter,
+				(m, map) -> setter.accept(m, FXCollections.observableMap(map)),
+				() -> new SimpleMapProperty<>(null, identifier)));
+	}
+
+	public <K, V> MapProperty<K, V> field(String identifier, MapGetter<M, K, V> getter, MapSetter<M, K, V> setter,
+			Map<K, V> defaultValue) {
+		return addIdentified(identifier, new BeanMapPropertyField<>(this::propertyWasChanged, getter,
+				(m, map) -> setter.accept(m, FXCollections.observableMap(map)),
+				() -> new SimpleMapProperty<>(null, identifier), defaultValue));
+	}
+
+	public <K, V> MapProperty<K, V> immutableField(String identifier, MapGetter<M, K, V> getter,
+			MapImmutableSetter<M, K, V> immutableSetter) {
+		return addIdentifiedImmutable(identifier, new ImmutableMapPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				(m, map) -> immutableSetter.apply(m, FXCollections.observableMap(map)),
+				() -> new SimpleMapProperty<>(null, identifier)));
+	}
+
+	public <K, V> MapProperty<K, V> immutableField(String identifier, MapGetter<M, K, V> getter,
+			MapImmutableSetter<M, K, V> immutableSetter,
+			Map<K, V> defaultValue) {
+		return addIdentifiedImmutable(identifier, new ImmutableMapPropertyField<>(
+				this::propertyWasChanged,
+				getter,
+				(m, map) -> immutableSetter.apply(m, FXCollections.observableMap(map)),
+				() -> new SimpleMapProperty<>(null, identifier),
+				defaultValue));
+	}
+
+	public <K, V> MapProperty<K, V> field(String identifier, MapPropertyAccessor<M, K, V> accessor) {
+		return addIdentified(identifier, new FxMapPropertyField<>(this::propertyWasChanged, accessor,
+				() -> new SimpleMapProperty<>(null, identifier)));
+	}
+
+	public <K, V> MapProperty<K, V> field(String identifier, MapPropertyAccessor<M, K, V> accessor,
+			Map<K, V> defaultValue) {
+		return addIdentified(identifier, new FxMapPropertyField<>(this::propertyWasChanged, accessor,
+				() -> new SimpleMapProperty<>(null, identifier), defaultValue));
 	}
 }

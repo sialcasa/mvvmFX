@@ -1,7 +1,7 @@
 # MvvmFX CDI
 
 This module is an extension for the [MvvmFX](https://github.com/sialcasa/mvvmFX) framework that adds support for 
-[CDI](http://cdi-spec.org/) as dependency injection framework. It uses [JBoss Weld](http://weld.cdi-spec.org/) as implementation for CDI.
+[CDI](http://cdi-spec.org/) as dependency injection framework. 
 
 
 ```xml
@@ -13,7 +13,7 @@ This module is an extension for the [MvvmFX](https://github.com/sialcasa/mvvmFX)
 ```
 
 
-To create an application that is powered by CDI / Weld you have to extend `MvvmfxCdiApplication`:
+To create an application that is powered by CDI you have to extend `MvvmfxCdiApplication`:
 
 ```java
 public class Starter extends MvvmfxCdiApplication{
@@ -29,7 +29,15 @@ public class Starter extends MvvmfxCdiApplication{
 }
 ```
 
-An example application using CDI can be found at [contacts-example](/examples/contacts-example) and 
+Starting with version 1.7.0 this module doesn't depend on JBoss Weld anymore. 
+Instead it's now possible to use any CDI 2.0 compatible implementation. 
+However, this also means that you have to add an CDI library to your project on your own.
+
+An example application using CDI and JBoss Weld can be found at [contacts-example](/examples/contacts-example) and 
 at [welcome-example](/examples/mini-examples/welcome-example).
 
-If you prefer Guice as dependency injection framework you can use [mvvnfx-guice](/mvvmfx-guice).
+Other supported dependency-injection frameworks are:
+
+* [Guice](/mvvmfx-guice)
+* [Spring-Boot](/mvvmfx-spring-boot)
+* [EasyDI](/mvvmfx-easydi)

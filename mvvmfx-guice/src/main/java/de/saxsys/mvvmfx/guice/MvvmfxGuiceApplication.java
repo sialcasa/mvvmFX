@@ -15,67 +15,65 @@
  ******************************************************************************/
 package de.saxsys.mvvmfx.guice;
 
-import java.util.List;
-
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import de.saxsys.mvvmfx.MvvmFX;
+import de.saxsys.mvvmfx.guice.internal.MvvmfxModule;
 import de.saxsys.mvvmfx.internal.MvvmfxApplication;
+import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.stage.Stage;
 
-import com.cathive.fx.guice.GuiceApplication;
-import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
-import com.google.inject.Module;
-import com.google.inject.Provider;
-
-import de.saxsys.mvvmfx.MvvmFX;
-import de.saxsys.mvvmfx.guice.internal.GuiceInjector;
-import de.saxsys.mvvmfx.guice.internal.MvvmfxModule;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class has to be extended by the user to build a javafx application powered by Guice.
  *
  * @author manuel.mauky
  */
-public abstract class MvvmfxGuiceApplication extends GuiceApplication implements MvvmfxApplication {
-	
-	
-	@Inject
-	private GuiceInjector guiceInjector;
+public abstract class MvvmfxGuiceApplication extends Application implements MvvmfxApplication {
 	
 	private Stage primaryStage;
-	
-	@Override
-	public final void init(List<Module> modules) throws Exception {
+
+
+	/**
+	 * This method is called by the javafx runtime when the application is initialized.
+	 * See {@link Application#init()} for more details.
+	 * <p>
+	 * In this method the initialization of the guice container is done.
+	 * For this reason, this method is marked as final and cannot be overwritten by users.
+	 * <p>
+	 * Please use {@link #initMvvmfx()} for your own initialization logic.
+	 *
+	 * @throws Exception
+	 */
+	public final void init() throws Exception {
+		List<Module> modules = new ArrayList<>();
+
 		modules.add(new MvvmfxModule());
 		
 		modules.add(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(HostServices.class).toProvider(new Provider<HostServices>() {
-					@Override
-					public HostServices get() {
-						return getHostServices();
-					}
-				});
+				bind(HostServices.class).toProvider(MvvmfxGuiceApplication.this::getHostServices);
 				
-				bind(Stage.class).toProvider(new Provider<Stage>() {
-					@Override
-					public Stage get() {
-						return primaryStage;
-					}
-				});
+				bind(Stage.class).toProvider(() -> primaryStage);
 				
-				bind(Parameters.class).toProvider(new Provider<Parameters>() {
-					@Override
-					public Parameters get() {
-						return getParameters();
-					}
-				});
+				bind(Parameters.class).toProvider(MvvmfxGuiceApplication.this::getParameters);
 			}
 		});
 		
 		
 		this.initGuiceModules(modules);
+
+		final Injector injector = Guice.createInjector(modules);
+		MvvmFX.setCustomDependencyInjector(injector::getInstance);
+
+		injector.injectMembers(this);
+
 		this.initMvvmfx();
 	}
 	
@@ -86,8 +84,7 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication implements
 	 */
 	public final void start(Stage stage) throws Exception {
 		this.primaryStage = stage;
-		MvvmFX.setCustomDependencyInjector(guiceInjector);
-		
+
 		this.startMvvmfx(stage);
 	}
 	
@@ -97,7 +94,8 @@ public abstract class MvvmfxGuiceApplication extends GuiceApplication implements
 	}
 	
 	/**
-	 * Configure the guice modules.
+	 * Configure your guice modules. Use the given list and
+	 * add your modules to it.
 	 *
 	 * @param modules
 	 *            module list

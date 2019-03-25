@@ -12,10 +12,16 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
 /**
- * This basic class runner ensures that JavaFx is running and then wraps all the
- * runChild() calls in a Platform.runLater(). runChild() is called for each test
- * that is run. By wrapping each call in the Platform.runLater() this ensures
- * that the request is executed on the JavaFx thread.
+ * This JUnit 4 TestRunner can be used to start a JavaFX Thread for test execution.
+ * This way a JavaFX Thread will be available so that you can use <code>Platform.runLater</code>
+ * and similar constructs in your test code.
+ *
+ * However, this TestRunner alone won't execute your test method on the JavaFX Thread.
+ * To execute a test method on the JavaFX Thread you have to use the annotation {@link TestInJfxThread}
+ * together with this test runner.
+ *
+ * This solution only works for JUnit 4. For a solution for JUnit 5 please see {@link de.saxsys.mvvmfx.testingutils.JfxToolkitExtension}.
+ *
  */
 public class JfxRunner extends BlockJUnit4ClassRunner {
 	/**
