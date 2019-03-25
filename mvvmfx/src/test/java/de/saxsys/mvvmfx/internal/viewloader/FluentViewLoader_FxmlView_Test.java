@@ -31,6 +31,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.lang.reflect.Method;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
@@ -503,6 +504,45 @@ public class FluentViewLoader_FxmlView_Test {
 		assertThat(TestViewModelWithMultipleInitializeAnnotations.init1).isTrue();
 		assertThat(TestViewModelWithMultipleInitializeAnnotations.init2).isTrue();
 		assertThat(TestViewModelWithMultipleInitializeAnnotations.initialize).isTrue();
+	}
+
+	/**
+	 * Here we check that when a viewModel has multiple methods with the name "initialize" but with
+	 * different arguments, only the correct method is invoked (the one without arguments).
+	 */
+	@Test
+	public void testViewModelHasMultipleInitializeMethods() {
+		TestViewModelWithMultipleInitializeMethodsViewModel.correctInit = false;
+		TestViewModelWithMultipleInitializeMethodsViewModel.wrongInit = false;
+
+		ViewTuple<TestFxmlViewWithViewModelWithMultipleInitializeMethods, TestViewModelWithMultipleInitializeMethodsViewModel> viewTuple = FluentViewLoader
+				.fxmlView(TestFxmlViewWithViewModelWithMultipleInitializeMethods.class).load();
+
+		assertThat(TestViewModelWithMultipleInitializeMethodsViewModel.correctInit).isTrue();
+		assertThat(TestViewModelWithMultipleInitializeMethodsViewModel.wrongInit).isFalse();
+	}
+
+	/**
+	 * If a ViewModel has a method with the name "initialize" with arguments then this method may not be invoked.
+	 */
+	@Test
+	public void testViewModelWithNonValidInitializeMethodWithArguments() {
+		TestViewModelWithNonValidInitializeMethodWithArguments.init = false;
+
+		ViewTuple<TestFxmlViewWithViewModelWithNonValidInitializeMethodViewWithArguments, TestViewModelWithNonValidInitializeMethodWithArguments> viewTuple = FluentViewLoader
+				.fxmlView(TestFxmlViewWithViewModelWithNonValidInitializeMethodViewWithArguments.class).load();
+
+		assertThat(TestViewModelWithNonValidInitializeMethodWithArguments.init).isFalse();
+	}
+
+	@Test
+	public void testViewModelWithNonValidInitializeMethodWithBadReturnType() {
+		TestViewModelWithNonValidInitializeMethodWithBadReturnType.init = false;
+
+		ViewTuple<TestFxmlViewWithViewModelWithNonValidInitializeMethodViewWithBadReturnType, TestViewModelWithNonValidInitializeMethodWithBadReturnType> viewTuple = FluentViewLoader
+				.fxmlView(TestFxmlViewWithViewModelWithNonValidInitializeMethodViewWithBadReturnType.class).load();
+
+		assertThat(TestViewModelWithNonValidInitializeMethodWithBadReturnType.init).isFalse();
 	}
 
 	@Test

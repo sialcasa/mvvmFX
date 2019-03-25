@@ -119,7 +119,7 @@ public abstract class MvvmfxEasyDIApplication extends Application implements Mvv
 	 * for the start process of the application (for example in the {@link #startMvvmfx(Stage)} method).
 	 * <p>
 	 * <b>Lifecycle notice:</b>
-	 * This method is invoked by the framework <b>before</b> the invokation of {@link MvvmfxEasyDIApplication#initMvvmfx()}
+	 * This method is invoked by the framework <b>before</b> the invocation of {@link MvvmfxEasyDIApplication#initMvvmfx()}
 	 * and {@link MvvmfxEasyDIApplication#startMvvmfx(Stage)}.
 	 *
 	 *

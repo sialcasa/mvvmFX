@@ -17,13 +17,23 @@ package de.saxsys.mvvmfx.utils.mapping;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.MapProperty;
+import javafx.beans.property.SetProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleMapProperty;
+import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class PersonFX {
 	
@@ -32,7 +42,12 @@ public class PersonFX {
 	private IntegerProperty age = new SimpleIntegerProperty();
 
 	private ListProperty<String> nicknames = new SimpleListProperty<>(FXCollections.observableArrayList());
-	
+
+	private SetProperty<String> emailAddresses = new SimpleSetProperty<>(FXCollections.observableSet(new HashSet<>()));
+
+	private MapProperty<String, String> phoneNumbers = new SimpleMapProperty<>(
+			FXCollections.observableMap(new HashMap<>()));
+
 	public String getName() {
 		return name.get();
 	}
@@ -67,5 +82,30 @@ public class PersonFX {
 
 	public void setNicknames(List<String> nicknames) {
 		this.nicknames.setAll(nicknames);
+	}
+
+	public Set<String> getEmailAddresses() {
+		return emailAddresses.get();
+	}
+
+	public SetProperty<String> emailAddressesProperty() {
+		return emailAddresses;
+	}
+
+	public void setEmailAddresses(Set<String> emailAddresses) {
+		this.emailAddresses.addAll(emailAddresses);
+	}
+
+	public Map<String, String> getPhoneNumbers() {
+		return phoneNumbers.get();
+	}
+
+	public MapProperty<String, String> phoneNumbersProperty() {
+		return phoneNumbers;
+	}
+
+	public void setPhoneNumbers(Map<String, String> phoneNumbers) {
+		this.phoneNumbers.clear();
+		this.phoneNumbers.putAll(phoneNumbers);
 	}
 }

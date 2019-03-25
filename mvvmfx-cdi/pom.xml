@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx-parent</artifactId>
-		<version>1.7.1-SNAPSHOT</version>
+		<version>1.8.0</version>
 	</parent>
 
 	<artifactId>mvvmfx-cdi</artifactId>
@@ -39,10 +39,20 @@
 					<forkMode>always</forkMode>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>de.saxsys.mvvmfx-cdi</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
 		</plugins>
 
 	</build>
-
 
 	<dependencies>
 

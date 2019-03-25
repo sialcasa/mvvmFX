@@ -1,6 +1,6 @@
 ![image](http://www.buildpath.de/mvvm/mvvmfx.png)
 
-**mvvmFX** is an application framework which provides you necessary components to implement the [MVVM](../../wiki/MVVM "MVVM") pattern with JavaFX.
+**mvvmFX** is an application framework which provides you necessary components to implement the [MVVM](../../wiki/MVVM-Overview "MVVM") pattern with JavaFX.
 
 **MVVM** is the enhanced version of the [Presentation Model](http://martinfowler.com/eaaDev/PresentationModel.html "Presentation Model") pattern and was created by Microsoft engineers for [WPF](http://msdn.microsoft.com/en-us/library/ms754130.aspx "WPF"). JavaFX and WPF does have similarities like data binding and descriptive UI declaration (FXML/XAML). Because of this fact we adopted best practices of the development with the Microsoft technology and introduced new helpers to support the development of applications with JavaFX and MVVM.
 
@@ -20,7 +20,7 @@ This is the stable release that can be used in production.
 <dependency>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx</artifactId>
-		<version>1.7.0</version>
+		<version>1.8.0</version>
 </dependency>
 ```
 
@@ -32,7 +32,7 @@ Here we make bug fixes for the current stable release.
 <dependency>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx</artifactId>
-		<version>1.7.1-SNAPSHOT</version>
+		<version>1.8.1-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -44,8 +44,23 @@ Here we develop new features. This release is unstable and shouldn't be used in 
 <dependency>
 		<groupId>de.saxsys</groupId>
 		<artifactId>mvvmfx</artifactId>
-		<version>1.8.0-SNAPSHOT</version>
+		<version>1.9.0-SNAPSHOT</version>
 </dependency>
+```
+
+#### Snapshot repository
+
+We use the Sonatype snapshot repository.
+ Maybe you have to add this repository to your \<repository> section of the pom.xml.
+
+```xml
+<repository>
+		<id>sonatype-snapshots</id>
+		<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+		<snapshots>
+			<enabled>true</enabled>
+		</snapshots>
+</repository>
 ```
 
 

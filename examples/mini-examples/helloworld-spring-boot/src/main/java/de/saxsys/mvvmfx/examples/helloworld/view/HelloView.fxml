@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.geometry.Insets?>
+<VBox fx:controller="de.saxsys.mvvmfx.examples.helloworld.view.HelloView" xmlns="http://javafx.com/javafx/8.0.60"
+      xmlns:fx="http://javafx.com/fxml/1">
+
+    <padding>
+        <Insets topRightBottomLeft="10"/>
+    </padding>
+    <spacing>10</spacing>
+
+
+    <HBox alignment="BASELINE_LEFT">
+        <spacing>10</spacing>
+        <Label text="What's your name?"/>
+        <TextField fx:id="name"/>
+    </HBox>
+
+    <Label fx:id="message"/>
+
+</VBox>

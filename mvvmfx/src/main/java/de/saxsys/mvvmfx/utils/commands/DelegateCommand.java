@@ -39,8 +39,8 @@ import java.util.function.Supplier;
 @Beta
 public class DelegateCommand extends Service<Void> implements Command {
 	
-	private final Supplier<Action> actionSupplier;
-	private boolean inBackground = false;
+	protected final Supplier<Action> actionSupplier;
+	protected boolean inBackground = false;
 	protected final ReadOnlyBooleanWrapper executable = new ReadOnlyBooleanWrapper(true);
 	protected ReadOnlyBooleanWrapper notExecutable;
 	protected ReadOnlyBooleanWrapper notRunning;
@@ -142,7 +142,7 @@ public class DelegateCommand extends Service<Void> implements Command {
 		return (ObjectProperty<State>) stateProperty();
 	}
 	
-	private void callActionAndSynthesizeServiceRun() {
+	protected void callActionAndSynthesizeServiceRun() {
 		try {
 		    // the service exception property is the one that is accessible via command.exceptionProperty().
             // If this command was already executed this property is bound to the exceptionProperty of the previous action instance at this point in time
@@ -291,5 +291,9 @@ public class DelegateCommand extends Service<Void> implements Command {
 			throw new RuntimeException(
 					"Cannot use DelegateCommand in asynchronous mode because of an incompatible JDK version. Please report this to the mvvmFX developers at https://github.com/sialcasa/mvvmFX.");
 		}
+	}
+
+	public Supplier<Action> getActionSupplier() {
+		return actionSupplier;
 	}
 }

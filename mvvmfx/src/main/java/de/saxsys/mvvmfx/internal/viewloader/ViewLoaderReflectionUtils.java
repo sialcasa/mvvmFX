@@ -28,12 +28,9 @@ import de.saxsys.mvvmfx.internal.ContextImpl;
 import javafx.beans.value.ObservableBooleanValue;
 import net.jodah.typetools.TypeResolver;
 
-import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -284,7 +281,7 @@ public class ViewLoaderReflectionUtils {
         for (Annotation annotation : viewModelClass.getDeclaredAnnotations()) {
             if (annotation.annotationType().isAssignableFrom(ScopeProvider.class)) {
                 ScopeProvider provider = (ScopeProvider) annotation;
-                Class<? extends Scope>[] scopes = provider.scopes();
+                Class<? extends Scope>[] scopes = getScopesFromProvider(provider, viewModelClass);
                 for (int i = 0; i < scopes.length; i++) {
                     Class<? extends Scope> scopeType = scopes[i];
                     // Overrides existing scopes!!!!
@@ -300,6 +297,21 @@ public class ViewLoaderReflectionUtils {
             ReflectionUtils.accessMember(scopeField, () -> injectScopeIntoField(scopeField, viewModel, context),
                     "Can't inject Scope into ViewModel <" + viewModel.getClass() + ">");
         });
+    }
+
+    private static Class<? extends Scope>[] getScopesFromProvider(final ScopeProvider scopeProvider, final Class<?> aViewModelClass) {
+        Class<? extends Scope>[] scopes = scopeProvider.value();
+        
+        if (scopes.length == 0) {
+            scopes = scopeProvider.scopes();
+        }
+        
+        if (scopes.length == 0) {
+            final String message = String.format("The scope provider '%s' has to provide at least one scope.", aViewModelClass.getCanonicalName());
+            throw new IllegalArgumentException(message);
+        }
+
+        return scopes;
     }
 
     public static void injectContext(View codeBehind, ContextImpl context) {
@@ -332,8 +344,8 @@ public class ViewLoaderReflectionUtils {
         if (newScope == null) {
             // TODO Modify Stacktrace to get the Injectionpoint of the Scope
             throw new IllegalStateException(
-                    "A scope was requested but no @ScopeProvider found in the hirarchy. Declare it like this: @ScopeProvider("
-                            + scopeType.getName() + ")");
+                    "A scope was requested but no @ScopeProvider found in the hierarchy. Declare it like this: @ScopeProvider("
+                            + scopeType.getName() + ".class )");
         }
 
         if (!newScope.getClass().equals(scopeType)) {
@@ -394,7 +406,12 @@ public class ViewLoaderReflectionUtils {
 
         initializeMethods.forEach(initMethod -> {
 			// if there is a @PostConstruct annotation, throw an exception to prevent double injection
-			if(initMethod.isAnnotationPresent(PostConstruct.class)) {
+            final boolean postConstructPresent = Arrays.stream(initMethod.getAnnotations())
+                    .map(Annotation::annotationType)
+                    .map(Class::getName)
+                    .anyMatch("javax.annotation.PostConstruct"::equals);
+
+            if(postConstructPresent) {
 				throw new IllegalStateException(String.format("initialize method of ViewModel [%s] is annotated with @PostConstruct. " +
 						"This will lead to unexpected behaviour and duplicate initialization. " +
 						"Please rename the method or remove the @PostConstruct annotation. " +
@@ -415,11 +432,13 @@ public class ViewLoaderReflectionUtils {
 	 * </ol>
 	 */
 	private static Collection<Method> getInitializeMethods(Class<?> classType) {
-		final List<Method> initializeMethods = new ArrayList<>();
-		Arrays.stream(classType.getMethods())
-				.filter(method -> "initialize".equals(method.getName()))
-				.findAny()
-				.ifPresent(initializeMethods::add);
+        final List<Method> initializeMethods = new ArrayList<>();
+
+        Arrays.stream(classType.getMethods())
+                .filter(method -> "initialize".equals(method.getName()))
+                .filter(method -> void.class.equals(method.getReturnType()))
+                .filter(method -> method.getParameterCount() == 0)
+                .forEach(initializeMethods::add);
 
 		Arrays.stream(classType.getDeclaredMethods())
 				.filter(method -> method.isAnnotationPresent(Initialize.class))
@@ -450,5 +469,21 @@ public class ViewLoaderReflectionUtils {
 				});
             }
         }
+    }
+
+    /**
+     * This method is used to check if the given View instance has one or more fields that try to inject a scope
+     * with the {@link InjectScope} annotation.
+     * This is a violation of the mvvm-pattern and therefore this method will throw an exception with a message describing the
+     * error.
+     */
+    static void checkScopesInView(View codeBehind) {
+        List<Field> scopeFields = ReflectionUtils.getFieldsWithAnnotation(codeBehind, InjectScope.class);
+
+        if(!scopeFields.isEmpty()) {
+            throw new IllegalStateException("The view class [" + codeBehind.getClass().getSimpleName() + "] tries to inject a Scope with " +
+                    "@InjectScope. This would be a violation of the mvvm pattern. Scopes are only supported in ViewModels.");
+        }
+
     }
 }
