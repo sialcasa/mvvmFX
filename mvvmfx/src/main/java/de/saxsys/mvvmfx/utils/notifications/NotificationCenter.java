@@ -128,5 +128,11 @@ public interface NotificationCenter {
 	 */
 	void unsubscribe(Object channel,
 			NotificationObserver observer);
-	
+
+
+	/**
+	 * Clears all {@link NotificationObserver} subscriptions in the current {@link NotificationCenter}
+	 * for session aware applications that needs to perform a complete reset on logout.
+	 */
+	void clear();
 }
