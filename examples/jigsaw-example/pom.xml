@@ -30,7 +30,7 @@
         <maven.compiler.target>11</maven.compiler.target>
 
         <java.version>11</java.version>
-        <mvvmfx.version>1.8.0</mvvmfx.version>
+        <mvvmfx.version>1.8.1-SNAPSHOT</mvvmfx.version>
     </properties>
 
     <build>
