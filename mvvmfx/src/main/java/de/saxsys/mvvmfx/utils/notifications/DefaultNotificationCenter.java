@@ -134,7 +134,13 @@ public class DefaultNotificationCenter implements NotificationCenter {
 			removeObserverFromObserverMap(observer, observerMap);
 		}
 	}
-	
+
+	@Override
+	public void clear() {
+		this.globalObservers.clear();
+		this.channelObserverMap.clear();
+	}
+
 	/*
 	 * Helper
 	 */
