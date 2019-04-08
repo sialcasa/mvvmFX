@@ -37,7 +37,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Automatic-Module-Name>de.saxsys.mvvmfx-validation</Automatic-Module-Name>
+                            <Automatic-Module-Name>de.saxsys.mvvmfx.validation</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>
