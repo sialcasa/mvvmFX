@@ -12,4 +12,30 @@
 
     <artifactId>jigsaw-example-circle</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>de.saxsys</groupId>
+            <artifactId>mvvmfx</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+        </dependency>
+    </dependencies>
 </project>

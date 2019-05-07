@@ -45,7 +45,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Automatic-Module-Name>de.saxsys.mvvmfx-cdi</Automatic-Module-Name>
+                            <Automatic-Module-Name>de.saxsys.mvvmfx.cdi</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>

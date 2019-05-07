@@ -20,8 +20,12 @@
         <repository>
             <id>snapshots-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases><enabled>false</enabled></releases>
-            <snapshots><enabled>true</enabled></snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
@@ -30,6 +34,7 @@
         <maven.compiler.target>11</maven.compiler.target>
 
         <java.version>11</java.version>
+        <javafx.version>11</javafx.version>
         <mvvmfx.version>1.9.0-SNAPSHOT</mvvmfx.version>
     </properties>
 
@@ -46,41 +51,38 @@
         </plugins>
     </build>
 
-    <dependencies>
-        <!-- https://mvnrepository.com/artifact/de.saxsys/mvvmfx -->
-        <dependency>
-            <groupId>de.saxsys</groupId>
-            <artifactId>mvvmfx</artifactId>
-            <version>${mvvmfx.version}</version>
-            <scope>compile</scope>
-        </dependency>
+    <dependencyManagement>
 
-        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>11</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-graphics -->
+        <dependencies>
+            <dependency>
+                <groupId>de.saxsys</groupId>
+                <artifactId>mvvmfx</artifactId>
+                <version>${mvvmfx.version}</version>
+            </dependency>
 
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>11</version>
-        </dependency>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-controls</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-base -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-base</artifactId>
-            <version>11</version>
-        </dependency>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-graphics</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-fxml -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>11</version>
-        </dependency>
-    </dependencies>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-base</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-fxml</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
