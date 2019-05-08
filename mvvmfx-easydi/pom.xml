@@ -29,7 +29,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Automatic-Module-Name>de.saxsys.mvvmfx-easydi</Automatic-Module-Name>
+                            <Automatic-Module-Name>de.saxsys.mvvmfx.easydi</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>

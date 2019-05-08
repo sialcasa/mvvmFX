@@ -30,7 +30,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Automatic-Module-Name>de.saxsys.mvvmfx-testing-utils</Automatic-Module-Name>
+                            <Automatic-Module-Name>de.saxsys.mvvmfx_testing_utils</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>

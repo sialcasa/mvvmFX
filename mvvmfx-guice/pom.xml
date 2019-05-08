@@ -44,7 +44,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Automatic-Module-Name>de.saxsys.mvvmfx-guice</Automatic-Module-Name>
+                            <Automatic-Module-Name>de.saxsys.mvvmfx.guice</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>

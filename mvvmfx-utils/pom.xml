@@ -23,7 +23,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Automatic-Module-Name>de.saxsys.mvvmfx-utils</Automatic-Module-Name>
+                            <Automatic-Module-Name>de.saxsys.mvvmfx.utils</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>
