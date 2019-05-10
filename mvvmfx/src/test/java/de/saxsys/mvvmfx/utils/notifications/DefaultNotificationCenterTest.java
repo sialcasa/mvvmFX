@@ -24,13 +24,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.mockito.internal.util.reflection.Whitebox;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.internal.util.reflection.Whitebox.getInternalState;
 
 @ExtendWith(JfxToolkitExtension.class)
 public class DefaultNotificationCenterTest {
@@ -184,5 +188,52 @@ public class DefaultNotificationCenterTest {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			defaultCenter.subscribe(TEST_NOTIFICATION, null);
 		});
+	}
+
+
+	/**
+	 * Reproduces <a href="https://github.com/sialcasa/mvvmFX/issues/379">Issue #379</a>. Even when the last subscriber
+	 * of a specific channel is removed, internally a map for subscribers for this channel is still left. This could
+	 * lead to a memory-problem if many channels are added and removed dynamically because old channels are not cleaned
+	 * up.
+	 */
+	@Test
+	@SuppressWarnings("unchecked")
+	public void removeChannelMapAfterLastChannelSubscriberWasRemoved() {
+		Object channelOne = "ChannelOne";
+		Object channelTwo = "ChannelTwo";
+
+		HashMap<Object, HashMap<String, List<NotificationObserver>>> channelObserverMap = (HashMap<Object,
+				HashMap<String, List<NotificationObserver>>>)
+				Whitebox.getInternalState(defaultCenter,
+						"channelObserverMap");
+
+		assertThat(channelObserverMap.isEmpty());
+
+		// when
+		defaultCenter.subscribe(channelOne, TEST_NOTIFICATION, observer1);
+		defaultCenter.subscribe(channelOne, TEST_NOTIFICATION, observer2);
+		defaultCenter.subscribe(channelTwo, TEST_NOTIFICATION, observer3);
+
+		// then
+		assertThat(channelObserverMap).hasSize(2);
+
+		// when
+		defaultCenter.unsubscribe(channelOne, observer1);
+
+		// then
+		assertThat(channelObserverMap).hasSize(2); // still an observer left for channel one
+
+		// when
+		defaultCenter.unsubscribe(channelOne, observer2);
+
+		// then
+		assertThat(channelObserverMap).hasSize(1); // now only for channel two there should be an entry.
+
+		// when
+		defaultCenter.unsubscribe(channelTwo, TEST_NOTIFICATION, observer3);
+
+		// then
+		assertThat(channelObserverMap).isEmpty(); // now all maps for all channels are cleared.
 	}
 }

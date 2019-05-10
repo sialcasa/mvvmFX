@@ -123,6 +123,10 @@ public class DefaultNotificationCenter implements NotificationCenter {
 		if (channelObserverMap.containsKey(channel)) {
 			final ObserverMap observerMap = channelObserverMap.get(channel);
 			removeObserversForMessageName(messageName, observer, observerMap);
+
+			if (observerMap.isEmpty()) {
+				channelObserverMap.remove(channel);
+			}
 		}
 	}
 
@@ -132,6 +136,10 @@ public class DefaultNotificationCenter implements NotificationCenter {
 		if (channelObserverMap.containsKey(channel)) {
 			ObserverMap observerMap = channelObserverMap.get(channel);
 			removeObserverFromObserverMap(observer, observerMap);
+
+			if (observerMap.isEmpty()) {
+				channelObserverMap.remove(channel);
+			}
 		}
 	}
 
@@ -178,6 +186,10 @@ public class DefaultNotificationCenter implements NotificationCenter {
 			final List<NotificationObserver> observers = observerMap.get(key);
 
 			removeObserverFromObserverList(observer, observers);
+
+			if (observers.isEmpty()) {
+				observerMap.remove(key);
+			}
 		}
 	}
 
@@ -208,7 +220,7 @@ public class DefaultNotificationCenter implements NotificationCenter {
 			final List<NotificationObserver> observers = observerMap.get(messageName);
 			removeObserverFromObserverList(observer, observers);
 
-			if (observers.size() == 0) {
+			if (observers.isEmpty()) {
 				observerMap.remove(messageName);
 			}
 		}
