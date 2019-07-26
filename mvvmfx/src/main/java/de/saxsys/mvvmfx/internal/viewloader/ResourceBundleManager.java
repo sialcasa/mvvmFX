@@ -16,17 +16,14 @@
 package de.saxsys.mvvmfx.internal.viewloader;
 
 import eu.lestard.doc.Internal;
-import sun.util.ResourceBundleEnumeration;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListResourceBundle;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
