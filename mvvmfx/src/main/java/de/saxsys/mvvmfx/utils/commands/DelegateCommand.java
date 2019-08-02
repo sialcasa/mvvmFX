@@ -142,6 +142,14 @@ public class DelegateCommand extends Service<Void> implements Command {
 	private ObjectProperty<State> getStateObjectPropertyReadable() {
 		return (ObjectProperty<State>) stateProperty();
 	}
+
+	/**
+	 * In synchronous mode we need to simulate the lifecycle of the service and therefore manipulate the
+	 * {@link Service#runningProperty()}.
+	 */
+	private BooleanProperty getRunningPropertyReadable() {
+		return (BooleanProperty) runningProperty();
+	}
 	
 	protected void callActionAndSynthesizeServiceRun() {
 		try {
@@ -153,8 +161,11 @@ public class DelegateCommand extends Service<Void> implements Command {
 			Action action = actionSupplier.get();
 			setWritableExceptionProperty(action);
 			bindServiceExceptionToTaskException();
-			
+
+			getRunningPropertyReadable().set(true);
 			action.action();
+			getRunningPropertyReadable().set(false);
+
 			getStateObjectPropertyReadable().setValue(State.SUCCEEDED);
 		} catch (Exception e) {
 			setException(e);
