@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -414,5 +415,35 @@ public class DelegateCommandTest {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+
+	@Test
+	void testRunningPropertyForSynchronousMode() {
+		CountDownLatch commandExecutedLatch = new CountDownLatch(1);
+		CountDownLatch listenerCalledLatch = new CountDownLatch(1);
+
+		Command command = new DelegateCommand(() -> new Action() {
+			@Override
+			protected void action() throws Exception {
+				commandExecutedLatch.countDown();
+			}
+		});
+
+		command.runningProperty().addListener((observable, oldValue, newValue) -> {
+			listenerCalledLatch.countDown();
+		});
+
+		// when
+		command.execute();
+
+		// then
+		Assertions.assertDoesNotThrow(() -> {
+			commandExecutedLatch.await(2, TimeUnit.SECONDS);
+			listenerCalledLatch.await(2, TimeUnit.SECONDS);
+		});
+
+		Assertions.assertEquals(0, commandExecutedLatch.getCount(), "Action was not executed");
+		Assertions.assertEquals(0, listenerCalledLatch.getCount(), "Listener was not invoked");
 	}
 }
