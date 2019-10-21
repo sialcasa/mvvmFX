@@ -1,0 +1,12 @@
+
+.error {
+    -fx-border-color: red;
+}
+
+.valid {
+    -fx-border-color: green;
+}
+
+.required {
+    -fx-background-color: yellow;
+}

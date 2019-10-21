@@ -32,14 +32,14 @@ import java.util.Optional;
  * this visualization you have to add the ControlsFX library to your classpath, otherwise you will get
  * {@link NoClassDefFoundError}s and {@link ClassNotFoundException}s. If you are using a build management system like
  * <i>maven</i> or <i>gradle</i> you simply have to add the library as dependency.
- * 
- * 
+ *
+ *
  * @author manuel.mauky
  */
 public class ControlsFxVisualizer extends ValidationVisualizerBase {
-	
+
 	private ValidationDecoration decoration = new GraphicValidationDecoration();
-	
+
 	/**
 	 * Define a custom ControlsFX {@link ValidationVisualizer} that is used to visualize the validation results.
 	 * <p>
@@ -48,24 +48,24 @@ public class ControlsFxVisualizer extends ValidationVisualizerBase {
 	public void setDecoration(ValidationDecoration decoration) {
 		this.decoration = decoration;
 	}
-	
-	
+
+
 	@Override
-	void applyRequiredVisualization(Control control, boolean required) {
+    protected void applyRequiredVisualization(Control control, boolean required) {
 		ValidationSupport.setRequired(control, required);
 		if (required) {
 			decoration.applyRequiredDecoration(control);
 		}
 	}
-	
+
 	@Override
-	void applyVisualization(Control control, Optional<ValidationMessage> messageOptional, boolean required) {
-		
+    protected void applyVisualization(Control control, Optional<ValidationMessage> messageOptional, boolean required) {
+
 		if (messageOptional.isPresent()) {
 			final ValidationMessage message = messageOptional.get();
-			
+
 			decoration.removeDecorations(control);
-			
+
 			if (Severity.ERROR.equals(message.getSeverity())) {
 				decoration.applyValidationDecoration(org.controlsfx.validation.ValidationMessage.error(control,
 						message.getMessage()));
@@ -73,14 +73,14 @@ public class ControlsFxVisualizer extends ValidationVisualizerBase {
 				decoration.applyValidationDecoration(org.controlsfx.validation.ValidationMessage.warning(control,
 						message.getMessage()));
 			}
-			
+
 		} else {
 			decoration.removeDecorations(control);
 		}
-		
+
 		if (required) {
 			decoration.applyRequiredDecoration(control);
 		}
 	}
-	
+
 }
